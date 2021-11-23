@@ -1,2 +1,2 @@
-# open-dread-rando
-Randomizer patcher for Metroid Dread
+# Open Dread Rando
+Open Source randomizer patcher for Metroid Dread.
