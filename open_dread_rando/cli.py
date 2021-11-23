@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import logging.config
 from pathlib import Path
@@ -54,8 +55,11 @@ def main():
     args = parser.parse_args()
     print(args)
 
+    with args.input_json.open() as f:
+        configuration = json.load(f)
+
     dread_patcher.patch(
         args.input_path,
         args.output_path,
-        {},
+        configuration,
     )
