@@ -21,6 +21,7 @@
         }
     },
     "required": [
-        "starting_location"
+        "starting_location",
+        "starting_items"
     ]
 }
