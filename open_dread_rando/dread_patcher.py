@@ -115,6 +115,18 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
         PICKABLE["fields"]["fields"]["sOnPickCaption"] = pickup["caption"]
         PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = pickup["caption"]
 
+        model_dependencies = [
+            "actors/items/itemsphere/animations/relax.bcskla",
+            "actors/items/itemsphere/charclasses/timeline.bmsas",
+            "actors/items/itemsphere/collisions/itemsphere.bmscd",
+            "actors/items/itemsphere/fx/impact.bcptl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
+            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
+            "actors/items/itemsphere/models/itemsphere.bcmdl",
+            "actors/items/itemsphere/models/imats/itemsphere_mp_opaque_01.bsmat",
+        ]
+
         item_id: str = pickup["item_id"]
         quantity: float = pickup["quantity"]
         set_custom_params: dict = PICKABLE["functions"][0]["params"]
@@ -145,6 +157,13 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
 
         # Powerup is in plain sight (except for the part we're using the sphere model)
         actor.pComponents.pop("LIFE", None)
+
+        # Dependencies
+        for level_pkg in pkgs_for_level:
+            editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
+            editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
+            for dep in model_dependencies:
+                editor.ensure_present(level_pkg, dep)
 
         # # For debugging, write the bmsad we just created
         # Path("custom_bmsad", f"randomizer_powerup_{i}.bmsad.json").write_text(
