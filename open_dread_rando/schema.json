@@ -16,14 +16,21 @@
                     "caption": {
                         "type": "string"
                     },
+                    "model": {
+                        "type": "string"
+                    },
                     "item_id": {
                         "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number"
                     }
                 },
                 "required": [
                     "pickup_actor",
                     "caption",
-                    "item_id"
+                    "item_id",
+                    "quantity"
                 ]
             }
         },

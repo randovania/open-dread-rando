@@ -8,7 +8,6 @@ from pathlib import Path
 import jsonschema
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource
-from mercury_engine_data_structures.formats.dread_types import EBreakableTileType
 
 T = typing.TypeVar("T")
 LOG = logging.getLogger("dread_patcher")
@@ -86,6 +85,7 @@ class PatcherEditor(FileTreeEditor):
 
 def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
     for elevator in elevators_config:
+        LOG.info("Writing elevator from: %s", str(elevator["teleporter"]))
         level = editor.get_scenario(elevator["teleporter"]["scenario"])
         actor = level.actors_for_layer(elevator["teleporter"]["layer"])[elevator["teleporter"]["actor"]]
         try:
@@ -102,7 +102,7 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
     pkgs_for_lua = set()
 
     for i, pickup in enumerate(pickups_config):
-        LOG.info("Writing pickup %d", i)
+        LOG.info("Writing pickup %d: %s", i, pickup["item_id"])
         pkgs_for_level = set(editor.find_pkgs(path_for_level(pickup["pickup_actor"]["scenario"]) + ".brfld"))
         pkgs_for_lua.update(pkgs_for_level)
 
@@ -113,15 +113,43 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
         new_template["name"] = f"randomizer_powerup_{i}"
         PICKABLE = new_template["property"]["components"]["PICKABLE"]
         PICKABLE["fields"]["fields"]["sOnPickCaption"] = pickup["caption"]
-        PICKABLE["functions"][0]["params"]["Param1"]["value"] = pickup["item_id"]
+        PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = pickup["caption"]
+
+        item_id: str = pickup["item_id"]
+        quantity: float = pickup["quantity"]
+        set_custom_params: dict = PICKABLE["functions"][0]["params"]
+
+        if item_id == "ITEM_ENERGY_TANKS":
+            item_id = "fMaxLife"
+            quantity *= 100.0
+            set_custom_params["Param4"]["value"] = "Full"
+            set_custom_params["Param5"]["value"] = "fCurrentLife"
+            set_custom_params["Param6"]["value"] = "LIFE"
+
+        elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
+            set_custom_params["Param4"]["value"] = "Custom"
+            set_custom_params["Param5"]["value"] = item_id.replace("_MAX", "_CURRENT")
+            set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
+
+        set_custom_params["Param1"]["value"] = item_id
+        set_custom_params["Param2"]["value"] = quantity
+        if quantity > 1:
+            set_custom_params["Param13"] = {
+                "type": "f",
+                "value": quantity,
+            }
 
         new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{i}.bmsad"
         editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
-
         actor.oActorDefLink = f"actordef:{new_path}"
 
         # Powerup is in plain sight (except for the part we're using the sphere model)
         actor.pComponents.pop("LIFE", None)
+
+        # # For debugging, write the bmsad we just created
+        # Path("custom_bmsad", f"randomizer_powerup_{i}.bmsad.json").write_text(
+        #     json.dumps(new_template, indent=4)
+        # )
 
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc",
                          _read_powerup_lua(),
