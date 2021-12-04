@@ -78,7 +78,7 @@
                             },
                             "Param9": {
                                 "type": "b",
-                                "value": true
+                                "value": false
                             },
                             "Param10": {
                                 "type": "b",
@@ -86,21 +86,11 @@
                             },
                             "Param11": {
                                 "type": "b",
-                                "value": true
-                            }
-                        }
-                    },
-                    {
-                        "name": "SetValue",
-                        "unk": 0,
-                        "params": {
-                            "Param1": {
-                                "type": "s",
-                                "value": "fTimeToCanBePicked"
+                                "value": false
                             },
-                            "Param2": {
-                                "type": "f",
-                                "value": 0.4000000059604645
+                            "Param12": {
+                                "type": "s",
+                                "value": "NumTanksPickedUp"
                             }
                         }
                     }
