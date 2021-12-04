@@ -1,5 +1,4 @@
 import copy
-import dataclasses
 import json
 import logging
 import shutil
@@ -10,32 +9,10 @@ import jsonschema
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource
 
+from open_dread_rando.model_data import ALL_MODEL_DATA
+
 T = typing.TypeVar("T")
 LOG = logging.getLogger("dread_patcher")
-
-
-@dataclasses.dataclass(frozen=True)
-class ModelData:
-    bcmdl_path: str
-    dependencies: tuple[str, ...]
-
-
-_MODEL_DATA: dict[str, ModelData] = {
-    "itemsphere": ModelData(
-        bcmdl_path="actors/items/itemsphere/models/itemsphere.bcmdl",
-        dependencies=(
-            "actors/items/itemsphere/animations/relax.bcskla",
-            "actors/items/itemsphere/charclasses/timeline.bmsas",
-            "actors/items/itemsphere/collisions/itemsphere.bmscd",
-            "actors/items/itemsphere/fx/impact.bcptl",
-            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
-            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
-            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
-            "actors/items/itemsphere/models/itemsphere.bcmdl",
-            "actors/items/itemsphere/models/imats/itemsphere_mp_opaque_01.bsmat",
-        ),
-    )
-}
 
 
 def _read_schema():
@@ -135,7 +112,7 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
         actor = level.actors_for_layer(pickup["pickup_actor"]["layer"])[pickup["pickup_actor"]["actor"]]
 
         model_name: str = pickup["model"]
-        model_data = _MODEL_DATA.get(model_name, _MODEL_DATA["itemsphere"])
+        model_data = ALL_MODEL_DATA.get(model_name, ALL_MODEL_DATA["itemsphere"])
 
         new_template = copy.deepcopy(template_bmsad)
         new_template["name"] = f"randomizer_powerup_{i}"
@@ -170,8 +147,6 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
                 "type": "f",
                 "value": quantity,
             }
-            # if item_id == "ITEM_WEAPON_POWER_BOMB_MAX":
-            #     set_custom_params["Param3"]["value"] = quantity
 
         set_custom_params["Param1"]["value"] = item_id
         set_custom_params["Param2"]["value"] = quantity
