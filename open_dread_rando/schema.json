@@ -5,6 +5,28 @@
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
         },
+        "pickups": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "pickup_actor": {
+                        "$ref": "#/$defs/actor_reference_with_layer"
+                    },
+                    "caption": {
+                        "type": "string"
+                    },
+                    "item_id": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "pickup_actor",
+                    "caption",
+                    "item_id"
+                ]
+            }
+        },
         "elevators": {
             "type": "array",
             "items": {

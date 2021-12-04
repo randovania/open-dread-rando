@@ -1,0 +1,197 @@
+{
+    "magic": "MSAD",
+    "version": 33554447,
+    "name": "randomizer_powerup",
+    "type": "CCharClass",
+    "property": {
+        "model_name": "actors/items/itemsphere/models/itemsphere.bcmdl",
+        "unk_1": 0,
+        "unk_2": 8,
+        "unk_3": 0,
+        "sub_actors": [],
+        "unk_4": [
+            1.0,
+            50.0,
+            0.0,
+            1.0,
+            0.0,
+            60.0,
+            70.0,
+            60.0,
+            20.0
+        ],
+        "magic": 4294967295,
+        "unk_5": 0,
+        "unk_6": "",
+        "unk_7": 0,
+        "components": {
+            "PICKABLE": {
+                "type": "CPickableItemComponent",
+                "unk_1": [
+                    3000,
+                    0
+                ],
+                "fields": {
+                    "empty_string": "",
+                    "root": "Root",
+                    "fields": {
+                        "sOnPickCaption": "Something acquired!"
+                    }
+                },
+                "extra_fields": {},
+                "functions": [
+                    {
+                        "name": "SetCustomParams",
+                        "unk": 1,
+                        "params": {
+                            "Param1": {
+                                "type": "s",
+                                "value": "ITEM_GHOST_AURA"
+                            },
+                            "Param2": {
+                                "type": "f",
+                                "value": 1.0
+                            },
+                            "Param3": {
+                                "type": "f",
+                                "value": -1.0
+                            },
+                            "Param4": {
+                                "type": "s",
+                                "value": "None"
+                            },
+                            "Param5": {
+                                "type": "s",
+                                "value": ""
+                            },
+                            "Param6": {
+                                "type": "s",
+                                "value": ""
+                            },
+                            "Param7": {
+                                "type": "s",
+                                "value": ""
+                            },
+                            "Param8": {
+                                "type": "s",
+                                "value": ""
+                            },
+                            "Param9": {
+                                "type": "b",
+                                "value": true
+                            },
+                            "Param10": {
+                                "type": "b",
+                                "value": true
+                            },
+                            "Param11": {
+                                "type": "b",
+                                "value": true
+                            }
+                        }
+                    },
+                    {
+                        "name": "SetValue",
+                        "unk": 0,
+                        "params": {
+                            "Param1": {
+                                "type": "s",
+                                "value": "fTimeToCanBePicked"
+                            },
+                            "Param2": {
+                                "type": "f",
+                                "value": 0.4000000059604645
+                            }
+                        }
+                    }
+                ],
+                "dependencies": null
+            },
+            "SCRIPT": {
+                "type": "CScriptComponent",
+                "unk_1": [
+                    4294967295,
+                    4294967294
+                ],
+                "fields": null,
+                "extra_fields": {},
+                "functions": [
+                    {
+                        "name": "SetParams",
+                        "unk": 1,
+                        "params": {
+                            "Param1": {
+                                "type": "s",
+                                "value": "actors/items/randomizer_powerup/scripts/randomizer_powerup.lua"
+                            },
+                            "Param2": {
+                                "type": "s",
+                                "value": "RandomizerPowerup"
+                            }
+                        }
+                    }
+                ],
+                "dependencies": null
+            },
+            "MODELUPDATER": {
+                "type": "CModelUpdaterComponent",
+                "unk_1": [
+                    4294967295,
+                    4294967294
+                ],
+                "fields": null,
+                "extra_fields": {},
+                "functions": [
+                    {
+                        "name": "LoadModel",
+                        "unk": 1,
+                        "params": {
+                            "Param1": {
+                                "type": "s",
+                                "value": "actors/items/itemsphere/models/itemsphere.bcmdl"
+                            },
+                            "Param2": {
+                                "type": "s",
+                                "value": "actors/items/itemsphere/models/itemsphere.bcmdl"
+                            }
+                        }
+                    }
+                ],
+                "dependencies": null
+            },
+            "ANIMATION": {
+                "type": "CAnimationComponent",
+                "unk_1": [
+                    4294967295,
+                    4294967294
+                ],
+                "fields": {
+                    "empty_string": "",
+                    "root": "Root",
+                    "fields": {
+                        "sInitialAction": "relax",
+                        "sAnimTree": "system/animtrees/base.bmsat"
+                    }
+                },
+                "extra_fields": {},
+                "functions": [],
+                "dependencies": null
+            },
+            "AUDIO": {
+                "type": "CAudioComponent",
+                "unk_1": [
+                    4294967295,
+                    4294967294
+                ],
+                "fields": null,
+                "extra_fields": {},
+                "functions": [],
+                "dependencies": null
+            }
+        },
+        "binaries": [
+            "actors/items/itemsphere/charclasses/timeline.bmsas"
+        ],
+        "sources": []
+    }
+}

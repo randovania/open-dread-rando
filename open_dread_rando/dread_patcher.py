@@ -1,11 +1,13 @@
+import copy
 import json
 import logging
+import shutil
 import typing
 from pathlib import Path
 
 import jsonschema
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import Brfld, BaseResource
+from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource
 from mercury_engine_data_structures.formats.dread_types import EBreakableTileType
 
 T = typing.TypeVar("T")
@@ -15,6 +17,15 @@ LOG = logging.getLogger("dread_patcher")
 def _read_schema():
     with Path(__file__).parent.joinpath("schema.json").open() as f:
         return json.load(f)
+
+
+def _read_template_powerup():
+    with Path(__file__).parent.joinpath("template_powerup_bmsad.json").open() as f:
+        return json.load(f)
+
+
+def _read_powerup_lua() -> bytes:
+    return Path(__file__).parent.joinpath("randomizer_powerup.lua").read_bytes()
 
 
 def path_for_level(level_name: str) -> str:
@@ -85,8 +96,40 @@ def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
         usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
 
+def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
+    template_bmsad = _read_template_powerup()
+
+    pkgs_for_lua = set()
+
+    for i, pickup in enumerate(pickups_config):
+        LOG.info("Writing pickup %d", i)
+        pkgs_for_level = set(editor.find_pkgs(path_for_level(pickup["pickup_actor"]["scenario"]) + ".brfld"))
+        pkgs_for_lua.update(pkgs_for_level)
+
+        level = editor.get_scenario(pickup["pickup_actor"]["scenario"])
+        actor = level.actors_for_layer(pickup["pickup_actor"]["layer"])[pickup["pickup_actor"]["actor"]]
+
+        new_template = copy.deepcopy(template_bmsad)
+        new_template["name"] = f"randomizer_powerup_{i}"
+        PICKABLE = new_template["property"]["components"]["PICKABLE"]
+        PICKABLE["fields"]["fields"]["sOnPickCaption"] = pickup["caption"]
+        PICKABLE["functions"][0]["params"]["Param1"]["value"] = pickup["item_id"]
+
+        new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{i}.bmsad"
+        editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
+
+        actor.oActorDefLink = f"actordef:{new_path}"
+
+        # Powerup is in plain sight (except for the part we're using the sphere model)
+        actor.pComponents.pop("LIFE", None)
+
+    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc",
+                         _read_powerup_lua(),
+                         in_pkgs=pkgs_for_lua)
+
+
 def patch(input_path: Path, output_path: Path, configuration: dict):
-    LOG.info("Will patch files at %s", input_path)
+    LOG.info("Will patch files from %s", input_path)
 
     jsonschema.validate(instance=configuration, schema=_read_schema())
 
@@ -101,17 +144,13 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
                            configuration["starting_location"]
                            ).encode("ascii"))
 
-    # actor = level.actors_for_layer("default")[configuration["starting_location"]["actor"]]
-    # old_on_teleport = actor.pComponents["STARTPOINT"]["sOnTeleport"]
-    # if old_on_teleport not in ("", "Game.HUDIdleScreenLeave"):
-    #     raise ValueError("Starting actor at {} with unexpected sOnTeleport: {}".format(
-    #         configuration["starting_location"], old_on_teleport,
-    #     ))
-    # actor.pComponents["STARTPOINT"]["sOnTeleport"] = "Game.HUDIdleScreenLeave"
-
     if "elevators" in configuration:
         patch_elevators(editor, configuration["elevators"])
 
+    patch_pickups(editor, configuration["pickups"])
+
     editor.flush_modified_assets()
+
+    shutil.rmtree(out_romfs)
     editor.save_modified_pkgs(out_romfs)
     logging.info("Done")
