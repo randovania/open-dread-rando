@@ -139,6 +139,17 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
             set_custom_params["Param5"]["value"] = "fCurrentLife"
             set_custom_params["Param6"]["value"] = "LIFE"
 
+        elif item_id == "ITEM_LIFE_SHARDS":
+            item_id = "fLifeShards"
+            set_custom_params["Param4"]["value"] = "Custom"
+            set_custom_params["Param5"]["value"] = ""
+            set_custom_params["Param6"]["value"] = "LIFE"
+            set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
+            PICKABLE["fields"]["fields"]["sOnPickEnergyFragment1Caption"] = pickup["caption"]
+            PICKABLE["fields"]["fields"]["sOnPickEnergyFragment2Caption"] = pickup["caption"]
+            PICKABLE["fields"]["fields"]["sOnPickEnergyFragment3Caption"] = pickup["caption"]
+            PICKABLE["fields"]["fields"]["sOnPickEnergyFragmentCompleteCaption"] = pickup["caption"]
+
         elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
             set_custom_params["Param4"]["value"] = "Custom"
             set_custom_params["Param5"]["value"] = item_id.replace("_MAX", "_CURRENT")
