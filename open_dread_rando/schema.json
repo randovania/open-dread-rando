@@ -29,6 +29,7 @@
                 "required": [
                     "pickup_actor",
                     "caption",
+                    "model",
                     "item_id",
                     "quantity"
                 ]

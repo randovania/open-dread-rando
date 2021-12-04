@@ -1,4 +1,5 @@
 import copy
+import dataclasses
 import json
 import logging
 import shutil
@@ -11,6 +12,30 @@ from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource
 
 T = typing.TypeVar("T")
 LOG = logging.getLogger("dread_patcher")
+
+
+@dataclasses.dataclass(frozen=True)
+class ModelData:
+    bcmdl_path: str
+    dependencies: tuple[str, ...]
+
+
+_MODEL_DATA: dict[str, ModelData] = {
+    "itemsphere": ModelData(
+        bcmdl_path="actors/items/itemsphere/models/itemsphere.bcmdl",
+        dependencies=(
+            "actors/items/itemsphere/animations/relax.bcskla",
+            "actors/items/itemsphere/charclasses/timeline.bmsas",
+            "actors/items/itemsphere/collisions/itemsphere.bmscd",
+            "actors/items/itemsphere/fx/impact.bcptl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
+            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
+            "actors/items/itemsphere/models/itemsphere.bcmdl",
+            "actors/items/itemsphere/models/imats/itemsphere_mp_opaque_01.bsmat",
+        ),
+    )
+}
 
 
 def _read_schema():
@@ -109,27 +134,26 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
         level = editor.get_scenario(pickup["pickup_actor"]["scenario"])
         actor = level.actors_for_layer(pickup["pickup_actor"]["layer"])[pickup["pickup_actor"]["actor"]]
 
+        model_name: str = pickup["model"]
+        model_data = _MODEL_DATA.get(model_name, _MODEL_DATA["itemsphere"])
+
         new_template = copy.deepcopy(template_bmsad)
         new_template["name"] = f"randomizer_powerup_{i}"
+
+        # Update used model
+        new_template["property"]["model_name"] = model_data.bcmdl_path
+        MODELUPDATER = new_template["property"]["components"]["MODELUPDATER"]
+        MODELUPDATER["functions"][0]["params"]["Param1"]["value"] = model_data.bcmdl_path
+
+        # Update caption
         PICKABLE = new_template["property"]["components"]["PICKABLE"]
         PICKABLE["fields"]["fields"]["sOnPickCaption"] = pickup["caption"]
         PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = pickup["caption"]
 
-        model_dependencies = [
-            "actors/items/itemsphere/animations/relax.bcskla",
-            "actors/items/itemsphere/charclasses/timeline.bmsas",
-            "actors/items/itemsphere/collisions/itemsphere.bmscd",
-            "actors/items/itemsphere/fx/impact.bcptl",
-            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
-            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
-            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
-            "actors/items/itemsphere/models/itemsphere.bcmdl",
-            "actors/items/itemsphere/models/imats/itemsphere_mp_opaque_01.bsmat",
-        ]
-
+        # Update given item
+        set_custom_params: dict = PICKABLE["functions"][0]["params"]
         item_id: str = pickup["item_id"]
         quantity: float = pickup["quantity"]
-        set_custom_params: dict = PICKABLE["functions"][0]["params"]
 
         if item_id == "ITEM_ENERGY_TANKS":
             item_id = "fMaxLife"
@@ -142,14 +166,15 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
             set_custom_params["Param4"]["value"] = "Custom"
             set_custom_params["Param5"]["value"] = item_id.replace("_MAX", "_CURRENT")
             set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
-
-        set_custom_params["Param1"]["value"] = item_id
-        set_custom_params["Param2"]["value"] = quantity
-        if quantity > 1:
             set_custom_params["Param13"] = {
                 "type": "f",
                 "value": quantity,
             }
+            # if item_id == "ITEM_WEAPON_POWER_BOMB_MAX":
+            #     set_custom_params["Param3"]["value"] = quantity
+
+        set_custom_params["Param1"]["value"] = item_id
+        set_custom_params["Param2"]["value"] = quantity
 
         new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{i}.bmsad"
         editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
@@ -162,7 +187,7 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
         for level_pkg in pkgs_for_level:
             editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
             editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
-            for dep in model_dependencies:
+            for dep in model_data.dependencies:
                 editor.ensure_present(level_pkg, dep)
 
         # # For debugging, write the bmsad we just created
