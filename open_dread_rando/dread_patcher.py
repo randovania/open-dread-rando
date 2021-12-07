@@ -48,10 +48,21 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
     def _wrap(v: str):
         return f'"{v}"'
 
+    # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
+    final_inventory = {
+        "ITEM_MAX_LIFE": 99,
+        "ITEM_MAX_SPECIAL_ENERGY": 1000,
+        "ITEM_METROID_COUNT": 0,
+        "ITEM_METROID_TOTAL_COUNT": 40,
+        "ITEM_WEAPON_MISSILE_MAX": 0,
+        "ITEM_WEAPON_POWER_BOMB_MAX": 0,
+    }
+    final_inventory.update(inventory)
+
     replacement = {
         "new_game_inventory": "\n".join(
             "{} = {},".format(key, value)
-            for key, value in inventory.items()
+            for key, value in final_inventory.items()
         ),
         "starting_scenario": _wrap(starting_location["scenario"]),
         "starting_actor": _wrap(starting_location["actor"]),
