@@ -209,9 +209,11 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     editor.replace_asset(
         "system/scripts/init.lc",
-        create_custom_init(configuration["starting_items"],
-                           configuration["starting_location"]
-                           ).encode("ascii"))
+        create_custom_init(
+            configuration["starting_items"],
+            configuration["starting_location"]
+        ).encode("ascii"),
+    )
 
     if "elevators" in configuration:
         patch_elevators(editor, configuration["elevators"])
