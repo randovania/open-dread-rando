@@ -1,4 +1,6 @@
 import copy
+from enum import Enum
+import functools
 import json
 import logging
 import shutil
@@ -20,6 +22,7 @@ def _read_schema():
         return json.load(f)
 
 
+@functools.cache
 def _read_template_powerup():
     with Path(__file__).parent.joinpath("template_powerup_bmsad.json").open() as f:
         return json.load(f)
@@ -108,93 +111,151 @@ def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
         usable.sScenarioName = elevator["destination"]["scenario"]
         usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
+class PickupType(Enum):
+    ACTOR = "actor"
+    EMMI = "emmi"
+    COREX = "corex"
+    CORPIUS = "corpius"
 
-def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
+    def patch_pickup(self, editor: PatcherEditor, pickup: dict, pickup_id: int):
+        if self == PickupType.ACTOR:
+            patch_actor_pickup(editor, pickup, pickup_id)
+        if self == PickupType.EMMI:
+            patch_emmi_pickup(editor, pickup, pickup_id)
+        if self == PickupType.COREX:
+            patch_corex_pickup(editor, pickup, pickup_id)
+        if self == PickupType.CORPIUS:
+            patch_corpius_pickup(editor, pickup, pickup_id)
+
+def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     template_bmsad = _read_template_powerup()
 
-    pkgs_for_lua = set()
+    pkgs_for_level = set(editor.find_pkgs(path_for_level(pickup["pickup_actor"]["scenario"]) + ".brfld"))
+
+    level = editor.get_scenario(pickup["pickup_actor"]["scenario"])
+    actor = level.actors_for_layer(pickup["pickup_actor"]["layer"])[pickup["pickup_actor"]["actor"]]
+
+    model_name: str = pickup["model"]
+    model_data = ALL_MODEL_DATA.get(model_name, ALL_MODEL_DATA["itemsphere"])
+
+    new_template = copy.deepcopy(template_bmsad)
+    new_template["name"] = f"randomizer_powerup_{pickup_id}"
+
+    # Update used model
+    new_template["property"]["model_name"] = model_data.bcmdl_path
+    MODELUPDATER = new_template["property"]["components"]["MODELUPDATER"]
+    MODELUPDATER["functions"][0]["params"]["Param1"]["value"] = model_data.bcmdl_path
+
+    # Update caption
+    PICKABLE = new_template["property"]["components"]["PICKABLE"]
+    PICKABLE["fields"]["fields"]["sOnPickCaption"] = pickup["caption"]
+    PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = pickup["caption"]
+
+    # Update given item
+    set_custom_params: dict = PICKABLE["functions"][0]["params"]
+    item_id: str = pickup["item_id"]
+    quantity: float = pickup["quantity"]
+
+    if item_id == "ITEM_ENERGY_TANKS":
+        item_id = "fMaxLife"
+        quantity *= 100.0
+        set_custom_params["Param4"]["value"] = "Full"
+        set_custom_params["Param5"]["value"] = "fCurrentLife"
+        set_custom_params["Param6"]["value"] = "LIFE"
+
+    elif item_id == "ITEM_LIFE_SHARDS":
+        item_id = "fLifeShards"
+        set_custom_params["Param4"]["value"] = "Custom"
+        set_custom_params["Param5"]["value"] = ""
+        set_custom_params["Param6"]["value"] = "LIFE"
+        set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment1Caption"] = pickup["caption"]
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment2Caption"] = pickup["caption"]
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment3Caption"] = pickup["caption"]
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragmentCompleteCaption"] = pickup["caption"]
+
+    elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
+        set_custom_params["Param4"]["value"] = "Custom"
+        set_custom_params["Param5"]["value"] = item_id.replace("_MAX", "_CURRENT")
+        set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
+        set_custom_params["Param13"] = {
+            "type": "f",
+            "value": quantity,
+        }
+
+    set_custom_params["Param1"]["value"] = item_id
+    set_custom_params["Param2"]["value"] = quantity
+
+    new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{pickup_id}.bmsad"
+    editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
+    actor.oActorDefLink = f"actordef:{new_path}"
+
+    # Powerup is in plain sight (except for the part we're using the sphere model)
+    actor.pComponents.pop("LIFE", None)
+
+    # Dependencies
+    for level_pkg in pkgs_for_level:
+        editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
+        editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
+        for dep in model_data.dependencies:
+            editor.ensure_present(level_pkg, dep)
+
+    # # For debugging, write the bmsad we just created
+    # Path("custom_bmsad", f"randomizer_powerup_{i}.bmsad.json").write_text(
+    #     json.dumps(new_template, indent=4)
+    # )
+    for pkg in pkgs_for_level:
+        editor.ensure_present(pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
+
+def patch_emmi_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
+    try:
+        bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
+        editor.replace_asset(bmsad_path, actordef)
+    except ValueError as e:
+        LOG.warning(e)
+
+def patch_corex_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
+    bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnBigXAbsorbed")
+    editor.replace_asset(bmsad_path, actordef)
+
+def patch_corpius_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
+    # if pickup["item_id"] == "ITEM_OPTIC_CAMOUFLAGE" and pickup["quantity"] == 1:
+    #     return
+    # raise NotImplementedError("Corpius's item cannot yet be edited.")
+    bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
+    actordef._raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
+
+    editor.replace_asset(bmsad_path, actordef)
+
+
+def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, item_id_field: str) -> typing.Tuple[str, Bmsad]:
+    if pickup["quantity"] > 1:
+        raise NotImplementedError("Boss items cannot yet provide quantities greater than 1.")
+    
+    item_id: str = pickup["item_id"]
+    if item_id in {"ITEM_ENERGY_TANKS", "ITEM_LIFE_SHARDS", "ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
+        # raise NotImplementedError("Boss items cannot yet provide expansions.")
+        pass
+
+    bmsad_path: str = pickup["pickup_actordef"]
+    actordef = editor.get_file(bmsad_path, Bmsad)
+    
+    AI = actordef._raw["property"]["components"]["AI"]
+    AI["fields"]["fields"][item_id_field] = item_id
+
+    return bmsad_path, actordef
+    
+
+def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
+    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", _read_powerup_lua(), [])
 
     for i, pickup in enumerate(pickups_config):
         LOG.info("Writing pickup %d: %s", i, pickup["item_id"])
-        pkgs_for_level = set(editor.find_pkgs(path_for_level(pickup["pickup_actor"]["scenario"]) + ".brfld"))
-        pkgs_for_lua.update(pkgs_for_level)
-
-        level = editor.get_scenario(pickup["pickup_actor"]["scenario"])
-        actor = level.actors_for_layer(pickup["pickup_actor"]["layer"])[pickup["pickup_actor"]["actor"]]
-
-        model_name: str = pickup["model"]
-        model_data = ALL_MODEL_DATA.get(model_name, ALL_MODEL_DATA["itemsphere"])
-
-        new_template = copy.deepcopy(template_bmsad)
-        new_template["name"] = f"randomizer_powerup_{i}"
-
-        # Update used model
-        new_template["property"]["model_name"] = model_data.bcmdl_path
-        MODELUPDATER = new_template["property"]["components"]["MODELUPDATER"]
-        MODELUPDATER["functions"][0]["params"]["Param1"]["value"] = model_data.bcmdl_path
-
-        # Update caption
-        PICKABLE = new_template["property"]["components"]["PICKABLE"]
-        PICKABLE["fields"]["fields"]["sOnPickCaption"] = pickup["caption"]
-        PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = pickup["caption"]
-
-        # Update given item
-        set_custom_params: dict = PICKABLE["functions"][0]["params"]
-        item_id: str = pickup["item_id"]
-        quantity: float = pickup["quantity"]
-
-        if item_id == "ITEM_ENERGY_TANKS":
-            item_id = "fMaxLife"
-            quantity *= 100.0
-            set_custom_params["Param4"]["value"] = "Full"
-            set_custom_params["Param5"]["value"] = "fCurrentLife"
-            set_custom_params["Param6"]["value"] = "LIFE"
-
-        elif item_id == "ITEM_LIFE_SHARDS":
-            item_id = "fLifeShards"
-            set_custom_params["Param4"]["value"] = "Custom"
-            set_custom_params["Param5"]["value"] = ""
-            set_custom_params["Param6"]["value"] = "LIFE"
-            set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
-            PICKABLE["fields"]["fields"]["sOnPickEnergyFragment1Caption"] = pickup["caption"]
-            PICKABLE["fields"]["fields"]["sOnPickEnergyFragment2Caption"] = pickup["caption"]
-            PICKABLE["fields"]["fields"]["sOnPickEnergyFragment3Caption"] = pickup["caption"]
-            PICKABLE["fields"]["fields"]["sOnPickEnergyFragmentCompleteCaption"] = pickup["caption"]
-
-        elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
-            set_custom_params["Param4"]["value"] = "Custom"
-            set_custom_params["Param5"]["value"] = item_id.replace("_MAX", "_CURRENT")
-            set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
-            set_custom_params["Param13"] = {
-                "type": "f",
-                "value": quantity,
-            }
-
-        set_custom_params["Param1"]["value"] = item_id
-        set_custom_params["Param2"]["value"] = quantity
-
-        new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{i}.bmsad"
-        editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
-        actor.oActorDefLink = f"actordef:{new_path}"
-
-        # Powerup is in plain sight (except for the part we're using the sphere model)
-        actor.pComponents.pop("LIFE", None)
-
-        # Dependencies
-        for level_pkg in pkgs_for_level:
-            editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
-            editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
-            for dep in model_data.dependencies:
-                editor.ensure_present(level_pkg, dep)
-
-        # # For debugging, write the bmsad we just created
-        # Path("custom_bmsad", f"randomizer_powerup_{i}.bmsad.json").write_text(
-        #     json.dumps(new_template, indent=4)
-        # )
-
-    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc",
-                         _read_powerup_lua(),
-                         in_pkgs=pkgs_for_lua)
+        pickup_type = PickupType(pickup["pickup_type"])
+        try:
+            pickup_type.patch_pickup(editor, pickup, i)
+        except NotImplementedError as e:
+            LOG.warning(e)
 
 
 def patch(input_path: Path, output_path: Path, configuration: dict):
@@ -222,6 +283,6 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     editor.flush_modified_assets()
 
-    shutil.rmtree(out_romfs)
+    shutil.rmtree(out_romfs, ignore_errors=True)
     editor.save_modified_pkgs(out_romfs)
     logging.info("Done")

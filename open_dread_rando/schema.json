@@ -10,13 +10,16 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "pickup_actor": {
-                        "$ref": "#/$defs/actor_reference_with_layer"
+                    "pickup_type": {
+                        "type": "string",
+                        "enum": [
+                            "actor",
+                            "emmi",
+                            "corex",
+                            "corpius"
+                        ]
                     },
                     "caption": {
-                        "type": "string"
-                    },
-                    "model": {
                         "type": "string"
                     },
                     "item_id": {
@@ -27,12 +30,43 @@
                     }
                 },
                 "required": [
-                    "pickup_actor",
+                    "pickup_type",
                     "caption",
-                    "model",
                     "item_id",
                     "quantity"
-                ]
+                ],
+                "if": {
+                    "properties": {
+                        "pickup_type": {
+                            "const": "actor"
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "pickup_actor": {
+                            "$ref": "#/$defs/actor_reference_with_layer"
+                        },
+                        "model": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "pickup_actor",
+                        "model"
+                    ]
+                },
+                "else": {
+                    "properties": {
+                        "pickup_actordef": {
+                            "type": "string",
+                            "pattern": "[a-zA-Z0-9_/]+?\\.bmsad"
+                        }
+                    },
+                    "required": [
+                        "pickup_actordef"
+                    ]
+                }
             }
         },
         "elevators": {
