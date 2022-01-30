@@ -48,9 +48,6 @@ def create_init_copy(editor: FileTreeEditor):
 
 
 def create_custom_init(inventory: dict[str, int], starting_location: dict):
-    def _wrap(v: str):
-        return f'"{v}"'
-
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
         "ITEM_MAX_LIFE": 99,
@@ -63,20 +60,33 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
     final_inventory.update(inventory)
 
     replacement = {
-        "new_game_inventory": "\n".join(
-            "{} = {},".format(key, value)
-            for key, value in final_inventory.items()
-        ),
-        "starting_scenario": _wrap(starting_location["scenario"]),
-        "starting_actor": _wrap(starting_location["actor"]),
+        "new_game_inventory": final_inventory,
+        "starting_scenario": starting_location["scenario"],
+        "starting_actor": starting_location["actor"],
     }
 
-    code = Path(__file__).parent.joinpath("custom_init.lua").read_text()
-    for key, content in replacement.items():
-        code = code.replace(f'TEMPLATE("{key}")', content)
+    return replace_lua_template("custom_init.lua", replacement)
 
+def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
+    code = Path(__file__).parent.joinpath(file).read_text()
+    for key, content in replacement.items():
+        code = code.replace(f'TEMPLATE("{key}")', lua_convert(content))
     return code
 
+def lua_convert(data) -> str:
+    if isinstance(data, list):
+        return "\n".join(
+            "{},".format(lua_convert(item))
+            for item in data
+        )
+    elif isinstance(data, dict):
+        return "\n".join(
+            "{} = {},".format(key, lua_convert(value))
+            for key, value in data.items()
+        )
+    elif isinstance(data, str):
+        return f'"{data}"'
+    return str(data)
 
 class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]
@@ -152,39 +162,11 @@ def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = pickup["caption"]
 
     # Update given item
-    set_custom_params: dict = PICKABLE["functions"][0]["params"]
-    item_id: str = pickup["item_id"]
-    quantity: float = pickup["quantity"]
-
-    if item_id == "ITEM_ENERGY_TANKS":
-        item_id = "fMaxLife"
-        quantity *= 100.0
-        set_custom_params["Param4"]["value"] = "Full"
-        set_custom_params["Param5"]["value"] = "fCurrentLife"
-        set_custom_params["Param6"]["value"] = "LIFE"
-
-    elif item_id == "ITEM_LIFE_SHARDS":
-        item_id = "fLifeShards"
-        set_custom_params["Param4"]["value"] = "Custom"
-        set_custom_params["Param5"]["value"] = ""
-        set_custom_params["Param6"]["value"] = "LIFE"
-        set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
-        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment1Caption"] = pickup["caption"]
-        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment2Caption"] = pickup["caption"]
-        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment3Caption"] = pickup["caption"]
-        PICKABLE["fields"]["fields"]["sOnPickEnergyFragmentCompleteCaption"] = pickup["caption"]
-
-    elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
-        set_custom_params["Param4"]["value"] = "Custom"
-        set_custom_params["Param5"]["value"] = item_id.replace("_MAX", "_CURRENT")
-        set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
-        set_custom_params["Param13"] = {
-            "type": "f",
-            "value": quantity,
-        }
-
-    set_custom_params["Param1"]["value"] = item_id
-    set_custom_params["Param2"]["value"] = quantity
+    if len(pickup["resources"]) == 1:
+        new_template = patch_single_item_pickup(new_template, pickup, pickup_id)
+    else:
+        new_template = patch_progressive_pickup(new_template, pickup, pickup_id)
+    
 
     new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{pickup_id}.bmsad"
     editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
@@ -207,6 +189,100 @@ def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     for pkg in pkgs_for_level:
         editor.ensure_present(pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
 
+def get_script_class(item_id: str) -> str:
+    mapping = {
+        "ITEM_WEAPON_POWER_BOMB": "RandomizerPowerBomb",
+        "ITEM_VARIA_SUIT": "RandomizerSuit",
+        "ITEM_GRAVITY_SUIT": "RandomizerSuit",
+        "ITEM_HYPER_SUIT": "RandomizerSuit",
+        # TODO: special handling for speed booster?
+    }
+    return mapping.get(item_id, "RandomizerPowerup")
+
+def patch_single_item_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
+    PICKABLE: dict = bmsad["property"]["components"]["PICKABLE"]
+    SCRIPT: dict = bmsad["property"]["components"]["SCRIPT"]
+
+    set_custom_params: dict = PICKABLE["functions"][0]["params"]
+    item_id: str = pickup["resources"][0]["item_id"]
+    quantity: float = pickup["resources"][0]["quantity"]
+
+    if item_id == "ITEM_ENERGY_TANKS":
+        item_id = "fMaxLife"
+        quantity *= 100.0
+        set_custom_params["Param4"]["value"] = "Full"
+        set_custom_params["Param5"]["value"] = "fCurrentLife"
+        set_custom_params["Param6"]["value"] = "LIFE"
+
+    elif item_id == "ITEM_LIFE_SHARDS":
+        item_id = "fLifeShards"
+        set_custom_params["Param4"]["value"] = "Custom"
+        set_custom_params["Param5"]["value"] = ""
+        set_custom_params["Param6"]["value"] = "LIFE"
+        set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment1Caption"] = pickup["caption"]
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment2Caption"] = pickup["caption"]
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragment3Caption"] = pickup["caption"]
+        PICKABLE["fields"]["fields"]["sOnPickEnergyFragmentCompleteCaption"] = pickup["caption"]
+
+    elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX", "ITEM_WEAPON_POWER_BOMB"}:
+        current = item_id.replace("_MAX", "_CURRENT")
+        if item_id == current:
+            current += "_MAX"
+
+        set_custom_params["Param4"]["value"] = "Custom"
+        set_custom_params["Param5"]["value"] = current
+        set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
+        set_custom_params["Param13"] = {
+            "type": "f",
+            "value": quantity,
+        }
+    
+    SCRIPT["functions"][0]["params"]["Param2"] = get_script_class(item_id)
+
+    if item_id == "ITEM_WEAPON_POWER_BOMB":
+        item_id = "ITEM_WEAPON_POWER_BOMB_MAX"
+
+    set_custom_params["Param1"]["value"] = item_id
+    set_custom_params["Param2"]["value"] = quantity
+
+    return bmsad
+
+def patch_progressive_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
+    expansions = {"ITEM_ENERGY_TANKS", "ITEM_LIFE_SHARDS", "ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX", "ITEM_WEAPON_POWER_BOMB"}
+    item_ids = {resource["item_id"] for resource in pickup["resources"]}
+    if not expansions.isdisjoint(item_ids):
+        raise NotImplementedError("Progressive pickups cannot include expansions.")
+    
+    PICKABLE: dict = bmsad["property"]["components"]["PICKABLE"]
+    SCRIPT: dict = bmsad["property"]["components"]["SCRIPT"]
+
+    set_custom_params: dict = PICKABLE["functions"][0]["params"]
+    set_custom_params["Param1"]["value"] = "ITEM_NONE"
+
+    class_name = f"RandomizerProgressive{pickup_id}"
+    replacement = {
+        "name": class_name,
+        "progression": pickup["resources"]
+    }
+    add_progressive_class(replacement)
+
+    SCRIPT["functions"][0]["params"]["Param2"] = class_name
+
+    return bmsad
+
+_powerup_script = None
+def add_progressive_class(replacement):
+    global _powerup_script
+    if _powerup_script is None:
+        _powerup_script = _read_powerup_lua()
+    
+    new_class = replace_lua_template("randomizer_progressive_template.lua", replacement)
+    _powerup_script += new_class.encode("utf-8")
+
+def powerup_lua():
+    return _powerup_script or _read_powerup_lua()
+
 def patch_emmi_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
     editor.replace_asset(bmsad_path, actordef)
@@ -224,10 +300,14 @@ def patch_corpius_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
 
 
 def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, item_id_field: str) -> typing.Tuple[str, Bmsad]:
-    if pickup["quantity"] > 1:
+    if len(pickup["resources"]) > 1:
+        raise NotImplementedError("Boss items cannot yet be progressive.")
+    
+    quantity: float = pickup["resources"][0]["quantity"]
+    if quantity > 1:
         raise NotImplementedError("Boss items cannot yet provide quantities greater than 1.")
     
-    item_id: str = pickup["item_id"]
+    item_id: str = pickup["resources"][0]["item_id"]
     if item_id in {"ITEM_ENERGY_TANKS", "ITEM_LIFE_SHARDS", "ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
         raise NotImplementedError("Boss items cannot yet provide expansions.")
 
@@ -263,8 +343,6 @@ def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, 
     
 
 def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
-    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", _read_powerup_lua(), [])
-
     for i, pickup in enumerate(pickups_config):
         LOG.info("Writing pickup %d: %s", i, pickup["item_id"])
         pickup_type = PickupType(pickup["pickup_type"])
@@ -272,6 +350,8 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
             pickup_type.patch_pickup(editor, pickup, i)
         except NotImplementedError as e:
             LOG.warning(e)
+    
+    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", powerup_lua(), [])
 
 
 def patch(input_path: Path, output_path: Path, configuration: dict):

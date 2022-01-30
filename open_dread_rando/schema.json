@@ -22,18 +22,29 @@
                     "caption": {
                         "type": "string"
                     },
-                    "item_id": {
-                        "type": "string"
-                    },
-                    "quantity": {
-                        "type": "number"
+                    "resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item_id": {
+                                    "type": "string"
+                                },
+                                "quantity": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "item_id",
+                                "quantity"
+                            ]
+                        }
                     }
                 },
                 "required": [
                     "pickup_type",
                     "caption",
-                    "item_id",
-                    "quantity"
+                    "resources"
                 ],
                 "if": {
                     "properties": {
