@@ -1,8 +1,8 @@
 
-TEMPLATE("name") = {}
-setmetatable(TEMPLATE("name"), metatable)
-function TEMPLATE("name"):Progression()
-    return {
-        TEMPLATE("progression")
-    }
+setmetatable(TEMPLATE("name"), mt)
+function TEMPLATE("name").main()
+end
+function TEMPLATE("name").OnPickedUp(actor)
+    local progression = TEMPLATE("progression")
+    RandomizerPowerup.OnPickedUp(actor, progression)
 end

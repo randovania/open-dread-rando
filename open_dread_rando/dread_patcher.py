@@ -46,6 +46,8 @@ def create_init_copy(editor: FileTreeEditor):
             editor.find_pkgs("system/scripts/init.lc")
         )
 
+def _wrap(data: str) -> str:
+    return f'"{data}"'
 
 def create_custom_init(inventory: dict[str, int], starting_location: dict):
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
@@ -61,8 +63,8 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
 
     replacement = {
         "new_game_inventory": final_inventory,
-        "starting_scenario": starting_location["scenario"],
-        "starting_actor": starting_location["actor"],
+        "starting_scenario": _wrap(starting_location["scenario"]),
+        "starting_actor": _wrap(starting_location["actor"]),
     }
 
     return replace_lua_template("custom_init.lua", replacement)
@@ -75,17 +77,15 @@ def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
 
 def lua_convert(data) -> str:
     if isinstance(data, list):
-        return "\n".join(
+        return "{\n"+"\n".join(
             "{},".format(lua_convert(item))
             for item in data
-        )
+        )+"\n}"
     elif isinstance(data, dict):
-        return "\n".join(
+        return "{\n"+"\n".join(
             "{} = {},".format(key, lua_convert(value))
             for key, value in data.items()
-        )
-    elif isinstance(data, str):
-        return f'"{data}"'
+        )+"\n}"
     return str(data)
 
 class PatcherEditor(FileTreeEditor):
@@ -238,7 +238,7 @@ def patch_single_item_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
             "value": quantity,
         }
     
-    SCRIPT["functions"][0]["params"]["Param2"] = get_script_class(item_id)
+    SCRIPT["functions"][0]["params"]["Param2"]["value"] = get_script_class(item_id)
 
     if item_id == "ITEM_WEAPON_POWER_BOMB":
         item_id = "ITEM_WEAPON_POWER_BOMB_MAX"
@@ -261,13 +261,14 @@ def patch_progressive_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
     set_custom_params["Param1"]["value"] = "ITEM_NONE"
 
     class_name = f"RandomizerProgressive{pickup_id}"
+    resources = [{"item_id": _wrap(res["item_id"]), "quantity": res["quantity"]} for res in pickup["resources"]]
     replacement = {
         "name": class_name,
-        "progression": pickup["resources"]
+        "progression": resources
     }
     add_progressive_class(replacement)
 
-    SCRIPT["functions"][0]["params"]["Param2"] = class_name
+    SCRIPT["functions"][0]["params"]["Param2"]["value"] = class_name
 
     return bmsad
 
@@ -343,15 +344,19 @@ def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, 
     
 
 def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
+    # add to the TOC
+    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
+
     for i, pickup in enumerate(pickups_config):
-        LOG.info("Writing pickup %d: %s", i, pickup["item_id"])
+        LOG.info("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
         pickup_type = PickupType(pickup["pickup_type"])
         try:
             pickup_type.patch_pickup(editor, pickup, i)
         except NotImplementedError as e:
             LOG.warning(e)
     
-    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", powerup_lua(), [])
+    # replace with the generated script
+    editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", powerup_lua())
 
 
 def patch(input_path: Path, output_path: Path, configuration: dict):
