@@ -9,7 +9,7 @@ from pathlib import Path
 
 import jsonschema
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource
+from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource, Txt
 
 from open_dread_rando.model_data import ALL_MODEL_DATA
 
@@ -208,20 +208,15 @@ def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
         editor.ensure_present(pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
 
 def patch_emmi_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
-    try:
-        bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
-        editor.replace_asset(bmsad_path, actordef)
-    except ValueError as e:
-        LOG.warning(e)
+    bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
+    editor.replace_asset(bmsad_path, actordef)
 
 def patch_corex_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnBigXAbsorbed")
     editor.replace_asset(bmsad_path, actordef)
 
 def patch_corpius_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
-    # if pickup["item_id"] == "ITEM_OPTIC_CAMOUFLAGE" and pickup["quantity"] == 1:
-    #     return
-    # raise NotImplementedError("Corpius's item cannot yet be edited.")
+    # TODO: fix weirdness with aeion suit upgrade thingy
     bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
     actordef._raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
 
@@ -234,14 +229,35 @@ def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, 
     
     item_id: str = pickup["item_id"]
     if item_id in {"ITEM_ENERGY_TANKS", "ITEM_LIFE_SHARDS", "ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX"}:
-        # raise NotImplementedError("Boss items cannot yet provide expansions.")
-        pass
+        raise NotImplementedError("Boss items cannot yet provide expansions.")
 
     bmsad_path: str = pickup["pickup_actordef"]
     actordef = editor.get_file(bmsad_path, Bmsad)
     
     AI = actordef._raw["property"]["components"]["AI"]
     AI["fields"]["fields"][item_id_field] = item_id
+
+    # may want to edit all the localization files?
+    text_files = {
+        # "eu_dutch.txt",
+        # "eu_french.txt",
+        # "eu_german.txt",
+        # "eu_italian.txt",
+        # "eu_spanish.txt",
+        # "japanese.txt",
+        # "korean.txt",
+        # "russian.txt",
+        # "simplified_chinese.txt",
+        # "traditional_chinese.txt",
+        "us_english.txt",
+        # "us_french.txt",
+        # "us_spanish.txt" 
+    }
+    for text_file in text_files:
+        text_file = "system/localization/"+text_file
+        text = editor.get_file(text_file, Txt)
+        text.strings[pickup["pickup_string_key"]] = pickup["caption"]
+        editor.replace_asset(text_file, text)
 
     return bmsad_path, actordef
     

@@ -61,10 +61,14 @@
                         "pickup_actordef": {
                             "type": "string",
                             "pattern": "[a-zA-Z0-9_/]+?\\.bmsad"
+                        },
+                        "pickup_string_key": {
+                            "type": "string"
                         }
                     },
                     "required": [
-                        "pickup_actordef"
+                        "pickup_actordef",
+                        "pickup_string_key"
                     ]
                 }
             }
