@@ -7,32 +7,87 @@
         },
         "pickups": {
             "type": "array",
+            "minItems": 146,
+            "maxItems": 148,
             "items": {
                 "type": "object",
                 "properties": {
-                    "pickup_actor": {
-                        "$ref": "#/$defs/actor_reference_with_layer"
+                    "pickup_type": {
+                        "type": "string",
+                        "enum": [
+                            "actor",
+                            "emmi",
+                            "corex",
+                            "corpius"
+                        ]
                     },
                     "caption": {
                         "type": "string"
                     },
-                    "model": {
-                        "type": "string"
-                    },
-                    "item_id": {
-                        "type": "string"
-                    },
-                    "quantity": {
-                        "type": "number"
+                    "resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item_id": {
+                                    "type": "string"
+                                },
+                                "quantity": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "item_id",
+                                "quantity"
+                            ]
+                        }
                     }
                 },
                 "required": [
-                    "pickup_actor",
+                    "pickup_type",
                     "caption",
-                    "model",
-                    "item_id",
-                    "quantity"
-                ]
+                    "resources"
+                ],
+                "if": {
+                    "properties": {
+                        "pickup_type": {
+                            "const": "actor"
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "pickup_actor": {
+                            "$ref": "#/$defs/actor_reference_with_layer"
+                        },
+                        "model": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "pickup_actor",
+                        "model"
+                    ]
+                },
+                "else": {
+                    "properties": {
+                        "pickup_actordef": {
+                            "type": "string",
+                            "pattern": "[a-zA-Z0-9_/]+?\\.bmsad"
+                        },
+                        "pickup_string_key": {
+                            "type": "string"
+                        },
+                        "pickup_lua_callback": {
+                            "$ref": "#/$defs/scenario_lua_callback"
+                        }
+                    },
+                    "required": [
+                        "pickup_actordef",
+                        "pickup_string_key",
+                        "pickup_lua_callback"
+                    ]
+                }
             }
         },
         "elevators": {
@@ -62,6 +117,21 @@
         "starting_items"
     ],
     "$defs": {
+        "scenario_lua_callback": {
+            "type": "object",
+            "properties": {
+                "scenario": {
+                    "$ref": "#/$defs/scenario_name"
+                },
+                "function": {
+                    "type": "string"
+                },
+                "args": {
+                    "type": "number",
+                    "default": 0
+                }
+            }
+        },
         "actor_reference_with_layer": {
             "type": "object",
             "properties": {
