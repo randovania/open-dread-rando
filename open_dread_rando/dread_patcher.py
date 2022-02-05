@@ -8,7 +8,6 @@ from enum import Enum
 from pathlib import Path
 
 import jsonschema
-from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import Bmsad, Txt
 
 from open_dread_rando import elevator, lua_util
@@ -32,29 +31,6 @@ def _read_template_powerup():
 
 def _read_powerup_lua() -> bytes:
     return Path(__file__).parent.joinpath("files", "randomizer_powerup.lua").read_bytes()
-
-
-def create_init_copy(editor: FileTreeEditor):
-    original_init = "system/scripts/original_init.lc"
-    if not editor.does_asset_exists(original_init):
-        original_lc = editor.get_raw_asset("system/scripts/init.lc")
-        editor.add_new_asset(
-            original_init,
-            original_lc,
-            editor.find_pkgs("system/scripts/init.lc")
-        )
-
-
-def create_level_copy(editor: FileTreeEditor, level_name: str):
-    path = path_for_level(level_name)
-    original = path + "_original.lc"
-    if not editor.does_asset_exists(original):
-        original_lc = editor.get_raw_asset(path + ".lc")
-        editor.add_new_asset(
-            original,
-            original_lc,
-            editor.find_pkgs(path + ".lc")
-        )
 
 
 def create_custom_init(inventory: dict[str, int], starting_location: dict):
@@ -331,12 +307,13 @@ _custom_level_scripts: dict[str, str] = {}
 def _patch_actordef_pickup_script(editor: PatcherEditor, pickup: dict):
     scenario: str = pickup["pickup_lua_callback"]["scenario"]
 
-    create_level_copy(editor, scenario)
+    scenario_path = path_for_level(scenario)
+    lua_util.create_script_copy(editor, scenario_path)
 
     if scenario not in _custom_level_scripts.keys():
         _custom_level_scripts[scenario] = "\n".join([
             f"Game.LogWarn(0, 'Loading original {scenario}...')",
-            f"Game.ImportLibrary('{path_for_level(scenario) + '_original.lua'}')",
+            f"Game.ImportLibrary('{scenario_path}_original.lua')",
             f"Game.LogWarn(0, 'Loaded original {scenario}.')",
             f"Game.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')\n\n",
         ])
@@ -381,7 +358,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     out_romfs = output_path.joinpath("romfs")
     editor = PatcherEditor(input_path)
 
-    create_init_copy(editor)
+    lua_util.create_script_copy(editor, "system/scripts/init")
 
     editor.replace_asset(
         "system/scripts/init.lc",

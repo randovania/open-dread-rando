@@ -1,4 +1,4 @@
-Game.ImportLibrary("system/scripts/original_init.lua")
+Game.ImportLibrary("system/scripts/init_original.lua")
 
 Init.tNewGameInventory = TEMPLATE("new_game_inventory")
 

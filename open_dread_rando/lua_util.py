@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
+
 
 def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
     code = Path(__file__).parent.joinpath("templates", file).read_text()
@@ -24,3 +26,14 @@ def lua_convert(data) -> str:
 
 def wrap_string(data: str) -> str:
     return f'"{data}"'
+
+
+def create_script_copy(editor: FileTreeEditor, path: str):
+    original = path + "_original.lc"
+    if not editor.does_asset_exists(original):
+        original_lc = editor.get_raw_asset(path + ".lc")
+        editor.add_new_asset(
+            original,
+            original_lc,
+            editor.find_pkgs(path + ".lc")
+        )
