@@ -6,11 +6,11 @@ from pathlib import Path
 
 import jsonschema
 
-import open_dread_rando.pickup
 from open_dread_rando import elevator, lua_util
 from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import path_for_level, PatcherEditor
-from open_dread_rando.pickup import _read_powerup_lua, PickupType, _powerup_script, _custom_level_scripts
+from open_dread_rando.pickup import _read_powerup_lua, PickupType, _powerup_script, _custom_level_scripts, \
+    pickup_object_for
 
 T = typing.TypeVar("T")
 
@@ -52,9 +52,8 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
 
     for i, pickup in enumerate(pickups_config):
         LOG.info("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
-        pickup_type = PickupType(pickup["pickup_type"])
         try:
-            pickup_type.patch_pickup(editor, pickup, i)
+            pickup_object_for(pickup, i).patch(editor)
         except NotImplementedError as e:
             LOG.warning(e)
 
@@ -65,7 +64,6 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
 
 
 def patch(input_path: Path, output_path: Path, configuration: dict):
-    open_dread_rando.pickup._outpath = output_path
     LOG.info("Will patch files from %s", input_path)
 
     jsonschema.validate(instance=configuration, schema=_read_schema())
@@ -87,7 +85,6 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     patch_pickups(editor, configuration["pickups"])
-
     editor.flush_modified_assets()
 
     shutil.rmtree(out_romfs, ignore_errors=True)
