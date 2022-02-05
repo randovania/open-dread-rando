@@ -1,10 +1,10 @@
 import copy
-from enum import Enum
 import functools
 import json
 import logging
 import shutil
 import typing
+from enum import Enum
 from pathlib import Path
 
 import jsonschema
@@ -46,6 +46,7 @@ def create_init_copy(editor: FileTreeEditor):
             editor.find_pkgs("system/scripts/init.lc")
         )
 
+
 def create_level_copy(editor: FileTreeEditor, level_name: str):
     path = path_for_level(level_name)
     original = path + "_original.lc"
@@ -57,8 +58,10 @@ def create_level_copy(editor: FileTreeEditor, level_name: str):
             editor.find_pkgs(path + ".lc")
         )
 
+
 def _wrap(data: str) -> str:
     return f'"{data}"'
+
 
 def create_custom_init(inventory: dict[str, int], starting_location: dict):
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
@@ -81,24 +84,27 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
 
     return replace_lua_template("custom_init.lua", replacement)
 
+
 def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
     code = Path(__file__).parent.joinpath(file).read_text()
     for key, content in replacement.items():
         code = code.replace(f'TEMPLATE("{key}")', lua_convert(content))
     return code
 
+
 def lua_convert(data) -> str:
     if isinstance(data, list):
-        return "{\n"+"\n".join(
+        return "{\n" + "\n".join(
             "{},".format(lua_convert(item))
             for item in data
-        )+"\n}"
+        ) + "\n}"
     elif isinstance(data, dict):
-        return "{\n"+"\n".join(
+        return "{\n" + "\n".join(
             "{} = {},".format(key, lua_convert(value))
             for key, value in data.items()
-        )+"\n}"
+        ) + "\n}"
     return str(data)
+
 
 class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]
@@ -133,6 +139,7 @@ def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
         usable.sScenarioName = elevator["destination"]["scenario"]
         usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
+
 class PickupType(Enum):
     ACTOR = "actor"
     EMMI = "emmi"
@@ -148,6 +155,7 @@ class PickupType(Enum):
             patch_corex_pickup(editor, pickup, pickup_id)
         if self == PickupType.CORPIUS:
             patch_corpius_pickup(editor, pickup, pickup_id)
+
 
 def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     template_bmsad = _read_template_powerup()
@@ -178,7 +186,6 @@ def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
         new_template = patch_single_item_pickup(new_template, pickup, pickup_id)
     else:
         new_template = patch_progressive_pickup(new_template, pickup, pickup_id)
-    
 
     new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{pickup_id}.bmsad"
     editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
@@ -200,6 +207,7 @@ def patch_actor_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     )
     for pkg in pkgs_for_level:
         editor.ensure_present(pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
+
 
 def patch_single_item_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
     PICKABLE: dict = bmsad["property"]["components"]["PICKABLE"]
@@ -239,7 +247,7 @@ def patch_single_item_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
             "type": "f",
             "value": quantity,
         }
-    
+
     SCRIPT["functions"][0]["params"]["Param2"]["value"] = get_script_class(pickup)
 
     if item_id == "ITEM_WEAPON_POWER_BOMB":
@@ -250,12 +258,16 @@ def patch_single_item_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
 
     return bmsad
 
-expansions = {"ITEM_ENERGY_TANKS", "ITEM_LIFE_SHARDS", "ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX", "ITEM_WEAPON_POWER_BOMB"}
+
+expansions = {"ITEM_ENERGY_TANKS", "ITEM_LIFE_SHARDS", "ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX",
+              "ITEM_WEAPON_POWER_BOMB"}
+
+
 def patch_progressive_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
     item_ids = {resource["item_id"] for resource in pickup["resources"]}
     if not expansions.isdisjoint(item_ids):
         raise NotImplementedError("Progressive pickups cannot include expansions.")
-    
+
     PICKABLE: dict = bmsad["property"]["components"]["PICKABLE"]
     SCRIPT: dict = bmsad["property"]["components"]["SCRIPT"]
 
@@ -266,7 +278,10 @@ def patch_progressive_pickup(bmsad: dict, pickup: dict, pickup_id: int) -> dict:
 
     return bmsad
 
+
 _progressive_classes = {}
+
+
 def get_script_class(pickup: dict, boss: bool = False) -> str:
     main_pb = pickup["resources"][0]["item_id"] == "ITEM_WEAPON_POWER_BOMB"
     if not boss and len(pickup["resources"]) == 1:
@@ -276,7 +291,7 @@ def get_script_class(pickup: dict, boss: bool = False) -> str:
 
     if hashable_progression in _progressive_classes.keys():
         return _progressive_classes[hashable_progression]
-    
+
     class_name = f"RandomizerProgressive{hashable_progression}"
 
     resources = [{"item_id": _wrap(res["item_id"]), "quantity": res["quantity"]} for res in pickup["resources"]]
@@ -290,36 +305,44 @@ def get_script_class(pickup: dict, boss: bool = False) -> str:
     _progressive_classes[hashable_progression] = class_name
     return class_name
 
+
 _powerup_script: str = None
+
+
 def add_progressive_class(replacement):
     global _powerup_script
     if _powerup_script is None:
         _powerup_script = _read_powerup_lua()
-    
+
     new_class = replace_lua_template("randomizer_progressive_template.lua", replacement)
     _powerup_script += new_class.encode("utf-8")
 
+
 def powerup_lua():
     return _powerup_script or _read_powerup_lua()
+
 
 def patch_emmi_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
     editor.replace_asset(bmsad_path, actordef)
 
+
 def patch_corex_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnBigXAbsorbed")
     editor.replace_asset(bmsad_path, actordef)
+
 
 def patch_corpius_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int):
     # TODO: fix weirdness with aeion suit upgrade thingy
     bmsad_path, actordef = _patch_actordef_pickup(editor, pickup, pickup_id, "sInventoryItemOnKilled")
     if pickup["resources"][0]["item_id"] not in expansions:
-        actordef._raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
+        actordef.raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
 
     editor.replace_asset(bmsad_path, actordef)
 
 
-def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, item_id_field: str) -> typing.Tuple[str, Bmsad]:
+def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict,
+                           pickup_id: int, item_id_field: str) -> tuple[str, Bmsad]:
     item_id: str = pickup["resources"][0]["item_id"]
 
     if len(pickup["resources"]) > 1 or pickup["resources"][0]["quantity"] > 1 or item_id in expansions:
@@ -329,7 +352,7 @@ def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, 
     bmsad_path: str = pickup["pickup_actordef"]
     actordef = editor.get_file(bmsad_path, Bmsad)
 
-    AI = actordef._raw["property"]["components"]["AI"]
+    AI = actordef.raw["property"]["components"]["AI"]
     AI["fields"]["fields"][item_id_field] = item_id
 
     # may want to edit all the localization files?
@@ -349,14 +372,17 @@ def _patch_actordef_pickup(editor: PatcherEditor, pickup: dict, pickup_id: int, 
         # "us_spanish.txt" 
     }
     for text_file in text_files:
-        text_file = "system/localization/"+text_file
+        text_file = "system/localization/" + text_file
         text = editor.get_file(text_file, Txt)
         text.strings[pickup["pickup_string_key"]] = pickup["caption"]
         editor.replace_asset(text_file, text)
 
     return bmsad_path, actordef
 
+
 _custom_level_scripts: dict[str, str] = {}
+
+
 def _patch_actordef_pickup_script(editor: PatcherEditor, pickup: dict):
     scenario: str = pickup["pickup_lua_callback"]["scenario"]
 
@@ -378,6 +404,7 @@ def _patch_actordef_pickup_script(editor: PatcherEditor, pickup: dict):
     }
     _custom_level_scripts[scenario] += replace_lua_template("boss_powerup_template.lua", replacement)
 
+
 def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
@@ -389,13 +416,16 @@ def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
             pickup_type.patch_pickup(editor, pickup, i)
         except NotImplementedError as e:
             LOG.warning(e)
-    
+
     # replace with the generated script
     editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", powerup_lua())
     for scenario, script in _custom_level_scripts.items():
-        editor.replace_asset(path_for_level(scenario)+".lc", script.encode("utf-8"))
+        editor.replace_asset(path_for_level(scenario) + ".lc", script.encode("utf-8"))
+
 
 _outpath = Path()
+
+
 def patch(input_path: Path, output_path: Path, configuration: dict):
     global _outpath
     _outpath = output_path
