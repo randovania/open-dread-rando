@@ -11,7 +11,7 @@ import jsonschema
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import Bmsad, Txt
 
-from open_dread_rando import elevator
+from open_dread_rando import elevator, lua_util
 from open_dread_rando.logger import LOG
 from open_dread_rando.model_data import ALL_MODEL_DATA
 from open_dread_rando.patcher_editor import path_for_level, PatcherEditor
@@ -80,28 +80,7 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
         "starting_actor": _wrap(starting_location["actor"]),
     }
 
-    return replace_lua_template("custom_init.lua", replacement)
-
-
-def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
-    code = Path(__file__).parent.joinpath(file).read_text()
-    for key, content in replacement.items():
-        code = code.replace(f'TEMPLATE("{key}")', lua_convert(content))
-    return code
-
-
-def lua_convert(data) -> str:
-    if isinstance(data, list):
-        return "{\n" + "\n".join(
-            "{},".format(lua_convert(item))
-            for item in data
-        ) + "\n}"
-    elif isinstance(data, dict):
-        return "{\n" + "\n".join(
-            "{} = {},".format(key, lua_convert(value))
-            for key, value in data.items()
-        ) + "\n}"
-    return str(data)
+    return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
 class PickupType(Enum):
@@ -278,7 +257,7 @@ def add_progressive_class(replacement):
     if _powerup_script is None:
         _powerup_script = _read_powerup_lua()
 
-    new_class = replace_lua_template("randomizer_progressive_template.lua", replacement)
+    new_class = lua_util.replace_lua_template("randomizer_progressive_template.lua", replacement)
     _powerup_script += new_class.encode("utf-8")
 
 
@@ -366,7 +345,7 @@ def _patch_actordef_pickup_script(editor: PatcherEditor, pickup: dict):
         "pickup_class": get_script_class(pickup, True),
         "args": ", ".join([f"_ARG_{i}_" for i in range(pickup["pickup_lua_callback"]["args"])])
     }
-    _custom_level_scripts[scenario] += replace_lua_template("boss_powerup_template.lua", replacement)
+    _custom_level_scripts[scenario] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
 
 
 def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
