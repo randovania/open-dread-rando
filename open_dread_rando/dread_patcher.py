@@ -9,12 +9,14 @@ from pathlib import Path
 
 import jsonschema
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import Brfld, Bmsad, BaseResource, Txt
+from mercury_engine_data_structures.formats import Bmsad, Txt
 
+from open_dread_rando import elevator
+from open_dread_rando.logger import LOG
 from open_dread_rando.model_data import ALL_MODEL_DATA
+from open_dread_rando.patcher_editor import path_for_level, PatcherEditor
 
 T = typing.TypeVar("T")
-LOG = logging.getLogger("dread_patcher")
 
 
 def _read_schema():
@@ -30,10 +32,6 @@ def _read_template_powerup():
 
 def _read_powerup_lua() -> bytes:
     return Path(__file__).parent.joinpath("randomizer_powerup.lua").read_bytes()
-
-
-def path_for_level(level_name: str) -> str:
-    return f"maps/levels/c10_samus/{level_name}/{level_name}"
 
 
 def create_init_copy(editor: FileTreeEditor):
@@ -104,40 +102,6 @@ def lua_convert(data) -> str:
             for key, value in data.items()
         ) + "\n}"
     return str(data)
-
-
-class PatcherEditor(FileTreeEditor):
-    memory_files: dict[str, BaseResource]
-
-    def __init__(self, root: Path):
-        super().__init__(root)
-        self.memory_files = {}
-
-    def get_file(self, path: str, type_hint: typing.Type[T] = BaseResource) -> T:
-        if path not in self.memory_files:
-            self.memory_files[path] = self.get_parsed_asset(path, type_hint=type_hint)
-        return self.memory_files[path]
-
-    def get_scenario(self, name: str) -> Brfld:
-        return self.get_file(path_for_level(name) + ".brfld", Brfld)
-
-    def flush_modified_assets(self):
-        for name, resource in self.memory_files.items():
-            self.replace_asset(name, resource)
-        self.memory_files = {}
-
-
-def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
-    for elevator in elevators_config:
-        LOG.info("Writing elevator from: %s", str(elevator["teleporter"]))
-        level = editor.get_scenario(elevator["teleporter"]["scenario"])
-        actor = level.actors_for_layer(elevator["teleporter"]["layer"])[elevator["teleporter"]["actor"]]
-        try:
-            usable = actor.pComponents.USABLE
-        except AttributeError:
-            raise ValueError(f'Actor {elevator["teleporter"]} is not a teleporter')
-        usable.sScenarioName = elevator["destination"]["scenario"]
-        usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
 
 class PickupType(Enum):
@@ -447,7 +411,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     )
 
     if "elevators" in configuration:
-        patch_elevators(editor, configuration["elevators"])
+        elevator.patch_elevators(editor, configuration["elevators"])
 
     patch_pickups(editor, configuration["pickups"])
 
