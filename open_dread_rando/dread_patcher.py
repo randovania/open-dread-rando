@@ -7,10 +7,10 @@ from pathlib import Path
 import jsonschema
 
 from open_dread_rando import elevator, lua_util
+from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.logger import LOG
-from open_dread_rando.patcher_editor import path_for_level, PatcherEditor
-from open_dread_rando.pickup import _read_powerup_lua, PickupType, _powerup_script, _custom_level_scripts, \
-    pickup_object_for
+from open_dread_rando.patcher_editor import PatcherEditor
+from open_dread_rando.pickup import pickup_object_for
 
 T = typing.TypeVar("T")
 
@@ -42,25 +42,16 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
-def powerup_lua():
-    return _powerup_script or _read_powerup_lua()
-
-
-def patch_pickups(editor: PatcherEditor, pickups_config: list[dict]):
+def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict]):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
 
     for i, pickup in enumerate(pickups_config):
         LOG.info("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
         try:
-            pickup_object_for(pickup, i).patch(editor)
+            pickup_object_for(lua_scripts, pickup, i).patch(editor)
         except NotImplementedError as e:
             LOG.warning(e)
-
-    # replace with the generated script
-    editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", powerup_lua())
-    for scenario, script in _custom_level_scripts.items():
-        editor.replace_asset(path_for_level(scenario) + ".lc", script.encode("utf-8"))
 
 
 def patch(input_path: Path, output_path: Path, configuration: dict):
@@ -70,9 +61,10 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     out_romfs = output_path.joinpath("romfs")
     editor = PatcherEditor(input_path)
+    lua_scripts = LuaEditor()
 
+    # Update init.c
     lua_util.create_script_copy(editor, "system/scripts/init")
-
     editor.replace_asset(
         "system/scripts/init.lc",
         create_custom_init(
@@ -81,10 +73,14 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
         ).encode("ascii"),
     )
 
+    # Elevators
     if "elevators" in configuration:
         elevator.patch_elevators(editor, configuration["elevators"])
 
-    patch_pickups(editor, configuration["pickups"])
+    # Pickups
+    patch_pickups(editor, lua_scripts, configuration["pickups"])
+
+    lua_scripts.save_modifications(editor)
     editor.flush_modified_assets()
 
     shutil.rmtree(out_romfs, ignore_errors=True)
