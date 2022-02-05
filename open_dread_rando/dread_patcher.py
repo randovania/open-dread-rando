@@ -20,18 +20,18 @@ T = typing.TypeVar("T")
 
 
 def _read_schema():
-    with Path(__file__).parent.joinpath("schema.json").open() as f:
+    with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
 
 
 @functools.cache
 def _read_template_powerup():
-    with Path(__file__).parent.joinpath("template_powerup_bmsad.json").open() as f:
+    with Path(__file__).parent.joinpath("templates", "template_powerup_bmsad.json").open() as f:
         return json.load(f)
 
 
 def _read_powerup_lua() -> bytes:
-    return Path(__file__).parent.joinpath("randomizer_powerup.lua").read_bytes()
+    return Path(__file__).parent.joinpath("files", "randomizer_powerup.lua").read_bytes()
 
 
 def create_init_copy(editor: FileTreeEditor):
@@ -57,10 +57,6 @@ def create_level_copy(editor: FileTreeEditor, level_name: str):
         )
 
 
-def _wrap(data: str) -> str:
-    return f'"{data}"'
-
-
 def create_custom_init(inventory: dict[str, int], starting_location: dict):
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
@@ -76,8 +72,8 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
 
     replacement = {
         "new_game_inventory": final_inventory,
-        "starting_scenario": _wrap(starting_location["scenario"]),
-        "starting_actor": _wrap(starting_location["actor"]),
+        "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
+        "starting_actor": lua_util.wrap_string(starting_location["actor"]),
     }
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)
@@ -237,7 +233,13 @@ def get_script_class(pickup: dict, boss: bool = False) -> str:
 
     class_name = f"RandomizerProgressive{hashable_progression}"
 
-    resources = [{"item_id": _wrap(res["item_id"]), "quantity": res["quantity"]} for res in pickup["resources"]]
+    resources = [
+        {
+            "item_id": lua_util.wrap_string(res["item_id"]),
+            "quantity": res["quantity"]
+        }
+        for res in pickup["resources"]
+    ]
     replacement = {
         "name": class_name,
         "progression": resources,
