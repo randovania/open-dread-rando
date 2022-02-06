@@ -3,8 +3,13 @@ from pathlib import Path
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 
 
+def _templates() -> Path:
+    return Path(__file__).parent.joinpath("templates")
+def _files() -> Path:
+    return Path(__file__).parent.joinpath("files")
+
 def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
-    code = Path(__file__).parent.joinpath("templates", file).read_text()
+    code = _templates().joinpath(file).read_text()
     for key, content in replacement.items():
         code = code.replace(f'TEMPLATE("{key}")', lua_convert(content))
     return code
@@ -37,3 +42,7 @@ def create_script_copy(editor: FileTreeEditor, path: str):
             original_lc,
             editor.find_pkgs(path + ".lc")
         )
+
+def replace_script(editor: FileTreeEditor, path: str, replacement_path: str):
+    create_script_copy(editor, path)
+    editor.replace_asset(path+".lc", _files().joinpath(replacement_path).read_bytes())

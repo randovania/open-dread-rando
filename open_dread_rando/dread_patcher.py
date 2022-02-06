@@ -64,7 +64,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()
 
-    # Update init.c
+    # Update init.lc
     lua_util.create_script_copy(editor, "system/scripts/init")
     editor.replace_asset(
         "system/scripts/init.lc",
@@ -73,6 +73,9 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
             configuration["starting_location"]
         ).encode("ascii"),
     )
+
+    # Update scenario.lc
+    lua_util.replace_script(editor, "system/scripts/scenario", "custom_scenario.lua")
 
     # Elevators
     if "elevators" in configuration:
