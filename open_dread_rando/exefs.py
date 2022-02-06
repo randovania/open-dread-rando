@@ -2,13 +2,11 @@ from pathlib import Path
 import shutil
 import ips
 
-from open_dread_rando.logger import LOG
-
-
 VERSIONS = {
     "1.0.0": "49161D9CCBC15DF944D0B6278A3C446C006B0BE8"
 }
 NOP = bytes.fromhex('1F2003D5')
+
 
 class NSOPatch(ips.Patch):
     def __init__(self):
@@ -26,6 +24,8 @@ class VersionedPatch(dict):
     # use the highest version with a patch defined
 
 def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
+    # patches corpius to not give the phantom cloak, and not to display the
+    # "Upgrading suit for Aeion compatibility" message which causes softlocks
     grant_item_none = VersionedPatch({
         "1.0.0": (0x00d94890, bytes.fromhex('A13F00D0 21D81591'))
     })
@@ -38,7 +38,6 @@ def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
         patch.add_record(offset, data)
 
 def patch_exefs(output_path: Path, configuration: dict):
-    LOG.info("Patching exefs...")
     exefs = output_path.joinpath("exefs")
     shutil.rmtree(exefs, ignore_errors=True)
     exefs.mkdir()

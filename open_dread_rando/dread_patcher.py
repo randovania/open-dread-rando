@@ -85,6 +85,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     patch_pickups(editor, lua_scripts, configuration["pickups"])
 
     # Exefs
+    LOG.info("Creating exefs patches")
     patch_exefs(output_path, configuration)
 
     LOG.info("Saving modified lua scripts")
@@ -102,7 +103,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 def patch_with_status_update(input_path: Path, output_path: Path, configuration: dict,
                              status_update: typing.Callable[[float, str], None]):
 
-    total_logs = 80
+    total_logs = 108
 
     class StatusUpdateHandler(logging.Handler):
         count = 0
@@ -116,6 +117,10 @@ def patch_with_status_update(input_path: Path, output_path: Path, configuration:
 
             # Encoding a bmsad is quick, skip these
             if message.endswith(".bmsad"):
+                return
+            
+            # These can come up frequently and are benign
+            if message.startswith("Skipping extracted file"):
                 return
 
             self.count += 1
