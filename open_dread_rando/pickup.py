@@ -199,7 +199,6 @@ class ActorDefPickup(BasePickup):
             text_file = "system/localization/" + text_file
             text = editor.get_file(text_file, Txt)
             text.strings[self.pickup["pickup_string_key"]] = self.pickup["caption"]
-            editor.replace_asset(text_file, text)
 
         return bmsad_path, actordef
 

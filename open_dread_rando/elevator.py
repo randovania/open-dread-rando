@@ -4,7 +4,7 @@ from open_dread_rando.patcher_editor import PatcherEditor
 
 def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
     for elevator in elevators_config:
-        LOG.info("Writing elevator from: %s", str(elevator["teleporter"]))
+        LOG.debug("Writing elevator from: %s", str(elevator["teleporter"]))
         level = editor.get_scenario(elevator["teleporter"]["scenario"])
         actor = level.actors_for_layer(elevator["teleporter"]["layer"])[elevator["teleporter"]["actor"]]
         try:

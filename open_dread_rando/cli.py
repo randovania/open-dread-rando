@@ -53,13 +53,16 @@ def main():
     setup_logging()
     parser = create_parser()
     args = parser.parse_args()
-    print(args)
 
     with args.input_json.open() as f:
         configuration = json.load(f)
 
-    dread_patcher.patch(
+    def status_update(percent: float, message: str):
+        print("[{0:3d}%] {1}".format(int(percent * 100), message))
+
+    dread_patcher.patch_with_status_update(
         args.input_path,
         args.output_path,
         configuration,
+        status_update,
     )
