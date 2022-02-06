@@ -7,6 +7,7 @@ from pathlib import Path
 import jsonschema
 
 from open_dread_rando import elevator, lua_util
+from open_dread_rando.exefs import patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -79,6 +80,9 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     # Pickups
     patch_pickups(editor, lua_scripts, configuration["pickups"])
+
+    # Exefs
+    patch_exefs(output_path, configuration)
 
     LOG.info("Saving modified lua scripts")
     lua_scripts.save_modifications(editor)
