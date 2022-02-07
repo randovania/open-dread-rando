@@ -15,10 +15,17 @@ class LuaEditor:
         self._custom_level_scripts: dict[str, str] = {}
         self._corex_replacement = {}
 
+    def get_parent_for(self, item_id) -> str:
+        if item_id == "ITEM_WEAPON_POWER_BOMB":
+            return "RandomizerPowerBomb"
+        if item_id == "ITEM_OPTIC_CAMOUFLAGE":
+            return "RandomizerPhantomCloak"
+        return "RandomizerPowerup"
+
     def get_script_class(self, pickup_resources: list[dict], boss: bool = False) -> str:
-        main_pb = pickup_resources[0]["item_id"] == "ITEM_WEAPON_POWER_BOMB"
+        parent = self.get_parent_for(pickup_resources[0]["item_id"])
         if not boss and len(pickup_resources) == 1:
-            return "RandomizerPowerBomb" if main_pb else "RandomizerPowerup"
+            return parent
 
         hashable_progression = "_".join([f'{res["item_id"]}_{res["quantity"]}' for res in pickup_resources])
 
@@ -37,7 +44,7 @@ class LuaEditor:
         replacement = {
             "name": class_name,
             "progression": resources,
-            "parent": "RandomizerPowerBomb" if main_pb else "RandomizerPowerup",
+            "parent": parent,
         }
         self.add_progressive_class(replacement)
 

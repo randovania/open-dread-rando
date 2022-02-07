@@ -11,14 +11,27 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     local name = "Boss"
     if actor ~= nil then name = actor.sName end
     Game.LogWarn(0, "Collected pickup: " .. name)
-    local granted = RandomizerPowerup.ProgressivePickup(progression)
+    local granted = RandomizerPowerup.ProgressivePickup(actor, progression)
     RandomizerPowerup.ChangeSuit()
     RandomizerPowerup.IncreaseEnergy(granted)
     -- Game.ReinitPlayerFromBlackboard()
+    local oPlayer = Game.GetPlayer()
+    if oPlayer ~= nil then
+        oPlayer.INPUT:IgnoreInput(true, false, "PickupObtained")
+    end
+    Game.AddSF(0.1, RandomizerPowerup.RecoverInput, "")
     return granted
 end
 
-function RandomizerPowerup.ProgressivePickup(progression)
+function RandomizerPowerup.RecoverInput()
+    -- items with unique inputs (Speed Booster, Phantom Cloak) require disabling and re-enabling inputs to work properly
+    local oPlayer = Game.GetPlayer()
+    if oPlayer ~= nil then
+        oPlayer.INPUT:IgnoreInput(false, false, "PickupObtained")
+    end
+end
+
+function RandomizerPowerup.ProgressivePickup(actor, progression)
     progression = progression or {}
     local loop = false
 
@@ -38,8 +51,8 @@ function RandomizerPowerup.ProgressivePickup(progression)
         local current = Game.GetItemAmount(Game.GetPlayerName(), resource.item_id)
         if loop or current < resource.quantity then
             Game.LogWarn(0, "Granting " .. resource.quantity .. " " .. resource.item_id)
-            Game.GetPlayer().INVENTORY:SetItemAmount(resource.item_id, current + resource.quantity, true)
-            return resource.item_id
+            Scenario.SetItemAmount(resource.item_id, current + resource.quantity)
+            return resource
         end
     end
 end
@@ -63,13 +76,15 @@ function RandomizerPowerup.ChangeSuit()
     end
 end
 
-function RandomizerPowerup.IncreaseEnergy(item_id)
+function RandomizerPowerup.IncreaseEnergy(resource)
+    if resource == nil then return end
+    local item_id = resource.item_id
     if item_id ~= "ITEM_ENERGY_TANKS" and item_id ~= "ITEM_LIFE_SHARDS" then return end
     if item_id == "ITEM_LIFE_SHARDS" and (Game.GetItemAmount(Game.GetPlayerName(), item_id) % 4) ~= 0 then return end
     Game.LogWarn(0, "Increasing player energy.")
     local max = Game.GetItemAmount(Game.GetPlayerName(), "ITEM_MAX_LIFE")
-    Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_MAX_LIFE", max+100, true)
-    Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_CURRENT_LIFE", max+100, true)
+    Scenario.SetItemAmount("ITEM_MAX_LIFE", max+100)
+    Scenario.SetItemAmount("ITEM_CURRENT_LIFE", max+100)
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)
@@ -78,8 +93,15 @@ setmetatable(RandomizerPowerBomb, {__index = RandomizerPowerup})
 function RandomizerPowerBomb.OnPickedUp(actor, progression)
     progression = {{item_id = "ITEM_WEAPON_POWER_BOMB_MAX", quantity = 0}}
     local granted = RandomizerPowerup.OnPickedUp(actor, progression)
-    if granted == "ITEM_WEAPON_POWER_BOMB_MAX" then
-        Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_WEAPON_POWER_BOMB", 1, true)
+    if granted ~= nil and granted.item_id == "ITEM_WEAPON_POWER_BOMB_MAX" then
+        Scenario.SetItemAmount("ITEM_WEAPON_POWER_BOMB", 1)
     end
 end
 
+RandomizerPhantomCloak = {}
+setmetatable(RandomizerPhantomCloak, {__index = RandomizerPowerup})
+function RandomizerPhantomCloak.OnPickedUp(actor, progression)
+    RandomizerPowerup.OnPickedUp(actor, progression)
+    -- prevent the pickup from trying to kill you
+    Scenario.SetItemAmount("ITEM_CURRENT_SPECIAL_ENERGY", 1000)
+end
