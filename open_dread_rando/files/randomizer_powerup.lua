@@ -14,7 +14,8 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     local granted = RandomizerPowerup.ProgressivePickup(actor, progression)
     RandomizerPowerup.ChangeSuit()
     RandomizerPowerup.IncreaseEnergy(granted)
-    -- Game.ReinitPlayerFromBlackboard()
+    RandomizerPowerup.IncreaseAmmo(granted)
+
     local oPlayer = Game.GetPlayer()
     if oPlayer ~= nil then
         oPlayer.INPUT:IgnoreInput(true, false, "PickupObtained")
@@ -85,6 +86,23 @@ function RandomizerPowerup.IncreaseEnergy(resource)
     local max = Game.GetItemAmount(Game.GetPlayerName(), "ITEM_MAX_LIFE")
     Scenario.SetItemAmount("ITEM_MAX_LIFE", max+100)
     Scenario.SetItemAmount("ITEM_CURRENT_LIFE", max+100)
+end
+
+function RandomizerPowerup.IncreaseAmmo(resource)
+    if resource == nil then return end
+    local current_id = nil
+
+    if resource.item_id == "ITEM_WEAPON_POWER_BOMB_MAX" then
+        current_id = "ITEM_WEAPON_POWER_BOMB_CURRENT"
+    elseif resource.item_id == "ITEM_WEAPON_MISSILE_MAX" then
+        current_id = "ITEM_WEAPON_MISSILE_CURRENT"
+    end
+
+    if current_id == nil then return end
+
+    local current = Game.GetItemAmount(Game.GetPlayerName(), current_id)
+    local max = Game.GetItemAmount(Game.GetPlayerName(), resource.item_id)
+    Scenario.SetItemAmount(current_id, math.min(max, current + resource.quantity))
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)
