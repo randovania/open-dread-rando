@@ -1709,18 +1709,20 @@ function s010_cave.Skipped_CoolDownEventCutscenePlaceholder()
 end
 
 function s010_cave.Cooldown_Activation()
-  if Game.GetCurrentGameModeID() ~= "EDITOR" then
-    Game.SetCooldownFlag(true)
-    if CAVES_COOLDOWN_APPLIED == false then
-      Game.PushSetup("Cooldown", true, true)
-      Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_COOLDOWN_APPLIED, "b", true)
-      CAVES_COOLDOWN_APPLIED = true
-      local oActor = Game.GetActor("elevator_aqua_000_platform")
-      if oActor ~= nil then
-        oActor.bEnabled = false
-      end
-    end
-  end
+  -- Cooldown has been removed from rando
+
+  -- if Game.GetCurrentGameModeID() ~= "EDITOR" then
+  --   Game.SetCooldownFlag(true)
+  --   if CAVES_COOLDOWN_APPLIED == false then
+  --     Game.PushSetup("Cooldown", true, true)
+  --     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_COOLDOWN_APPLIED, "b", true)
+  --     CAVES_COOLDOWN_APPLIED = true
+  --     local oActor = Game.GetActor("elevator_aqua_000_platform")
+  --     if oActor ~= nil then
+  --       oActor.bEnabled = false
+  --     end
+  --   end
+  -- end
 end
 
 function s010_cave.Cooldown_Deactivation()

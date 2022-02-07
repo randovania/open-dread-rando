@@ -664,11 +664,13 @@ end
 
 
 function s020_magma.Cooldown_Activation()
-  if MAGMA_COOLDOWN_APPLIED == false then
-    Game.PushSetup("Cooldown", true, true)
-    Scenario.WriteToBlackboard(Scenario.LUAPropIDs.MAGMA_COOLDOWN_APPLIED, "b", true)
-    MAGMA_COOLDOWN_APPLIED = true
-  end
+  -- Cooldown has been removed from rando
+  
+  -- if MAGMA_COOLDOWN_APPLIED == false then
+  --   Game.PushSetup("Cooldown", true, true)
+  --   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.MAGMA_COOLDOWN_APPLIED, "b", true)
+  --   MAGMA_COOLDOWN_APPLIED = true
+  -- end
 end
 
 function s020_magma.Cooldown_Deactivation()
