@@ -13,6 +13,7 @@ class LuaEditor:
         self._progressive_classes = {}
         self._powerup_script = _read_powerup_lua()
         self._custom_level_scripts: dict[str, str] = {}
+        self._corex_replacement = {}
 
     def get_script_class(self, pickup_resources: list[dict], boss: bool = False) -> str:
         main_pb = pickup_resources[0]["item_id"] == "ITEM_WEAPON_POWER_BOMB"
@@ -67,8 +68,16 @@ class LuaEditor:
             "args": ", ".join([f"_ARG_{i}_" for i in range(pickup_lua_callback["args"])])
         }
         self._custom_level_scripts[scenario] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
+    
+    def patch_corex_pickup_script(self, editor: PatcherEditor, resources: list[dict], pickup_lua_callback: dict):
+        bossid = pickup_lua_callback["function"]
+        self._corex_replacement[bossid] = self.get_script_class(resources, True)
 
     def save_modifications(self, editor: PatcherEditor):
         editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", self._powerup_script)
         for scenario, script in self._custom_level_scripts.items():
             editor.replace_asset(path_for_level(scenario) + ".lc", script.encode("utf-8"))
+        
+        corex_script = lua_util.replace_lua_template("custom_corex.lua", self._corex_replacement).encode("utf-8")
+        for boss in {"core_x", "core_x_superquetzoa"}:
+            editor.replace_asset(f"actors/characters/{boss}/scripts/{boss}.lc", corex_script)

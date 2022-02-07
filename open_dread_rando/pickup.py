@@ -216,11 +216,17 @@ class CoreXPickup(ActorDefPickup):
     def patch(self, editor: PatcherEditor):
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnBigXAbsorbed")
         editor.replace_asset(bmsad_path, actordef)
+    
+    def _patch_actordef_pickup_script_help(self, editor: PatcherEditor):
+        return self.lua_editor.patch_corex_pickup_script(
+            editor,
+            self.pickup["resources"],
+            self.pickup["pickup_lua_callback"],
+        )
 
 
 class CorpiusPickup(ActorDefPickup):
     def patch(self, editor: PatcherEditor):
-        # TODO: fix weirdness with aeion suit upgrade thingy
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnKilled")
         if self.pickup["resources"][0]["item_id"] not in EXPANSION_ITEM_IDS:
             actordef.raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
