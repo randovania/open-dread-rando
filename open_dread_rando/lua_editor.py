@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Tuple
 
 from open_dread_rando import lua_util
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
@@ -7,8 +6,11 @@ from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 
 def _read_powerup_lua() -> bytes:
     return Path(__file__).parent.joinpath("files", "randomizer_powerup.lua").read_bytes()
+
+
 def _read_level_lua(level_id: str) -> str:
     return Path(__file__).parent.joinpath("files", "levels", f"{level_id}.lc.lua").read_text()
+
 
 class LuaEditor:
     def __init__(self):
@@ -70,7 +72,8 @@ class LuaEditor:
         lua_util.create_script_copy(editor, scenario_path)
 
         if not self._custom_level_scripts[scenario]["edited"]:
-            self._custom_level_scripts[scenario]["script"] += "\nGame.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')\n\n"
+            self._custom_level_scripts[scenario][
+                "script"] += "\nGame.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')\n\n"
             self._custom_level_scripts[scenario]["edited"] = True
 
         replacement = {
@@ -79,8 +82,9 @@ class LuaEditor:
             "pickup_class": self.get_script_class(resources, True),
             "args": ", ".join([f"_ARG_{i}_" for i in range(pickup_lua_callback["args"])])
         }
-        self._custom_level_scripts[scenario]["script"] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
-    
+        self._custom_level_scripts[scenario]["script"] += lua_util.replace_lua_template("boss_powerup_template.lua",
+                                                                                        replacement)
+
     def patch_corex_pickup_script(self, editor: PatcherEditor, resources: list[dict], pickup_lua_callback: dict):
         bossid = pickup_lua_callback["function"]
         self._corex_replacement[bossid] = self.get_script_class(resources, True)
@@ -89,7 +93,7 @@ class LuaEditor:
         editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", self._powerup_script)
         for scenario, script in self._custom_level_scripts.items():
             editor.replace_asset(path_for_level(scenario) + ".lc", script["script"].encode("utf-8"))
-        
+
         corex_script = lua_util.replace_lua_template("custom_corex.lua", self._corex_replacement).encode("utf-8")
         for boss in {"core_x", "core_x_superquetzoa"}:
             editor.replace_asset(f"actors/characters/{boss}/scripts/{boss}.lc", corex_script)

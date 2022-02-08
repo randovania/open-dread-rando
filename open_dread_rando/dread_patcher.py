@@ -106,7 +106,6 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
 def patch_with_status_update(input_path: Path, output_path: Path, configuration: dict,
                              status_update: typing.Callable[[float, str], None]):
-
     total_logs = 108
 
     class StatusUpdateHandler(logging.Handler):
@@ -122,7 +121,7 @@ def patch_with_status_update(input_path: Path, output_path: Path, configuration:
             # Encoding a bmsad is quick, skip these
             if message.endswith(".bmsad"):
                 return
-            
+
             # These can come up frequently and are benign
             if message.startswith("Skipping extracted file"):
                 return
