@@ -36,6 +36,6 @@ class PatcherEditor(FileTreeEditor):
         shutil.rmtree(debug_path, ignore_errors=True)
         for asset_id, asset in self._modified_resources.items():
             if asset is not None:
-                debug_path = debug_path.joinpath(self._name_for_asset_id[asset_id])
-                debug_path.parent.mkdir(parents=True, exist_ok=True)
-                debug_path.write_bytes(asset)
+                path = debug_path.joinpath(self._name_for_asset_id[asset_id])
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(asset)
