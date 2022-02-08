@@ -192,3 +192,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 }
+
+
+def get_data(name: str) -> ModelData:
+    return ALL_MODEL_DATA.get(name, ALL_MODEL_DATA["itemsphere"])

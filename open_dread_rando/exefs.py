@@ -1,5 +1,6 @@
-from pathlib import Path
 import shutil
+from pathlib import Path
+
 import ips
 
 VERSIONS = {
@@ -12,16 +13,18 @@ class NSOPatch(ips.Patch):
     def __init__(self):
         # always use IPS32
         super().__init__(True)
-    
+
     def add_record(self, offset, content, rle_size=-1):
         # NSO files have a 0x100 byte header which is not accounted
         # for in Ghidra/IDA but is accounted for in the IPS
-        return super().add_record(offset+0x100, content, rle_size)
+        return super().add_record(offset + 0x100, content, rle_size)
+
 
 class VersionedPatch(dict):
     def __missing__(self, key):
         return self[max(self.keys())]
     # use the highest version with a patch defined
+
 
 def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
     # patches corpius to not give the phantom cloak, and not to display the
@@ -37,10 +40,11 @@ def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
         offset, data = p[version]
         patch.add_record(offset, data)
 
+
 def patch_exefs(output_path: Path, configuration: dict):
     exefs = output_path.joinpath("exefs")
     shutil.rmtree(exefs, ignore_errors=True)
-    exefs.mkdir()
+    exefs.mkdir(parents=True, exist_ok=True)
 
     for version, exefs_hash in VERSIONS.items():
         patch = NSOPatch()

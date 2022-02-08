@@ -6,8 +6,8 @@ from pathlib import Path
 
 from mercury_engine_data_structures.formats import Bmsad, Txt
 
+from open_dread_rando import model_data
 from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.model_data import ALL_MODEL_DATA
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 
 EXPANSION_ITEM_IDS = {
@@ -134,20 +134,20 @@ class ActorPickup(BasePickup):
         actor = level.actors_for_layer(pickup_actor["layer"])[pickup_actor["actor"]]
 
         model_name: str = self.pickup["model"]
-        model_data = ALL_MODEL_DATA.get(model_name, ALL_MODEL_DATA["itemsphere"])
+        selected_model_data = model_data.get_data(model_name)
 
         new_template = copy.deepcopy(template_bmsad)
         new_template["name"] = f"randomizer_powerup_{self.pickup_id}"
 
         # Update used model
-        new_template["property"]["model_name"] = model_data.bcmdl_path
-        MODELUPDATER = new_template["property"]["components"]["MODELUPDATER"]
-        MODELUPDATER["functions"][0]["params"]["Param1"]["value"] = model_data.bcmdl_path
+        new_template["property"]["model_name"] = selected_model_data.bcmdl_path
+        model_updater = new_template["property"]["components"]["MODELUPDATER"]
+        model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
 
         # Update caption
-        PICKABLE = new_template["property"]["components"]["PICKABLE"]
-        PICKABLE["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
-        PICKABLE["fields"]["fields"]["sOnPickTankUnknownCaption"] = self.pickup["caption"]
+        pickable = new_template["property"]["components"]["PICKABLE"]
+        pickable["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
+        pickable["fields"]["fields"]["sOnPickTankUnknownCaption"] = self.pickup["caption"]
 
         # Update given item
         if len(self.pickup["resources"]) == 1:
@@ -166,7 +166,7 @@ class ActorPickup(BasePickup):
         for level_pkg in pkgs_for_level:
             editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
             editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
-            for dep in model_data.dependencies:
+            for dep in selected_model_data.dependencies:
                 editor.ensure_present(level_pkg, dep)
 
         for pkg in pkgs_for_level:
@@ -216,7 +216,7 @@ class CoreXPickup(ActorDefPickup):
     def patch(self, editor: PatcherEditor):
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnBigXAbsorbed")
         editor.replace_asset(bmsad_path, actordef)
-    
+
     def _patch_actordef_pickup_script_help(self, editor: PatcherEditor):
         return self.lua_editor.patch_corex_pickup_script(
             editor,

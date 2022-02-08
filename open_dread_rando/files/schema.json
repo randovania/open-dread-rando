@@ -108,6 +108,11 @@
                 ]
             }
         },
+        "debug_export_modified_files": {
+            "type": "boolean",
+            "default": false,
+            "description": "Saves all modified files to a _debug sub-directory."
+        },
         "starting_items": {
             "type": "object"
         }

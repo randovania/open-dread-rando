@@ -1,3 +1,4 @@
+import shutil
 import typing
 from pathlib import Path
 
@@ -30,3 +31,11 @@ class PatcherEditor(FileTreeEditor):
         for name, resource in self.memory_files.items():
             self.replace_asset(name, resource)
         self.memory_files = {}
+
+    def save_modified_saves_to(self, debug_path: Path):
+        shutil.rmtree(debug_path, ignore_errors=True)
+        for asset_id, asset in self._modified_resources.items():
+            if asset is not None:
+                debug_path = debug_path.joinpath(self._name_for_asset_id[asset_id])
+                debug_path.parent.mkdir(parents=True, exist_ok=True)
+                debug_path.write_bytes(asset)

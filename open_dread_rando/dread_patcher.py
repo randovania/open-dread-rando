@@ -60,7 +60,6 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     jsonschema.validate(instance=configuration, schema=_read_schema())
 
-    out_romfs = output_path.joinpath("romfs")
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()
 
@@ -94,9 +93,14 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Flush modified assets")
     editor.flush_modified_assets()
 
-    shutil.rmtree(out_romfs, ignore_errors=True)
+    if configuration.get("debug_export_modified_files", False):
+        editor.save_modified_saves_to(output_path.joinpath("_debug"))
+
+    out_romfs = output_path.joinpath("romfs")
     LOG.info("Saving modified pkgs to %s", out_romfs)
+    shutil.rmtree(out_romfs, ignore_errors=True)
     editor.save_modified_pkgs(out_romfs)
+
     LOG.info("Done")
 
 
