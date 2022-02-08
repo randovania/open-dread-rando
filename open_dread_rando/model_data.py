@@ -25,7 +25,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
     ),
 
     "powerup_speedbooster": ModelData(
-        bcmdl_path="actors/items/itemsphere/models/itemspher1.bcmdl",
+        bcmdl_path="actors/items/itemsphere/models/speed_booster.bcmdl",
         dependencies=(
             "actors/items/itemsphere/animations/relax.bcskla",
             "actors/items/itemsphere/collisions/itemsphere.bmscd",
@@ -33,8 +33,8 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
             "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
             "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
-            "actors/items/itemsphere/models/itemspher1.bcmdl",
-            "actors/items/itemsphere/models/imats/itemspher1_mp_opaque_01.bsmat",
+            "actors/items/itemsphere/models/speed_booster.bcmdl",
+            "actors/items/itemsphere/models/imats/speedboost_mp_opaque_01.bsmat",
         ),
     ),
 
