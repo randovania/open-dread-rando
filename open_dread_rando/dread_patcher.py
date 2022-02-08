@@ -54,6 +54,13 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
         except NotImplementedError as e:
             LOG.warning(e)
 
+def add_custom_files(editor: PatcherEditor):
+    custom_romfs = Path(__file__).parent.joinpath("files", "romfs")
+    for child in custom_romfs.rglob("*"):
+        if not child.is_file():
+            continue
+        relative = child.relative_to(custom_romfs).as_posix()
+        editor.add_new_asset(str(relative), child.read_bytes(), [])
 
 def patch(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files from %s", input_path)
@@ -62,6 +69,9 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()
+
+    # Copy custom files
+    add_custom_files(editor)
 
     # Update init.lc
     lua_util.create_script_copy(editor, "system/scripts/init")
