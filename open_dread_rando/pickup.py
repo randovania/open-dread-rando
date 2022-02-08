@@ -157,6 +157,9 @@ class ActorPickup(BasePickup):
         pickable["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
         pickable["fields"]["fields"]["sOnPickTankUnknownCaption"] = self.pickup["caption"]
 
+        # Animation/BMSAS
+        new_template["property"]["binaries"][0] = selected_model_data.bmsas
+
         # Update given item
         if len(self.pickup["resources"]) == 1:
             new_template = self.patch_single_item_pickup(new_template)

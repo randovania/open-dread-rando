@@ -4,12 +4,14 @@ import dataclasses
 @dataclasses.dataclass(frozen=True)
 class ModelData:
     bcmdl_path: str
+    bmsas: str
     dependencies: tuple[str, ...]
 
 
 ALL_MODEL_DATA: dict[str, ModelData] = {
     "itemsphere": ModelData(
         bcmdl_path="actors/items/itemsphere/models/itemsphere.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/itemsphere/animations/relax.bcskla",
             "actors/items/itemsphere/collisions/itemsphere.bmscd",
@@ -24,6 +26,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_widebeam": ModelData(
         bcmdl_path="actors/items/powerup_widebeam/models/powerup_widebeam.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_widebeam/models/powerup_widebeam.bcmdl",
             "actors/items/powerup_widebeam/models/imats/powerup_widebeam_autoilum.bsmat",
@@ -34,6 +37,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_plasmabeam": ModelData(
         bcmdl_path="actors/items/powerup_plasmabeam/models/powerup_plasmabeam.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_plasmabeam/models/powerup_plasmabeam.bcmdl",
             "actors/items/powerup_plasmabeam/models/imats/powerup_plasmabeam_autoilum.bsmat",
@@ -44,6 +48,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_chargebeam": ModelData(
         bcmdl_path="actors/items/powerup_chargebeam/models/powerup_chargebeam.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_chargebeam/models/powerup_chargebeam.bcmdl",
             "actors/items/powerup_chargebeam/models/imats/powerup_chargebeam_autoilum.bsmat",
@@ -54,6 +59,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_diffusionbeam": ModelData(
         bcmdl_path="actors/items/powerup_diffusionbeam/models/powerup_diffusionbeam.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_diffusionbeam/models/powerup_diffusionbeam.bcmdl",
             "actors/items/powerup_diffusionbeam/models/imats/powerup_diffusionbeam_autoilum.bsmat",
@@ -64,6 +70,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_grapplebeam": ModelData(
         bcmdl_path="actors/items/powerup_grapplebeam/models/powerup_grapplebeam.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_grapplebeam/fx/auraitemparticle.bcptl",
             "actors/items/powerup_grapplebeam/models/powerup_grapplebeam.bcmdl",
@@ -73,6 +80,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_supermissile": ModelData(
         bcmdl_path="actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
             "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
@@ -82,6 +90,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_ghostaura": ModelData(
         bcmdl_path="actors/items/powerup_ghostaura/models/powerup_ghostaura.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_ghostaura/models/powerup_ghostaura.bcmdl",
         ),
@@ -89,6 +98,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_sonar": ModelData(
         bcmdl_path="actors/items/powerup_sonar/models/powerup_sonar.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_sonar/models/powerup_sonar.bcmdl",
         ),
@@ -96,6 +106,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_variasuit": ModelData(
         bcmdl_path="actors/items/powerup_variasuit/models/powerup_variasuit.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_variasuit/models/powerup_variasuit.bcmdl",
             "actors/items/powerup_variasuit/models/imats/powerup_variasuit_material01.bsmat",
@@ -104,6 +115,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_gravitysuit": ModelData(
         bcmdl_path="actors/items/powerup_gravitysuit/models/powerup_gravitysuit.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_gravitysuit/models/powerup_gravitysuit.bcmdl",
             "actors/items/powerup_gravitysuit/models/imats/powerup_gravitysuit_ball.bsmat",
@@ -114,6 +126,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_bomb": ModelData(
         bcmdl_path="actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
             "actors/items/powerup_bomb/models/imats/powerup_bomb_hologram.bsmat",
@@ -123,6 +136,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_doublejump": ModelData(
         bcmdl_path="actors/items/powerup_doublejump/models/powerup_doublejump.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_doublejump/models/powerup_doublejump.bcmdl",
             "actors/items/powerup_doublejump/models/imats/powerup_doublejump_mp_glass_01.bsmat",
@@ -132,6 +146,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_spacejump": ModelData(
         bcmdl_path="actors/items/powerup_spacejump/models/powerup_spacejump.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_spacejump/models/powerup_spacejump.bcmdl",
             "actors/items/powerup_spacejump/models/imats/powerup_spacejump_mat01.bsmat",
@@ -140,6 +155,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_screwattack": ModelData(
         bcmdl_path="actors/items/powerup_screwattack/models/powerup_screwattack.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_screwattack/models/powerup_screwattack.bcmdl",
             "actors/items/powerup_screwattack/models/imats/powerup_screwattack_mp_opaque_01.bsmat",
@@ -148,6 +164,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "item_energytank": ModelData(
         bcmdl_path="actors/items/item_energytank/models/item_energytank.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/item_energytank/models/item_energytank.bcmdl",
             "actors/items/item_energytank/models/imats/item_energytank_mp_opaque_01.bsmat",
@@ -156,6 +173,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "item_energyfragment": ModelData(
         bcmdl_path="actors/items/item_energyfragment/models/item_energyfragment.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/item_energyfragment/models/item_energyfragment.bcmdl",
             "actors/items/item_energyfragment/models/imats/item_energyfragment_glow.bsmat",
@@ -167,6 +185,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "item_missiletank": ModelData(
         bcmdl_path="actors/items/item_missiletank/models/item_missiletank.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
         dependencies=(
             "actors/items/item_missiletank/models/item_missiletank.bcmdl",
             "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
@@ -176,6 +195,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "item_missiletankplus": ModelData(
         bcmdl_path="actors/items/item_missiletankplus/models/item_missiletankplus.bcmdl",
+        bmsas="actors/items/item_missiletankplus/charclasses/item_missiletankplus.bmsas",
         dependencies=(
             "actors/items/item_missiletankplus/models/item_missiletankplus.bcmdl",
             "actors/items/item_missiletankplus/models/imats/item_missiletankplus_mat01.bsmat",
@@ -185,6 +205,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "item_powerbombtank": ModelData(
         bcmdl_path="actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
             "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mat01.bsmat",
