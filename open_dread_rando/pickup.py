@@ -81,11 +81,19 @@ class ActorPickup(BasePickup):
             set_custom_params["Param5"]["value"] = ""
             set_custom_params["Param6"]["value"] = "LIFE"
             set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
+
+            fields = pickable["fields"]["fields"]
             caption = self.pickup["caption"]
-            pickable["fields"]["fields"]["sOnPickEnergyFragment1Caption"] = caption
-            pickable["fields"]["fields"]["sOnPickEnergyFragment2Caption"] = caption
-            pickable["fields"]["fields"]["sOnPickEnergyFragment3Caption"] = caption
-            pickable["fields"]["fields"]["sOnPickEnergyFragmentCompleteCaption"] = caption
+            if caption == "Energy Part acquired.\nCollect 4 to increase energy capacity.":
+                # If text is vanilla, then support showing how many parts we had.
+                fields["sOnPickEnergyFragment1Caption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_1"
+                fields["sOnPickEnergyFragment2Caption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_2"
+                fields["sOnPickEnergyFragment3Caption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_3"
+                fields["sOnPickEnergyFragmentCompleteCaption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_COMPLETE"
+            else:
+                for field_name in ["sOnPickEnergyFragment1Caption", "sOnPickEnergyFragment2Caption",
+                                   "sOnPickEnergyFragment3Caption", "sOnPickEnergyFragmentCompleteCaption"]:
+                    fields[field_name] = caption
 
         elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX", "ITEM_WEAPON_POWER_BOMB"}:
             current = item_id.replace("_MAX", "_CURRENT")
