@@ -71,10 +71,11 @@ class LuaEditor:
         scenario_path = path_for_level(scenario)
         lua_util.create_script_copy(editor, scenario_path)
 
-        if not self._custom_level_scripts[scenario]["edited"]:
-            self._custom_level_scripts[scenario][
-                "script"] += "\nGame.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')\n\n"
-            self._custom_level_scripts[scenario]["edited"] = True
+        script = self._custom_level_scripts[scenario]
+
+        if not script["edited"]:
+            script["script"] += "\nGame.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')\n\n"
+            script["edited"] = True
 
         replacement = {
             "scenario": scenario,
@@ -82,8 +83,7 @@ class LuaEditor:
             "pickup_class": self.get_script_class(resources, True),
             "args": ", ".join([f"_ARG_{i}_" for i in range(pickup_lua_callback["args"])])
         }
-        self._custom_level_scripts[scenario]["script"] += lua_util.replace_lua_template("boss_powerup_template.lua",
-                                                                                        replacement)
+        script["script"] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
 
     def patch_corex_pickup_script(self, editor: PatcherEditor, resources: list[dict], pickup_lua_callback: dict):
         bossid = pickup_lua_callback["function"]
