@@ -6,6 +6,7 @@ class ModelData:
     bcmdl_path: str
     bmsas: str
     dependencies: tuple[str, ...]
+    grapple_fx: bool = False
 
 
 ALL_MODEL_DATA: dict[str, ModelData] = {
@@ -117,6 +118,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/powerup_grapplebeam/models/powerup_grapplebeam.bcmdl",
             "actors/items/powerup_grapplebeam/models/imats/powerup_grapplebeam_grapplebeam.bsmat",
         ),
+        grapple_fx=True,
     ),
 
     "powerup_supermissile": ModelData(
@@ -137,6 +139,18 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
             "actors/items/powerup_supermissile/models/imats/powerup_ice__missile_mp_opaque_01.bsmat",
         ),
+    ),
+
+    "powerup_stormmissile": ModelData(
+        bcmdl_path="actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
+            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
+            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_mp_opaque_01.bsmat",
+            "actors/items/powerup_grapplebeam/fx/auraitemparticle.bcptl",
+        ),
+        grapple_fx=True,
     ),
 
     "powerup_ghostaura": ModelData(
@@ -183,6 +197,18 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/powerup_bomb/models/imats/powerup_bomb_hologram.bsmat",
             "actors/items/powerup_bomb/models/imats/powerup_bomb_material.bsmat",
         ),
+    ),
+
+    "powerup_crossbomb": ModelData(
+        bcmdl_path="actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
+            "actors/items/powerup_bomb/models/imats/powerup_bomb_hologram.bsmat",
+            "actors/items/powerup_bomb/models/imats/powerup_bomb_material.bsmat",
+            "actors/items/powerup_grapplebeam/fx/auraitemparticle.bcptl",
+        ),
+        grapple_fx=True,
     ),
 
     "powerup_doublejump": ModelData(

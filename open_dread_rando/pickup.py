@@ -152,6 +152,14 @@ class ActorPickup(BasePickup):
         model_updater = new_template["property"]["components"]["MODELUPDATER"]
         model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
 
+        # Apply grapple particles
+        if selected_model_data.grapple_fx:
+            grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad", Bmsad)
+            grapple_components = grapple.raw["property"]["components"]
+            components = new_template["property"]["components"]
+            components["MATERIALFX"] = grapple_components["MATERIALFX"]
+            components["FX"] = grapple_components["FX"]
+
         # Update caption
         pickable = new_template["property"]["components"]["PICKABLE"]
         pickable["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
