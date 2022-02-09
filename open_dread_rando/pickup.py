@@ -152,6 +152,25 @@ class ActorPickup(BasePickup):
         model_updater = new_template["property"]["components"]["MODELUPDATER"]
         model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
 
+        # Apply grapple particles
+        if selected_model_data.grapple_fx:
+            grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad", Bmsad)
+            grapple_components = grapple.raw["property"]["components"]
+            components = new_template["property"]["components"]
+            components["MATERIALFX"] = grapple_components["MATERIALFX"]
+            components["FX"] = grapple_components["FX"]
+        
+        if selected_model_data.transform is not None:
+            model_updater["fields"] = {
+                "empty_string": "",
+                "root": "Root",
+                "fields": {
+                    "vInitScale": list(selected_model_data.transform.scale)
+                }
+            }
+            actor.vPos = [a+b for a,b in zip(actor.vPos, selected_model_data.transform.position)]
+            actor.vAng = [a+b for a,b in zip(actor.vAng, selected_model_data.transform.angle)]
+
         # Update caption
         pickable = new_template["property"]["components"]["PICKABLE"]
         pickable["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
@@ -176,7 +195,7 @@ class ActorPickup(BasePickup):
         # Dependencies
         for level_pkg in pkgs_for_level:
             editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
-            editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
+            editor.ensure_present(level_pkg, selected_model_data.bmsas)
             for dep in selected_model_data.dependencies:
                 editor.ensure_present(level_pkg, dep)
 

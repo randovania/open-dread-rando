@@ -31,6 +31,12 @@ class PatcherEditor(FileTreeEditor):
         for name, resource in self.memory_files.items():
             self.replace_asset(name, resource)
         self.memory_files = {}
+    
+    def add_new_asset(self, name: str, new_data: typing.Union[bytes, BaseResource], in_pkgs: typing.Iterable[str]):
+        super().add_new_asset(name, new_data, in_pkgs)
+        # Hack for textures' weird folder layout
+        if name.startswith("textures/") and isinstance(new_data, bytes):
+            self._toc.add_file(name[9:], len(new_data))
 
     def save_modified_saves_to(self, debug_path: Path):
         shutil.rmtree(debug_path, ignore_errors=True)
