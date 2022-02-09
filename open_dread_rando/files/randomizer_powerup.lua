@@ -6,6 +6,12 @@ end
 
 RandomizerPowerup.Self = nil
 
+
+function RandomizerPowerup.BeginPlay(self)
+    self.MODELUPDATER.sModelAlias = "Model"
+    self.MODELUPDATER:ForceUpdate()
+end
+
 function RandomizerPowerup.SetItemAmount(item_id, quantity)
     if type(quantity) == "string" then
         quantity = RandomizerPowerup.GetItemAmount(quantity)

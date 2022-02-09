@@ -150,7 +150,10 @@ class ActorPickup(BasePickup):
         # Update used model
         new_template["property"]["model_name"] = selected_model_data.bcmdl_path
         model_updater = new_template["property"]["components"]["MODELUPDATER"]
-        model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
+        model_updater["fields"]["fields"]["dctModels"]["Model"] = selected_model_data.bcmdl_path
+
+        actor.pComponents.MODELUPDATER["@Type"] = "CMultiModelUpdaterComponent"
+        actor.pComponents.MODELUPDATER.sModelAlias = "Default"
 
         # Apply grapple particles
         if selected_model_data.grapple_fx:
@@ -161,13 +164,7 @@ class ActorPickup(BasePickup):
             components["FX"] = grapple_components["FX"]
         
         if selected_model_data.transform is not None:
-            model_updater["fields"] = {
-                "empty_string": "",
-                "root": "Root",
-                "fields": {
-                    "vInitScale": list(selected_model_data.transform.scale)
-                }
-            }
+            model_updater["fields"]["fields"]["vInitScale"] = list(selected_model_data.transform.scale)
             actor.vPos = [a+b for a,b in zip(actor.vPos, selected_model_data.transform.position)]
             actor.vAng = [a+b for a,b in zip(actor.vAng, selected_model_data.transform.angle)]
 

@@ -124,29 +124,22 @@
                 "dependencies": null
             },
             "MODELUPDATER": {
-                "type": "CModelUpdaterComponent",
+                "type": "CMultiModelUpdaterComponent",
                 "unk_1": [
                     4294967295,
                     4294967294
                 ],
-                "fields": null,
-                "extra_fields": {},
-                "functions": [
-                    {
-                        "name": "LoadModel",
-                        "unk": 1,
-                        "params": {
-                            "Param1": {
-                                "type": "s",
-                                "value": "actors/items/itemsphere/models/itemsphere.bcmdl"
-                            },
-                            "Param2": {
-                                "type": "s",
-                                "value": "actors/items/itemsphere/models/itemsphere.bcmdl"
-                            }
+                "fields": {
+                    "empty_string": "",
+                    "root": "Root",
+                    "fields": {
+                        "dctModels": {
+                            "Default": "actors/items/itemsphere/models/itemsphere.bcmdl"
                         }
                     }
-                ],
+                },
+                "extra_fields": {},
+                "functions": [],
                 "dependencies": null
             },
             "ANIMATION": {
