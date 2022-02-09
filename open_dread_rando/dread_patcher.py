@@ -1,3 +1,4 @@
+import copy
 import json
 import logging
 import shutil
@@ -19,6 +20,72 @@ T = typing.TypeVar("T")
 def _read_schema():
     with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
+
+
+def apply_one_sided_door_fixes(editor: PatcherEditor):
+    all_scenarios = [
+        "s010_cave",
+        "s020_magma",
+        "s030_baselab",
+        "s040_aqua",
+        "s050_forest",
+        "s060_quarantine",
+        "s070_basesanc",
+        "s080_shipyard",
+    ]
+
+    for scenario_name in all_scenarios:
+        scenario = editor.get_scenario(scenario_name)
+
+        for layer_name, actor_name, actor in list(scenario.all_actors()):
+            is_door = "LIFE" in actor.pComponents and "CDoorLifeComponent" == actor.pComponents.LIFE["@type"]
+            if not is_door:
+                continue
+
+            if actor.oActorDefLink != "actordef:actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad":
+                continue
+
+            life_comp = actor.pComponents.LIFE
+            left = scenario.follow_link(life_comp.wpLeftDoorShieldEntity)
+            right = scenario.follow_link(life_comp.wpRightDoorShieldEntity)
+
+            if left is None and right is None:
+                continue
+
+            elif left is None:
+                other = right
+                direction = "wpLeftDoorShieldEntity"
+
+            elif right is None:
+                other = left
+                direction = "wpRightDoorShieldEntity"
+            else:
+                continue
+
+            if "db_hdoor" in other.oActorDefLink:
+                continue
+
+            LOG.debug("[{:>15}/{}] ({:>20}) copy {} into {}".format(scenario_name, layer_name, actor_name, other.sName,
+                                                                    direction))
+            mirrored = copy.deepcopy(other)
+            mirrored.sName += "_mirrored"
+            mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]
+            scenario.actors_for_layer(layer_name)[mirrored.sName] = mirrored
+
+            link_for_actor = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{actor_name}"
+            mirrored_link = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
+
+            life_comp[direction] = mirrored_link
+
+            actor_groups = typing.cast(dict[str, list[str]],
+                                       scenario.raw.Root.pScenario.rEntitiesLayer.dctActorGroups)
+            for group_name, group_elements in actor_groups.items():
+                if link_for_actor in group_elements:
+                    group_elements.append(mirrored_link)
+
+
+def apply_static_fixes(editor: PatcherEditor):
+    apply_one_sided_door_fixes(editor)
 
 
 def create_custom_init(inventory: dict[str, int], starting_location: dict):
@@ -54,6 +121,7 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
         except NotImplementedError as e:
             LOG.warning(e)
 
+
 def add_custom_files(editor: PatcherEditor):
     custom_romfs = Path(__file__).parent.joinpath("files", "romfs")
     for child in custom_romfs.rglob("*"):
@@ -62,6 +130,7 @@ def add_custom_files(editor: PatcherEditor):
         relative = child.relative_to(custom_romfs).as_posix()
         editor.add_new_asset(str(relative), child.read_bytes(), [])
 
+
 def patch(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files from %s", input_path)
 
@@ -69,6 +138,8 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()
+
+    apply_static_fixes(editor)
 
     # Copy custom files
     add_custom_files(editor)
