@@ -153,6 +153,16 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         grapple_fx=True,
     ),
 
+    "item_cube": ModelData(
+        bcmdl_path="actors/items/item_cube_broken/models/itemcube_broken.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/item_cube_broken/models/itemcube_broken.bcmdl",
+            "actors/items/item_cube/models/imats/itemcube_cube.bsmat",
+            "actors/items/item_cube/models/imats/itemcube_emisive.bsmat",
+        ),
+    ),
+
     "powerup_ghostaura": ModelData(
         bcmdl_path="actors/items/powerup_ghostaura/models/powerup_ghostaura.bcmdl",
         bmsas="actors/items/powerup_ghostaura/charclasses/powerup_ghostaura.bmsas",
