@@ -49,6 +49,16 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "powerup_wavebeam": ModelData(
+        bcmdl_path="actors/items/powerup_widebeam/models/powerup_wavebeam.bcmdl",
+        dependencies=(
+            "actors/items/powerup_widebeam/models/powerup_wavebeam.bcmdl",
+            "actors/items/powerup_widebeam/models/imats/powerup_widebeam_autoilum.bsmat",
+            "actors/items/powerup_widebeam/models/imats/powerup_widebeam_bola.bsmat",
+            "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_cangrejo.bsmat",
+        ),
+    ),
+
     "powerup_plasmabeam": ModelData(
         bcmdl_path="actors/items/powerup_plasmabeam/models/powerup_plasmabeam.bcmdl",
         bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
