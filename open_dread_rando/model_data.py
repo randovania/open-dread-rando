@@ -24,8 +24,24 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "powerup_spidermagnet": ModelData(
+        bcmdl_path="actors/items/itemsphere/models/magnetsphere.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/itemsphere/animations/relax.bcskla",
+            "actors/items/itemsphere/collisions/itemsphere.bmscd",
+            "actors/items/itemsphere/fx/impact.bcptl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
+            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
+            "actors/items/itemsphere/models/magnetsphere.bcmdl",
+            "actors/items/itemsphere/models/imats/itemsphere_spidermagnet.bsmat",
+        ),
+    ),
+
     "powerup_speedbooster": ModelData(
         bcmdl_path="actors/items/itemsphere/models/speed_booster.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/itemsphere/animations/relax.bcskla",
             "actors/items/itemsphere/collisions/itemsphere.bmscd",
@@ -51,10 +67,11 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_wavebeam": ModelData(
         bcmdl_path="actors/items/powerup_widebeam/models/powerup_wavebeam.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_widebeam/models/powerup_wavebeam.bcmdl",
-            "actors/items/powerup_widebeam/models/imats/powerup_widebeam_autoilum.bsmat",
-            "actors/items/powerup_widebeam/models/imats/powerup_widebeam_bola.bsmat",
+            "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_autoilum.bsmat",
+            "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_bola.bsmat",
             "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_cangrejo.bsmat",
         ),
     ),
@@ -114,6 +131,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
 
     "powerup_icemissile": ModelData(
         bcmdl_path="actors/items/powerup_supermissile/models/powerup_ice__missile.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
             "actors/items/powerup_supermissile/models/powerup_ice__missile.bcmdl",
             "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
