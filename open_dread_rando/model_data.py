@@ -1,5 +1,12 @@
 import dataclasses
+from typing import Optional, Tuple
 
+
+@dataclasses.dataclass(frozen=True)
+class Transform:
+    position: Tuple[float, float, float] = (0.0, 0.0, 0.0)
+    angle: Tuple[float, float, float] = (0.0, 0.0, 0.0)
+    scale: Tuple[float, float, float] = (1.0, 1.0, 1.0)
 
 @dataclasses.dataclass(frozen=True)
 class ModelData:
@@ -7,6 +14,7 @@ class ModelData:
     bmsas: str
     dependencies: tuple[str, ...]
     grapple_fx: bool = False
+    transform: Optional[Transform] = None
 
 
 ALL_MODEL_DATA: dict[str, ModelData] = {
@@ -153,30 +161,46 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         grapple_fx=True,
     ),
 
-    "item_cube": ModelData(
-        bcmdl_path="actors/items/item_cube_broken/models/itemcube_broken.bcmdl",
+    "powerup_opticcamo": ModelData(
+        bcmdl_path="actors/items/item_cube_broken/model/itemcube_camo.bcmdl",
         bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
-            "actors/items/item_cube_broken/models/itemcube_broken.bcmdl",
-            "actors/items/item_cube/models/imats/itemcube_cube.bsmat",
-            "actors/items/item_cube/models/imats/itemcube_emisive.bsmat",
+            "actors/items/item_cube_broken/model/itemcube_camo.bcmdl",
+            "actors/items/item_cube/model/imats/itemcube_camo.bsmat",
+            "actors/items/item_cube/model/imats/itemcube_emisive.bsmat",
         ),
+        transform=Transform(
+            scale=(0.5, 0.5, 0.5),
+            position=(0.0, 30.0, 0.0),
+        )
     ),
 
     "powerup_ghostaura": ModelData(
-        bcmdl_path="actors/items/powerup_ghostaura/models/powerup_ghostaura.bcmdl",
-        bmsas="actors/items/powerup_ghostaura/charclasses/powerup_ghostaura.bmsas",
+        bcmdl_path="actors/items/item_cube_broken/model/itemcube_broken.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
-            "actors/items/powerup_ghostaura/models/powerup_ghostaura.bcmdl",
+            "actors/items/item_cube_broken/model/itemcube_broken.bcmdl",
+            "actors/items/item_cube/model/imats/itemcube_cube.bsmat",
+            "actors/items/item_cube/model/imats/itemcube_emisive.bsmat",
         ),
+        transform=Transform(
+            scale=(0.5, 0.5, 0.5),
+            position=(0.0, 30.0, 0.0),
+        )
     ),
 
     "powerup_sonar": ModelData(
-        bcmdl_path="actors/items/powerup_sonar/models/powerup_sonar.bcmdl",
-        bmsas="actors/items/powerup_sonar/charclasses/powerup_sonar.bmsas",
+        bcmdl_path="actors/items/item_cube_broken/model/itemcube_sonr.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
         dependencies=(
-            "actors/items/powerup_sonar/models/powerup_sonar.bcmdl",
+            "actors/items/item_cube_broken/model/itemcube_sonr.bcmdl",
+            "actors/items/item_cube/model/imats/itemcube_sonr.bsmat",
+            "actors/items/item_cube/model/imats/itemcube_emisive.bsmat",
         ),
+        transform=Transform(
+            scale=(0.5, 0.5, 0.5),
+            position=(0.0, 30.0, 0.0),
+        )
     ),
 
     "powerup_variasuit": ModelData(
