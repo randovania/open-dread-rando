@@ -184,7 +184,7 @@ class ActorPickup(BasePickup):
         # Dependencies
         for level_pkg in pkgs_for_level:
             editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
-            editor.ensure_present(level_pkg, "actors/items/itemsphere/charclasses/timeline.bmsas")
+            editor.ensure_present(level_pkg, selected_model_data.bmsas)
             for dep in selected_model_data.dependencies:
                 editor.ensure_present(level_pkg, dep)
 
