@@ -208,6 +208,20 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "powerup_morphball": ModelData(
+        bcmdl_path="actors/items/powerup_bomb/models/powerup_morph.bcmdl",
+        bmsas="actors/items/powerup_bomb/charclasses/powerup_bomb.bmsas",
+        dependencies=(
+            "actors/items/powerup_bomb/models/powerup_morph.bcmdl",
+            "actors/items/powerup_bomb/models/imats/powerup_morphhologram.bsmat",
+            "actors/items/powerup_bomb/models/imats/powerup_morphmaterial.bsmat",
+        ),
+        transform=Transform(
+            scale=(1.6, 1.6, 1.6),
+            position=(0.0, -20.0, 0.0),
+        )
+    ),
+
     "powerup_bomb": ModelData(
         bcmdl_path="actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
         bmsas="actors/items/powerup_bomb/charclasses/powerup_bomb.bmsas",
