@@ -94,6 +94,6 @@ class LuaEditor:
         for scenario, script in self._custom_level_scripts.items():
             editor.replace_asset(path_for_level(scenario) + ".lc", script["script"].encode("utf-8"))
 
-        corex_script = lua_util.replace_lua_template("custom_corex.lua", self._corex_replacement).encode("utf-8")
         for boss in {"core_x", "core_x_superquetzoa"}:
+            corex_script = lua_util.replace_lua_template(f"custom_{boss}.lua", self._corex_replacement).encode("utf-8")
             editor.replace_asset(f"actors/characters/{boss}/scripts/{boss}.lc", corex_script)
