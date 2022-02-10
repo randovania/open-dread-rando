@@ -399,7 +399,7 @@ function s040_aqua.StopIgnoreHangHydrogigaArena()
 end
 
 function s040_aqua.ElevatorEndUse_elevator_cave_000()
-  Game.SetCooldownFlag(true)
+  Game.SetCooldownFlag(false)
 end
 
 

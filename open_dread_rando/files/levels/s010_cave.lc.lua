@@ -1709,6 +1709,8 @@ function s010_cave.Skipped_CoolDownEventCutscenePlaceholder()
 end
 
 function s010_cave.Cooldown_Activation()
+  Game.SetCooldownFlag(false)
+  s010_cave.Cooldown_Deactivation()
   -- Cooldown has been removed from rando
 
   -- if Game.GetCurrentGameModeID() ~= "EDITOR" then

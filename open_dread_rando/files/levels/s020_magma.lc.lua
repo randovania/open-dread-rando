@@ -664,6 +664,7 @@ end
 
 
 function s020_magma.Cooldown_Activation()
+  s020_magma.Cooldown_Deactivation()
   -- Cooldown has been removed from rando
   
   -- if MAGMA_COOLDOWN_APPLIED == false then
