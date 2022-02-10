@@ -331,6 +331,23 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mat01.bsmat",
             "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mp_fxhologram_01.bsmat",
         ),
+        transform=Transform(
+            scale=(0.8, 0.8, 0.8),
+        )
+    ),
+
+    "powerup_powerbomb": ModelData(
+        bcmdl_path="actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
+        bmsas="actors/items/item_powerbombtank/charclasses/item_powerbombtank.bmsas",
+        dependencies=(
+            "actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
+            "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mat01.bsmat",
+            "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mp_fxhologram_01.bsmat",
+        ),
+        transform=Transform(
+            scale = (-1.25, 1.25, 1.25),
+            position=(0.0, -30.0, 0.0),
+        ),
     ),
 }
 
