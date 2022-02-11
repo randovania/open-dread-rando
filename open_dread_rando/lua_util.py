@@ -24,11 +24,13 @@ def lua_convert(data) -> str:
             "{},".format(lua_convert(item))
             for item in data
         ) + "\n}"
-    elif isinstance(data, dict):
+    if isinstance(data, dict):
         return "{\n" + "\n".join(
             "{} = {},".format(key, lua_convert(value))
             for key, value in data.items()
         ) + "\n}"
+    if isinstance(data, bool):
+        return "true" if data else "false"
     return str(data)
 
 

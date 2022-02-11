@@ -74,10 +74,10 @@ local CAVES_TUTO_MAP_ROOM_DONE = false
 
 
 function s010_cave.OnLoadScenarioFinished()
-  if not CAVES_GAME_INTRO then
-    Game.ResetFader()
-    Game.FadeOut(0)
-  end
+  -- if not CAVES_GAME_INTRO then
+  --   Game.ResetFader()
+  --   Game.FadeOut(0)
+  -- end
 end
 
 function s010_cave.InitFromBlackboard()
@@ -136,7 +136,7 @@ function s010_cave.InitFromBlackboard()
   end
   
   if not CAVES_GAME_INTRO then
-    s010_cave.OnBegin_Cutscene_intro_space()
+    s010_cave.OnEnd_Cutscene_intro_end()
   end
 end
 
@@ -193,8 +193,8 @@ end
 function s010_cave.OnEnd_Cutscene_intro_end()
     
   
-  Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
-  CAVES_GAME_INTRO = true
+  -- Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
+  -- CAVES_GAME_INTRO = true
   Game.PushSetup("PostIntro", true, true)
   Game.PlayCurrentEnvironmentMusic()
   Game.SaveGame("savedata", "IntroEnd", "StartPoint0", true)

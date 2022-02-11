@@ -225,16 +225,17 @@ class ActorDefPickup(BasePickup):
         ai_component = actordef.raw["property"]["components"]["AI"]
         ai_component["fields"]["fields"][item_id_field] = item_id
 
-        for text_file in ALL_TEXT_FILES:
-            text_file = "system/localization/" + text_file
-            text = editor.get_file(text_file, Txt)
-            text.strings[self.pickup["pickup_string_key"]] = self.pickup["caption"]
+        patch_text(editor, self.pickup["pickup_string_key"], self.pickup["caption"])
 
         return bmsad_path, actordef
 
     def patch(self, editor: PatcherEditor):
         raise NotImplementedError()
 
+def patch_text(editor: PatcherEditor, key: str, value: str):
+    for text_file in ALL_TEXT_FILES:
+        text = editor.get_file(f"system/localization/{text_file}", Txt)
+        text.strings[key] = value
 
 class EmmiPickup(ActorDefPickup):
     def patch(self, editor: PatcherEditor):

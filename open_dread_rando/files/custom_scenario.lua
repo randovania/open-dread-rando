@@ -10,3 +10,20 @@ function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallba
     end
     GUI.ShowMessage(message, true, post_gui_callback, false)
 end
+
+local init_scenario = Scenario.InitScenario
+function Scenario.InitScenario(arg1, arg2, arg3, arg4)
+    init_scenario(arg1, arg2, arg3, arg4)
+    if not Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, false) then
+        Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
+        Game.AddSF(0.8, Scenario.ShowText, "")
+    end
+end
+
+local textboxes_seen = 0
+function Scenario.ShowText()
+    if Init.iNumRandoTextBoxes - textboxes_seen > 0 then
+        textboxes_seen = textboxes_seen + 1
+        GUI.ShowMessage("#RANDO_STARTING_TEXT_" .. textboxes_seen, true, "Scenario.ShowText")
+    end
+end

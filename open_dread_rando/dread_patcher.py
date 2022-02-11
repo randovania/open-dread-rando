@@ -12,7 +12,7 @@ from open_dread_rando.exefs import patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.pickup import pickup_object_for
+from open_dread_rando.pickup import patch_text, pickup_object_for
 
 T = typing.TypeVar("T")
 
@@ -92,7 +92,7 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_one_sided_door_fixes(editor)
 
 
-def create_custom_init(inventory: dict[str, int], starting_location: dict):
+def create_custom_init(editor: PatcherEditor, inventory: dict[str, int], starting_location: dict, starting_text: list[list[str]]):
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
         "ITEM_MAX_LIFE": 99,
@@ -105,10 +105,24 @@ def create_custom_init(inventory: dict[str, int], starting_location: dict):
     }
     final_inventory.update(inventory)
 
+    def chunks(l, n):
+        for i in range(0, len(l), n):
+            yield l[i:i+n]
+    
+    textboxes = 0
+    for group in starting_text:
+        boxes = chunks(group, 3)
+        for box in boxes:
+            textboxes += 1
+            box_text = "|".join(box)
+            patch_text(editor, f"RANDO_STARTING_TEXT_{textboxes}", box_text)
+            
+
     replacement = {
         "new_game_inventory": final_inventory,
         "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
         "starting_actor": lua_util.wrap_string(starting_location["actor"]),
+        "textbox_count": textboxes
     }
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)
@@ -153,8 +167,10 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     editor.replace_asset(
         "system/scripts/init.lc",
         create_custom_init(
+            editor,
             configuration["starting_items"],
-            configuration["starting_location"]
+            configuration["starting_location"],
+            configuration["starting_text"],
         ).encode("ascii"),
     )
 

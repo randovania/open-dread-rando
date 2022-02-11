@@ -115,6 +115,15 @@
         },
         "starting_items": {
             "type": "object"
+        },
+        "starting_text": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
         }
     },
     "required": [
