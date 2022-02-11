@@ -74,6 +74,7 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
 
             link_for_actor = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{actor_name}"
             mirrored_link = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
+            shield_link = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{other.sName}"
 
             life_comp[direction] = mirrored_link
 
@@ -81,6 +82,9 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
                                        scenario.raw.Root.pScenario.rEntitiesLayer.dctActorGroups)
             for group_name, group_elements in actor_groups.items():
                 if link_for_actor in group_elements:
+                    if shield_link not in group_elements:
+                        # ensure the existing shield is present on both sides
+                        group_elements.append(shield_link)
                     group_elements.append(mirrored_link)
 
 
