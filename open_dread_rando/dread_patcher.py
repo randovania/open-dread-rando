@@ -65,8 +65,7 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
             if "db_hdoor" in other.oActorDefLink:
                 continue
 
-            LOG.debug("[{:>15}/{}] ({:>20}) copy {} into {}".format(scenario_name, layer_name, actor_name, other.sName,
-                                                                    direction))
+            LOG.debug("%s/%s/%s: copy %s into %s", scenario_name, layer_name, actor_name, other.sName, direction)
             mirrored = copy.deepcopy(other)
             mirrored.sName += "_mirrored"
             mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]

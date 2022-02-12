@@ -57,12 +57,8 @@ def main():
     with args.input_json.open() as f:
         configuration = json.load(f)
 
-    def status_update(percent: float, message: str):
-        print("[{0:3d}%] {1}".format(int(percent * 100), message))
-
-    dread_patcher.patch_with_status_update(
+    dread_patcher.patch(
         args.input_path,
         args.output_path,
         configuration,
-        status_update,
     )
