@@ -4,7 +4,8 @@ from pathlib import Path
 import ips
 
 VERSIONS = {
-    "1.0.0": "49161D9CCBC15DF944D0B6278A3C446C006B0BE8"
+    "1.0.0": "49161D9CCBC15DF944D0B6278A3C446C006B0BE8",
+    "2.0.0": "C447858C965A1A2EBCC506649CF87AC5665180ED",
 }
 NOP = bytes.fromhex('1F2003D5')
 
@@ -29,11 +30,14 @@ class VersionedPatch(dict):
 def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
     # patches corpius to not give the phantom cloak, and not to display the
     # "Upgrading suit for Aeion compatibility" message which causes softlocks
+    corpius_none = bytes.fromhex('A13F00D0 21D81591')
     grant_item_none = VersionedPatch({
-        "1.0.0": (0x00d94890, bytes.fromhex('A13F00D0 21D81591'))
+        "1.0.0": (0x00d94890, corpius_none),
+        "2.0.0": (0x00d99be0, corpius_none),
     })
     stub_aeion_message = VersionedPatch({
-        "1.0.0": (0x011a1f4c, NOP)
+        "1.0.0": (0x011a1f4c, NOP),
+        "2.0.0": (0x011af61c, NOP),
     })
 
     for p in [grant_item_none, stub_aeion_message]:
