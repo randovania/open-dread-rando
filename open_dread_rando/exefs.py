@@ -30,10 +30,9 @@ class VersionedPatch(dict):
 def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
     # patches corpius to not give the phantom cloak, and not to display the
     # "Upgrading suit for Aeion compatibility" message which causes softlocks
-    corpius_none = bytes.fromhex('A13F00D0 21D81591')
     grant_item_none = VersionedPatch({
-        "1.0.0": (0x00d94890, corpius_none),
-        "2.0.0": (0x00d99be0, corpius_none),
+        "1.0.0": (0x00d94890, bytes.fromhex('A13F00D0 21D81591')),
+        "2.0.0": (0x00d99be0, bytes.fromhex('01400090 21DC3391')),
     })
     stub_aeion_message = VersionedPatch({
         "1.0.0": (0x011a1f4c, NOP),
