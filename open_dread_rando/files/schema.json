@@ -124,11 +124,20 @@
                     "type": "string"
                 }
             }
+        },
+        "energy_per_tank": {
+            "type": "number",
+            "default": 100.0
+        },
+        "immediate_energy_parts": {
+            "type": "boolean",
+            "default": false
         }
     },
     "required": [
         "starting_location",
-        "starting_items"
+        "starting_items",
+        "pickups"
     ],
     "$defs": {
         "scenario_lua_callback": {

@@ -50,10 +50,11 @@ class PickupType(Enum):
 
 
 class BasePickup:
-    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int):
+    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int, configuration: dict):
         self.lua_editor = lua_editor
         self.pickup = pickup
         self.pickup_id = pickup_id
+        self.configuration = configuration
 
     def patch(self, editor: PatcherEditor):
         raise NotImplementedError()
@@ -68,9 +69,14 @@ class ActorPickup(BasePickup):
         item_id: str = self.pickup["resources"][0]["item_id"]
         quantity: float = self.pickup["resources"][0]["quantity"]
 
-        if item_id == "ITEM_ENERGY_TANKS":
+        if (item_id == "ITEM_ENERGY_TANKS"
+            or (item_id == "ITEM_LIFE_SHARDS"
+            and self.configuration.get("immediate_energy_parts", False))
+        ):
             item_id = "fMaxLife"
-            quantity *= 100.0
+            quantity *= self.configuration.get("energy_per_tank", 100.0)
+            if item_id == "ITEM_LIFE_SHARDS":
+                quantity /= 4
             set_custom_params["Param4"]["value"] = "Full"
             set_custom_params["Param5"]["value"] = "fCurrentLife"
             set_custom_params["Param6"]["value"] = "LIFE"
@@ -273,6 +279,6 @@ _PICKUP_TYPE_TO_CLASS = {
 }
 
 
-def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int) -> "BasePickup":
+def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int, configuration: dict) -> "BasePickup":
     pickup_type = PickupType(pickup["pickup_type"])
-    return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id)
+    return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id, configuration)

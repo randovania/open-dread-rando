@@ -92,7 +92,11 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_one_sided_door_fixes(editor)
 
 
-def create_custom_init(editor: PatcherEditor, inventory: dict[str, int], starting_location: dict, starting_text: list[list[str]]):
+def create_custom_init(editor: PatcherEditor, configuration: dict):
+    inventory: dict[str, int] = configuration["starting_items"]
+    starting_location: dict = configuration["starting_location"]
+    starting_text: list[list[str]] = configuration.get("starting_text", [])
+    
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
         "ITEM_MAX_LIFE": 99,
@@ -122,20 +126,22 @@ def create_custom_init(editor: PatcherEditor, inventory: dict[str, int], startin
         "new_game_inventory": final_inventory,
         "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
         "starting_actor": lua_util.wrap_string(starting_location["actor"]),
-        "textbox_count": textboxes
+        "textbox_count": textboxes,
+        "energy_per_tank": configuration.get("energy_per_tank", 100.0),
+        "immediate_energy_parts": configuration.get("immediate_energy_parts", False),
     }
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
-def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict]):
+def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
 
     for i, pickup in enumerate(pickups_config):
         LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
         try:
-            pickup_object_for(lua_scripts, pickup, i).patch(editor)
+            pickup_object_for(lua_scripts, pickup, i, configuration).patch(editor)
         except NotImplementedError as e:
             LOG.warning(e)
 
@@ -166,12 +172,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     lua_util.create_script_copy(editor, "system/scripts/init")
     editor.replace_asset(
         "system/scripts/init.lc",
-        create_custom_init(
-            editor,
-            configuration["starting_items"],
-            configuration["starting_location"],
-            configuration["starting_text"],
-        ).encode("ascii"),
+        create_custom_init(editor, configuration).encode("ascii"),
     )
 
     # Update scenario.lc
@@ -182,7 +183,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     # Pickups
-    patch_pickups(editor, lua_scripts, configuration["pickups"])
+    patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
 
     # Exefs
     LOG.info("Creating exefs patches")

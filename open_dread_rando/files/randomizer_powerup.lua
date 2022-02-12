@@ -101,10 +101,19 @@ function RandomizerPowerup.IncreaseEnergy(resource)
     if resource == nil then return end
     local item_id = resource.item_id
     if item_id ~= "ITEM_ENERGY_TANKS" and item_id ~= "ITEM_LIFE_SHARDS" then return end
-    if item_id == "ITEM_LIFE_SHARDS" and (RandomizerPowerup.GetItemAmount(item_id) % 4) ~= 0 then return end
+    if not Init.bImmediateEnergyParts and item_id == "ITEM_LIFE_SHARDS" and (RandomizerPowerup.GetItemAmount(item_id) % 4) ~= 0 then return end
+    local energy = Init.fEnergyPerTank
+    if item_id == "ITEM_LIFE_SHARDS" and Init.bImmediateEnergyParts then
+        energy = energy / 4
+    end
     Game.LogWarn(0, "Increasing player energy.")
-    RandomizerPowerup.IncreaseItemAmount("ITEM_MAX_LIFE", 100)
-    RandomizerPowerup.SetItemAmount("ITEM_CURRENT_LIFE", "ITEM_MAX_LIFE")
+
+    local new = RandomizerPowerup.GetItemAmount("ITEM_MAX_LIFE") + energy
+    RandomizerPowerup.SetItemAmount("ITEM_MAX_LIFE", new)
+    RandomizerPowerup.SetItemAmount("ITEM_CURRENT_LIFE", new)
+    local life = Game.GetPlayer().LIFE
+    life.fMaxLife = new
+    life.fCurrentLife = new
 end
 
 function RandomizerPowerup.IncreaseAmmo(resource)
