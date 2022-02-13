@@ -1099,43 +1099,11 @@ end
 
 
 function s010_cave.OnEnter_AP_01()
-  local oActor = Game.GetActor("PRP_CV_AccessPoint001")
-  local sAdamDiag = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if oActor ~= nil then
-    if sAdamDiag == "DIAG_ADAM_AQUA_2" then
-      oActor.USABLE:ActiveDialogue("DIAG_ADAM_CAVE_4")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_CAVE_4")
-    elseif sAdamDiag == "DIAG_ADAM_CAVE_4" and Game.GetCooldownFlag() == false then
-        local iScrewAttack = Blackboard.GetProp("PLAYER_INVENTORY", "ITEM_SCREW_ATTACK")
-        if iScrewAttack ~= nil and iScrewAttack > 0 then
-          oActor.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-          Blackboard.SetProp( "GAME_PROGRESS", "ADAMDIALOGUE",  "s", "DIAG_ADAM_AQUA_3")
-        end
-      end
-    end
+  Scenario.CheckRandoHint("PRP_CV_AccessPoint001", "CAVE_1")
 end
 
 function s010_cave.OnEnter_AP_02()
-  local L0_2 = Game.GetActor("PRP_CV_AccessPoint002")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS",  "ADAMDIALOGUE")
-  if L0_2 ~= nil and L1_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_CAVE_1" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_CAVE_2")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_CAVE_2")
-    elseif L1_2 == "DIAG_ADAM_CAVE_2" then
-      local bUsed = Blackboard.GetProp("s010_cave", "PRP_CV_ThermalDevice:USABLE:Used")
-      if bUsed ~= nil then
-        L0_2.USABLE:ActiveDialogue("DIAG_ADAM_CAVE_3")
-        Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_CAVE_3")
-      end
-    elseif L1_2 == "DIAG_ADAM_CAVE_4" and Game.GetCooldownFlag() == false then
-        local iScrewAttack = Blackboard.GetProp("PLAYER_INVENTORY",  "ITEM_SCREW_ATTACK")
-        if iScrewAttack ~= nil and iScrewAttack > 0 then
-          L0_2.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-          Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_AQUA_3")
-        end
-      end
-    end
+  Scenario.CheckRandoHint("PRP_CV_AccessPoint002", "CAVE_2")
 end
 
 

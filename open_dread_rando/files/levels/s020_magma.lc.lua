@@ -742,37 +742,11 @@ end
 
 
 function s020_magma.OnEnter_AP_03()
-  local L0_2 = Game.GetActor("accesspoint")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if L0_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_CAVE_3" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_MAGMA_1")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_MAGMA_1")
-    elseif L1_2 == "DIAG_ADAM_CAVE_4" and Game.GetCooldownFlag() == false then
-      local L2_2 = Blackboard.GetProp("PLAYER_INVENTORY", "ITEM_SCREW_ATTACK")
-      if L2_2 ~= nil and 0 < L2_2 then
-        L0_2.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-        Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_AQUA_3")
-      end
-    end
-  end
+  Scenario.CheckRandoHint("accesspoint", "MAGMA_1")
 end
 
 function s020_magma.OnEnter_AP_03B()
-  local L0_2 = Game.GetActor("accesspoint_000")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if L0_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_MAGMA_1" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_MAGMA_2")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_MAGMA_2")
-    elseif L1_2 == "DIAG_ADAM_CAVE_4" and Game.GetCooldownFlag() == false then
-      local L2_2 = Blackboard.GetProp("PLAYER_INVENTORY", "ITEM_SCREW_ATTACK")
-      if L2_2 ~= nil and L2_2 > 0 then
-        L0_2.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-        Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_AQUA_3")
-      end
-    end
-  end
+  Scenario.CheckRandoHint("accesspoint_000", "MAGMA_2")
 end
 
 
