@@ -1160,10 +1160,10 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
     end
   elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_068" then
     
-      local oActor = Game.GetActor("cutsceneplayer_3")
-    if oActor ~= nil then
-      oActor.CUTSCENE:TryLaunchCutscene()
-    end
+    --   local oActor = Game.GetActor("cutsceneplayer_3")
+    -- if oActor ~= nil then
+    --   oActor.CUTSCENE:TryLaunchCutscene()
+    -- end
   elseif _ARG_0_ == "collision_camera_073" and _ARG_2_ == "collision_camera_020" then
     local oActor = Game.GetActor("cutsceneplayer_54")
     if oActor ~= nil then
