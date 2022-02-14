@@ -19,8 +19,13 @@ function Scenario.CheckRandoHint(ap_id, hint_id)
     local seen = Scenario.ReadFromBlackboard(Scenario.tRandoHintPropIDs[hint_id], false)
     if access_point ~= nil and not seen then
         access_point.USABLE:ActiveDialogue("DIAG_ADAM_" .. hint_id)
-        Scenario.WriteToBlackboard(Scenario.tRandoHintPropIDs[hint_id], "b", true)
+        Scenario.sHintId = hint_id
     end
+end
+
+function Scenario.SetRandoHintSeen()
+    if Scenario.sHintId == nil then return end
+    Scenario.WriteToBlackboard(Scenario.tRandoHintPropIDs[Scenario.sHintId], "b", true)
 end
 
 function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallback, skipped)

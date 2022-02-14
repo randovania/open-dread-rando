@@ -1158,12 +1158,12 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_068" then
+  -- elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_068" then
     
-    --   local oActor = Game.GetActor("cutsceneplayer_3")
-    -- if oActor ~= nil then
-    --   oActor.CUTSCENE:TryLaunchCutscene()
-    -- end
+  --     local oActor = Game.GetActor("cutsceneplayer_3")
+  --   if oActor ~= nil then
+  --     oActor.CUTSCENE:TryLaunchCutscene()
+  --   end
   elseif _ARG_0_ == "collision_camera_073" and _ARG_2_ == "collision_camera_020" then
     local oActor = Game.GetActor("cutsceneplayer_54")
     if oActor ~= nil then
@@ -2105,8 +2105,9 @@ function s010_cave.OnUsablePrepareUse(_ARG_0_)
 end
 
 function s010_cave.OnUsableUse(_ARG_0_)
-    
-    
+  if _ARG_0_.sName == "PRP_CV_AccessPoint001" or _ARG_0_.sName == "PRP_CV_AccessPoint001" then
+    Scenario.SetRandoHintSeen()
+  end
 
   if _ARG_0_.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, "b", true)

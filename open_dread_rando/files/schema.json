@@ -132,6 +132,35 @@
         "immediate_energy_parts": {
             "type": "boolean",
             "default": false
+        },
+        "hints": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "accesspoint_actor": {
+                        "$ref": "#/$defs/actor_reference_with_layer"
+                    },
+                    "hint_id": {
+                        "type": "string",
+                        "pattern": "[A-Z]+?_[0-9]+"
+                    },
+                    "text": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "accesspoint_actor",
+                    "hint_id",
+                    "text"
+                ]
+            }
+        },
+        "text_patches": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
         }
     },
     "required": [

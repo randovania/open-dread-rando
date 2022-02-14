@@ -1,6 +1,7 @@
 import shutil
 import typing
 from pathlib import Path
+from construct import Container
 
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import BaseResource, Brfld
@@ -26,6 +27,14 @@ class PatcherEditor(FileTreeEditor):
 
     def get_scenario(self, name: str) -> Brfld:
         return self.get_file(path_for_level(name) + ".brfld", Brfld)
+    
+    def get_level_pkgs(self, name: str) -> set[str]:
+        return set(self.find_pkgs(path_for_level(name) + ".brfld"))
+    
+    def resolve_actor_reference(self, ref: dict) -> Container:
+        scenario = self.get_scenario(ref["scenario"])
+        layer = ref.get("layer", "default")
+        return scenario.actors_for_layer(layer)[ref["actor"]]
 
     def flush_modified_assets(self):
         for name, resource in self.memory_files.items():

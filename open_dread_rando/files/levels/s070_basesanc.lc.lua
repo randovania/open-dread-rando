@@ -891,7 +891,11 @@ function s070_basesanc.OnEnter_AP_08()
   Scenario.CheckRandoHint("accesspoint_000", "SANC_1")
 end
 
-
+function s070_basesanc.OnUsableUse(_ARG_0_)
+  if _ARG_0_.sName == "accesspoint_000" then
+    Scenario.SetRandoHintSeen()
+  end
+end
 
 
 

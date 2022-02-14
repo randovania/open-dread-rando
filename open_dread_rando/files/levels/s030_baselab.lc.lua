@@ -646,7 +646,11 @@ function s030_baselab.OnEnter_AP_06()
   Scenario.CheckRandoHint("accesspoint_001", "LAB_2")
 end
 
-
+function s030_baselab.OnUsableUse(_ARG_0_)
+  if _ARG_0_.sName == "accesspoint_000" or _ARG_0_.sName == "accesspoint_001" then
+    Scenario.SetRandoHintSeen()
+  end
+end
 
 
 

@@ -12,7 +12,8 @@ from open_dread_rando.exefs import patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.pickup import patch_text, pickup_object_for
+from open_dread_rando.pickup import pickup_object_for
+from open_dread_rando.text_patches import apply_text_patches, patch_hints, patch_text
 
 T = typing.TypeVar("T")
 
@@ -183,6 +184,14 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
 
     # Pickups
     patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
+
+    # Hints
+    if "hints" in configuration:
+        patch_hints(editor, configuration["hints"])
+    
+    # Text patches
+    if "text_patches" in configuration:
+        apply_text_patches(editor, configuration["text_patches"])
 
     # Exefs
     LOG.info("Creating exefs patches")

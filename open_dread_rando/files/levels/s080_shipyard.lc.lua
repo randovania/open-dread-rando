@@ -429,7 +429,11 @@ function s080_shipyard.OnEnter_AP_10()
   Scenario.CheckRandoHint("accesspoint_000", "SHIP_1")
 end
 
-
+function s080_shipyard.OnUsableUse(_ARG_0_)
+  if _ARG_0_.sName == "accesspoint_000" then
+    Scenario.SetRandoHintSeen()
+  end
+end
 
 
 
