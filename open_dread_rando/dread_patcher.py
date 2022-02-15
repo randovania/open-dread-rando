@@ -6,12 +6,14 @@ import typing
 from pathlib import Path
 
 import jsonschema
+from mercury_engine_data_structures.construct_extensions import json as json_ext
+from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando import elevator, lua_util
 from open_dread_rando.exefs import patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.patcher_editor import PatcherEditor
+from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 from open_dread_rando.pickup import pickup_object_for
 from open_dread_rando.text_patches import apply_text_patches, patch_hints, patch_text
 
@@ -72,20 +74,13 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
             mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]
             scenario.actors_for_layer(layer_name)[mirrored.sName] = mirrored
 
-            link_for_actor = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{actor_name}"
-            mirrored_link = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
-            shield_link = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{other.sName}"
+            # Add a reference to the other shield to the main actor
+            life_comp[direction] = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
 
-            life_comp[direction] = mirrored_link
-
-            actor_groups = typing.cast(dict[str, list[str]],
-                                       scenario.raw.Root.pScenario.rEntitiesLayer.dctActorGroups)
-            for group_name, group_elements in actor_groups.items():
-                if link_for_actor in group_elements:
-                    if shield_link not in group_elements:
-                        # ensure the existing shield is present on both sides
-                        group_elements.append(shield_link)
-                    group_elements.append(mirrored_link)
+            for group_name in scenario.all_actor_groups():
+                if any(scenario.is_actor_in_group(group_name, x, layer_name) for x in [actor_name, other.sName]):
+                    for name in [actor_name, mirrored.sName, other.sName]:
+                        scenario.add_actor_to_group(group_name, name, layer_name)
 
 
 def apply_static_fixes(editor: PatcherEditor):
@@ -96,7 +91,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     inventory: dict[str, int] = configuration["starting_items"]
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
-    
+
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
         "ITEM_MAX_LIFE": 99,
@@ -111,8 +106,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 
     def chunks(l, n):
         for i in range(0, len(l), n):
-            yield l[i:i+n]
-    
+            yield l[i:i + n]
+
     textboxes = 0
     for group in starting_text:
         boxes = chunks(group, 3)
@@ -120,7 +115,6 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
             textboxes += 1
             box_text = "|".join(box)
             patch_text(editor, f"RANDO_STARTING_TEXT_{textboxes}", box_text)
-            
 
     replacement = {
         "new_game_inventory": final_inventory,
@@ -188,7 +182,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     # Hints
     if "hints" in configuration:
         patch_hints(editor, configuration["hints"])
-    
+
     # Text patches
     if "text_patches" in configuration:
         apply_text_patches(editor, configuration["text_patches"])
