@@ -228,7 +228,7 @@ function s040_aqua.OnEnter_AP_09()
   Scenario.CheckRandoHint("accesspoint_001", "AQUA_2")
 end
 
-function s040_aqua.OnUsableUse(_ARG_0_)
+function s040_aqua.OnUsableFinishInteract(_ARG_0_)
   if _ARG_0_.sName == "accesspoint_000" or _ARG_0_.sName == "accesspoint_001" then
     Scenario.SetRandoHintSeen()
   end

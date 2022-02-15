@@ -25,7 +25,10 @@ end
 
 function Scenario.SetRandoHintSeen()
     if Scenario.sHintId == nil then return end
-    Scenario.WriteToBlackboard(Scenario.tRandoHintPropIDs[Scenario.sHintId], "b", true)
+    local hint_id = Scenario.tRandoHintPropIDs[Scenario.sHintId]
+    if not Scenario.ReadFromBlackboard(hint_id, false) then
+        Scenario.WriteToBlackboard(hint_id, "b", true)
+    end
 end
 
 function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallback, skipped)

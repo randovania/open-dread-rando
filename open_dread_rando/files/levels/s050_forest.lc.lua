@@ -259,7 +259,7 @@ function s050_forest.OnEnter_AP_07()
   Scenario.CheckRandoHint("accesspoint_000", "FOREST_1")
 end
 
-function s050_forest.OnUsableUse(_ARG_0_)
+function s050_forest.OnUsableFinishInteract(_ARG_0_)
   if _ARG_0_.sName == "accesspoint_000" then
     Scenario.SetRandoHintSeen()
   end

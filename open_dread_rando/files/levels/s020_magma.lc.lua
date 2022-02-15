@@ -749,7 +749,7 @@ function s020_magma.OnEnter_AP_03B()
   Scenario.CheckRandoHint("accesspoint_000", "MAGMA_2")
 end
 
-function s020_magma.OnUsableUse(_ARG_0_)
+function s020_magma.OnUsableFinishInteract(_ARG_0_)
   if _ARG_0_.sName == "accesspoint" or _ARG_0_.sName == "accesspoint_000" then
     Scenario.SetRandoHintSeen()
   end

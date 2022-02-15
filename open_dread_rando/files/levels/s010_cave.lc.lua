@@ -2081,8 +2081,8 @@ end
 
 
 function s010_cave.OnUsableFinishInteract(_ARG_0_)
-  if _ARG_0_.sName == "PRP_CV_AccessPoint001" then
-    s010_cave.OnTutoMapOptionsBegins(true)
+  if _ARG_0_.sName == "PRP_CV_AccessPoint001" or _ARG_0_.sName == "PRP_CV_AccessPoint002" then
+    Scenario.SetRandoHintSeen()
   elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(true)
   end
@@ -2105,10 +2105,6 @@ function s010_cave.OnUsablePrepareUse(_ARG_0_)
 end
 
 function s010_cave.OnUsableUse(_ARG_0_)
-  if _ARG_0_.sName == "PRP_CV_AccessPoint001" or _ARG_0_.sName == "PRP_CV_AccessPoint001" then
-    Scenario.SetRandoHintSeen()
-  end
-
   if _ARG_0_.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, "b", true)
   end
