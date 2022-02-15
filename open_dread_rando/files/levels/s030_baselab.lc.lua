@@ -639,40 +639,18 @@ end
 
 
 function s030_baselab.OnEnter_AP_04()
-  local L0_2 = Game.GetActor("accesspoint_000")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if L0_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_MAGMA_2" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_LAB_1")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_LAB_1")
-    elseif L1_2 == "DIAG_ADAM_CAVE_4" then
-      local L2_2 = Blackboard.GetProp("PLAYER_INVENTORY", "ITEM_SCREW_ATTACK")
-      if L2_2 ~= nil and L2_2 > 0 then
-        L0_2.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-        Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_AQUA_3")
-      end
-    end
-  end
+  Scenario.CheckRandoHint("accesspoint_000", "LAB_1")
 end
 
 function s030_baselab.OnEnter_AP_06()
-  local L0_2 = Game.GetActor("accesspoint_001")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if L0_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_AQUA_1" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_LAB_2")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_LAB_2")
-    elseif L1_2 == "DIAG_ADAM_CAVE_4" then
-      local L2_2 = Blackboard.GetProp("PLAYER_INVENTORY", "ITEM_SCREW_ATTACK")
-      if L2_2 ~= nil and L2_2 > 0 then
-        L0_2.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-        Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_AQUA_3")
-      end
-    end
-  end
+  Scenario.CheckRandoHint("accesspoint_001", "LAB_2")
 end
 
-
+function s030_baselab.OnUsableFinishInteract(_ARG_0_)
+  if _ARG_0_.sName == "accesspoint_000" or _ARG_0_.sName == "accesspoint_001" then
+    Scenario.SetRandoHintSeen()
+  end
+end
 
 
 

@@ -4,11 +4,12 @@ import json
 from enum import Enum
 from pathlib import Path
 
-from mercury_engine_data_structures.formats import Bmsad, Txt
+from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando import model_data
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
+from open_dread_rando.text_patches import patch_text
 
 EXPANSION_ITEM_IDS = {
     "ITEM_ENERGY_TANKS",
@@ -16,23 +17,6 @@ EXPANSION_ITEM_IDS = {
     "ITEM_WEAPON_MISSILE_MAX",
     "ITEM_WEAPON_POWER_BOMB_MAX",
     "ITEM_WEAPON_POWER_BOMB",
-}
-
-# may want to edit all the localization files?
-ALL_TEXT_FILES = {
-    # "eu_dutch.txt",
-    # "eu_french.txt",
-    # "eu_german.txt",
-    # "eu_italian.txt",
-    # "eu_spanish.txt",
-    # "japanese.txt",
-    # "korean.txt",
-    # "russian.txt",
-    # "simplified_chinese.txt",
-    # "traditional_chinese.txt",
-    "us_english.txt",
-    # "us_french.txt",
-    # "us_spanish.txt"
 }
 
 
@@ -143,10 +127,9 @@ class ActorPickup(BasePickup):
         template_bmsad = _read_template_powerup()
 
         pickup_actor = self.pickup["pickup_actor"]
-        pkgs_for_level = set(editor.find_pkgs(path_for_level(pickup_actor["scenario"]) + ".brfld"))
-        level = editor.get_scenario(pickup_actor["scenario"])
-        actor = level.actors_for_layer(pickup_actor["layer"])[pickup_actor["actor"]]
-
+        pkgs_for_level = editor.get_level_pkgs(pickup_actor["scenario"])
+        actor = editor.resolve_actor_reference(pickup_actor)
+        
         model_name: str = self.pickup["model"]
         selected_model_data = model_data.get_data(model_name)
 
@@ -237,11 +220,6 @@ class ActorDefPickup(BasePickup):
 
     def patch(self, editor: PatcherEditor):
         raise NotImplementedError()
-
-def patch_text(editor: PatcherEditor, key: str, value: str):
-    for text_file in ALL_TEXT_FILES:
-        text = editor.get_file(f"system/localization/{text_file}", Txt)
-        text.strings[key] = value
 
 class EmmiPickup(ActorDefPickup):
     def patch(self, editor: PatcherEditor):

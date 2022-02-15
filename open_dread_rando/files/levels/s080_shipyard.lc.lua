@@ -426,20 +426,14 @@ end
 
 
 function s080_shipyard.OnEnter_AP_10()
-  local L0_2 = Game.GetActor("accesspoint_000")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if L0_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_CAVE_4" or L1_2 == "DIAG_ADAM_AQUA_3" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_SHIP_1")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_SHIP_1")
-    elseif L1_2 == "DIAG_ADAM_SHIP_1" and SHIP_STRONG_REACTION then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_SHIP_2")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_SHIP_2")
-    end
-  end
+  Scenario.CheckRandoHint("accesspoint_000", "SHIP_1")
 end
 
-
+function s080_shipyard.OnUsableFinishInteract(_ARG_0_)
+  if _ARG_0_.sName == "accesspoint_000" then
+    Scenario.SetRandoHintSeen()
+  end
+end
 
 
 

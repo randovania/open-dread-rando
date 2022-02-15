@@ -1099,43 +1099,11 @@ end
 
 
 function s010_cave.OnEnter_AP_01()
-  local oActor = Game.GetActor("PRP_CV_AccessPoint001")
-  local sAdamDiag = Blackboard.GetProp("GAME_PROGRESS", "ADAMDIALOGUE")
-  if oActor ~= nil then
-    if sAdamDiag == "DIAG_ADAM_AQUA_2" then
-      oActor.USABLE:ActiveDialogue("DIAG_ADAM_CAVE_4")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_CAVE_4")
-    elseif sAdamDiag == "DIAG_ADAM_CAVE_4" and Game.GetCooldownFlag() == false then
-        local iScrewAttack = Blackboard.GetProp("PLAYER_INVENTORY", "ITEM_SCREW_ATTACK")
-        if iScrewAttack ~= nil and iScrewAttack > 0 then
-          oActor.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-          Blackboard.SetProp( "GAME_PROGRESS", "ADAMDIALOGUE",  "s", "DIAG_ADAM_AQUA_3")
-        end
-      end
-    end
+  Scenario.CheckRandoHint("PRP_CV_AccessPoint001", "CAVE_1")
 end
 
 function s010_cave.OnEnter_AP_02()
-  local L0_2 = Game.GetActor("PRP_CV_AccessPoint002")
-  local L1_2 = Blackboard.GetProp("GAME_PROGRESS",  "ADAMDIALOGUE")
-  if L0_2 ~= nil and L1_2 ~= nil then
-    if L1_2 == "DIAG_ADAM_CAVE_1" then
-      L0_2.USABLE:ActiveDialogue("DIAG_ADAM_CAVE_2")
-      Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_CAVE_2")
-    elseif L1_2 == "DIAG_ADAM_CAVE_2" then
-      local bUsed = Blackboard.GetProp("s010_cave", "PRP_CV_ThermalDevice:USABLE:Used")
-      if bUsed ~= nil then
-        L0_2.USABLE:ActiveDialogue("DIAG_ADAM_CAVE_3")
-        Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_CAVE_3")
-      end
-    elseif L1_2 == "DIAG_ADAM_CAVE_4" and Game.GetCooldownFlag() == false then
-        local iScrewAttack = Blackboard.GetProp("PLAYER_INVENTORY",  "ITEM_SCREW_ATTACK")
-        if iScrewAttack ~= nil and iScrewAttack > 0 then
-          L0_2.USABLE:ActiveDialogue("DIAG_ADAM_AQUA_3")
-          Blackboard.SetProp("GAME_PROGRESS", "ADAMDIALOGUE", "s", "DIAG_ADAM_AQUA_3")
-        end
-      end
-    end
+  Scenario.CheckRandoHint("PRP_CV_AccessPoint002", "CAVE_2")
 end
 
 
@@ -1190,12 +1158,12 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_068" then
+  -- elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_068" then
     
-      local oActor = Game.GetActor("cutsceneplayer_3")
-    if oActor ~= nil then
-      oActor.CUTSCENE:TryLaunchCutscene()
-    end
+  --     local oActor = Game.GetActor("cutsceneplayer_3")
+  --   if oActor ~= nil then
+  --     oActor.CUTSCENE:TryLaunchCutscene()
+  --   end
   elseif _ARG_0_ == "collision_camera_073" and _ARG_2_ == "collision_camera_020" then
     local oActor = Game.GetActor("cutsceneplayer_54")
     if oActor ~= nil then
@@ -2113,8 +2081,8 @@ end
 
 
 function s010_cave.OnUsableFinishInteract(_ARG_0_)
-  if _ARG_0_.sName == "PRP_CV_AccessPoint001" then
-    s010_cave.OnTutoMapOptionsBegins(true)
+  if _ARG_0_.sName == "PRP_CV_AccessPoint001" or _ARG_0_.sName == "PRP_CV_AccessPoint002" then
+    Scenario.SetRandoHintSeen()
   elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(true)
   end
@@ -2137,9 +2105,6 @@ function s010_cave.OnUsablePrepareUse(_ARG_0_)
 end
 
 function s010_cave.OnUsableUse(_ARG_0_)
-    
-    
-
   if _ARG_0_.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, "b", true)
   end
