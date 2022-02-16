@@ -36,16 +36,18 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.IncreaseEnergy(granted)
     RandomizerPowerup.IncreaseAmmo(granted)
 
+    return granted
+end
+
+function RandomizerPowerup.DisableInput()
+    -- items with unique inputs (Speed Booster, Phantom Cloak) require disabling and re-enabling inputs to work properly
     local oPlayer = Game.GetPlayer()
     if oPlayer ~= nil then
         oPlayer.INPUT:IgnoreInput(true, false, "PickupObtained")
     end
     Game.AddSF(0.1, RandomizerPowerup.RecoverInput, "")
-    return granted
 end
-
 function RandomizerPowerup.RecoverInput()
-    -- items with unique inputs (Speed Booster, Phantom Cloak) require disabling and re-enabling inputs to work properly
     local oPlayer = Game.GetPlayer()
     if oPlayer ~= nil then
         oPlayer.INPUT:IgnoreInput(false, false, "PickupObtained")
@@ -148,6 +150,7 @@ function RandomizerPhantomCloak.OnPickedUp(actor, progression)
     local has_cloak_already = RandomizerPowerup.GetItemAmount("ITEM_OPTIC_CAMOUFLAGE") > 0
     RandomizerPowerup.OnPickedUp(actor, progression)
     if not has_cloak_already then
+        RandomizerPowerup.DisableInput()
         Game.AddSF(0.101, RandomizerPhantomCloak.Deactivate, "")
     end
 end
@@ -155,4 +158,14 @@ end
 function RandomizerPhantomCloak.Deactivate()
     -- prevent the pickup from trying to kill you
     Game.GetPlayer().SPECIALENERGY:Fill()
+end
+
+RandomizerSpeedBooster = {}
+setmetatable(RandomizerSpeedBooster, {__index = RandomizerPowerup})
+function RandomizerSpeedBooster.OnPickedUp(actor, progression)
+    local has_speed_already = RandomizerPowerup.GetItemAmount("ITEM_SPEED_BOOSTER") > 0
+    RandomizerPowerup.OnPickedUp(actor, progression)
+    if not has_speed_already then
+        RandomizerPowerup.DisableInput()
+    end
 end
