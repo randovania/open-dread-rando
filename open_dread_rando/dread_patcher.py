@@ -31,9 +31,20 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
 
+    energy_per_tank = configuration.get("energy_per_tank", 100)
+    max_life = energy_per_tank - 1
+    
+    # increase starting HP if starting with etanks/parts
+    if "ITEM_ENERGY_TANKS" in inventory:
+        etanks = inventory.pop("ITEM_ENERGY_TANKS")
+        max_life += etanks * energy_per_tank
+    if "ITEM_LIFE_SHARDS" in inventory and configuration.get("immediate_energy_parts"):
+        shards = inventory.pop("ITEM_LIFE_SHARDS")
+        max_life += shards * energy_per_tank / 4
+
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
-        "ITEM_MAX_LIFE": 99,
+        "ITEM_MAX_LIFE": max_life,
         "ITEM_CURRENT_SPECIAL_ENERGY": 1000,
         "ITEM_MAX_SPECIAL_ENERGY": 1000,
         "ITEM_METROID_COUNT": 0,
