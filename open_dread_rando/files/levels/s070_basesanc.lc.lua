@@ -920,13 +920,11 @@ function s070_basesanc.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_
 
   -- lock door to professor room before meeting him the first time
   local arena_door = Game.GetActor("doorpowerpower_002")
-  if _ARG_0_ == "collision_camera_004" then
-    if arena_door ~= nil then
-      if Blackboard.GetProp("GAME_PROGRESS", "PROFESSOR_MET") then
-        arena_door.LIFE:UnLockDoor()
-      else
-        arena_door.LIFE:LockDoor()
-      end
+  if arena_door ~= nil then
+    if Blackboard.GetProp("GAME_PROGRESS", "PROFESSOR_MET") then
+      arena_door.LIFE:UnLockDoor()
+    else
+      arena_door.LIFE:LockDoor()
     end
   end
 
