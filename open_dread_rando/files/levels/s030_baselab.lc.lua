@@ -59,8 +59,9 @@ local LAB_EMMY_SPAWNED = false
 local LAB_POSTXRELEASE_APPLIED = false
 local L3_1 = false
 
-
-
+if s030_baselab.sRandoBlackoutPropID == nil then
+  s030_baselab.sRandoBlackoutPropID = Blackboard.RegisterLUAProp("RANDO_BLACKOUT", "bool")
+end
 
 
 
@@ -660,6 +661,16 @@ end
 
 
 function s030_baselab.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+  local enable_wide = Scenario.ReadFromBlackboard(s030_baselab.sRandoBlackoutPropID, false)
+  local wide_door_left = Game.GetActor("doorwidebeam_001")
+  local wide_door_right = Game.GetActor("doorwidebeam_001_mirrored")
+
+  if wide_door_left ~= nil then
+    wide_door_left.bEnabled = enable_wide
+  end
+  if wide_door_right ~= nil then
+    wide_door_right.bEnabled = enable_wide
+  end
 end
 
 
@@ -678,6 +689,7 @@ end
 function s030_baselab.OnEnter_ActivatePostBlackout()
   Game.PushSetup("PostBlackout", true, true)
   Game.StopMusic(true)
+  Scenario.WriteToBlackboard(s030_baselab.sRandoBlackoutPropID, "b", true)
 end
 
 function s030_baselab.Event_ShakerNaut_Activation()
