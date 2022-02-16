@@ -40,6 +40,7 @@ function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallba
         post_gui_callback = "Scenario.EmmyAbilityObtained_ShowMessageLaunchCallbacks"
     end
     GUI.ShowMessage(message, true, post_gui_callback, false)
+    Game.AddSF(0.5, Game.PlayCurrentEnvironmentMusic, "")
 end
 
 local init_scenario = Scenario.InitScenario
