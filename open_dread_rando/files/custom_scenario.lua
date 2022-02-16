@@ -48,6 +48,7 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     init_scenario(arg1, arg2, arg3, arg4)
     if not Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, false) then
         Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
+        Game.AddSF(0.1, Init.SaveGameAtStartingLocation, "")
         Game.AddSF(0.8, Scenario.ShowText, "")
     end
 end

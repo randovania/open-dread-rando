@@ -13,9 +13,16 @@ end
 
 local buff = {}
 
+Init.sStartingScenario = TEMPLATE("starting_scenario")
+Init.sStartingActor = TEMPLATE("starting_actor")
+
 function Game.StartPrologue(arg1, arg2, arg3, arg4, arg5)
     Game.LogWarn(0, string.format("Will start Game - %s / %s / %s / %s", tostring(arg1), tostring(arg2), tostring(arg3), tostring(arg4)))
-    Game.LoadScenario("c10_samus", TEMPLATE("starting_scenario"), TEMPLATE("starting_actor"), "", 1)
+    Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
+end
+
+function Init.SaveGameAtStartingLocation()
+    Game.SaveGame("savedata", "IntroEnd", Init.sStartingActor, true)
 end
 
 Game.SetForceSkipCutscenes(true)
