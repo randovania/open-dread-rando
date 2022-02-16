@@ -68,6 +68,9 @@ PROBLEM_LAYERS = {
     ],
     "s020_magma": [
         "eg_collision_camera_063_PostXRelease", # Kraid arena
+    ],
+    "s070_basesanc": [
+        "eg_collision_camera_005_PostXRelease", # Quiet Robe room
     ]
 }
 def remove_problematic_x_layers(editor: PatcherEditor):
@@ -77,7 +80,8 @@ def remove_problematic_x_layers(editor: PatcherEditor):
     for level, layers in PROBLEM_LAYERS.items():
         scenario = editor.get_scenario(level)
         for layer in layers:
-            scenario.raw.Root.pScenario.rEntitiesLayer.dctActorGroups.pop(layer)
+            for outer_layer in {"rEntitiesLayer", "rSoundsLayer", "rLightsLayer"}:
+                scenario.raw.Root.pScenario[outer_layer].dctActorGroups.pop(layer)
 
 
 def apply_static_fixes(editor: PatcherEditor):
