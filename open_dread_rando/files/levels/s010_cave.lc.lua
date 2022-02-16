@@ -237,7 +237,10 @@ end
 
 function s010_cave.DelayedOnEmmyCaveDead()
     
-    
+  local cu_door = Game.GetActor("Door017 (CU)_000")
+  if cu_door ~= nil then
+    cu_door.LIFE:UnLockDoor()
+  end
     
     
     
@@ -1196,6 +1199,14 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
     if not CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED then
       Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED, "b", true)
       CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED = true
+    end
+  elseif _ARG_0_ == "collision_camera_049" and 
+      _ARG_0_ ~= "collision_camera_090" and
+      CurrentScenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
+    -- lock CU door except when entering from the CU room if emmi is alive
+    local cu_door = Game.GetActor("Door017 (CU)_000")
+    if cu_door ~= nil then
+      cu_door.LIFE:LockDoor()
     end
   end
 end
