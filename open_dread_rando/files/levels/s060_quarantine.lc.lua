@@ -136,7 +136,7 @@ function s060_quarantine.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_
 end
 
 
-function s060_quarantine.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+function s060_quarantine.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
   
     
   
@@ -144,27 +144,27 @@ function s060_quarantine.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _AR
   local L5_2 = Game.GetActor("TG_PostChozoWarriorEnemies")
   local L6_2 = Game.GetActor("SG_ChozoWarriorX")
   
-  if _ARG_0_ == "collision_camera_007" and _ARG_2_ == "collision_camera_004" then
+  if old_subarea == "collision_camera_007" and new_subarea == "collision_camera_004" then
     Game.SaveGameToSnapshot("ChozoWarriorX_Quarantine")
     s060_quarantine.LaunchCutscene_67()
   end
   
-  if _ARG_0_ == "collision_camera_012" and _ARG_2_ == "collision_camera_011" then
+  if old_subarea == "collision_camera_012" and new_subarea == "collision_camera_011" then
     s060_quarantine.LaunchCutscene_113()
   end
   
-  if _ARG_0_ == "collision_camera_003" and _ARG_2_ == "collision_camera_002" then
+  if old_subarea == "collision_camera_003" and new_subarea == "collision_camera_002" then
     local L7_2 = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
     if L7_2 == true then
       s060_quarantine.LaunchCutscene_4()
     end
   end
   
-  if _ARG_0_ == "collision_camera_003" and _ARG_2_ == "collision_camera_005" then
+  if old_subarea == "collision_camera_003" and new_subarea == "collision_camera_005" then
     s060_quarantine.LaunchCutscene_13()
   end
   
-  if _ARG_0_ == "collision_camera_004" and L6_2 ~= nil then
+  if old_subarea == "collision_camera_004" and L6_2 ~= nil then
     print(L6_2.SPAWNGROUP.iNumDeaths)
   
     if L6_2.SPAWNGROUP.iNumDeaths > 1 then

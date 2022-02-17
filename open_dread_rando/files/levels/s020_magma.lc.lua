@@ -764,31 +764,31 @@ function s020_magma.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
-function s020_magma.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
     
     
     
     
     
-  if s020_magma.IsKraidCombatBegin(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_) then
+  if s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade) then
     s020_magma.Kraid_InitCutscene()
   end
-  if _ARG_0_ == "collision_camera_009" and _ARG_1_ == "PostCooldown" then
+  if old_subarea == "collision_camera_009" and old_actorgroup == "PostCooldown" then
     Game.PopSetup("Cooldown", true, true)
     Game.PushSetup("PostXRelease", true, true)
-  elseif MAGMA_COOLDOWN_APPLIED == true and _ARG_0_ == "collision_camera_004" and _ARG_2_ == "collision_camera_009" then
+  elseif MAGMA_COOLDOWN_APPLIED == true and old_subarea == "collision_camera_004" and new_subarea == "collision_camera_009" then
     local oActor = Game.GetActor("cutsceneplayer_78")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_052" and _ARG_2_ == "collision_camera_020" then
+  elseif old_subarea == "collision_camera_052" and new_subarea == "collision_camera_020" then
     local oActor = Game.GetActor("cutsceneplayer_38")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_063" and _ARG_2_ == "collision_camera_044" then
+  elseif old_subarea == "collision_camera_063" and new_subarea == "collision_camera_044" then
     Game.PlayCurrentEnvironmentMusic()
-  elseif _ARG_0_ == "collision_camera_022" and _ARG_2_ == "collision_camera_030" then
+  elseif old_subarea == "collision_camera_022" and new_subarea == "collision_camera_030" then
     Game.StopMusic(true)
     Game.PlayCurrentEnvironmentMusic()
   end
@@ -1007,8 +1007,8 @@ end
 
 
 
-function s020_magma.IsKraidCombatBegin(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
-  if _ARG_0_ == "collision_camera_024" and _ARG_1_ == "Default" and _ARG_2_ == "collision_camera_063" and _ARG_3_ == "Default" then
+function s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
+  if old_subarea == "collision_camera_024" and old_actorgroup == "Default" and new_subarea == "collision_camera_063" and new_actorgroup == "Default" then
     return true
   else
     return false

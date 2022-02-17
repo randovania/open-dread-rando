@@ -1127,9 +1127,9 @@ function s010_cave.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
-function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
-  if _ARG_0_ == "collision_camera_005" and _ARG_2_ == "collision_camera_006" then
-    if _ARG_4_ and CAVES_EMMY_SPAWNED == false then
+function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
+  if old_subarea == "collision_camera_005" and new_subarea == "collision_camera_006" then
+    if disable_fade and CAVES_EMMY_SPAWNED == false then
         Game.SetSubAreasPreferredTransitionType("None")
     elseif Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
         if CurrentScenario.oEmmyEntity.bEnabled == false then
@@ -1144,8 +1144,8 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_064" and _ARG_2_ == "collision_camera_074" then
-    if _ARG_4_ then
+  elseif old_subarea == "collision_camera_064" and new_subarea == "collision_camera_074" then
+    if disable_fade then
       local oActor = Game.GetActor("TG_EnableSubareaChangeFade_001")
       if oActor ~= nil then
         oActor.bEnabled = false
@@ -1156,35 +1156,35 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_002" and _ARG_2_ == "collision_camera_003" then
+  elseif old_subarea == "collision_camera_002" and new_subarea == "collision_camera_003" then
     local oActor = Game.GetActor("cutsceneplayer_5")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  -- elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_068" then
+  -- elseif old_subarea == "collision_camera_000" and new_subarea == "collision_camera_068" then
     
   --     local oActor = Game.GetActor("cutsceneplayer_3")
   --   if oActor ~= nil then
   --     oActor.CUTSCENE:TryLaunchCutscene()
   --   end
-  elseif _ARG_0_ == "collision_camera_073" and _ARG_2_ == "collision_camera_020" then
+  elseif old_subarea == "collision_camera_073" and new_subarea == "collision_camera_020" then
     local oActor = Game.GetActor("cutsceneplayer_54")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_049" and _ARG_2_ == "collision_camera_090" then
+  elseif old_subarea == "collision_camera_049" and new_subarea == "collision_camera_090" then
     
     local oActor = Game.GetActor("cutsceneplayer_50")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_003" and _ARG_2_ == "collision_camera_018" then
+  elseif old_subarea == "collision_camera_003" and new_subarea == "collision_camera_018" then
     
     local oActor = Game.GetActor("cutsceneplayer_49-1")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif _ARG_0_ == "collision_camera_018" and _ARG_2_ == "collision_camera_005" then
+  elseif old_subarea == "collision_camera_018" and new_subarea == "collision_camera_005" then
     
     local oActor1 = Game.GetActor("cutsceneplayer_49-1")
     if oActor1 ~= nil then
@@ -1200,8 +1200,8 @@ function s010_cave.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
       Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED, "b", true)
       CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED = true
     end
-  elseif _ARG_0_ == "collision_camera_049" and 
-      _ARG_0_ ~= "collision_camera_090" and
+  elseif new_subarea == "collision_camera_049" and 
+      old_subarea ~= "collision_camera_090" and
       CurrentScenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     -- lock CU door except when entering from the CU room if emmi is alive
     local cu_door = Game.GetActor("Door017 (CU)_000")

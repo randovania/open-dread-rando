@@ -905,7 +905,7 @@ function s070_basesanc.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
-function s070_basesanc.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+function s070_basesanc.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 
 
 
@@ -920,28 +920,30 @@ function s070_basesanc.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_
 
   -- lock door to professor room before meeting him the first time
   local arena_door = Game.GetActor("doorpowerpower_002")
-  if arena_door ~= nil then
-    if Blackboard.GetProp("GAME_PROGRESS", "PROFESSOR_MET") then
-      arena_door.LIFE:UnLockDoor()
-    else
-      arena_door.LIFE:LockDoor()
+  if new_subarea == "collision_camera_004" then
+    if arena_door ~= nil then
+      if Blackboard.GetProp("GAME_PROGRESS", "PROFESSOR_MET") then
+        arena_door.LIFE:UnLockDoor()
+      else
+        arena_door.LIFE:LockDoor()
+      end
     end
   end
 
   local L5_2 = Game.GetActor("SG_2ChozoRobots")
-  if _ARG_0_ == "collision_camera_005" and _ARG_1_ == "Default" then
+  if old_subarea == "collision_camera_005" and old_actorgroup == "Default" then
     Game.PushSetup("PostChozoRobotSoldier_Arena", true, true)
   end
 
-  if _ARG_2_ == "collision_camera_005" and _ARG_3_ == "Default" then
+  if new_subarea == "collision_camera_005" and new_actorgroup == "Default" then
     Game.PushSetup("PostChozoRobotSoldier", true, true)
   end
 
-  if _ARG_0_ == "collision_camera_027" and _ARG_1_ == "PostSuperQuetzoaDead" then
+  if old_subarea == "collision_camera_027" and old_actorgroup == "PostSuperQuetzoaDead" then
     Game.PushSetup("PostSuperQuetzoaArena", true, true)
   end
 
-  if _ARG_0_ == "collision_camera_017" and _ARG_1_ == "2ChozoRobots" and L5_2 ~= nil then
+  if old_subarea == "collision_camera_017" and old_actorgroup == "2ChozoRobots" and L5_2 ~= nil then
     print(L5_2.SPAWNGROUP.iNumDeaths)
 
     if L5_2.SPAWNGROUP.iNumDeaths > 1 then

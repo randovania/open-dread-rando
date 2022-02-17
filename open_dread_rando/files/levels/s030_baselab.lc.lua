@@ -660,7 +660,7 @@ function s030_baselab.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
-function s030_baselab.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+function s030_baselab.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
   local enable_wide = Scenario.ReadFromBlackboard(s030_baselab.sRandoBlackoutPropID, false)
   local wide_door_left = Game.GetActor("doorwidebeam_001")
   local wide_door_right = Game.GetActor("doorwidebeam_001_mirrored")

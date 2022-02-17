@@ -444,18 +444,18 @@ function s080_shipyard.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
-function s080_shipyard.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+function s080_shipyard.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 
 
 
 
-  if _ARG_0_ == "collision_camera_011" and _ARG_2_ == "collision_camera_014" and SHIP_EMMY_METROIDNIZATION == false then
+  if old_subarea == "collision_camera_011" and new_subarea == "collision_camera_014" and SHIP_EMMY_METROIDNIZATION == false then
     s080_shipyard.ClosePowerBombDoor()
-  elseif _ARG_0_ == "collision_camera_009" and _ARG_2_ == "collision_camera_010" and SHIP_STRONG_REACTION == false then
+  elseif old_subarea == "collision_camera_009" and new_subarea == "collision_camera_010" and SHIP_STRONG_REACTION == false then
     s080_shipyard.OnBegin_Cutscene_12()
-  elseif _ARG_0_ == "collision_camera_006" and _ARG_2_ == "collision_camera_005" and SHIP_CWXELITE_PRESENTATION == false then
+  elseif old_subarea == "collision_camera_006" and new_subarea == "collision_camera_005" and SHIP_CWXELITE_PRESENTATION == false then
     s080_shipyard.OnBegin_Cutscene_71()
-  elseif _ARG_0_ == "collision_camera_000" and _ARG_2_ == "collision_camera_016" then
+  elseif old_subarea == "collision_camera_000" and new_subarea == "collision_camera_016" then
     Game.StopMusic(true)
   end
 end

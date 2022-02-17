@@ -274,7 +274,7 @@ function s050_forest.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
-function s050_forest.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_)
+function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
     
     
     
@@ -286,11 +286,11 @@ function s050_forest.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_
     
     
 
-  if _ARG_0_ == "collision_camera_039" and _ARG_2_ == "collision_camera_032" then
+  if old_subarea == "collision_camera_039" and new_subarea == "collision_camera_032" then
     s050_forest.LaunchCutscene_33()
   end
   
-  if _ARG_0_ == "collision_camera_002" and _ARG_1_ == "Default" then
+  if old_subarea == "collision_camera_002" and old_actorgroup == "Default" then
     local L5_2 = Game.GetActor("SG_ChozoRobotSoldier")
     if L5_2 ~= nil then
       print(L5_2.SPAWNGROUP.iNumDeaths)
@@ -300,7 +300,7 @@ function s050_forest.OnSubAreaChange(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_, _ARG_4_
     end
   end
   
-  if _ARG_0_ == "collision_camera_023" and _ARG_1_ == "ChozoWarriorX" then
+  if old_subarea == "collision_camera_023" and old_actorgroup == "ChozoWarriorX" then
     local L5_2 = Game.GetActor( "SG_ChozoWarriorX")
     if L5_2 ~= nil then
       print(L5_2.SPAWNGROUP.iNumDeaths)
