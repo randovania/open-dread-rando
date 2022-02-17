@@ -129,6 +129,9 @@
             "type": "number",
             "default": 100.0
         },
+        "energy_per_part": {
+            "type": "number"
+        },
         "immediate_energy_parts": {
             "type": "boolean",
             "default": false
