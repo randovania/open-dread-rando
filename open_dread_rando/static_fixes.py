@@ -61,27 +61,29 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
                     for name in [actor_name, mirrored.sName, other.sName]:
                         scenario.add_actor_to_group(group_name, name, layer_name)
 
-PROBLEM_LAYERS = {
+PROBLEM_X_LAYERS = {
     "s010_cave": [
-        "eg_collision_camera_011_PostXRelease", # Chain reaction
-        "eg_collision_camera_020_PostXRelease", # Corpius arena
+        "collision_camera_026", # Chain reaction
+        "collision_camera_020", # Corpius arena
+        "collision_camera_073", # Corpius entrance
     ],
     "s020_magma": [
-        "eg_collision_camera_063_PostXRelease", # Kraid arena
+        "collision_camera_063", # Kraid arena
     ],
     "s070_basesanc": [
-        "eg_collision_camera_005_PostXRelease", # Quiet Robe room
+        "collision_camera_005", # Quiet Robe room
     ]
 }
 def remove_problematic_x_layers(editor: PatcherEditor):
     # these X layers have priority, so they will set some rooms to their post-state
     # even if they've never been entered. in these particular problem rooms, this
     # can cause softlocks (e.g. phantom cloak on golzuna, main PBs on corpius)
-    for level, layers in PROBLEM_LAYERS.items():
-        scenario = editor.get_scenario(level)
-        for layer in layers:
-            for outer_layer in {"rEntitiesLayer", "rSoundsLayer", "rLightsLayer"}:
-                scenario.raw.Root.pScenario[outer_layer].dctActorGroups.pop(layer)
+    for level, layers in PROBLEM_X_LAYERS.items():
+        manager = editor.get_subarea_manager(level)
+        configs = manager.get_subarea_setup("PostXRelease").vSubareaConfigs
+        manager.get_subarea_setup("PostXRelease").vSubareaConfigs = [
+            config for config in configs if config.sId not in layers
+        ]
 
 
 def apply_static_fixes(editor: PatcherEditor):

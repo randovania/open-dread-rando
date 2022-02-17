@@ -1008,7 +1008,7 @@ end
 
 
 function s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-  if old_subarea == "collision_camera_024" and old_actorgroup == "Default" and new_subarea == "collision_camera_063" and new_actorgroup == "Default" then
+  if old_subarea == "collision_camera_024" and new_subarea == "collision_camera_063" and new_actorgroup == "Default" then
     return true
   else
     return false

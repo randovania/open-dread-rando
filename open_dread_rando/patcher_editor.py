@@ -4,7 +4,7 @@ from pathlib import Path
 from construct import Container
 
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import BaseResource, Brfld
+from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa
 
 T = typing.TypeVar("T")
 
@@ -27,6 +27,9 @@ class PatcherEditor(FileTreeEditor):
 
     def get_scenario(self, name: str) -> Brfld:
         return self.get_file(path_for_level(name) + ".brfld", Brfld)
+    
+    def get_subarea_manager(self, scenario: str) -> Brsa:
+        return self.get_file(path_for_level(scenario) + ".brsa", Brsa)
     
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))

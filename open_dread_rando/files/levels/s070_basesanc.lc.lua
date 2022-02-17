@@ -334,7 +334,11 @@ end
 
 
 function s070_basesanc.OnAfter_Cutscene_40_Part3()
-
+  -- try again
+  local oActor2 = Game.GetActor("doorpowerpower_002")
+  if oActor2 ~= nil then
+    oActor2.LIFE:UnLockDoor()
+  end
 
 
 end
