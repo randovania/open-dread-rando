@@ -58,9 +58,10 @@ class ActorPickup(BasePickup):
             and self.configuration.get("immediate_energy_parts", False))
         ):
             item_id = "fMaxLife"
-            quantity *= self.configuration.get("energy_per_tank", 100.0)
+            energy = self.configuration.get("energy_per_tank", 100.0)
             if item_id == "ITEM_LIFE_SHARDS":
-                quantity /= 4
+                energy = self.configuration.get("energy_per_part", energy / 4)
+            quantity *= energy
             set_custom_params["Param4"]["value"] = "Full"
             set_custom_params["Param5"]["value"] = "fCurrentLife"
             set_custom_params["Param6"]["value"] = "LIFE"

@@ -106,7 +106,7 @@ function RandomizerPowerup.IncreaseEnergy(resource)
     if not Init.bImmediateEnergyParts and item_id == "ITEM_LIFE_SHARDS" and (RandomizerPowerup.GetItemAmount(item_id) % 4) ~= 0 then return end
     local energy = Init.fEnergyPerTank
     if item_id == "ITEM_LIFE_SHARDS" and Init.bImmediateEnergyParts then
-        energy = energy / 4
+        energy = Init.fEnergyPerPart
     end
     Game.LogWarn(0, "Increasing player energy.")
 
