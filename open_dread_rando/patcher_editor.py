@@ -4,7 +4,7 @@ from pathlib import Path
 from construct import Container
 
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa
+from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS
 
 T = typing.TypeVar("T")
 
@@ -12,6 +12,8 @@ T = typing.TypeVar("T")
 def path_for_level(level_name: str) -> str:
     return f"maps/levels/c10_samus/{level_name}/{level_name}"
 
+def extension_for_type(type_hint: typing.Type[T]) -> str:
+    return next(ext for ext, t in ALL_FORMATS.items() if t == type_hint)
 
 class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]
@@ -25,11 +27,15 @@ class PatcherEditor(FileTreeEditor):
             self.memory_files[path] = self.get_parsed_asset(path, type_hint=type_hint)
         return self.memory_files[path]
 
+    def get_scenario_file(self, name: str, type_hint: typing.Type[T]) -> T:
+        path = f"{path_for_level(name)}.{extension_for_type(type_hint)}"
+        return self.get_file(path, type_hint)
+
     def get_scenario(self, name: str) -> Brfld:
-        return self.get_file(path_for_level(name) + ".brfld", Brfld)
+        return self.get_scenario_file(name, Brfld)
     
-    def get_subarea_manager(self, scenario: str) -> Brsa:
-        return self.get_file(path_for_level(scenario) + ".brsa", Brsa)
+    def get_subarea_manager(self, name: str) -> Brsa:
+        return self.get_scenario_file(name, Brsa)
     
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))
