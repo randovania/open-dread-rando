@@ -13,7 +13,7 @@ def path_for_level(level_name: str) -> str:
     return f"maps/levels/c10_samus/{level_name}/{level_name}"
 
 def extension_for_type(type_hint: typing.Type[T]) -> str:
-    return next(ext for ext, t in ALL_FORMATS.items() if t == type_hint)
+    return next(ext for ext, t in ALL_FORMATS.items() if t == type_hint).lower()
 
 class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]

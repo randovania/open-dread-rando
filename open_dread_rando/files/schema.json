@@ -62,6 +62,78 @@
                         },
                         "model": {
                             "type": "string"
+                        },
+                        "map_icon": {
+                            "type": "object",
+                            "properties": {
+                                "original_actor": {
+                                    "$ref": "#/$defs/actor_reference_with_layer"
+                                }
+                            },
+                            "oneOf": [
+                                {
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "properties": {
+                                        "icon_id": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "icon_id"
+                                    ]
+                                },
+                                {
+                                    "properties": {
+                                        "custom_icon": {
+                                            "type": "object",
+                                            "properties": {
+                                                "label": {
+                                                    "type": "string"
+                                                },
+                                                "coords": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "row": {
+                                                            "type": "integer"
+                                                        },
+                                                        "col": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "row",
+                                                        "col"
+                                                    ],
+                                                    "default": {
+                                                        "row": 0,
+                                                        "col": 4
+                                                    }
+                                                },
+                                                "is_global": {
+                                                    "type": "boolean",
+                                                    "default": true
+                                                },
+                                                "full_zoom_scale": {
+                                                    "type": "boolean",
+                                                    "default": true
+                                                },
+                                                "extras": {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                }
+                                            },
+                                            "required": [
+                                                "label"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "custom_icon"
+                                    ]
+                                }
+                            ]
                         }
                     },
                     "required": [

@@ -4,6 +4,7 @@ from typing import Tuple, Union
 from mercury_engine_data_structures.formats import Bmmdef
 
 from open_dread_rando.patcher_editor import PatcherEditor
+from open_dread_rando.text_patches import patch_text
 
 
 @dataclasses.dataclass(frozen=True)
@@ -17,12 +18,16 @@ class MapIcon:
     is_global: bool = True
     full_zoom_scale: bool = True
 
-    def add_to_defs(self, bmmdef: Bmmdef):
+    def __post_init__(self):
+        object.__setattr__(self, "string_key", f"MAP_ICON_{self.icon_id}")
+
+    def add_to_defs(self, bmmdef: Bmmdef, editor: PatcherEditor):
+        patch_text(editor, self.string_key, self.label)
         bmmdef.add_icon(
             self.icon_id,
             self.coords[1],
             self.coords[0],
-            self.label,
+            f"#{self.string_key}",
             self.disabled_id,
             self.offset,
             self.auto_scale,
@@ -210,7 +215,7 @@ class MapIconEditor:
     
     def add_icon(self, icon: MapIcon):
         if icon.icon_id not in self.mapdefs.icons:
-            icon.add_to_defs(self.mapdefs)
+            icon.add_to_defs(self.mapdefs, self.editor)
 
     def get_data(self, pickup: dict) -> str:
         if "map_icon" not in pickup:
@@ -218,7 +223,7 @@ class MapIconEditor:
 
         map_icon: dict = pickup["map_icon"]
         if "icon_id" in map_icon:
-            return self._get_icon(pickup["icon_id"])
+            return self._get_icon(map_icon["icon_id"])
         
         custom_icon: dict = map_icon["custom_icon"]
         if "coords" in custom_icon:

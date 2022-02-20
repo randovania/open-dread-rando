@@ -13,6 +13,7 @@ from open_dread_rando import elevator, lua_util
 from open_dread_rando.exefs import patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
+from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 from open_dread_rando.pickup import pickup_object_for
 from open_dread_rando.static_fixes import apply_static_fixes
@@ -84,11 +85,12 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
+    map_icon_editor = MapIconEditor(editor)
 
     for i, pickup in enumerate(pickups_config):
         LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
         try:
-            pickup_object_for(lua_scripts, pickup, i, configuration).patch(editor)
+            pickup_object_for(lua_scripts, pickup, i, configuration, map_icon_editor).patch(editor)
         except NotImplementedError as e:
             LOG.warning(e)
 
