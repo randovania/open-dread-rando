@@ -3,11 +3,14 @@ import functools
 import json
 from enum import Enum
 from pathlib import Path
+from typing import Type
+from construct import Container
 
-from mercury_engine_data_structures.formats import Bmsad
+from mercury_engine_data_structures.formats import Bmsad, Bmmap
 
 from open_dread_rando import model_data
 from open_dread_rando.lua_editor import LuaEditor
+from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 from open_dread_rando.text_patches import patch_text
 
@@ -34,11 +37,12 @@ class PickupType(Enum):
 
 
 class BasePickup:
-    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int, configuration: dict):
+    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int, configuration: dict, map_icon_editor: MapIconEditor):
         self.lua_editor = lua_editor
         self.pickup = pickup
         self.pickup_id = pickup_id
         self.configuration = configuration
+        self.map_icon_editor = map_icon_editor
 
     def patch(self, editor: PatcherEditor):
         raise NotImplementedError()
@@ -124,19 +128,7 @@ class ActorPickup(BasePickup):
 
         return bmsad
 
-    def patch(self, editor: PatcherEditor):
-        template_bmsad = _read_template_powerup()
-
-        pickup_actor = self.pickup["pickup_actor"]
-        pkgs_for_level = editor.get_level_pkgs(pickup_actor["scenario"])
-        actor = editor.resolve_actor_reference(pickup_actor)
-        
-        model_name: str = self.pickup["model"]
-        selected_model_data = model_data.get_data(model_name)
-
-        new_template = copy.deepcopy(template_bmsad)
-        new_template["name"] = f"randomizer_powerup_{self.pickup_id}"
-
+    def patch_model(self, editor: PatcherEditor, selected_model_data: model_data.ModelData, actor: Container, new_template: dict):
         # Update used model
         new_template["property"]["model_name"] = selected_model_data.bcmdl_path
         model_updater = new_template["property"]["components"]["MODELUPDATER"]
@@ -160,14 +152,44 @@ class ActorPickup(BasePickup):
             }
             actor.vPos = [a+b for a,b in zip(actor.vPos, selected_model_data.transform.position)]
             actor.vAng = [a+b for a,b in zip(actor.vAng, selected_model_data.transform.angle)]
+        
+        # Animation/BMSAS
+        new_template["property"]["binaries"][0] = selected_model_data.bmsas
+    
+    def patch_minimap_icon(self, editor: PatcherEditor, actor: Container):
+        if "map_icon" in self.pickup and "original_actor" in self.pickup["map_icon"]:
+            map_actor = self.pickup["map_icon"]["original_actor"]
+        else:
+            map_actor = self.pickup["pickup_actor"]
+        
+        map_def = editor.get_scenario_file(map_actor["scenario"], Bmmap)
+        if map_actor["actor"] in map_def.items:
+            icon = map_def.items.pop(map_actor["actor"])
+            icon.sIconId = self.map_icon_editor.get_data(self.pickup)
+            map_def.items[actor.sName] = icon
+
+    def patch(self, editor: PatcherEditor):
+        template_bmsad = _read_template_powerup()
+
+        pickup_actor = self.pickup["pickup_actor"]
+        pkgs_for_level = editor.get_level_pkgs(pickup_actor["scenario"])
+        actor = editor.resolve_actor_reference(pickup_actor)
+
+        new_template = copy.deepcopy(template_bmsad)
+        new_template["name"] = f"randomizer_powerup_{self.pickup_id}"
+
+        # Update model
+        model_name: str = self.pickup["model"]
+        selected_model_data = model_data.get_data(model_name)
+        self.patch_model(editor, selected_model_data, actor, new_template)
+
+        # Update minimap
+        self.patch_minimap_icon(editor, actor)
 
         # Update caption
         pickable = new_template["property"]["components"]["PICKABLE"]
         pickable["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
         pickable["fields"]["fields"]["sOnPickTankUnknownCaption"] = self.pickup["caption"]
-
-        # Animation/BMSAS
-        new_template["property"]["binaries"][0] = selected_model_data.bmsas
 
         # Update given item
         if len(self.pickup["resources"]) == 1:
@@ -250,7 +272,7 @@ class CorpiusPickup(ActorDefPickup):
         editor.replace_asset(bmsad_path, actordef)
 
 
-_PICKUP_TYPE_TO_CLASS = {
+_PICKUP_TYPE_TO_CLASS: dict[PickupType, Type[BasePickup]] = {
     PickupType.ACTOR: ActorPickup,
     PickupType.EMMI: EmmiPickup,
     PickupType.COREX: CoreXPickup,
@@ -258,6 +280,6 @@ _PICKUP_TYPE_TO_CLASS = {
 }
 
 
-def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int, configuration: dict) -> "BasePickup":
+def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int, configuration: dict, map_icon_editor: MapIconEditor) -> "BasePickup":
     pickup_type = PickupType(pickup["pickup_type"])
-    return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id, configuration)
+    return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id, configuration, map_icon_editor)
