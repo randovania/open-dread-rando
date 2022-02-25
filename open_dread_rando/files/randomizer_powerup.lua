@@ -144,15 +144,26 @@ function RandomizerPowerBomb.OnPickedUp(actor, progression)
     end
 end
 
+function RandomizerPowerup.ToggleInputsOnPickedUp(actor, progression, item, SFs)
+    SFs = SFs or {}
+    local has_item_already = RandomizerPowerup.GetItemAmount(item)
+    RandomizerPowerup.OnPickedUp(actor, progression)
+    if not has_item_already then
+        RandomizerPowerup.DisableInput()
+        for _, SF in ipairs(SFs) do
+            Game.AddSF(table.unpack(SF))
+        end
+    end
+end
+
 RandomizerPhantomCloak = {}
 setmetatable(RandomizerPhantomCloak, {__index = RandomizerPowerup})
 function RandomizerPhantomCloak.OnPickedUp(actor, progression)
-    local has_cloak_already = RandomizerPowerup.GetItemAmount("ITEM_OPTIC_CAMOUFLAGE") > 0
-    RandomizerPowerup.OnPickedUp(actor, progression)
-    if not has_cloak_already then
-        RandomizerPowerup.DisableInput()
-        Game.AddSF(0.101, RandomizerPhantomCloak.Deactivate, "")
-    end
+    RandomizerPowerup.ToggleInputsOnPickedUp(
+        actor, progression, "ITEM_OPTIC_CAMOUFLAGE", {
+            {0.101, RandomizerPhantomCloak.Deactivate, ""}
+        }
+    )
 end
 
 function RandomizerPhantomCloak.Deactivate()
@@ -163,9 +174,15 @@ end
 RandomizerSpeedBooster = {}
 setmetatable(RandomizerSpeedBooster, {__index = RandomizerPowerup})
 function RandomizerSpeedBooster.OnPickedUp(actor, progression)
-    local has_speed_already = RandomizerPowerup.GetItemAmount("ITEM_SPEED_BOOSTER") > 0
-    RandomizerPowerup.OnPickedUp(actor, progression)
-    if not has_speed_already then
-        RandomizerPowerup.DisableInput()
-    end
+    RandomizerPowerup.ToggleInputsOnPickedUp(
+        actor, progression, "ITEM_SPEED_BOOSTER"
+    )
+end
+
+RandomizerStormMissile = {}
+setmetatable(RandomizerStormMissile, {__index = RandomizerPowerup})
+function RandomizerStormMissile.OnPickedUp(actor, progression)
+    RandomizerPowerup.ToggleInputsOnPickedUp(
+        actor, progression, "ITEM_MULTILOCKON"
+    )
 end

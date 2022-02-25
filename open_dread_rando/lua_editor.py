@@ -12,6 +12,13 @@ def _read_level_lua(level_id: str) -> str:
     return Path(__file__).parent.joinpath("files", "levels", f"{level_id}.lc.lua").read_text()
 
 
+SPECIFIC_CLASSES = {
+    "ITEM_WEAPON_POWER_BOMB": "RandomizerPowerBomb",
+    "ITEM_OPTIC_CAMOUFLAGE": "RandomizerPhantomCloak",
+    "ITEM_SPEED_BOOSTER": "RandomizerSpeedBooster",
+    "ITEM_MULTILOCKON": "RandomizerStormMissile",
+}
+
 class LuaEditor:
     def __init__(self):
         self._progressive_classes = {}
@@ -27,11 +34,7 @@ class LuaEditor:
         return {scenario: {"script": _read_level_lua(scenario), "edited": False} for scenario in scenarios}
 
     def get_parent_for(self, item_id) -> str:
-        if item_id == "ITEM_WEAPON_POWER_BOMB":
-            return "RandomizerPowerBomb"
-        if item_id == "ITEM_OPTIC_CAMOUFLAGE":
-            return "RandomizerPhantomCloak"
-        return "RandomizerPowerup"
+        return SPECIFIC_CLASSES.get(item_id, "RandomizerPowerup")
 
     def get_script_class(self, pickup_resources: list[dict], boss: bool = False) -> str:
         parent = self.get_parent_for(pickup_resources[0]["item_id"])
