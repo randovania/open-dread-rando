@@ -91,12 +91,17 @@ function RandomizerPowerup.ChangeSuit()
     for _, suit in ipairs(suits) do
         if suit.model == model_updater.sModelAlias then break end
         if RandomizerPowerup.GetItemAmount(suit.item) > 0 then
-            Game.LogWarn(0, "Updating suit to " .. suit.model)
-            model_updater.sModelAlias = suit.model
-            model_updater:ForceUpdate()
+            Game.AddPSF(0.2, RandomizerPowerup.Delayed_ChangeSuit, "s", suit.model)
             break
         end
     end
+end
+
+function RandomizerPowerup.Delayed_ChangeSuit(model)
+    -- some race condition causes it to crash if you don't wait a little while to update
+    local model_updater = Game.GetPlayer().MODELUPDATER
+    Game.LogWarn(0, "Updating suit to " .. model)
+    model_updater.sModelAlias = model
 end
 
 function RandomizerPowerup.IncreaseEnergy(resource)
