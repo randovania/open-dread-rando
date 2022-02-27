@@ -236,7 +236,26 @@
             "additionalProperties": {
                 "type": "string"
             }
+        },
+        "mod_compatibility": {
+            "type": "string",
+            "enum": [
+                "ryujinx",
+                "atmosphere"
+            ],
+            "description": "Decides how the files are organized in the output path, in order to be compatible with different mod formats.",
+            "default": "ryujinx"
+        },
+        "mod_category": {
+            "type": "string",
+            "enum": [
+                "pkg",
+                "romfs"
+            ],
+            "description": "When pkg, outputs fully modified pkg files. On romfs, output just the modified files but requires an exefs patch to load.",
+            "default": "pkg"
         }
+
     },
     "required": [
         "starting_location",

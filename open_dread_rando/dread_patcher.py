@@ -1,23 +1,21 @@
-import copy
 import json
 import logging
 import shutil
 import typing
 from pathlib import Path
 
-import jsonschema
-from mercury_engine_data_structures.construct_extensions import json as json_ext
-from mercury_engine_data_structures.formats import Bmsad
+from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util
 from open_dread_rando.exefs import patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.map_icons import MapIconEditor
-from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
+from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickup import pickup_object_for
 from open_dread_rando.static_fixes import apply_static_fixes
 from open_dread_rando.text_patches import apply_text_patches, patch_hints, patch_text
+from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
 
@@ -25,6 +23,15 @@ T = typing.TypeVar("T")
 def _read_schema():
     with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
+
+
+def _output_format_for_category(category: str) -> OutputFormat:
+    if category == "pkg":
+        return OutputFormat.PKG
+    elif category == "romfs":
+        return OutputFormat.ROMFS
+    else:
+        raise ValueError(f"unknown value: {category}")
 
 
 def create_custom_init(editor: PatcherEditor, configuration: dict):
@@ -36,7 +43,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     energy_per_part = configuration.get("energy_per_part", energy_per_tank / 4)
 
     max_life = energy_per_tank - 1
-    
+
     # increase starting HP if starting with etanks/parts
     if "ITEM_ENERGY_TANKS" in inventory:
         etanks = inventory.pop("ITEM_ENERGY_TANKS")
@@ -107,7 +114,7 @@ def add_custom_files(editor: PatcherEditor):
 def patch(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files from %s", input_path)
 
-    jsonschema.validate(instance=configuration, schema=_read_schema())
+    DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
 
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()
@@ -158,7 +165,7 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     out_romfs = output_path.joinpath("romfs")
     LOG.info("Saving modified pkgs to %s", out_romfs)
     shutil.rmtree(out_romfs, ignore_errors=True)
-    editor.save_modified_pkgs(out_romfs)
+    editor.save_modifications(out_romfs, output_format=_output_format_for_category(configuration["mod_category"]))
 
     LOG.info("Done")
 
