@@ -1,0 +1,12 @@
+{
+    "Lua.diagnostics.disable": [
+        "undefined-global"
+    ],
+    "Lua.runtime.builtin": {
+        "debug": "disable"
+    },
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.diagnostics.globals": [
+        "sTeleportLandmark"
+    ]
+}

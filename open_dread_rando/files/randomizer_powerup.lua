@@ -32,7 +32,7 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     if actor ~= nil then name = actor.sName end
     Game.LogWarn(0, "Collected pickup: " .. name)
     local granted = RandomizerPowerup.ProgressivePickup(actor, progression)
-    RandomizerPowerup.ChangeSuit()
+    -- RandomizerPowerup.ChangeSuit()
     RandomizerPowerup.IncreaseEnergy(granted)
     RandomizerPowerup.IncreaseAmmo(granted)
 
@@ -91,14 +91,21 @@ function RandomizerPowerup.ChangeSuit()
     for _, suit in ipairs(suits) do
         if suit.model == model_updater.sModelAlias then break end
         if RandomizerPowerup.GetItemAmount(suit.item) > 0 then
-            Game.AddPSF(0.2, RandomizerPowerup.Delayed_ChangeSuit, "s", suit.model)
+            Game.AddPSF(0.1, RandomizerPowerup.Delayed_ChangeSuit, "s", suit.model)
             break
         end
     end
 end
 
 function RandomizerPowerup.Delayed_ChangeSuit(model)
-    -- some race condition causes it to crash if you don't wait a little while to update
+    if fxcallbacks == nil then
+        Game.LogWarn(0, "No fxcallbacks")
+    elseif #fxcallbacks.lfxenabled > 0 then
+        Game.LogWarn(0, "FX active, try again")
+        Game.AddPSF(0.1, RandomizerPowerup.Delayed_ChangeSuit, "s", model)
+        return
+    end
+    -- updating the model while VFX are active on the old model will cause a nullptr
     local model_updater = Game.GetPlayer().MODELUPDATER
     Game.LogWarn(0, "Updating suit to " .. model)
     model_updater.sModelAlias = model
@@ -151,12 +158,12 @@ end
 
 function RandomizerPowerup.ToggleInputsOnPickedUp(actor, progression, item, SFs)
     SFs = SFs or {}
-    local has_item_already = RandomizerPowerup.GetItemAmount(item)
+    local has_item_already = RandomizerPowerup.GetItemAmount(item) > 0
     RandomizerPowerup.OnPickedUp(actor, progression)
     if not has_item_already then
         RandomizerPowerup.DisableInput()
         for _, SF in ipairs(SFs) do
-            Game.AddSF(table.unpack(SF))
+            Game.AddSF(SF[1], SF[2], SF[3])
         end
     end
 end
