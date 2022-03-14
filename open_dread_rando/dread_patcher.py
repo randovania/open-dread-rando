@@ -7,7 +7,7 @@ from pathlib import Path
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util
-from open_dread_rando.exefs import patch_exefs
+from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.map_icons import MapIconEditor
@@ -32,6 +32,21 @@ def _output_format_for_category(category: str) -> OutputFormat:
         return OutputFormat.ROMFS
     else:
         raise ValueError(f"unknown value: {category}")
+
+def _output_paths_for_compatibility(out_path: Path, compatibility: str) -> typing.Tuple[Path, Path, Path]:
+    if compatibility == "ryujinx":
+        mod_path = out_path.joinpath("DreadRandovania")
+        exefs_patches = mod_path.joinpath("exefs")
+        romfs = mod_path.joinpath("romfs")
+        exefs = None
+    elif compatibility == "atmosphere":
+        exefs_patches = out_path.joinpath("exefs_patches", "DreadRandovania")
+        mod_path = out_path.joinpath("contents", "010093801237c000")
+        romfs = mod_path.joinpath("romfs")
+        exefs = mod_path.joinpath("exefs")
+    else:
+        raise ValueError(f"unknown value: {compatibility}")
+    return romfs, exefs, exefs_patches
 
 
 def create_custom_init(editor: PatcherEditor, configuration: dict):
@@ -148,10 +163,18 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     # Text patches
     if "text_patches" in configuration:
         apply_text_patches(editor, configuration["text_patches"])
+    
+
+    out_romfs, out_exefs, exefs_patches = _output_paths_for_compatibility(output_path, configuration["mod_compatibility"])
+    output_format = _output_format_for_category(configuration["mod_category"])
 
     # Exefs
     LOG.info("Creating exefs patches")
-    patch_exefs(output_path, configuration)
+    patch_exefs(exefs_patches, configuration)
+
+    if output_format == OutputFormat.ROMFS:
+        assert out_exefs is not None
+        include_depackager(out_exefs)
 
     LOG.info("Saving modified lua scripts")
     lua_scripts.save_modifications(editor)
@@ -160,12 +183,11 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     editor.flush_modified_assets()
 
     if configuration.get("debug_export_modified_files", False):
-        editor.save_modified_saves_to(output_path.joinpath("_debug"))
+        editor.save_modified_saves_to(out_romfs.parent.joinpath("_debug"))
 
-    out_romfs = output_path.joinpath("romfs")
     LOG.info("Saving modified pkgs to %s", out_romfs)
     shutil.rmtree(out_romfs, ignore_errors=True)
-    editor.save_modifications(out_romfs, output_format=_output_format_for_category(configuration["mod_category"]))
+    editor.save_modifications(out_romfs, output_format=output_format)
 
     LOG.info("Done")
 

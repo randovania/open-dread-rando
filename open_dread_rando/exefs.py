@@ -44,12 +44,18 @@ def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
         patch.add_record(offset, data)
 
 
-def patch_exefs(output_path: Path, configuration: dict):
-    exefs = output_path.joinpath("exefs")
-    shutil.rmtree(exefs, ignore_errors=True)
-    exefs.mkdir(parents=True, exist_ok=True)
+def patch_exefs(exefs_patches: Path, configuration: dict):
+    shutil.rmtree(exefs_patches, ignore_errors=True)
+    exefs_patches.mkdir(parents=True, exist_ok=True)
 
     for version, exefs_hash in VERSIONS.items():
         patch = NSOPatch()
         _patch_corpius(patch, version, configuration)
-        exefs.joinpath(f"{exefs_hash}.ips").write_bytes(bytes(patch))
+        exefs_patches.joinpath(f"{exefs_hash}.ips").write_bytes(bytes(patch))
+
+def include_depackager(exefs_path: Path):
+    shutil.rmtree(exefs_path, ignore_errors=True)
+    exefs_path.mkdir(parents=True, exist_ok=True)
+
+    dread_depackager = Path(__file__).parent.joinpath("files", "dread_depackager")
+    shutil.copytree(dread_depackager, exefs_path, dirs_exist_ok=True)
