@@ -11,6 +11,7 @@ from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.map_icons import MapIconEditor
+from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickup import pickup_object_for
 from open_dread_rando.static_fixes import apply_static_fixes
@@ -23,30 +24,6 @@ T = typing.TypeVar("T")
 def _read_schema():
     with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
         return json.load(f)
-
-
-def _output_format_for_category(category: str) -> OutputFormat:
-    if category == "pkg":
-        return OutputFormat.PKG
-    elif category == "romfs":
-        return OutputFormat.ROMFS
-    else:
-        raise ValueError(f"unknown value: {category}")
-
-def _output_paths_for_compatibility(out_path: Path, compatibility: str) -> typing.Tuple[Path, Path, Path]:
-    if compatibility == "ryujinx":
-        mod_path = out_path.joinpath("DreadRandovania")
-        exefs_patches = mod_path.joinpath("exefs")
-        romfs = mod_path.joinpath("romfs")
-        exefs = None
-    elif compatibility == "atmosphere":
-        exefs_patches = out_path.joinpath("exefs_patches", "DreadRandovania")
-        mod_path = out_path.joinpath("contents", "010093801237c000")
-        romfs = mod_path.joinpath("romfs")
-        exefs = mod_path.joinpath("exefs")
-    else:
-        raise ValueError(f"unknown value: {compatibility}")
-    return romfs, exefs, exefs_patches
 
 
 def create_custom_init(editor: PatcherEditor, configuration: dict):
@@ -165,8 +142,8 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
         apply_text_patches(editor, configuration["text_patches"])
     
 
-    out_romfs, out_exefs, exefs_patches = _output_paths_for_compatibility(output_path, configuration["mod_compatibility"])
-    output_format = _output_format_for_category(configuration["mod_category"])
+    out_romfs, out_exefs, exefs_patches = output_paths_for_compatibility(output_path, configuration["mod_compatibility"])
+    output_format = output_format_for_category(configuration["mod_category"])
 
     # Exefs
     LOG.info("Creating exefs patches")
