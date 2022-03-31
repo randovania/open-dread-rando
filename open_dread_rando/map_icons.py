@@ -58,7 +58,7 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "PROGRESSIVE_BEAM": MapIcon(
         icon_id="ItemProgressiveBeam",
-        coords=(0, 6),
+        coords=(7, 7),
         label="PROGRESSIVE BEAM"
     ),
     "powerup_chargebeam": MapIcon(
@@ -73,7 +73,7 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "PROGRESSIVE_CHARGE": MapIcon(
         icon_id="ItemProgressiveCharge",
-        coords=(3, 6),
+        coords=(8, 7),
         label="PROGRESSIVE CHARGE"
     ),
     "powerup_grapplebeam": MapIcon(
@@ -93,7 +93,7 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "PROGRESSIVE_MISSILE": MapIcon(
         icon_id="ItemProgressiveMissile",
-        coords=(6, 6),
+        coords=(9, 7),
         label="PROGRESSIVE MISSILE"
     ),
     "powerup_stormmissile": MapIcon(
@@ -128,7 +128,7 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "PROGRESSIVE_SUIT": MapIcon(
         icon_id="ItemProgressiveSuit",
-        coords=(12, 6),
+        coords=(10, 7),
         label="PROGRESSIVE SUIT"
     ),
     "powerup_morphball": MapIcon(
@@ -148,7 +148,7 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "PROGRESSIVE_BOMB": MapIcon(
         icon_id="ItemProgressiveBomb",
-        coords=(15, 6),
+        coords=(11, 7),
         label="PROGRESSIVE BOMB"
     ),
     "powerup_powerbomb": MapIcon(
@@ -168,7 +168,7 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "PROGRESSIVE_SPIN": MapIcon(
         icon_id="ItemProgressiveSpin",
-        coords=(4, 7),
+        coords=(12, 7),
         label="PROGRESSIVE SPIN"
     ),
     "powerup_spidermagnet": MapIcon(
