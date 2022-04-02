@@ -43,11 +43,12 @@ function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallba
     Game.AddSF(0.5, Game.PlayCurrentEnvironmentMusic, "")
 end
 
+Scenario.sRandoGameInitializedPropID = Blackboard.RegisterLUAProp("RANDO_GAME_INITIALIZED", "bool")
 local init_scenario = Scenario.InitScenario
 function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     init_scenario(arg1, arg2, arg3, arg4)
-    if not Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, false) then
-        Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
+    if not Scenario.ReadFromSharedBlackboard(Scenario.sRandoGameInitializedPropID, false) then
+        Scenario.WriteToSharedBlackboard(Scenario.sRandoGameInitializedPropID, "b", true)
         Game.AddSF(0.9, Init.SaveGameAtStartingLocation, "")
         Game.AddSF(0.8, Scenario.ShowText, "")
     end
