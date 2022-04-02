@@ -193,8 +193,8 @@ end
 function s010_cave.OnEnd_Cutscene_intro_end()
     
   
-  -- Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
-  -- CAVES_GAME_INTRO = true
+  Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
+  CAVES_GAME_INTRO = true
   Game.PushSetup("PostIntro", true, true)
   Game.PlayCurrentEnvironmentMusic()
   -- Game.SaveGame("savedata", "IntroEnd", "StartPoint0", true)
