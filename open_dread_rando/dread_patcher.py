@@ -140,9 +140,11 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     # Text patches
     if "text_patches" in configuration:
         apply_text_patches(editor, configuration["text_patches"])
-    
 
-    out_romfs, out_exefs, exefs_patches = output_paths_for_compatibility(output_path, configuration["mod_compatibility"])
+    out_romfs, out_exefs, exefs_patches = output_paths_for_compatibility(
+        output_path,
+        configuration["mod_compatibility"],
+    )
     output_format = output_format_for_category(configuration["mod_category"])
 
     # Exefs

@@ -53,6 +53,7 @@ def patch_exefs(exefs_patches: Path, configuration: dict):
         _patch_corpius(patch, version, configuration)
         exefs_patches.joinpath(f"{exefs_hash}.ips").write_bytes(bytes(patch))
 
+
 def include_depackager(exefs_path: Path):
     shutil.rmtree(exefs_path, ignore_errors=True)
     exefs_path.mkdir(parents=True, exist_ok=True)
