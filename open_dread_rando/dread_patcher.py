@@ -31,6 +31,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     inventory: dict[str, int] = configuration["starting_items"]
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
+    shareable_hash: str = configuration["shareable_hash"]
 
     energy_per_tank = configuration.get("energy_per_tank", 100)
     energy_per_part = configuration.get("energy_per_part", energy_per_tank / 4)
@@ -78,6 +79,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "energy_per_part": energy_per_part,
         "immediate_energy_parts": configuration.get("immediate_energy_parts", False),
         "default_x_released": configuration.get("game_patches", {}).get("default_x_released", False),
+        "shareable_hash": lua_util.wrap_string(shareable_hash),
     }
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)

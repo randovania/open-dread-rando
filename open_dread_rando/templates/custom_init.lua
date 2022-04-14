@@ -29,6 +29,34 @@ function Init.SaveGameAtStartingLocation()
     Game.SaveGame("savedata", "IntroEnd", Init.sStartingActor, true)
 end
 
+Init.sThisRandoSeedHash = TEMPLATE("shareable_hash")
+
+local original_Init_CreateNewGameData = Init.CreateNewGameData
+function Init.CreateNewGameData(difficulty)
+    original_Init_CreateNewGameData(difficulty)
+
+    local playerSection =  Game.GetPlayerBlackboardSectionName()
+
+    --[[
+        When creating a new save file, store the current seed hash in the Blackboard.
+
+        The seed hash will be cross-checked when loading a save (via Scenario.InitScenario), and a warning message will be shown if the
+        hash in the Blackboard doesn't exist or doesn't match the copy stored in Init.sThisRandoSeedHash.
+
+        If the player loads a non-rando save, the hash won't exist in the Blackboard, and if they load a save from a different seed, the
+        hash in the Blackboard will be different than the one in Init.sThisRandoSeedHash.
+    ]]
+
+    Game.LogWarn(0, "Setting THIS_RANDO_HASH Blackboard property")
+    Blackboard.SetProp(playerSection, "THIS_RANDO_HASH", "s", Init.sThisRandoSeedHash)
+
+    -- Must explicitly set the "initialized" flag to false; it seems the Player Blackboard doesn't get fully wiped when making a new file
+    -- after recently playing a file in the same slot.
+
+    Game.LogWarn(0, "Resetting RANDO_GAME_INITIALIZED Blackboard property")
+    Blackboard.SetProp(playerSection, "RANDO_GAME_INITIALIZED", "b", false)
+end
+
 Game.SetForceSkipCutscenes(true)
 Game.LogWarn(0, "Finished modded system/init.lc")
 
