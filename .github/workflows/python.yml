@@ -35,7 +35,7 @@ jobs:
         run: python -m build --sdist
       
       - name: Store the packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: python-package-distributions
           path: dist
