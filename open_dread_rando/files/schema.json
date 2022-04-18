@@ -275,6 +275,9 @@
             "description": "When pkg, outputs fully modified pkg files. On romfs, output just the modified files but requires an exefs patch to load.",
             "default": "pkg"
         },
+        "shareable_hash": {
+            "type": "string"
+        },
         "cosmetic_patches": {
             "type": "object",
             "properties": {
