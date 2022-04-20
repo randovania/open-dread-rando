@@ -7,6 +7,7 @@ from pathlib import Path
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util
+from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
 from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
@@ -140,6 +141,10 @@ def patch(input_path: Path, output_path: Path, configuration: dict):
     # Text patches
     if "text_patches" in configuration:
         apply_text_patches(editor, configuration["text_patches"])
+
+    # Cosmetic patches
+    if "cosmetic_patches" in configuration:
+        apply_cosmetic_patches(editor, configuration["cosmetic_patches"])
 
     out_romfs, out_exefs, exefs_patches = output_paths_for_compatibility(
         output_path,

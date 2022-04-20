@@ -258,8 +258,18 @@
             ],
             "description": "When pkg, outputs fully modified pkg files. On romfs, output just the modified files but requires an exefs patch to load.",
             "default": "pkg"
+        },
+        "cosmetic_patches": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "config"
+            ]
         }
-
     },
     "required": [
         "starting_location",
