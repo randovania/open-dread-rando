@@ -111,6 +111,7 @@ function RandomizerPowerup.Delayed_ChangeSuit(model)
     model_updater.sModelAlias = model
 end
 
+MAX_ENERGY = 1499
 function RandomizerPowerup.IncreaseEnergy(resource)
     if resource == nil then return end
     local item_id = resource.item_id
@@ -122,12 +123,21 @@ function RandomizerPowerup.IncreaseEnergy(resource)
     end
     Game.LogWarn(0, "Increasing player energy.")
 
-    local new = RandomizerPowerup.GetItemAmount("ITEM_MAX_LIFE") + energy
-    RandomizerPowerup.SetItemAmount("ITEM_MAX_LIFE", new)
-    RandomizerPowerup.SetItemAmount("ITEM_CURRENT_LIFE", new)
+    local new_max = RandomizerPowerup.GetItemAmount("ITEM_MAX_LIFE") + energy
+    new_max = math.min(new_max, MAX_ENERGY)
+    
+    local new_current = new_max
+    if item_id == "ITEM_LIFE_SHARDS" and Init.bImmediateEnergyParts then
+        new_current = RandomizerPowerup.GetItemAmount("ITEM_CURRENT_LIFE") + energy
+        new_current = math.min(new_current, MAX_ENERGY)
+    end
+    
+    RandomizerPowerup.SetItemAmount("ITEM_MAX_LIFE", new_max)
+    RandomizerPowerup.SetItemAmount("ITEM_CURRENT_LIFE", new_current)
+
     local life = Game.GetPlayer().LIFE
-    life.fMaxLife = new
-    life.fCurrentLife = new
+    life.fMaxLife = new_max
+    life.fCurrentLife = new_current
 end
 
 function RandomizerPowerup.IncreaseAmmo(resource)
