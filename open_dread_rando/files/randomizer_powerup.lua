@@ -159,7 +159,11 @@ end
 RandomizerPowerBomb = {}
 setmetatable(RandomizerPowerBomb, {__index = RandomizerPowerup})
 function RandomizerPowerBomb.OnPickedUp(actor, progression)
-    progression = {{item_id = "ITEM_WEAPON_POWER_BOMB_MAX", quantity = 0}}
+    progression = progression or {{item_id = "ITEM_WEAPON_POWER_BOMB_MAX", quantity = 0}}
+    if actor ~= nil then
+        -- actor pickups grant the quantity directly; bosses do not
+        progression[1].quantity = 0
+    end
     local granted = RandomizerPowerup.OnPickedUp(actor, progression)
     if granted ~= nil and granted.item_id == "ITEM_WEAPON_POWER_BOMB_MAX" then
         RandomizerPowerup.SetItemAmount("ITEM_WEAPON_POWER_BOMB", 1)
