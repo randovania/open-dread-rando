@@ -69,7 +69,8 @@ class LuaEditor:
         new_class = lua_util.replace_lua_template("randomizer_progressive_template.lua", replacement)
         self._powerup_script += new_class.encode("utf-8")
 
-    def patch_actordef_pickup_script(self, editor: PatcherEditor, resources: list[dict], pickup_lua_callback: dict):
+    def patch_actordef_pickup_script(self, editor: PatcherEditor, resources: list[dict], pickup_lua_callback: dict,
+                                     extra_code: str = ""):
         scenario = pickup_lua_callback["scenario"]
         scenario_path = path_for_level(scenario)
         lua_util.create_script_copy(editor, scenario_path)
@@ -84,6 +85,7 @@ class LuaEditor:
             "scenario": scenario,
             "funcname": pickup_lua_callback["function"],
             "pickup_class": self.get_script_class(resources, True),
+            "extra_code": extra_code,
             "args": ", ".join([f"_ARG_{i}_" for i in range(pickup_lua_callback["args"])])
         }
         script["script"] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
