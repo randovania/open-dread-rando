@@ -269,6 +269,17 @@
             "required": [
                 "config"
             ]
+        },
+        "game_patches": {
+            "type": "object",
+            "properties": {
+                "consistent_raven_beak_damage_table": {
+                    "type": "boolean",
+                    "description": "Change Raven Beak's damage multiplier for all beams and missiles to be consistent.",
+                    "default": true
+                }
+            },
+            "additionalProperties": false
         }
     },
     "required": [
