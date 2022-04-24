@@ -84,6 +84,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
     }
 
+    replacement.update(configuration.get("game_patches", {}))
+
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 

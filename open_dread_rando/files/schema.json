@@ -321,6 +321,11 @@
                     "description": "How quickly you lose energy in damage rooms, in Damage per Second.",
                     "type": "number",
                     "default": 20
+                },
+                "enable_experiment_boss": {
+                    "type": "boolean",
+                    "description": "Enable the Experiment Z-57 boss fight when entering its arena through the Morph Ball Launcher after releasing the X.",
+                    "default": true
                 }
             },
             "additionalProperties": false
