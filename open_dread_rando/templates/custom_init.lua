@@ -47,7 +47,7 @@ function Init.CreateNewGameData(difficulty)
         hash in the Blackboard will be different than the one in Init.sThisRandoSeedHash.
     ]]
 
-    Game.LogWarn(0, "Setting THIS_RANDO_HASH Blackboard property")
+    Game.LogWarn(0, ("Setting THIS_RANDO_HASH Blackboard property to %q"):format(Init.sThisRandoSeedHash))
     Blackboard.SetProp(playerSection, "THIS_RANDO_HASH", "s", Init.sThisRandoSeedHash)
 
     -- Must explicitly set the "initialized" flag to false; it seems the Player Blackboard doesn't get fully wiped when making a new file

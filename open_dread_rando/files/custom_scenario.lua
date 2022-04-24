@@ -46,12 +46,14 @@ end
 local init_scenario = Scenario.InitScenario
 function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     local playerSection =  Game.GetPlayerBlackboardSectionName()
-    local thisRandoHash = Blackboard.GetProp(playerSection, "THIS_RANDO_HASH")
+    local currentSaveRandoHash = Blackboard.GetProp(playerSection, "THIS_RANDO_HASH")
     local randoInitialized = Blackboard.GetProp(playerSection, "RANDO_GAME_INITIALIZED")
+
+    Game.LogWarn(0, ("Cross-checking seed hashes. The current patch's hash is %q, and the current save's hash is %q."):format(Init.sThisRandoSeedHash, currentSaveRandoHash))
 
     -- Cross-check the seed hash in the Blackboard with the one in Init.sThisRandoSeedHash to make sure they match.
     -- If they don't, show a warning to the player, and DO NOT save over their game!
-    if thisRandoHash ~= Init.sThisRandoSeedHash then
+    if currentSaveRandoHash ~= Init.sThisRandoSeedHash then
         Game.AddSF(0.8, Scenario.ShowNotRandoGameMessage, "")
         return
     end
