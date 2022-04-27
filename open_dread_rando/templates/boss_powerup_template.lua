@@ -5,5 +5,6 @@ function TEMPLATE("scenario").TEMPLATE("funcname")(TEMPLATE("args"))
     original_TEMPLATE("funcname")(TEMPLATE("args"))
     Game.LogWarn(0, "Granting item")
     TEMPLATE("pickup_class").OnPickedUp(nil)
+    TEMPLATE("extra_code")
     Game.LogWarn(0, "Item granted")
 end

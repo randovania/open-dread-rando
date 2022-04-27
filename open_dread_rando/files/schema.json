@@ -22,7 +22,8 @@
                             "actor",
                             "emmi",
                             "corex",
-                            "corpius"
+                            "corpius",
+                            "cutscene"
                         ]
                     },
                     "caption": {
@@ -147,22 +148,37 @@
                 },
                 "else": {
                     "properties": {
-                        "pickup_actordef": {
-                            "type": "string",
-                            "pattern": "[a-zA-Z0-9_/]+?\\.bmsad"
-                        },
-                        "pickup_string_key": {
-                            "type": "string"
-                        },
                         "pickup_lua_callback": {
                             "$ref": "#/$defs/scenario_lua_callback"
                         }
                     },
                     "required": [
-                        "pickup_actordef",
-                        "pickup_string_key",
                         "pickup_lua_callback"
-                    ]
+                    ],
+                    "if": {
+                        "not": {
+                            "properties": {
+                                "pickup_type": {
+                                    "const": "cutscene"
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "pickup_actordef": {
+                                "type": "string",
+                                "pattern": "[a-zA-Z0-9_/]+?\\.bmsad"
+                            },
+                            "pickup_string_key": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "pickup_actordef",
+                            "pickup_string_key"
+                        ]
+                    }
                 }
             }
         },
