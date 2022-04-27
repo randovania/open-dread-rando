@@ -1004,8 +1004,9 @@ function s020_magma.Kraid_Activation_Stage_03_CutsceneEnd()
   Game.SaveGame("checkpoint", "KraidDead", "SP_Checkpoint_Dead_Kraid", true)
 end
 
-
-
+function s020_magma.OnKraidDeath_CUSTOM()
+  Game.AddGUISF(0, "s020_magma.Kraid_Activation_Stage_03_CutsceneEnd", "")
+end
 
 function s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
   if old_subarea == "collision_camera_024" and new_subarea == "collision_camera_063" and new_actorgroup == "Default" then

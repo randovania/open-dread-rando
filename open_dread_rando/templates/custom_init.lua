@@ -1,5 +1,7 @@
 Game.ImportLibrary("system/scripts/init_original.lua")
 
+local initOk, errorMsg = pcall(function()
+
 Init.tNewGameInventory = TEMPLATE("new_game_inventory")
 
 Init.iNumRandoTextBoxes = TEMPLATE("textbox_count")
@@ -28,3 +30,9 @@ end
 
 Game.SetForceSkipCutscenes(true)
 Game.LogWarn(0, "Finished modded system/init.lc")
+
+end)
+if not initOk then
+    Game.LogWarn(0, "Init failed: " .. errorMsg)
+    GUI.ShowMessage("Init failed: " .. errorMsg, true, "")
+end
