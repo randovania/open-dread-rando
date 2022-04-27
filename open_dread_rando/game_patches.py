@@ -2,6 +2,19 @@ from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando.patcher_editor import PatcherEditor
 
+_HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
+    {
+        "scenario": "s080_shipyard",
+        "layer": "default",
+        "actor": "grapplepulloff1x2_000"
+    },
+    {
+        "scenario": "s080_shipyard",
+        "layer": "default",
+        "actor": "grapplepulloff1x2"
+    }
+]
+
 
 def apply_game_patches(editor: PatcherEditor, configuration: dict):
     if configuration.get("consistent_raven_beak_damage_table", True):
@@ -24,3 +37,7 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
                 factor[beam] = factor.fMeleeChargeWaveBeamFactor
             for missile in ["fMissileFactor", "fSuperMissileFactor"]:
                 factor[missile] = factor.fIceMissileFactor
+
+    if configuration["remove_grapple_blocks_hanubia_shortcut"]:
+        for reference in _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS:
+            editor.remove_entity(reference)

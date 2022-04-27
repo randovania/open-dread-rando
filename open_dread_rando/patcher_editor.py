@@ -1,8 +1,8 @@
 import shutil
 import typing
 from pathlib import Path
-from construct import Container
 
+from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS
 
@@ -12,8 +12,10 @@ T = typing.TypeVar("T")
 def path_for_level(level_name: str) -> str:
     return f"maps/levels/c10_samus/{level_name}/{level_name}"
 
+
 def extension_for_type(type_hint: typing.Type[T]) -> str:
     return next(ext for ext, t in ALL_FORMATS.items() if t == type_hint).lower()
+
 
 class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]
@@ -33,13 +35,13 @@ class PatcherEditor(FileTreeEditor):
 
     def get_scenario(self, name: str) -> Brfld:
         return self.get_scenario_file(name, Brfld)
-    
+
     def get_subarea_manager(self, name: str) -> Brsa:
         return self.get_scenario_file(name, Brsa)
-    
+
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))
-    
+
     def resolve_actor_reference(self, ref: dict) -> Container:
         scenario = self.get_scenario(ref["scenario"])
         layer = ref.get("layer", "default")
@@ -49,7 +51,7 @@ class PatcherEditor(FileTreeEditor):
         for name, resource in self.memory_files.items():
             self.replace_asset(name, resource)
         self.memory_files = {}
-    
+
     def add_new_asset(self, name: str, new_data: typing.Union[bytes, BaseResource], in_pkgs: typing.Iterable[str]):
         super().add_new_asset(name, new_data, in_pkgs)
         # Hack for textures' weird folder layout
@@ -63,3 +65,13 @@ class PatcherEditor(FileTreeEditor):
                 path = debug_path.joinpath(self._name_for_asset_id[asset_id])
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(asset)
+
+    def remove_entity(self, reference: dict):
+        scenario = self.get_scenario(reference["scenario"])
+        layer = reference.get("layer", "default")
+        actor_name = reference["actor"]
+
+        for group_name in scenario.all_actor_groups():
+            scenario.remove_actor_from_group(group_name, actor_name, layer)
+
+        scenario.actors_for_layer(layer).pop(actor_name)
