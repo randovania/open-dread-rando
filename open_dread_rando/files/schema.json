@@ -293,6 +293,11 @@
                     "type": "boolean",
                     "description": "Change Raven Beak's damage multiplier for all beams and missiles to be consistent.",
                     "default": true
+                },
+                "enable_experiment_boss": {
+                    "type": "boolean",
+                    "description": "Enable the Experiment Z-57 boss fight when entering its arena through the Morph Ball Launcher after releasing the X.",
+                    "default": true
                 }
             },
             "additionalProperties": false

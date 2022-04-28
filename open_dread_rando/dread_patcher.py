@@ -79,6 +79,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "immediate_energy_parts": configuration.get("immediate_energy_parts", False),
     }
 
+    replacement.update(configuration.get("game_patches", {}))
+
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 

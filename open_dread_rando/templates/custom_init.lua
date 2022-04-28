@@ -6,6 +6,7 @@ Init.iNumRandoTextBoxes = TEMPLATE("textbox_count")
 Init.fEnergyPerTank = TEMPLATE("energy_per_tank")
 Init.fEnergyPerPart = TEMPLATE("energy_per_part")
 Init.bImmediateEnergyParts = TEMPLATE("immediate_energy_parts")
+Init.bEnableExperimentBoss = TEMPLATE("enable_experiment_boss")
 
 Game.LogWarn(0, "Inventory:")
 for k, v in pairs(Init.tNewGameInventory) do

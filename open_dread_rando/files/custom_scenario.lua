@@ -43,15 +43,23 @@ function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallba
     Game.AddSF(0.5, Game.PlayCurrentEnvironmentMusic, "")
 end
 
+function Scenario.ReadFromPlayerBlackboard(prop_id, default)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    local value = Blackboard.GetProp(playerSection, prop_id)
+    return value or default
+end
+
+function Scenario.WriteToPlayerBlackboard(prop_id, type, value)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    Blackboard.SetProp(playerSection, prop_id, type, value)
+end
+
 local init_scenario = Scenario.InitScenario
 function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     init_scenario(arg1, arg2, arg3, arg4)
 
-    local playerSection =  Game.GetPlayerBlackboardSectionName()
-    local randoInitialized = Blackboard.GetProp(playerSection, "RANDO_GAME_INITIALIZED")
-
-    if not randoInitialized then
-        Blackboard.SetProp(playerSection, "RANDO_GAME_INITIALIZED", "b", true)
+    if not Scenario.ReadFromPlayerBlackboard("RANDO_GAME_INITIALIZED", false) then
+        Scenario.WriteToPlayerBlackboard("RANDO_GAME_INITIALIZED", "b", true)
         Game.AddSF(0.9, Init.SaveGameAtStartingLocation, "")
         Game.AddSF(0.8, Scenario.ShowText, "")
     end
