@@ -1,5 +1,5 @@
 import copy
-import typing
+
 from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
 
@@ -61,19 +61,22 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
                     for name in [actor_name, mirrored.sName, other.sName]:
                         scenario.add_actor_to_group(group_name, name, layer_name)
 
+
 PROBLEM_X_LAYERS = {
     "s010_cave": [
-        "collision_camera_026", # Chain reaction
-        "collision_camera_020", # Corpius arena
-        "collision_camera_073", # Corpius entrance
+        "collision_camera_026",  # Chain reaction
+        "collision_camera_020",  # Corpius arena
+        "collision_camera_073",  # Corpius entrance
     ],
     "s020_magma": [
-        "collision_camera_063", # Kraid arena
+        "collision_camera_063",  # Kraid arena
     ],
     "s070_basesanc": [
-        "collision_camera_005", # Quiet Robe room
+        "collision_camera_005",  # Quiet Robe room
     ]
 }
+
+
 def remove_problematic_x_layers(editor: PatcherEditor):
     # these X layers have priority, so they will set some rooms to their post-state
     # even if they've never been entered. in these particular problem rooms, this
@@ -86,6 +89,21 @@ def remove_problematic_x_layers(editor: PatcherEditor):
         ]
 
 
+def add_callback_to_kraid(editor: PatcherEditor):
+    magma = editor.get_scenario("s020_magma")
+    death_cutscene_player = magma.follow_link(
+        "Root:pScenario:rEntitiesLayer:dctSublayers:cutscenes:dctActors:cutsceneplayer_61"
+    )
+    death_cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
+        "@type": "CLuaCallsLogicAction",
+        "sCallbackEntityName": "",
+        "sCallback": "CurrentScenario.OnKraidDeath_CUSTOM",
+        "bCallbackEntity": False,
+        "bCallbackPersistent": False,
+    })
+
+
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     apply_one_sided_door_fixes(editor)
+    add_callback_to_kraid(editor)
