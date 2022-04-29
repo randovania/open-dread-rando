@@ -293,6 +293,11 @@
                     "type": "boolean",
                     "description": "Change Raven Beak's damage multiplier for all beams and missiles to be consistent.",
                     "default": true
+                },
+                "remove_grapple_blocks_hanubia_shortcut": {
+                    "type": "boolean",
+                    "description": "Remove the two Grapple Blocks in the entrance to Hanubia from Ferenia.",
+                    "default": true
                 }
             },
             "additionalProperties": false
