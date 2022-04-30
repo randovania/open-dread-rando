@@ -76,6 +76,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "energy_per_tank": energy_per_tank,
         "energy_per_part": energy_per_part,
         "immediate_energy_parts": configuration.get("immediate_energy_parts", False),
+        "default_x_released": configuration.get("game_patches", {}).get("default_x_released", False),
     }
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)
