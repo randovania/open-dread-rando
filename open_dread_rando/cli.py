@@ -57,7 +57,7 @@ def main():
     with args.input_json.open() as f:
         configuration = json.load(f)
 
-    dread_patcher.patch(
+    dread_patcher.patch_extracted(
         args.input_path,
         args.output_path,
         configuration,
