@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
@@ -15,6 +16,12 @@ def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
     code = _templates().joinpath(file).read_text()
     for key, content in replacement.items():
         code = code.replace(f'TEMPLATE("{key}")', lua_convert(content))
+
+    unknown_templates = re.findall(r'TEMPLATE\("([^"]+)"\)', code)
+
+    if unknown_templates:
+        raise ValueError("The following templates were left unfulfilled: " + str(unknown_templates))
+
     return code
 
 
