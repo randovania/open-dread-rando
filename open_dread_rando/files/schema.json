@@ -298,6 +298,11 @@
                     "type": "boolean",
                     "description": "Remove the two Grapple Blocks in the entrance to Hanubia from Ferenia.",
                     "default": true
+                },
+                "default_x_released": {
+                    "type": "boolean",
+                    "description": "When enabled, the game starts with the X Parasites being released already.",
+                    "default": false
                 }
             },
             "additionalProperties": false

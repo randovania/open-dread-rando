@@ -45,10 +45,15 @@ end
 
 local init_scenario = Scenario.InitScenario
 function Scenario.InitScenario(arg1, arg2, arg3, arg4)
-    init_scenario(arg1, arg2, arg3, arg4)
-
     local playerSection =  Game.GetPlayerBlackboardSectionName()
     local randoInitialized = Blackboard.GetProp(playerSection, "RANDO_GAME_INITIALIZED")
+
+    if not randoInitialized then
+        Game.SetXparasite(Init.bDefaultXRelease)
+        Blackboard.SetProp("GAME_PROGRESS", "QUARENTINE_OPENED", "b", Init.bDefaultXRelease)
+    end
+
+    init_scenario(arg1, arg2, arg3, arg4)
 
     if not randoInitialized then
         Blackboard.SetProp(playerSection, "RANDO_GAME_INITIALIZED", "b", true)
