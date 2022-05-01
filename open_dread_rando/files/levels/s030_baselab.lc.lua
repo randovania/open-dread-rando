@@ -661,15 +661,15 @@ end
 
 
 function s030_baselab.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-  local enable_wide = Scenario.ReadFromBlackboard(s030_baselab.sRandoBlackoutPropID, false)
+  local disable_wide = not Scenario.ReadFromBlackboard(s030_baselab.sRandoBlackoutPropID, false)
   local wide_door_left = Game.GetActor("doorwidebeam_001")
   local wide_door_right = Game.GetActor("doorwidebeam_001_mirrored")
 
   if wide_door_left ~= nil then
-    wide_door_left.bEnabled = enable_wide
+    wide_door_left.LIFE:SetInvulnerable(disable_wide)
   end
   if wide_door_right ~= nil then
-    wide_door_right.bEnabled = enable_wide
+    wide_door_right.LIFE:SetInvulnerable(disable_wide)
   end
 end
 
