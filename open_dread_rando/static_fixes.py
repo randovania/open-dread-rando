@@ -1,5 +1,6 @@
 import copy
 
+from open_dread_rando import door_patcher
 from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
 
@@ -20,8 +21,7 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
         scenario = editor.get_scenario(scenario_name)
 
         for layer_name, actor_name, actor in list(scenario.all_actors()):
-            is_door = "LIFE" in actor.pComponents and "CDoorLifeComponent" == actor.pComponents.LIFE["@type"]
-            if not is_door:
+            if not door_patcher.is_door(actor):
                 continue
 
             if actor.oActorDefLink != "actordef:actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad":

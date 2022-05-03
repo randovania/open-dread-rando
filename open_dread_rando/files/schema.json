@@ -299,6 +299,11 @@
                     "description": "Remove the two Grapple Blocks in the entrance to Hanubia from Ferenia.",
                     "default": true
                 },
+                "remove_grapple_block_path_to_itorash": {
+                    "type": "boolean",
+                    "description": "Remove the Grapple Block in the path to Itorash in upper Hanubia.",
+                    "default": true
+                },
                 "default_x_released": {
                     "type": "boolean",
                     "description": "When enabled, the game starts with the X Parasites being released already.",
@@ -306,6 +311,40 @@
                 }
             },
             "additionalProperties": false
+        },
+        "door_patches": {
+            "type": "array",
+            "description": "Changes the door types",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "actor": {
+                        "$ref": "#/$defs/actor_reference_with_layer"
+                    },
+                    "door_type": {
+                        "type": "string",
+                        "enum": [
+                            "frame",
+                            "power_beam",
+                            "charge_beam",
+                            "wide_beam",
+                            "plasma_beam",
+                            "wave_beam",
+                            "missile",
+                            "super_missile",
+                            "grapple_beam",
+                            "phantom_cloak",
+                            "phase_shift"
+                        ]
+                    }
+                },
+                "required": [
+                    "actor",
+                    "door_type"
+                ],
+                "additionalProperties": false
+            },
+            "default": []
         }
     },
     "required": [

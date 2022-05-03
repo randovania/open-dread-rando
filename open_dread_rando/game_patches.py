@@ -41,3 +41,10 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
     if configuration["remove_grapple_blocks_hanubia_shortcut"]:
         for reference in _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS:
             editor.remove_entity(reference)
+
+    if configuration["remove_grapple_block_path_to_itorash"]:
+        editor.remove_entity({
+            "scenario": "s080_shipyard",
+            "layer": "default",
+            "actor": "grapplepulloff1x2_001"
+        })
