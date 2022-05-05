@@ -6,6 +6,7 @@ import ips
 VERSIONS = {
     "1.0.0": "49161D9CCBC15DF944D0B6278A3C446C006B0BE8",
     "2.0.0": "C447858C965A1A2EBCC506649CF87AC5665180ED",
+    "2.1.0": "646761F643AFEBB379EDD5E6A5151AF2CEF93DC1",
 }
 NOP = bytes.fromhex('1F2003D5')
 
@@ -33,10 +34,12 @@ def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
     grant_item_none = VersionedPatch({
         "1.0.0": (0x00d94890, bytes.fromhex('A13F00D0 21D81591')),
         "2.0.0": (0x00d99be0, bytes.fromhex('01400090 21DC3391')),
+        "2.1.0": (0x00da7380, bytes.fromhex('81410090 21B82091')),
     })
     stub_aeion_message = VersionedPatch({
         "1.0.0": (0x011a1f4c, NOP),
         "2.0.0": (0x011af61c, NOP),
+        "2.1.0": (0x011e7f1c, NOP),
     })
 
     for p in [grant_item_none, stub_aeion_message]:
