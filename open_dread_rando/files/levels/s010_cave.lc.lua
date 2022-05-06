@@ -223,7 +223,7 @@ function s010_cave.OnEmmyAbilityObtainedFadeOutCompleted()
   if L0_2 ~= nil then
     L0_2.TUNNEL_TRAP:SetOpenState()
   end  
-  Game.GetActor("Door062 (PW-PW, Special)").LIFE:LockDoor()
+  --Game.GetActor("Door062 (PW-PW, Special)").LIFE:LockDoor()
   local L1_2 = Game.GetActor( "SG_WarLotus_000")
   if L1_2 ~= nil then
     L1_2.SPAWNGROUP:EnableSpawnGroup()
@@ -2023,7 +2023,7 @@ function s010_cave.EnablePostScorpiusTrigger()
 end
 
 function s010_cave.OnEnter_ScorpiusArenaAfterBattle(_ARG_0_, _ARG_1_)
-  Game.GetActor("Door062 (PW-PW, Special)").LIFE:UnLockDoor()
+  --Game.GetActor("Door062 (PW-PW, Special)").LIFE:UnLockDoor()
   Game.PopSetup("SP_Scorpius_scorpius_Boss_Defeated", true, true)
   Game.PushSetup("PostScorpius", true, true)
   _ARG_0_.bEnabled = false
