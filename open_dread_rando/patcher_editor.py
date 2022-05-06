@@ -39,6 +39,9 @@ class PatcherEditor(FileTreeEditor):
     def get_subarea_manager(self, name: str) -> Brsa:
         return self.get_scenario_file(name, Brsa)
 
+    def get_scenario_map(self, name: str) -> Bmmap:
+        return self.get_scenario_file(name, Bmmap)
+
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))
 
@@ -76,6 +79,5 @@ class PatcherEditor(FileTreeEditor):
 
         scenario.actors_for_layer(layer).pop(actor_name)
         if map_category is not None:
-            bmmap = self.get_scenario_file(reference["scenario"], Bmmap)
-            bmmap.raw.Root[map_category].pop(actor_name)
+            self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
 

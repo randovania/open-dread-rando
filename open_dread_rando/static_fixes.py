@@ -5,6 +5,14 @@ from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
 
 
+def flip_icon_id(icon_id: str) -> str:
+    if icon_id.endswith("R"):
+        return icon_id[:-1] + "L"
+    elif icon_id.endswith("L"):
+        return icon_id[:-1] + "R"
+    raise ValueError(f"Unable to flip icon {icon_id}")
+
+
 def apply_one_sided_door_fixes(editor: PatcherEditor):
     all_scenarios = [
         "s010_cave",
@@ -19,6 +27,8 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
 
     for scenario_name in all_scenarios:
         scenario = editor.get_scenario(scenario_name)
+        bmmap = editor.get_scenario_map(scenario_name)
+        map_blockages = bmmap.raw.Root.mapBlockages
 
         for layer_name, actor_name, actor in list(scenario.all_actors()):
             if not door_patcher.is_door(actor):
@@ -52,6 +62,13 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
             mirrored.sName += "_mirrored"
             mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]
             scenario.actors_for_layer(layer_name)[mirrored.sName] = mirrored
+
+            mirrored_map = copy.deepcopy(map_blockages[other.sName])
+            mirrored_map["sIconId"] = flip_icon_id(mirrored_map["sIconId"])
+            delta = 450 if mirrored_map["sIconId"].endswith("R") else -450
+            mirrored_map["oBox"]["Min"][0] += delta
+            mirrored_map["oBox"]["Max"][0] += delta
+            map_blockages[mirrored.sName] = mirrored_map
 
             # Add a reference to the other shield to the main actor
             life_comp[direction] = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
