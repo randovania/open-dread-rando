@@ -4,7 +4,7 @@ from pathlib import Path
 
 from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS
+from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
 
 T = typing.TypeVar("T")
 
@@ -66,7 +66,7 @@ class PatcherEditor(FileTreeEditor):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(asset)
 
-    def remove_entity(self, reference: dict):
+    def remove_entity(self, reference: dict, map_category: typing.Optional[str]):
         scenario = self.get_scenario(reference["scenario"])
         layer = reference.get("layer", "default")
         actor_name = reference["actor"]
@@ -75,3 +75,7 @@ class PatcherEditor(FileTreeEditor):
             scenario.remove_actor_from_group(group_name, actor_name, layer)
 
         scenario.actors_for_layer(layer).pop(actor_name)
+        if map_category is not None:
+            bmmap = self.get_scenario_file(reference["scenario"], Bmmap)
+            bmmap.raw.Root[map_category].pop(actor_name)
+

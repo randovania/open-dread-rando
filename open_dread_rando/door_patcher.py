@@ -51,8 +51,7 @@ def patch_door(editor: PatcherEditor, door: dict):
         for link_name in ["wpLeftDoorShieldEntity", "wpRightDoorShieldEntity"]:
             link = life_comp[link_name]
             if link != '{EMPTY}':
-                # TODO: remove the map entry
-                editor.remove_entity(reference_for_link(link, door["actor"]["scenario"]))
+                editor.remove_entity(reference_for_link(link, door["actor"]["scenario"]), "mapBlockages")
                 life_comp[link_name] = '{EMPTY}'
 
         actor.oActorDefLink = f"actordef:{_ACTOR_DEF_FOR_TYPE[door_type]}"
