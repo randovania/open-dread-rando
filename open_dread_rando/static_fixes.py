@@ -120,7 +120,21 @@ def add_callback_to_kraid(editor: PatcherEditor):
     })
 
 
+def activate_emmi_zones(editor: PatcherEditor):
+    # Remove the cutscene that plays when you enter the emmi zone for the first time
+    # This causes the border of the zone to not be revealed, but it should be possible to do that in another way
+    editor.remove_entity(
+        {
+            "scenario": "s010_cave",
+            "layer": "Cutscenes",
+            "actor": "cutscenetrigger_36"
+        },
+        None,
+    )
+
+
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
+    activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
     add_callback_to_kraid(editor)
