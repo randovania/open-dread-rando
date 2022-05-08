@@ -52,9 +52,9 @@ function s050_forest.SetupDebugGameBlackboard()
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_METROIDNIZATION", "f", 0)
 end
 
-
-
-
+function s050_forest.IsEmmiActive()
+  return true
+end
 
 
 
@@ -341,7 +341,7 @@ function s050_forest.OnEmmyForestGenerated(_ARG_0_, _ARG_1_)
   AI.SetWorldGraphToEmmy("LE_WorldGraph", _ARG_1_.sName)
   s050_forest.ChangePatrolEmmy("PATROLROUTE_03")
   print("EMMY: Generation OK. Starting patrol: " .. _ARG_1_.AI.sCurrentPatrol)
-  if QUARENTINE_OPENED == true then
+  if s050_forest.IsEmmiActive() then
     print("QUARANTINE IS OPENED")
   else
     CurrentScenario.oEmmyEntity.bEnabled = false
@@ -516,7 +516,7 @@ function s050_forest.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
     
     
     
-  if QUARENTINE_OPENED == true and Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
+  if s050_forest.IsEmmiActive() and Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     if _ARG_1_ then
       if CurrentScenario.oEmmyEntity ~= nil then
         if _ARG_2_ then
