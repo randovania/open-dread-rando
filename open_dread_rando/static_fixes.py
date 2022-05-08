@@ -132,6 +132,17 @@ def activate_emmi_zones(editor: PatcherEditor):
         None,
     )
 
+    # Remove the cutscene that introduces the speed emmi
+    # This causes the border of the zone to not be revealed, but it should be possible to do that in another way
+    editor.remove_entity(
+        {
+            "scenario": "s030_baselab",
+            "layer": "cutscenes",
+            "actor": "cutscenetrigger_39"
+        },
+        None,
+    )
+
 
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
