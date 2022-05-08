@@ -54,9 +54,9 @@ function s070_basesanc.SetupDebugGameBlackboard()
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_METROIDNIZATION", "f", 0)
 end
 
-
-
-
+function s070_basesanc.IsEmmiActive()
+  return true
+end
 
 
 local QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
@@ -367,7 +367,7 @@ function s070_basesanc.OnCentralUnitEmmyReady(_ARG_0_, _ARG_1_)
   s070_basesanc.ChangePatrolEmmy("PATROLROUTE_01")
   print("EMMY: Generation OK. Starting patrol: " .. _ARG_1_.AI.sCurrentPatrol)
 
-  local L2_2 = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
+  local L2_2 = s070_basesanc.IsEmmiActive()
   if L2_2 == true and CurrentScenario.oEmmyEntity.AI.bTargetInsideEmmyZone then
     print("QUARANTINE IS OPENED")
   else
@@ -533,7 +533,7 @@ s070_basesanc.tEmmyDoor = nil
 function s070_basesanc.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
 
 
-  local L3_2 = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
+  local L3_2 = s070_basesanc.IsEmmiActive()
   if L3_2 == true and Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     local L4_2 = Game.GetActor("emmy_sanc_deactivated")
 
