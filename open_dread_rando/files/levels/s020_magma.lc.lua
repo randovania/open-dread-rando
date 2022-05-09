@@ -781,11 +781,11 @@ function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, ne
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
     end
-  elseif old_subarea == "collision_camera_052" and new_subarea == "collision_camera_020" then
-    local oActor = Game.GetActor("cutsceneplayer_38")
-    if oActor ~= nil then
-      oActor.CUTSCENE:TryLaunchCutscene()
-    end
+  --elseif old_subarea == "collision_camera_052" and new_subarea == "collision_camera_020" then
+  --  local oActor = Game.GetActor("cutsceneplayer_38")
+  --  if oActor ~= nil then
+  --    oActor.CUTSCENE:TryLaunchCutscene()
+  --  end
   elseif old_subarea == "collision_camera_063" and new_subarea == "collision_camera_044" then
     Game.PlayCurrentEnvironmentMusic()
   elseif old_subarea == "collision_camera_022" and new_subarea == "collision_camera_030" then

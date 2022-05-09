@@ -73,6 +73,8 @@ function s030_baselab.InitFromBlackboard()
   LAB_EMMY_SPAWNED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.LAB_EMMY_SPAWNED, false)
   LAB_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.LAB_POSTXRELEASE_APPLIED, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
+  s030_baselab.OnEnter_EmmyLAB_Presentation()
+
   if QUARENTINE_OPENED == true then
     s030_baselab.Activate_Setup_PostXRelease()
   end
@@ -134,25 +136,25 @@ function s030_baselab.OnEnter_EmmyLAB_Presentation()
   
     
   print("ACTIVANDO EMMY")
-  GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_LAB")
+  --GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_LAB")
   local oActor = Game.GetActor("TG_EmmyLAB_Deactivation") 
   if oActor ~= nil then
     oActor.bEnabled = false
   end
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.LAB_EMMY_SPAWNED, "b", true)
   LAB_EMMY_SPAWNED = true
-  if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) and CurrentScenario.oEmmyEntity ~= nil then
-    local oActor = Game.GetActor("LM_EmmyPresentation")
-    CurrentScenario.oEmmyEntity.bEnabled = false
-    CurrentScenario.oEmmyEntity.vPos = oActor.vPos
-    CurrentScenario.oEmmyEntity.vAng = oActor.vAng
-    CurrentScenario.oEmmyEntity.bEnabled = true
-    print("EMMY REACTIVADO")
-  end
-  local oShutter = Game.GetActor("doorshutter_001")
-  if oShutter ~= nil then
-    oShutter.ANIMATION:SetAction("opened", true)
-  end
+  --if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) and CurrentScenario.oEmmyEntity ~= nil then
+  --  local oActor = Game.GetActor("LM_EmmyPresentation")
+  --  CurrentScenario.oEmmyEntity.bEnabled = false
+  --  CurrentScenario.oEmmyEntity.vPos = oActor.vPos
+  --  CurrentScenario.oEmmyEntity.vAng = oActor.vAng
+  --  CurrentScenario.oEmmyEntity.bEnabled = true
+  --  print("EMMY REACTIVADO")
+  --end
+  --local oShutter = Game.GetActor("doorshutter_001")
+  --if oShutter ~= nil then
+  --  oShutter.ANIMATION:SetAction("opened", true)
+  --end
 end
 
 function s030_baselab.EmmyLabSpawnSequenceEnd()

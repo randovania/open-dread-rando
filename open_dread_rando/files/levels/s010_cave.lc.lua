@@ -108,6 +108,7 @@ function s010_cave.InitFromBlackboard()
   CAVES_TUTO_MAP_ROOM_DONE = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
   s010_cave.CheckScorpiusDead()
+  s010_cave.EmmyCaveSpawnSequence()
 
   if Game.GetFromGameBlackboardSection("PlayedCutscenes", "CutScenePlayed[cutscenes/0049centralunitdetectsamus01/0049centralunitdetectsamus01.bmscu]") == 0 then
     local L0_2 =  Game.GetActor( "DoorEmmy11")
@@ -298,11 +299,11 @@ end
 
 function s010_cave.EmmyCaveSpawnSequence()
     
-  local oActor1 = Game.GetActor("Door062 (PW-PW, Special)")
-  if oActor1 ~= nil then
-    oActor1.LIFE:CloseDoor(true, true, true)
-    oActor1.LIFE:LockDoor()
-  end
+  --local oActor1 = Game.GetActor("Door062 (PW-PW, Special)")
+  --if oActor1 ~= nil then
+  --  oActor1.LIFE:CloseDoor(true, true, true)
+  --  oActor1.LIFE:LockDoor()
+  --end
   
   local oActor2 = Game.GetActor("PRP_CV_CentralUnitCaves")
   if oActor2 ~= nil then
@@ -316,7 +317,7 @@ function s010_cave.EmmyCaveSpawnSequence()
     oActor3.bEnabled = false
   end
   
-  GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_CAVE")
+  --GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_CAVE")
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     CurrentScenario.oEmmyEntity.bEnabled = true
   end
@@ -1140,10 +1141,10 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
         end
     end
     
-    local oActor = Game.GetActor("cutsceneplayer_37") 
-    if oActor ~= nil then
-      oActor.CUTSCENE:TryLaunchCutscene()
-    end
+    --local oActor = Game.GetActor("cutsceneplayer_37")
+    --if oActor ~= nil then
+    --  oActor.CUTSCENE:TryLaunchCutscene()
+    --end
   elseif old_subarea == "collision_camera_064" and new_subarea == "collision_camera_074" then
     if disable_fade then
       local oActor = Game.GetActor("TG_EnableSubareaChangeFade_001")
