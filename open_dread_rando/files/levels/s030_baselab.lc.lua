@@ -73,7 +73,9 @@ function s030_baselab.InitFromBlackboard()
   LAB_EMMY_SPAWNED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.LAB_EMMY_SPAWNED, false)
   LAB_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.LAB_POSTXRELEASE_APPLIED, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
-  s030_baselab.OnEnter_EmmyLAB_Presentation()
+  if not LAB_EMMY_SPAWNED then
+    s030_baselab.OnEnter_EmmyLAB_Presentation()
+  end
 
   if QUARENTINE_OPENED == true then
     s030_baselab.Activate_Setup_PostXRelease()

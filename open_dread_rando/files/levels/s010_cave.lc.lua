@@ -108,7 +108,9 @@ function s010_cave.InitFromBlackboard()
   CAVES_TUTO_MAP_ROOM_DONE = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
   s010_cave.CheckScorpiusDead()
-  s010_cave.EmmyCaveSpawnSequence()
+  if not CAVES_EMMY_SPAWNED then
+    s010_cave.EmmyCaveSpawnSequence()
+  end
 
   if Game.GetFromGameBlackboardSection("PlayedCutscenes", "CutScenePlayed[cutscenes/0049centralunitdetectsamus01/0049centralunitdetectsamus01.bmscu]") == 0 then
     local L0_2 =  Game.GetActor( "DoorEmmy11")
