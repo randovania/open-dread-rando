@@ -753,7 +753,7 @@ function s010_cave.OnTeleport_Checkpoint_CU()
 end
 
 function s010_cave.Checkpoint_RelocatingEmmy_CU()
-    
+  Game.GetActor("DreadRando_CUDoor").bEnabled = false
   if CurrentScenario.oEmmyEntity ~= nil then
     local oActor = Game.GetActor("LM_EmmyDestroySearchLandmark01")
     if  oActor ~= nil then
@@ -1174,7 +1174,7 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
       oActor.CUTSCENE:TryLaunchCutscene()
     end
   elseif old_subarea == "collision_camera_049" and new_subarea == "collision_camera_090" then
-    
+    Game.GetActor("DreadRando_CUDoor").bEnabled = false
     local oActor = Game.GetActor("cutsceneplayer_50")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()

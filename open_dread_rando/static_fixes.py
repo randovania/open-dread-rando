@@ -1,5 +1,7 @@
 import copy
 
+import construct
+
 from open_dread_rando import door_patcher
 from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -144,8 +146,94 @@ def activate_emmi_zones(editor: PatcherEditor):
     )
 
 
+def fix_backdoor_white_cu(editor: PatcherEditor):
+    new_door = construct.Container({
+        "@type": "CEntity",
+        "sName": "DreadRando_CUDoor",
+        "oActorDefLink": "actordef:actors/props/doorclosedpower/charclasses/doorclosedpower.bmsad",
+        "vPos": [
+            8300.000,
+            -4700.000,
+            0.0
+        ],
+        "vAng": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "pComponents": {
+            "LIFE": {
+                "@type": "CDoorLifeComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True,
+                "fMaxDistanceOpened": 400.0,
+                "wpLeftDoorShieldEntity": "{EMPTY}",
+                "wpRightDoorShieldEntity": "{EMPTY}",
+                "fMinTimeOpened": 3.0,
+                "bStayOpen": True,
+                "bStartOpened": False,
+                "bOnBlackOutOpened": False,
+                "bDoorIsWet": False,
+                "bFrozenDuringColdown": True,
+                "iAreaLeft": 0,
+                "iAreaRight": 0,
+                "aVignettes": []
+            },
+            "AUDIO": {
+                "@type": "CAudioComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True
+            },
+            "FX": {
+                "@type": "CFXComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True,
+                "fSelectedHighRadius": 250.0,
+                "fSelectedLowRadius": 350.0
+            },
+            "COLLISION": {
+                "@type": "CCollisionComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True
+            },
+            "TIMELINECOMPONENT": {
+                "@type": "CTimelineComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True
+            },
+            "NAVMESHITEM": {
+                "@type": "CNavMeshItemComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True,
+                "tForbiddenEdgesSpawnPoints": []
+            },
+            "ANIMATION": {
+                "@type": "CAnimationComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True
+            },
+            "MODELUPDATER": {
+                "@type": "CModelUpdaterComponent",
+                "bWantsEnabled": True,
+                "bUseDefaultValues": True,
+                "sDefaultModelPath": ""
+            }
+        },
+        "bEnabled": True
+    })
+
+    cave = editor.get_scenario("s010_cave")
+    cave.actors_for_layer("default")[new_door["sName"]] = new_door
+
+    for group in ["eg_collision_camera_018_Default", "eg_collision_camera_090_Default",
+                  "eg_collision_camera_049_Default", "eg_collision_camera_090_PostXRelease",
+                  "eg_collision_camera_049_PostXRelease"]:
+        cave.add_actor_to_group(group, new_door["sName"])
+
+
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
     add_callback_to_kraid(editor)
+    fix_backdoor_white_cu(editor)
