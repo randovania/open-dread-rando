@@ -19,12 +19,16 @@ SPECIFIC_CLASSES = {
     "ITEM_MULTILOCKON": "RandomizerStormMissile",
 }
 
+
 class LuaEditor:
     def __init__(self):
         self._progressive_classes = {}
         self._powerup_script = _read_powerup_lua()
         self._custom_level_scripts: dict[str, dict] = self._read_levels()
-        self._corex_replacement = {}
+        self._corex_replacement = {
+            "escue": "false",
+            "golzuna": "false",
+        }
 
     def _read_levels(self) -> dict[str, dict]:
         scenarios = {
