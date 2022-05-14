@@ -6,6 +6,10 @@
             "type": "string",
             "format": "uri"
         },
+        "configuration_identifier": {
+            "type": "string",
+            "description": "An unique identifier for this configuration. Only save files created with this identifier can be loaded."
+        },
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
         },
@@ -275,9 +279,6 @@
             "description": "When pkg, outputs fully modified pkg files. On romfs, output just the modified files but requires an exefs patch to load.",
             "default": "pkg"
         },
-        "shareable_hash": {
-            "type": "string"
-        },
         "cosmetic_patches": {
             "type": "object",
             "properties": {
@@ -351,6 +352,7 @@
         }
     },
     "required": [
+        "configuration_identifier",
         "starting_location",
         "starting_items",
         "pickups"

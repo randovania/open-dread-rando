@@ -29,7 +29,7 @@ function Init.SaveGameAtStartingLocation()
     Game.SaveGame("savedata", "IntroEnd", Init.sStartingActor, true)
 end
 
-Init.sThisRandoSeedHash = TEMPLATE("shareable_hash")
+Init.sThisRandoIdentifier = TEMPLATE("configuration_identifier")
 
 local original_Init_CreateNewGameData = Init.CreateNewGameData
 function Init.CreateNewGameData(difficulty)
@@ -38,17 +38,17 @@ function Init.CreateNewGameData(difficulty)
     local playerSection =  Game.GetPlayerBlackboardSectionName()
 
     --[[
-        When creating a new save file, store the current seed hash in the Blackboard.
+        When creating a new save file, store the current identifier in the Blackboard.
 
-        The seed hash will be cross-checked when loading a save (via Scenario.InitScenario), and a warning message will be shown if the
-        hash in the Blackboard doesn't exist or doesn't match the copy stored in Init.sThisRandoSeedHash.
+        The identifier will be cross-checked when loading a save (via Scenario.InitScenario), and a warning message will be shown if the
+        identifier in the Blackboard doesn't exist or doesn't match the copy stored in Init.sThisRandoIdentifier.
 
-        If the player loads a non-rando save, the hash won't exist in the Blackboard, and if they load a save from a different seed, the
-        hash in the Blackboard will be different than the one in Init.sThisRandoSeedHash.
+        If the player loads a non-rando save, the identifier won't exist in the Blackboard, and if they load a save from a different seed, the
+        hash in the Blackboard will be different than the one in Init.sThisRandoIdentifier.
     ]]
 
-    Game.LogWarn(0, ("Setting THIS_RANDO_HASH Blackboard property to %q"):format(Init.sThisRandoSeedHash))
-    Blackboard.SetProp(playerSection, "THIS_RANDO_HASH", "s", Init.sThisRandoSeedHash)
+    Game.LogWarn(0, string.format("Setting THIS_RANDO_IDENTIFIER Blackboard property to %q", Init.sThisRandoIdentifier))
+    Blackboard.SetProp(playerSection, "THIS_RANDO_IDENTIFIER", "s", Init.sThisRandoIdentifier)
 
     -- Must explicitly set the "initialized" flag to false; it seems the Player Blackboard doesn't get fully wiped when making a new file
     -- after recently playing a file in the same slot.
