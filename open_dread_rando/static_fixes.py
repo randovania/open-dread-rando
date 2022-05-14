@@ -1,6 +1,7 @@
 import copy
 
 import construct
+from mercury_engine_data_structures.formats.dread_types import CActor
 
 from open_dread_rando import door_patcher
 from open_dread_rando.logger import LOG
@@ -108,11 +109,16 @@ def remove_problematic_x_layers(editor: PatcherEditor):
         ]
 
 
-def add_callback_to_kraid(editor: PatcherEditor):
+def apply_kraid_fixes(editor: PatcherEditor):
     magma = editor.get_scenario("s020_magma")
+
     death_cutscene_player = magma.follow_link(
         "Root:pScenario:rEntitiesLayer:dctSublayers:cutscenes:dctActors:cutsceneplayer_61"
     )
+    # Remove the checkpoint save
+    death_cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop()
+
+    # Add a call to OnKraidDeath_CUSTOM after Kraid dies
     death_cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
         "@type": "CLuaCallsLogicAction",
         "sCallbackEntityName": "",
@@ -120,6 +126,16 @@ def add_callback_to_kraid(editor: PatcherEditor):
         "bCallbackEntity": False,
         "bCallbackPersistent": False,
     })
+
+    # Remove the checkpoint after killing Kraid
+    # (not sure if this is necessary)
+    kraid_spawn = magma.follow_link(
+        "Root:pScenario:rEntitiesLayer:dctSublayers:Boss:dctActors:SP_Kraid"
+    )
+    kraid_file = kraid_spawn.pComponents.SPAWNPOINT.voActorBlueprint[0]
+    kraid = CActor.parse(kraid_file.InnerValue)
+    kraid.pComponents.AI.wpDeadCheckpointStartPoint = "{EMPTY}"
+    kraid_file.InnerValue = CActor.build(kraid)
 
 
 def activate_emmi_zones(editor: PatcherEditor):
@@ -246,6 +262,6 @@ def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
-    add_callback_to_kraid(editor)
+    apply_kraid_fixes(editor)
     fix_backdoor_white_cu(editor)
     patch_corpius_checkpoints(editor)

@@ -1001,7 +1001,6 @@ end
 
 function s020_magma.Kraid_Activation_Stage_03_CutsceneEnd()
 
-  Game.SaveGame("checkpoint", "KraidDead", "SP_Checkpoint_Dead_Kraid", true)
 end
 
 function s020_magma.OnKraidDeath_CUSTOM()
