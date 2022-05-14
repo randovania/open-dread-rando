@@ -231,12 +231,15 @@ def fix_backdoor_white_cu(editor: PatcherEditor):
         cave.add_actor_to_group(group, new_door["sName"])
 
 
-def remove_corpius_checkpoint(editor: PatcherEditor):
+def patch_corpius_checkpoints(editor: PatcherEditor):
     cave = editor.get_scenario("s010_cave")
-    cutscene = cave.follow_link("Root:pScenario:rEntitiesLayer:dctSublayers:Cutscenes:dctActors:cutsceneplayer_57")
 
-    # Remove CSaveGameLogicAction for SP_Scorpius_scorpius_dead
+    # Remove CSaveGameLogicAction for SP_Scorpius_scorpius_dead on the cutscene after killing Corpius
+    cutscene = cave.follow_link("Root:pScenario:rEntitiesLayer:dctSublayers:Cutscenes:dctActors:cutsceneplayer_57")
     cutscene.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop(0)
+
+    # Fix checkpoint before Corpius fight not working if the X were released
+    cave.add_actor_to_group("eg_collision_camera_072_PostXRelease", "SP_Checkpoint_Scorpius")
 
 
 def apply_static_fixes(editor: PatcherEditor):
@@ -245,4 +248,4 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_one_sided_door_fixes(editor)
     add_callback_to_kraid(editor)
     fix_backdoor_white_cu(editor)
-    remove_corpius_checkpoint(editor)
+    patch_corpius_checkpoints(editor)
