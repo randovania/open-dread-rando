@@ -8,7 +8,9 @@ end
 
 function CoreX_SuperQuetzoa.OnBigXAbsorbed(_ARG_0_)
   Game.PushSetup("PostSuperQuetzoaDead", true, false)
-  GUI.ShowMessage("#GUI_ITEM_ACQUIRED_MULTI_LOCK", true, 'TEMPLATE("escue").OnPickedUp', false)
+  if TEMPLATE("escue") then
+    GUI.ShowMessage("#GUI_ITEM_ACQUIRED_MULTI_LOCK", true, 'TEMPLATE("escue").OnPickedUp', false)
+  end
   local door = Game.GetActor("doorpowerpower_014")
   if  door ~= nil then
     door.LIFE:UnLockDoor()
