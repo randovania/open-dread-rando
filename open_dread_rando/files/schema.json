@@ -6,6 +6,10 @@
             "type": "string",
             "format": "uri"
         },
+        "configuration_identifier": {
+            "type": "string",
+            "description": "An unique identifier for this configuration. Only save files created with this identifier can be loaded."
+        },
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
         },
@@ -348,6 +352,7 @@
         }
     },
     "required": [
+        "configuration_identifier",
         "starting_location",
         "starting_items",
         "pickups"
