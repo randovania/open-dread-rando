@@ -80,6 +80,7 @@ local total_warning_messages = 2
 function Scenario.ShowNotRandoGameMessage()
     warning_messages_seen = warning_messages_seen + 1
     if warning_messages_seen > total_warning_messages then
+        Scenario.FadeOutAndGoToMainMenu(0.3)
         return
     end
     GUI.ShowMessage("#GUI_WARNING_NOT_RANDO_GAME_" .. warning_messages_seen, true, "Scenario.ShowNotRandoGameMessage")
