@@ -212,3 +212,9 @@ function RandomizerStormMissile.OnPickedUp(actor, progression)
         actor, progression, "ITEM_MULTILOCKON"
     )
 end
+
+RandomizerEnergyPart = {}
+setmetatable(RandomizerEnergyPart, {__index = RandomizerPowerup})
+function RandomizerEnergyPart.OnPickedUp(actor, progression)
+    RandomizerPowerup.IncreaseEnergy({item_id = "ITEM_LIFE_SHARDS"})
+end

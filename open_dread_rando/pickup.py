@@ -59,22 +59,15 @@ class ActorPickup(BasePickup):
         item_id: str = self.pickup["resources"][0]["item_id"]
         quantity: float = self.pickup["resources"][0]["quantity"]
 
-        energy_part = item_id == "ITEM_LIFE_SHARDS"
-        if (item_id == "ITEM_ENERGY_TANKS"
-                or energy_part and self.configuration["immediate_energy_parts"]
-        ):
-            energy = self.configuration.get("energy_per_tank", 100.0)
-            if energy_part:
-                energy = self.configuration.get("energy_per_part", energy / 4)
-
-            quantity *= energy
-            set_custom_params["Param4"]["value"] = "Custom" if energy_part else "Full"
-            set_custom_params["Param5"]["value"] = "" if energy_part else "fCurrentLife"
+        if item_id == "ITEM_ENERGY_TANKS":
+            quantity *= self.configuration.get("energy_per_tank", 100.0)
+            set_custom_params["Param4"]["value"] = "Full"
+            set_custom_params["Param5"]["value"] = "fCurrentLife"
             set_custom_params["Param6"]["value"] = "LIFE"
 
             item_id = "fMaxLife"
 
-        elif energy_part:
+        elif item_id == "ITEM_LIFE_SHARDS" and self.configuration["immediate_energy_parts"]:
             item_id = "fLifeShards"
             set_custom_params["Param4"]["value"] = "Custom"
             set_custom_params["Param5"]["value"] = ""
