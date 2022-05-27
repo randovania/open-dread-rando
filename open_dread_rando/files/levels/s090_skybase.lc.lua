@@ -1,7 +1,7 @@
 function s090_skybase.main()
   Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
 end
-
+s090_skybase.HasRandomizerChanges = true
 
 function s090_skybase.InitFromBlackboard()
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_FLOOR_SLIDE", "f", 1)

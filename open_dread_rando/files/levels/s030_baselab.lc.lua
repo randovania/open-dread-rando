@@ -1,5 +1,5 @@
 
-
+s030_baselab.HasRandomizerChanges = true
 function s030_baselab.main()
   s030_baselab.PatrolRoutesGeneration()
   s030_baselab.PatrolRoutesFinalNodesAssignation()

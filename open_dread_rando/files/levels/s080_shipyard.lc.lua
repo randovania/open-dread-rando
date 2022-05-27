@@ -1,6 +1,6 @@
 function s080_shipyard.main()
 end
-
+s080_shipyard.HasRandomizerChanges = true
 function s080_shipyard.OnLoadScenarioFinished()
   if Game.GetCurrentSubAreaId() == "collision_camera_020" then
     local L0_2 = Game.GetActor("cutsceneplayer_108")
