@@ -1,5 +1,5 @@
 
-
+s010_cave.HasRandomizerChanges = true
 function s010_cave.main()
 
   s010_cave.PatrolRoutesGeneration()

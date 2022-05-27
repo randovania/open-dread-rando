@@ -36,7 +36,10 @@ class LuaEditor:
             "s010_cave", "s020_magma", "s030_baselab", "s040_aqua", "s050_forest",
             "s060_quarantine", "s070_basesanc", "s080_shipyard", "s090_skybase"
         }
-        return {scenario: {"script": _read_level_lua(scenario), "edited": False} for scenario in scenarios}
+        return {
+            scenario: {"script": _read_level_lua(scenario), "edited": False}
+            for scenario in scenarios
+        }
 
     def get_parent_for(self, item_id) -> str:
         return SPECIFIC_CLASSES.get(item_id, "RandomizerPowerup")

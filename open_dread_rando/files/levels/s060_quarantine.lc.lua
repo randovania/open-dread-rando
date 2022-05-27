@@ -1,6 +1,6 @@
 function s060_quarantine.main()
 end
-
+s060_quarantine.HasRandomizerChanges = true
 
 function s060_quarantine.SetupDebugGameBlackboard()
     

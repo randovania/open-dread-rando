@@ -1,5 +1,5 @@
 
-
+s020_magma.HasRandomizerChanges = true
 function s020_magma.main()
   s020_magma.PatrolRoutesGeneration()
   s020_magma.PatrolRoutesFinalNodesAssignation()

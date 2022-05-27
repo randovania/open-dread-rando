@@ -4,7 +4,7 @@ function s070_basesanc.main()
   s070_basesanc.PatrolRoutesFinalNodesAssignation()
   s070_basesanc.m_bSkipAquaOpening = false
 end
-
+s070_basesanc.HasRandomizerChanges = true
 
 function s070_basesanc.SetupDebugGameBlackboard()
 

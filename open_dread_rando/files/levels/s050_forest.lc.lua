@@ -2,7 +2,7 @@ function s050_forest.main()
   s050_forest.PatrolRoutesGeneration()
   s050_forest.PatrolRoutesFinalNodesAssignation()
 end
-
+s050_forest.HasRandomizerChanges = true
 
 function s050_forest.SetupDebugGameBlackboard()
 

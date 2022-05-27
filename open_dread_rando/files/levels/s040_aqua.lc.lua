@@ -1,6 +1,6 @@
+s040_aqua.HasRandomizerChanges = true
 function s040_aqua.main()
 end
-
 
 function s040_aqua.SetupDebugGameBlackboard()
     
