@@ -2,6 +2,7 @@ import argparse
 import json
 import logging
 import logging.config
+import time
 from pathlib import Path
 
 from open_dread_rando import dread_patcher
@@ -57,8 +58,11 @@ def main():
     with args.input_json.open() as f:
         configuration = json.load(f)
 
+    start = time.time()
     dread_patcher.patch_extracted(
         args.input_path,
         args.output_path,
         configuration,
     )
+    end = time.time()
+    print("Patcher took {:.03f} seconds".format(end - start))
