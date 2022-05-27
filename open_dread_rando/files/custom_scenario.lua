@@ -54,6 +54,14 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
             Init.sThisRandoIdentifier, tostring(currentSaveRandoIdentifier)
     ))
 
+    -- This function is added via an exefs patch. It not existing means either broken install or unknown executable
+    if not Game.HasRandomizerPatches then
+        return Scenario.ShowFatalErrorMessage({
+            "{c2}Error!{c0}|Unsupported Metroid Dread version.",
+            "Only {c6}1.0.0{c0} and {c6}2.1.0{c0} are supported.|Returning to title screen.",
+        })
+    end
+
     -- Cross-check the seed hash in the Blackboard with the one in Init.sThisRandoSeedHash to make sure they match.
     -- If they don't, show a warning to the player, and DO NOT save over their game!
     if currentSaveRandoIdentifier ~= Init.sThisRandoIdentifier then
