@@ -57,8 +57,10 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     -- Cross-check the seed hash in the Blackboard with the one in Init.sThisRandoSeedHash to make sure they match.
     -- If they don't, show a warning to the player, and DO NOT save over their game!
     if currentSaveRandoIdentifier ~= Init.sThisRandoIdentifier then
-        Game.AddSF(0.8, Scenario.ShowNotRandoGameMessage, "")
-        return
+        return Scenario.ShowFatalErrorMessage({
+            "#GUI_WARNING_NOT_RANDO_GAME_1",
+            "#GUI_WARNING_NOT_RANDO_GAME_2",
+        })
     end
 
     if not randoInitialized then
@@ -68,6 +70,13 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
 
     init_scenario(arg1, arg2, arg3, arg4)
 
+    if not CurrentScenario.HasRandomizerChanges then
+        return Scenario.ShowFatalErrorMessage({
+            "{c2}Error!{c0}|Unable to find modifications to the level data.",
+            "Please verify if the mod was installed properly.|Returning to title screen.",
+        })
+    end
+
     if not randoInitialized then
         Blackboard.SetProp(playerSection, "RANDO_GAME_INITIALIZED", "b", true)
         Game.AddSF(0.9, Init.SaveGameAtStartingLocation, "")
@@ -75,15 +84,20 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     end
 end
 
-local warning_messages_seen = 0
-local total_warning_messages = 2
-function Scenario.ShowNotRandoGameMessage()
-    warning_messages_seen = warning_messages_seen + 1
-    if warning_messages_seen > total_warning_messages then
+local fatal_messages_seen = 0
+local fatal_messages
+function Scenario._ShowNextFatalErrorMessage()
+    fatal_messages_seen = fatal_messages_seen + 1
+    if fatal_messages_seen > #fatal_messages then
         Scenario.FadeOutAndGoToMainMenu(0.3)
         return
     end
-    GUI.ShowMessage("#GUI_WARNING_NOT_RANDO_GAME_" .. warning_messages_seen, true, "Scenario.ShowNotRandoGameMessage")
+    GUI.ShowMessage(fatal_messages[fatal_messages_seen], true, "Scenario._ShowNextFatalErrorMessage")
+end
+function Scenario.ShowFatalErrorMessage(messageBoxes)
+    fatal_messages_seen = 0
+    fatal_messages = messageBoxes
+    Game.AddSF(0.8, Scenario._ShowNextFatalErrorMessage, "")
 end
 
 Scenario.sRandoStartingTextSeenPropID = Blackboard.RegisterLUAProp("RANDO_START_TEXT", "bool")
