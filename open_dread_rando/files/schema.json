@@ -222,13 +222,12 @@
             }
         },
         "energy_per_tank": {
+            "description": "How much energy collecting an Energy Tank gives. Energy Parts give 1/4 of this value.",
             "type": "number",
             "default": 100.0
         },
-        "energy_per_part": {
-            "type": "number"
-        },
         "immediate_energy_parts": {
+            "description": "If true, Energy Parts increases maximum energy when collected by 1/4 of the tank capacity.",
             "type": "boolean",
             "default": false
         },
@@ -356,6 +355,24 @@
         "starting_location",
         "starting_items",
         "pickups"
+    ],
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "immediate_energy_parts": {
+                        "const": false
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "energy_per_tank": {
+                        "const": 100.0
+                    }
+                }
+            }
+        }
     ],
     "additionalProperties": false,
     "$defs": {

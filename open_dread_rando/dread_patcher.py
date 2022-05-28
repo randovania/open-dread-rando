@@ -33,8 +33,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
 
-    energy_per_tank = configuration.get("energy_per_tank", 100)
-    energy_per_part = configuration.get("energy_per_part", energy_per_tank / 4)
+    energy_per_tank = configuration["energy_per_tank"]
+    energy_per_part = energy_per_tank / 4
 
     max_life = energy_per_tank - 1
 
@@ -42,7 +42,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     if "ITEM_ENERGY_TANKS" in inventory:
         etanks = inventory.pop("ITEM_ENERGY_TANKS")
         max_life += etanks * energy_per_tank
-    if "ITEM_LIFE_SHARDS" in inventory and configuration.get("immediate_energy_parts"):
+    if "ITEM_LIFE_SHARDS" in inventory and configuration["immediate_energy_parts"]:
         shards = inventory.pop("ITEM_LIFE_SHARDS")
         max_life += shards * energy_per_part
 
@@ -77,7 +77,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "textbox_count": textboxes,
         "energy_per_tank": energy_per_tank,
         "energy_per_part": energy_per_part,
-        "immediate_energy_parts": configuration.get("immediate_energy_parts", False),
+        "immediate_energy_parts": configuration["immediate_energy_parts"],
         "default_x_released": configuration.get("game_patches", {}).get("default_x_released", False),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
     }

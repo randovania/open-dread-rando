@@ -60,7 +60,7 @@ class ActorPickup(BasePickup):
         quantity: float = self.pickup["resources"][0]["quantity"]
 
         if item_id == "ITEM_ENERGY_TANKS":
-            quantity *= self.configuration.get("energy_per_tank", 100.0)
+            quantity *= self.configuration["energy_per_tank"]
             set_custom_params["Param4"]["value"] = "Full"
             set_custom_params["Param5"]["value"] = "fCurrentLife"
             set_custom_params["Param6"]["value"] = "LIFE"
