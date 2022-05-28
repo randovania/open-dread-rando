@@ -113,14 +113,25 @@ end
 
 MAX_ENERGY = 1499
 function RandomizerPowerup.IncreaseEnergy(resource)
+    -- No resource, quit
     if resource == nil then return end
     local item_id = resource.item_id
+
+    -- Not etank or epart, quit
     if item_id ~= "ITEM_ENERGY_TANKS" and item_id ~= "ITEM_LIFE_SHARDS" then return end
-    if not Init.bImmediateEnergyParts and item_id == "ITEM_LIFE_SHARDS" and (RandomizerPowerup.GetItemAmount(item_id) % 4) ~= 0 then return end
+
+
     local energy = Init.fEnergyPerTank
-    if item_id == "ITEM_LIFE_SHARDS" and Init.bImmediateEnergyParts then
-        energy = Init.fEnergyPerPart
+
+    if item_id == "ITEM_LIFE_SHARDS" then
+        if Init.bImmediateEnergyParts then
+            energy = Init.fEnergyPerPart
+        elseif (RandomizerPowerup.GetItemAmount(item_id) % 4) ~= 0 then
+            -- only change energy every 4 parts if not immediate!
+            return
+        end
     end
+
     Game.LogWarn(0, "Increasing player energy.")
 
     local new_max = RandomizerPowerup.GetItemAmount("ITEM_MAX_LIFE") + energy
@@ -129,7 +140,7 @@ function RandomizerPowerup.IncreaseEnergy(resource)
     local new_current = new_max
     if item_id == "ITEM_LIFE_SHARDS" and Init.bImmediateEnergyParts then
         new_current = RandomizerPowerup.GetItemAmount("ITEM_CURRENT_LIFE") + energy
-        new_current = math.min(new_current, MAX_ENERGY)
+        new_current = math.min(new_current, new_max)
     end
     
     RandomizerPowerup.SetItemAmount("ITEM_MAX_LIFE", new_max)
@@ -216,5 +227,7 @@ end
 RandomizerEnergyPart = {}
 setmetatable(RandomizerEnergyPart, {__index = RandomizerPowerup})
 function RandomizerEnergyPart.OnPickedUp(actor, progression)
-    RandomizerPowerup.IncreaseEnergy({item_id = "ITEM_LIFE_SHARDS"})
+    if Init.bImmediateEnergyParts or not actor then
+        RandomizerPowerup.IncreaseEnergy({item_id = "ITEM_LIFE_SHARDS"})
+    end
 end

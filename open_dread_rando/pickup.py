@@ -67,7 +67,7 @@ class ActorPickup(BasePickup):
 
             item_id = "fMaxLife"
 
-        elif item_id == "ITEM_LIFE_SHARDS" and self.configuration["immediate_energy_parts"]:
+        elif item_id == "ITEM_LIFE_SHARDS" and not self.configuration["immediate_energy_parts"]:
             item_id = "fLifeShards"
             set_custom_params["Param4"]["value"] = "Custom"
             set_custom_params["Param5"]["value"] = ""
