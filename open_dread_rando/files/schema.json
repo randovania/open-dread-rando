@@ -311,6 +311,16 @@
                     "type": "boolean",
                     "description": "When enabled, the game starts with the X Parasites being released already.",
                     "default": false
+                },
+                "linear_damage_runs": {
+                    "type": "boolean",
+                    "description": "When enabled, damage over time from heated and cold rooms scales linearly instead of exponentially.",
+                    "default": false
+                },
+                "linear_dps": {
+                    "description": "How quickly you lose energy in damage rooms, in Damage per Second.",
+                    "type": "number",
+                    "default": 10
                 }
             },
             "additionalProperties": false
