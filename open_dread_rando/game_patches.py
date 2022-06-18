@@ -53,15 +53,31 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
             },
             "mapProps"
         )
-    if configuration.get("linear_damage_runs", True) and configuration["linear_dps"] > 0:
+    
+    if configuration["linear_damage_runs"] and configuration["linear_dps"] > 0:
+    
+        from math import ceil   #couldnt find a better way to do this without loops
+        
+        #This section should find a tick speed between 0.2 and 0.4 and determine a damage amount that should calculate to be the total DPS
+        #This *could* be customizable I suppose, but would require more UI work and the game is very picky on what values it allows. Only whole number damage values, and the tick speed cannot be too low or else it caps.
+        
+        damage = ceil(float(configuration["linear_dps"])/5)
+        tick = damage/float(configuration["linear_dps"]) - (1.5/60) #1/60 is to account for the damage frame, which does not count toward the timer, but 1.5/60 worked better in testing.
+        
         for AREA in _ALL_DAMAGE_ROOM_ACTORS:
+        
             for reference in AREA:
+            
                 actor = editor.resolve_actor_reference(reference)
+                
                 if actor.oActorDefLink == "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
-                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamagePerTime = configuration["linear_dps"]/2
-                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fInBetweenDamageTime = 0.5
+                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamagePerTime = damage
+                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fInBetweenDamageTime = tick
                     actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamageIncreaseAmount = 0
+                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fMaxDamage = 1000
+                
                 elif actor.oActorDefLink == "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
-                    actor.pComponents.ACTIVATABLE.oHeatConfig.fDamagePerTime = configuration["linear_dps"]/2
-                    actor.pComponents.ACTIVATABLE.oHeatConfig.fInBetweenDamageTime = 0.5
+                    actor.pComponents.ACTIVATABLE.oHeatConfig.fDamagePerTime = damage
+                    actor.pComponents.ACTIVATABLE.oHeatConfig.fInBetweenDamageTime = tick
                     actor.pComponents.ACTIVATABLE.oHeatConfig.fDamageIncreaseAmount = 0
+                    actor.pComponents.ACTIVATABLE.oHeatConfig.fMaxDamage = 1000
