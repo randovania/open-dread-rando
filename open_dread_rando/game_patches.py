@@ -2,6 +2,8 @@ from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando.patcher_editor import PatcherEditor
 
+from open_dread_rando.environmental_damage_sources import _ALL_DAMAGE_ROOM_ACTORS
+
 _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
     {
         "scenario": "s080_shipyard",
@@ -51,3 +53,15 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
             },
             "mapProps"
         )
+    if configuration.get("linear_damage_runs", True) and configuration["linear_dps"] > 0:
+        for AREA in _ALL_DAMAGE_ROOM_ACTORS:
+            for reference in AREA:
+                actor = editor.resolve_actor_reference(reference)
+                if actor.oActorDefLink == "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
+                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamagePerTime = configuration["linear_dps"]/2
+                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fInBetweenDamageTime = 0.5
+                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamageIncreaseAmount = 0
+                elif actor.oActorDefLink == "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
+                    actor.pComponents.ACTIVATABLE.oHeatConfig.fDamagePerTime = configuration["linear_dps"]/2
+                    actor.pComponents.ACTIVATABLE.oHeatConfig.fInBetweenDamageTime = 0.5
+                    actor.pComponents.ACTIVATABLE.oHeatConfig.fDamageIncreaseAmount = 0
