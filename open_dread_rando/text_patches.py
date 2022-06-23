@@ -72,7 +72,7 @@ def patch_credits(editor: PatcherEditor):
         "CREDIT_R_005": "Dyceron",
         "CREDIT_R_006_SUBTITLE": "Additional Art",
         "CREDIT_R_007": "BigSharksZ",
-        "CREDIT_R_008": "Shawn Sigma",
+        "CREDIT_R_008": "SkyTheLucario",
         "CREDIT_R_009_SUBTITLE": "     ",
         "CREDIT_R_010": "With contributions from many others."
     }
