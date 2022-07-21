@@ -2,7 +2,7 @@ from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando.patcher_editor import PatcherEditor
 
-from open_dread_rando.environmental_damage_sources import _ALL_DAMAGE_ROOM_ACTORS
+from open_dread_rando.environmental_damage_sources import ALL_DAMAGE_ROOM_ACTORS
 
 _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
     {
@@ -64,20 +64,20 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
         damage = ceil(float(configuration["linear_dps"])/5)
         tick = damage/float(configuration["linear_dps"]) - (1.5/60) #1/60 is to account for the damage frame, which does not count toward the timer, but 1.5/60 worked better in testing.
         
-        for AREA in _ALL_DAMAGE_ROOM_ACTORS:
         
-            for reference in AREA:
+        for reference in ALL_DAMAGE_ROOM_ACTORS:
+        
+            actor = editor.resolve_actor_reference(reference)
             
-                actor = editor.resolve_actor_reference(reference)
-                
-                if actor.oActorDefLink == "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
-                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamagePerTime = damage
-                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fInBetweenDamageTime = tick
-                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fDamageIncreaseAmount = 0
-                    actor.pComponents.ACTIVATABLE.oFreezeConfig.fMaxDamage = 1000
-                
-                elif actor.oActorDefLink == "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
-                    actor.pComponents.ACTIVATABLE.oHeatConfig.fDamagePerTime = damage
-                    actor.pComponents.ACTIVATABLE.oHeatConfig.fInBetweenDamageTime = tick
-                    actor.pComponents.ACTIVATABLE.oHeatConfig.fDamageIncreaseAmount = 0
-                    actor.pComponents.ACTIVATABLE.oHeatConfig.fMaxDamage = 1000
+            if actor.oActorDefLink == "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
+                config_name = 'oFreezeConfig'
+            elif actor.oActorDefLink == "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
+                config_name= 'oHeatConfig'
+            else:
+                raise ValueError(f"{reference} does not have a valid actorDef for environmental damage")
+
+            damage_config = actor.pComponents.ACTIVATABLE[config_name]
+            damage_config.fDamagePerTime = damage
+            damage_config.fInBetweenDamageTime = tick
+            damage_config.fDamageIncreaseAmount = 0
+            damage_config.fMaxDamage = 1000
