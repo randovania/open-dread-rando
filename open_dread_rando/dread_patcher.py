@@ -79,6 +79,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "energy_per_part": energy_per_part,
         "immediate_energy_parts": configuration["immediate_energy_parts"],
         "default_x_released": configuration.get("game_patches", {}).get("default_x_released", False),
+        "linear_damage_runs": configuration.get("linear_damage_runs"),
+        "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
     }
 
