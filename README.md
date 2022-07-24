@@ -15,3 +15,12 @@ With a JSON file:
 
 From stdin:
 `python -m open-dread-rando --input-path ~/dread/romfs --output-path ~/your-ryujinx-mod-folder/rando`
+
+## Game Versions
+
+Only versions 1.0.0 and the latest version are supported long term. Other versions might be compatible at any given point, but new releases are free to remove that.
+
+Currently, the following versions are supported:
+- 1.0.0
+- 2.0.0
+- 2.1.0
