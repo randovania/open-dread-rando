@@ -83,6 +83,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "linear_damage_runs": configuration.get("linear_damage_runs"),
         "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
+        "required_artifacts": configuration["objective"]["required_artifacts"]
     }
 
     replacement.update(configuration.get("game_patches", {}))

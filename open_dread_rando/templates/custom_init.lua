@@ -10,6 +10,7 @@ Init.fEnergyPerPart = TEMPLATE("energy_per_part")
 Init.bImmediateEnergyParts = TEMPLATE("immediate_energy_parts")
 Init.bDefaultXRelease = TEMPLATE("default_x_released")
 Init.bEnableExperimentBoss = TEMPLATE("enable_experiment_boss")
+Init.iNumRequiredArtifacts = TEMPLATE("required_artifacts")
 
 Game.LogWarn(0, "Inventory:")
 for k, v in pairs(Init.tNewGameInventory) do

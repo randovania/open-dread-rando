@@ -16,7 +16,6 @@
         "pickups": {
             "type": "array",
             "minItems": 146,
-            "maxItems": 148,
             "items": {
                 "type": "object",
                 "properties": {

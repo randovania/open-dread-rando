@@ -4,9 +4,17 @@ from open_dread_rando.patcher_editor import PatcherEditor
 from mercury_engine_data_structures.formats.dread_types import CTriggerComponent_EEvent
 
 
+# when playing with artifacts, ensure that sufficient artifact items are shuffled
+# artifact item IDs follow the pattern "ITEM_RANDO_ARTIFACT_N" where N is an integer in [1, required_artifacts]
 def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     if configuration["objective"]["required_artifacts"] == 0:
         return
+    
+    patch_text(
+        editor,
+        "RANDO_ARTIFACTS_ALL",
+        r"All Metroid DNA acquired.|{c3}Raven Beak{c0} awaits you in {c5}Itorash{c0}."
+    )
 
     access_point = copy.deepcopy(editor.resolve_actor_reference({
         "scenario": "s080_shipyard",
@@ -29,7 +37,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     for actor in [access_point, ap_platform, ap_trigger]:
         itorash.actors_for_layer('default')[actor.sName] = actor
         itorash.add_actor_to_group('eg_collision_camera_001_Default', actor.sName)
-        actor.vPos = [c + new_origin[i] for i, c in enumerate(actor.vPos)]
+        actor.vPos = [c + offset for c, offset in zip(actor.vPos, new_origin)]
     
     for charclass in [
         "actors/props/weightactivatedplatform_access",

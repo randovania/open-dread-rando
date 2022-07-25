@@ -169,12 +169,16 @@ function RandomizerPowerup.IncreaseAmmo(resource)
 end
 
 function RandomizerPowerup.CheckArtifacts()
+    if Init.iNumRequiredArtifacts == 0 then return end
     if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") > 0 then return end
-    for i=1, 9 do
+    
+    -- check for all artifact items, which are numbered. if all are collected, grant metroidnization
+    for i=1, Init.iNumRequiredArtifacts do
         if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_"..i) == 0 then return end
     end
+
     RandomizerPowerup.SetItemAmount("ITEM_METROIDNIZATION", 1)
-    GUI.ShowMessage("All Metroid DNA acquired.", true, "")
+    GUI.ShowMessage("#RANDO_ARTIFACTS_ALL", true, "")
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)

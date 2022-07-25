@@ -82,7 +82,7 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
                         scenario.add_actor_to_group(group_name, name, layer_name)
 
 
-PROBLEM_X_LAYERS = {
+PROBLEM_LAYERS = {
     "PostXRelease": {
         "s010_cave": [
             "collision_camera_026",  # Chain reaction
@@ -93,7 +93,8 @@ PROBLEM_X_LAYERS = {
             "collision_camera_063",  # Kraid arena
         ],
         "s040_aqua": [
-            "collision_camera_007", # Drogyga arena
+            "collision_camera_004",  # Below Drogyga
+            "collision_camera_028",  # Drogyga arena
         ],
         "s070_basesanc": [
             "collision_camera_005",  # Quiet Robe room
@@ -111,7 +112,7 @@ def remove_problematic_x_layers(editor: PatcherEditor):
     # these X layers have priority, so they will set some rooms to their post-state
     # even if they've never been entered. in these particular problem rooms, this
     # can cause softlocks (e.g. phantom cloak on golzuna, main PBs on corpius)
-    for setup, levels in PROBLEM_X_LAYERS.items():
+    for setup, levels in PROBLEM_LAYERS.items():
         for level, layers in levels.items():
             manager = editor.get_subarea_manager(level)
             configs = manager.get_subarea_setup(setup).vSubareaConfigs
@@ -120,23 +121,29 @@ def remove_problematic_x_layers(editor: PatcherEditor):
             ]
 
 
-def apply_kraid_fixes(editor: PatcherEditor):
-    magma = editor.get_scenario("s020_magma")
+def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str):
+    cutscene_player = editor.resolve_actor_reference(cutscene_ref)
 
-    death_cutscene_player = magma.follow_link(
-        "Root:pScenario:rEntitiesLayer:dctSublayers:cutscenes:dctActors:cutsceneplayer_61"
-    )
     # Remove the checkpoint save
-    death_cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop()
+    cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop()
 
-    # Add a call to OnKraidDeath_CUSTOM after Kraid dies
-    death_cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
+    # Add the custom call when the boss dies
+    cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
         "@type": "CLuaCallsLogicAction",
         "sCallbackEntityName": "",
-        "sCallback": "CurrentScenario.OnKraidDeath_CUSTOM",
+        "sCallback": callback,
         "bCallbackEntity": False,
         "bCallbackPersistent": False,
     })
+
+def apply_kraid_fixes(editor: PatcherEditor):
+    magma = editor.get_scenario("s020_magma")
+
+    _apply_boss_cutscene_fixes(editor, {
+        "scenario": "s020_magma",
+        "layer": "cutscenes",
+        "actor": "cutsceneplayer_61"
+    }, "CurrentScenario.OnKraidDeath_CUSTOM")
 
     # Remove the checkpoint after killing Kraid
     # (not sure if this is necessary)
@@ -147,7 +154,6 @@ def apply_kraid_fixes(editor: PatcherEditor):
     kraid = CActor.parse(kraid_file.InnerValue)
     kraid.pComponents.AI.wpDeadCheckpointStartPoint = "{EMPTY}"
     kraid_file.InnerValue = CActor.build(kraid)
-
 
 def activate_emmi_zones(editor: PatcherEditor):
     # Remove the cutscene that plays when you enter the emmi zone for the first time
