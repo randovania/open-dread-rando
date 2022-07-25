@@ -12,6 +12,7 @@ from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.map_icons import MapIconEditor
+from open_dread_rando.objective import apply_objective_patches
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickup import pickup_object_for
@@ -140,6 +141,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     # Pickups
     patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
+    apply_objective_patches(editor, configuration)
 
     # Hints
     if "hints" in configuration:

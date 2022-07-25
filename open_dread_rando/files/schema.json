@@ -330,6 +330,26 @@
             },
             "additionalProperties": false
         },
+        "objective": {
+            "type": "object",
+            "properties": {
+                "required_artifacts": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9,
+                    "default": 9
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": []
+                }
+            },
+            "additionalProperties": false,
+            "default": {}
+        },
         "door_patches": {
             "type": "array",
             "description": "Changes the door types",

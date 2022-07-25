@@ -36,6 +36,8 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.IncreaseEnergy(granted)
     RandomizerPowerup.IncreaseAmmo(granted)
 
+    RandomizerPowerup.CheckArtifacts()
+
     return granted
 end
 
@@ -164,6 +166,15 @@ function RandomizerPowerup.IncreaseAmmo(resource)
     if current_id == nil then return end
 
     RandomizerPowerup.IncreaseItemAmount(current_id, resource.quantity, resource.item_id)
+end
+
+function RandomizerPowerup.CheckArtifacts()
+    if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") > 0 then return end
+    for i=1, 9 do
+        if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_"..i) == 0 then return end
+    end
+    RandomizerPowerup.SetItemAmount("ITEM_METROIDNIZATION", 1)
+    GUI.ShowMessage("All Metroid DNA acquired.", true, "")
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)

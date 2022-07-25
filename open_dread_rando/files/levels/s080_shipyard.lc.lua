@@ -168,7 +168,7 @@ end
 
 
 function s080_shipyard.OnEndStrongReactionEvent()
-  Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_METROIDNIZATION", 1, true)
+  --Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_METROIDNIZATION", 1, true)
 end
 
 
