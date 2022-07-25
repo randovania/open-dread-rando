@@ -1183,21 +1183,21 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
     end
   elseif old_subarea == "collision_camera_003" and new_subarea == "collision_camera_018" then
     
-    local oActor = Game.GetActor("cutsceneplayer_49-1")
-    if oActor ~= nil then
-      oActor.CUTSCENE:TryLaunchCutscene()
-    end
+  --  local oActor = Game.GetActor("cutsceneplayer_49-1")
+  --  if oActor ~= nil then
+  --    oActor.CUTSCENE:TryLaunchCutscene()
+  --  end
   elseif old_subarea == "collision_camera_018" and new_subarea == "collision_camera_005" then
     
-    local oActor1 = Game.GetActor("cutsceneplayer_49-1")
-    if oActor1 ~= nil then
-      if oActor1.CUTSCENE:HasCutsceneBeenPlayed() == true then
-        local oActor2 = Game.GetActor("cutsceneplayer_49-2")
-        if oActor2 ~= nil then
-          oActor2.CUTSCENE:TryLaunchCutscene()
-        end
-      end
-    end
+  --  local oActor1 = Game.GetActor("cutsceneplayer_49-1")
+  --  if oActor1 ~= nil then
+  --    if oActor1.CUTSCENE:HasCutsceneBeenPlayed() == true then
+  --      local oActor2 = Game.GetActor("cutsceneplayer_49-2")
+  --      if oActor2 ~= nil then
+  --        oActor2.CUTSCENE:TryLaunchCutscene()
+  --      end
+  --    end
+  --  end
     
     if not CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED then
       Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED, "b", true)
