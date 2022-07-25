@@ -235,3 +235,15 @@ function s090_skybase.cutsceneplayer_108_end()
     Game.PlayCutsceneOnScenarioLoaded("cutsceneplayer_108", true, true, true, false, false, "", "", 0, 0, 0)
   end
 end
+
+function s090_skybase.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s090_skybase.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s090_skybase.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end

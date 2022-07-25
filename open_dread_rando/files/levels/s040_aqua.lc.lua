@@ -234,6 +234,19 @@ function s040_aqua.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
+function s040_aqua.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s040_aqua.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s040_aqua.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
+
 
 
 

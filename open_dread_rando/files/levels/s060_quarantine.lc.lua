@@ -354,3 +354,15 @@ end
 function s060_quarantine.OnExit_ChangeCamera_004_B()
   Game.SetCollisionCameraLocked("collision_camera_004_B", false)
 end
+
+function s060_quarantine.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s060_quarantine.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s060_quarantine.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end

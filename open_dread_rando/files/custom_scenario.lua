@@ -120,3 +120,70 @@ function Scenario.ShowText()
         GUI.ShowMessage("#RANDO_STARTING_TEXT_" .. textboxes_seen, true, "Scenario.ShowText")
     end
 end
+
+
+local teleportal_names = {
+    "teleport_baselab_000",
+    "LE_Teleport_FromMagma",
+    "teleporter_magma_000",
+    "LE_Teleport_Secret",
+    "teleporter_forest_000",
+    "teleporter_cave_000",
+    "LE_Teleport_FromCave",
+    "teleport_baselab_000",
+    "teleport_cave_000",
+    "teleport_magma_000",
+    "teleporter_000",
+    "teleporter_aqua_000"
+}
+function Scenario.IsTeleportal(actor)
+    for _, name in ipairs(teleportal_names) do
+        if actor.sName == name then return true end
+    end
+    return false
+end
+
+function Scenario.DisableGlobalTeleport(actor)
+    if not Scenario.IsTeleportal(actor) then return end
+    if not Blackboard.GetProp("GAME_PROGRESS", "TeleportWorldUnlocked") then return end
+
+    local teleportal_id, target_id = Scenario.GetTeleportalIDs(actor)
+    if Blackboard.GetProp("GAME_PROGRESS", teleportal_id) then return end
+    Blackboard.SetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked", "b", true)
+    Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", false)
+end
+
+function Scenario.GetTeleportalIDs(actor)
+    local teleportal_id = CurrentScenarioID .. actor.sName
+    local target_id = actor.USABLE.sTargetSpawnPoint
+
+    return teleportal_id, target_id
+end
+
+function Scenario.ResetGlobalTeleport(actor)
+    if not Scenario.IsTeleportal(actor) then return end
+    if not Blackboard.GetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked") then return end
+
+    Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
+end
+
+function Scenario.SetTeleportalUsed(actor)
+    if not Scenario.IsTeleportal(actor) then return end
+
+    local teleportal_id, target_id = Scenario.GetTeleportalIDs(actor)
+    Blackboard.SetProp("GAME_PROGRESS", teleportal_id, "b", true)
+    Blackboard.SetProp("GAME_PROGRESS", "RandoUnlockTeleportal", "s", target_id)
+    Scenario.ResetGlobalTeleport(actor)
+end
+
+local original_onload = Scenario.OnLoadScenarioFinished
+function Scenario.OnLoadScenarioFinished()
+    original_onload()
+
+    local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
+    if teleportal_id == nil then return end
+    local platform = Game.GetActor(teleportal_id)
+    if platform ~= nil then
+        Blackboard.SetProp("GAME_PROGRESS", CurrentScenarioID .. platform.SMARTOBJECT.sUsableEntity, "b", true)
+    end
+end
