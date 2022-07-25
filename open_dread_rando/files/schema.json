@@ -16,7 +16,6 @@
         "pickups": {
             "type": "array",
             "minItems": 146,
-            "maxItems": 148,
             "items": {
                 "type": "object",
                 "properties": {
@@ -321,9 +320,34 @@
                     "description": "How quickly you lose energy in damage rooms, in Damage per Second.",
                     "type": "number",
                     "default": 20
+                },
+                "enable_experiment_boss": {
+                    "type": "boolean",
+                    "description": "Enable the Experiment Z-57 boss fight when entering its arena through the Morph Ball Launcher after releasing the X.",
+                    "default": true
                 }
             },
             "additionalProperties": false
+        },
+        "objective": {
+            "type": "object",
+            "properties": {
+                "required_artifacts": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9,
+                    "default": 9
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": []
+                }
+            },
+            "additionalProperties": false,
+            "default": {}
         },
         "door_patches": {
             "type": "array",

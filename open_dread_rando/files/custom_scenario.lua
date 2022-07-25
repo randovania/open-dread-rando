@@ -43,6 +43,17 @@ function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallba
     Game.AddSF(0.5, Game.PlayCurrentEnvironmentMusic, "")
 end
 
+function Scenario.ReadFromPlayerBlackboard(prop_id, default)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    local value = Blackboard.GetProp(playerSection, prop_id)
+    return value or default
+end
+
+function Scenario.WriteToPlayerBlackboard(prop_id, type, value)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    Blackboard.SetProp(playerSection, prop_id, type, value)
+end
+
 local init_scenario = Scenario.InitScenario
 function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     local playerSection =  Game.GetPlayerBlackboardSectionName()

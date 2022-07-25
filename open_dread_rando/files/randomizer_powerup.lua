@@ -36,6 +36,8 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.IncreaseEnergy(granted)
     RandomizerPowerup.IncreaseAmmo(granted)
 
+    RandomizerPowerup.CheckArtifacts()
+
     return granted
 end
 
@@ -164,6 +166,19 @@ function RandomizerPowerup.IncreaseAmmo(resource)
     if current_id == nil then return end
 
     RandomizerPowerup.IncreaseItemAmount(current_id, resource.quantity, resource.item_id)
+end
+
+function RandomizerPowerup.CheckArtifacts()
+    if Init.iNumRequiredArtifacts == 0 then return end
+    if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") > 0 then return end
+    
+    -- check for all artifact items, which are numbered. if all are collected, grant metroidnization
+    for i=1, Init.iNumRequiredArtifacts do
+        if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_"..i) == 0 then return end
+    end
+
+    RandomizerPowerup.SetItemAmount("ITEM_METROIDNIZATION", 1)
+    GUI.ShowMessage("#RANDO_ARTIFACTS_ALL", true, "")
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)
