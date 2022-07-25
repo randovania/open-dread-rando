@@ -176,9 +176,42 @@ function Scenario.SetTeleportalUsed(actor)
     Scenario.ResetGlobalTeleport(actor)
 end
 
+local scenarios_with_teleport = {
+    s010_cave = "StartPoint0",
+    s020_magma = "savestation_000",
+    s030_baselab = "savestation_000",
+    s040_aqua = "savestation_000",
+    s050_forest = "savestation_000",
+    s070_basesanc = "savestation_000"
+}
+
+function Scenario.VisitAllTeleportScenarios()
+    if CurrentScenarioID == "s090_skybase" then
+        Blackboard.SetProp("GAME_PROGRESS", "RandoVisitScenarios", "b", true)
+    end
+
+    if not Blackboard.GetProp("GAME_PROGRESS", "RandoVisitScenarios") then return end
+
+    for scenario, spawn in pairs(scenarios_with_teleport) do
+        if not Blackboard.GetProp("GAME_PROGRESS", "RandoVisited"..scenario) then
+            Game.LoadScenario("c10_samus", scenario, spawn, "", 1)
+            return true
+        end
+    end
+
+    Blackboard.SetProp("GAME_PROGRESS", "RandoVisitScenarios", "b", false)
+    if CurrentScenarioID == "s090_skybase" then return false end
+    Game.LoadScenario("c10_samus", "s090_skybase", "elevator_shipyard_000_platform", "", 1)
+    return true
+end
+
 local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
+
+    Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
+
+    if Scenario.VisitAllTeleportScenarios() then return end
 
     local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
     if teleportal_id == nil then return end
