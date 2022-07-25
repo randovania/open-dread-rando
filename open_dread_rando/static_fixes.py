@@ -1,7 +1,7 @@
 import copy
 
 import construct
-from mercury_engine_data_structures.formats.dread_types import CActor
+from mercury_engine_data_structures.formats.dread_types import CActor, CTriggerComponent_EEvent
 
 from open_dread_rando import door_patcher
 from open_dread_rando.logger import LOG
@@ -83,17 +83,27 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
 
 
 PROBLEM_X_LAYERS = {
-    "s010_cave": [
-        "collision_camera_026",  # Chain reaction
-        "collision_camera_020",  # Corpius arena
-        "collision_camera_073",  # Corpius entrance
-    ],
-    "s020_magma": [
-        "collision_camera_063",  # Kraid arena
-    ],
-    "s070_basesanc": [
-        "collision_camera_005",  # Quiet Robe room
-    ]
+    "PostXRelease": {
+        "s010_cave": [
+            "collision_camera_026",  # Chain reaction
+            "collision_camera_020",  # Corpius arena
+            "collision_camera_073",  # Corpius entrance
+        ],
+        "s020_magma": [
+            "collision_camera_063",  # Kraid arena
+        ],
+        "s040_aqua": [
+            "collision_camera_007", # Drogyga arena
+        ],
+        "s070_basesanc": [
+            "collision_camera_005",  # Quiet Robe room
+        ]
+    },
+    "Cooldown": {
+        "s020_magma": [
+            "collision_camera_004",
+        ]
+    }
 }
 
 
@@ -101,12 +111,13 @@ def remove_problematic_x_layers(editor: PatcherEditor):
     # these X layers have priority, so they will set some rooms to their post-state
     # even if they've never been entered. in these particular problem rooms, this
     # can cause softlocks (e.g. phantom cloak on golzuna, main PBs on corpius)
-    for level, layers in PROBLEM_X_LAYERS.items():
-        manager = editor.get_subarea_manager(level)
-        configs = manager.get_subarea_setup("PostXRelease").vSubareaConfigs
-        manager.get_subarea_setup("PostXRelease").vSubareaConfigs = [
-            config for config in configs if config.sId not in layers
-        ]
+    for setup, levels in PROBLEM_X_LAYERS.items():
+        for level, layers in levels.items():
+            manager = editor.get_subarea_manager(level)
+            configs = manager.get_subarea_setup(setup).vSubareaConfigs
+            manager.get_subarea_setup(setup).vSubareaConfigs = [
+                config for config in configs if config.sId not in layers
+            ]
 
 
 def apply_kraid_fixes(editor: PatcherEditor):
@@ -258,6 +269,52 @@ def patch_corpius_checkpoints(editor: PatcherEditor):
     cave.add_actor_to_group("eg_collision_camera_072_PostXRelease", "SP_Checkpoint_Scorpius")
 
 
+def apply_experiment_fixes(editor: PatcherEditor):
+    magma = editor.get_scenario("s020_magma")
+
+    new_triggers = {
+        "TriggerEnableCooldown": (5050.000, -5346.150, 0.000),
+        "TriggerDisableCooldown": (5000.000, -7350.000, 0.000),
+    }
+
+    # create triggers to update the cooldown status appropriately
+    for name, pos in new_triggers.items():
+        ap_trigger = copy.deepcopy(editor.resolve_actor_reference({
+            "scenario": "s020_magma",
+            "layer": "default",
+            "actor": "AP_03"
+        }))
+
+        ap_trigger.sName = name
+        ap_trigger.vPos = pos
+
+        ap_trigger.pComponents.TRIGGER.lstActivationConditions[0].vLogicActions[0].sCallback = f"CurrentScenario.OnEnter_{name}"
+
+        magma.actors_for_layer('default')[name] = ap_trigger
+        magma.add_actor_to_group("eg_collision_camera_004_PostXRelease", name)
+    
+    # make thermal doors always closed during the fight
+    for name in ["trap_thermal_horizontal_000", "trap_thermal_horizontal_005"]:
+        magma.remove_actor_from_group("eg_collision_camera_009_Cooldown", name)
+        
+        trap = copy.deepcopy(editor.resolve_actor_reference({
+            "scenario": "s020_magma",
+            "layer": "default",
+            "actor": name
+        }))
+
+        trap.sName = f"{name}_EXPERIMENT"
+        magma.actors_for_layer('default')[trap.sName] = trap
+        magma.add_actor_to_group('eg_collision_camera_009_Cooldown', trap.sName)
+    
+    # disable closing the thermal door permanently after experiment
+    editor.remove_entity({
+        "scenario": "s020_magma",
+        "layer": "default",
+        "actor": "trap_thermal_horizontal_POSTCOOL"
+    }, "mapDoors")
+
+
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
@@ -265,3 +322,4 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_kraid_fixes(editor)
     fix_backdoor_white_cu(editor)
     patch_corpius_checkpoints(editor)
+    apply_experiment_fixes(editor)

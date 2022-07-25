@@ -681,7 +681,7 @@ function s020_magma.Cooldown_Deactivation()
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.COOLDOWN_FINISHED, "b", true)
   s020_magma.ThermalTrapChange()
   s020_magma.PistonDeactivation()
-  Game.PushSetup("PostCooldown", true, true)
+  -- Game.PushSetup("PostCooldown", true, true)
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.MAGMA_COOLDOWN_APPLIED, "b", false)
   MAGMA_COOLDOWN_APPLIED = false
 end
@@ -776,6 +776,25 @@ function s020_magma.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
+function s020_magma.SetCooldown(state)
+  Game.SetCooldownFlag(state)
+  if state then
+    Game.PushSetup("Cooldown", true, true)
+  else
+    Game.PopSetup("Cooldown", true, true)
+  end
+end
+
+function s020_magma.OnEnter_TriggerEnableCooldown()
+  if not Init.bEnableExperimentBoss or Scenario.ReadFromPlayerBlackboard("RANDO_DEFEATED_EXPERIMENT", false) then return end
+  s020_magma.SetCooldown(true)
+end
+
+function s020_magma.OnEnter_TriggerDisableCooldown()
+  s020_magma.SetCooldown(false)
+end
+
+
 function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
     
     
@@ -785,15 +804,18 @@ function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, ne
   if s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade) then
     s020_magma.Kraid_InitCutscene()
   end
+
+  if old_subarea == "collision_camera_004" and (new_subarea ~= "collision_camera_009" or Game.GetPlayer().vPos[1] < -7000) then
+    s020_magma.SetCooldown(false)
+  end
   if old_subarea == "collision_camera_009" and old_actorgroup == "PostCooldown" then
     Game.PopSetup("Cooldown", true, true)
     Game.PushSetup("PostXRelease", true, true)
   elseif Init.bEnableExperimentBoss and QUARENTINE_OPENED
-      and old_subarea == "collision_camera_004" and new_subarea == "collision_camera_009"
-      and Game.GetPlayer().vPos[2] > -7000 -- entered through the morph ball launcher
+      and new_subarea == "collision_camera_009" and old_subarea == "collision_camera_004"
+      and Game.GetPlayer().vPos[1] > -7000 -- entered through the morph ball launcher
       and not Scenario.ReadFromPlayerBlackboard("RANDO_DEFEATED_EXPERIMENT", false) then
     -- begin Experiment fight
-    Game.PushSetup("Cooldown", true, true) -- popped after the fight
 
     local oActor = Game.GetActor("cutsceneplayer_78")
     if oActor ~= nil then
@@ -843,6 +865,7 @@ function s020_magma.OnCutscene81Ended()
     
     
   s020_magma.Cooldown_Deactivation()
+  Game.PushSetup("PostCooldown", true, true)
   Blackboard.SetProp("s010_cave", "SubareaSetupID[collision_camera_080]", "s", "Default>PostXRelease")
   Scenario.WriteToPlayerBlackboard("RANDO_DEFEATED_EXPERIMENT", "b", true)
   Game.SetPlayerInteractMovementState()
