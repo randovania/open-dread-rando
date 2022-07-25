@@ -435,6 +435,18 @@ function s080_shipyard.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
+function s080_shipyard.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s080_shipyard.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s080_shipyard.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
 
 
 

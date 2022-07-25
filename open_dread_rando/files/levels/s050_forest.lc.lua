@@ -265,6 +265,19 @@ function s050_forest.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
+function s050_forest.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s050_forest.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s050_forest.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
+
 
 
 

@@ -657,6 +657,19 @@ function s030_baselab.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
+function s030_baselab.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s030_baselab.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s030_baselab.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
+
 
 
 function s030_baselab.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
