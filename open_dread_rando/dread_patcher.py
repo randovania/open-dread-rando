@@ -167,15 +167,13 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         output_path,
         configuration["mod_compatibility"],
     )
-    output_format = output_format_for_category(configuration["mod_category"])
 
     # Exefs
     LOG.info("Creating exefs patches")
     patch_exefs(exefs_patches, configuration)
 
-    if output_format == OutputFormat.ROMFS:
-        assert out_exefs is not None
-        include_depackager(out_exefs)
+    assert out_exefs is not None
+    include_depackager(out_exefs)
 
     LOG.info("Saving modified lua scripts")
     lua_scripts.save_modifications(editor)
@@ -188,7 +186,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     LOG.info("Saving modified pkgs to %s", out_romfs)
     shutil.rmtree(out_romfs, ignore_errors=True)
-    editor.save_modifications(out_romfs, output_format=output_format)
+    editor.save_modifications(out_romfs, output_format=OutputFormat.ROMFS)
 
     LOG.info("Done")
 

@@ -271,11 +271,10 @@
         "mod_category": {
             "type": "string",
             "enum": [
-                "pkg",
                 "romfs"
             ],
-            "description": "When pkg, outputs fully modified pkg files. On romfs, output just the modified files but requires an exefs patch to load.",
-            "default": "pkg"
+            "description": "Output just the modified files but requires an exefs patch to load.",
+            "default": "romfs"
         },
         "cosmetic_patches": {
             "type": "object",
