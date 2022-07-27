@@ -1,3 +1,5 @@
+Game.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')
+
 function s090_skybase.main()
   Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
 end
@@ -248,19 +250,10 @@ function s090_skybase.OnUsableUse(actor)
   Scenario.SetTeleportalUsed(actor)
 end
 
-function s090_skybase.CheckArtifactsObtained()
-  if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") == 0 then
-    local oActor = Game.GetActor("accesspoint_000")
-    if oActor ~= nil then
-      oActor.USABLE:ActiveDialogue("DIAG_ADAM_SHIP_2")
-    end
-  end
-end
-
 function s090_skybase.OnEnter_AP_10()
-  s090_skybase.CheckArtifactsObtained()
+  s090_skybase.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
 end
 
 function s090_skybase.OnExit_AP_10()
-  s090_skybase.CheckArtifactsObtained()
+  s090_skybase.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
 end

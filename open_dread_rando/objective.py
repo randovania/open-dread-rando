@@ -1,5 +1,5 @@
 import copy
-from open_dread_rando.text_patches import patch_text
+from open_dread_rando.text_patches import apply_text_patches, patch_text
 from open_dread_rando.patcher_editor import PatcherEditor
 from mercury_engine_data_structures.formats.dread_types import CTriggerComponent_EEvent
 
@@ -30,7 +30,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     }))
 
     origin = access_point.vPos
-    new_origin = (-2232.221 - origin[0], -3475.0 - origin[1], 0.0)
+    new_origin = (-2232.221 - origin[0], -3500.0 - origin[1], 0.0)
     itorash = editor.get_scenario("s090_skybase")
 
     # add actors to Itorash and update their position
@@ -53,18 +53,37 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     on_exit.vLogicActions[0].sCallback = "CurrentScenario.OnExit_AP_10"
     trigger.lstActivationConditions.append(on_exit)
 
+    # increase the height of the trigger to prevent jumping over it
+    segments = ap_trigger.pComponents.LOGICSHAPE.pLogicShape.oPolyCollection.vPolys[0].oSegmentData
+    for i in range(2):
+        segments[i].vPos[1] += 1000
+
     usable = access_point.pComponents.USABLE
 
     usable.vDoorsToChange = [itorash.link_for_actor('doorpowerpower_000')]
     usable.wpThermalDevice = ""
 
     hints = {
-        f"DIAG_ADAM_SHIP_2_PAGE_{i}": hint
+        f"DIAG_ADAM_SHIP_2_PAGE_{i+1}": hint
         for i, hint in enumerate(configuration['objective']['hints'])
     }
-    for k, v in hints.items():
-        patch_text(editor, k, v)
+    apply_text_patches(editor, hints)
+    
+    mlogs = {
+        f"MLOG_ITEM_RANDO_ARTIFACT_{i+1}": f"Acquired {r'{c1}'}Metroid DNA {i+1}{r'{c0}'}"
+        for i in range(12)
+    }
+    apply_text_patches(editor, mlogs)
 
     usable.tCaptionList = {
         "DIAG_ADAM_SHIP_2": list(hints) or ["DIAG_ADAM_SHIP_2_PAGE_1"]
+    }
+
+    quiet_robe_usable = editor.resolve_actor_reference({
+        "scenario": "s030_baselab",
+        "layer": "default",
+        "actor": "accesspoint_001"
+    })
+    quiet_robe_usable.pComponents.USABLE.tCaptionList = {
+        "DIAG_ADAM_LAB_2": list(hints) or ["DIAG_ADAM_LAB_2_PAGE_1"]
     }

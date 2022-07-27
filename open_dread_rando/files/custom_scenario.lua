@@ -158,17 +158,14 @@ function Scenario.DisableGlobalTeleport(actor)
     if not Scenario.IsTeleportal(actor) then return end
     if not Blackboard.GetProp("GAME_PROGRESS", "TeleportWorldUnlocked") then return end
 
-    local teleportal_id, target_id = Scenario.GetTeleportalIDs(actor)
+    local teleportal_id = Scenario.GetTeleportalID(actor)
     if Blackboard.GetProp("GAME_PROGRESS", teleportal_id) then return end
     Blackboard.SetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked", "b", true)
     Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", false)
 end
 
-function Scenario.GetTeleportalIDs(actor)
-    local teleportal_id = CurrentScenarioID .. actor.sName
-    local target_id = actor.USABLE.sTargetSpawnPoint
-
-    return teleportal_id, target_id
+function Scenario.GetTeleportalID(actor)
+    return CurrentScenarioID .. actor.sName
 end
 
 function Scenario.ResetGlobalTeleport(actor)
@@ -181,10 +178,12 @@ end
 function Scenario.SetTeleportalUsed(actor)
     if not Scenario.IsTeleportal(actor) then return end
 
-    local teleportal_id, target_id = Scenario.GetTeleportalIDs(actor)
+    Scenario.ResetGlobalTeleport(actor)
+
+    local teleportal_id = Scenario.GetTeleportalID(actor)
+    local target_id = actor.USABLE.sTargetSpawnPoint
     Blackboard.SetProp("GAME_PROGRESS", teleportal_id, "b", true)
     Blackboard.SetProp("GAME_PROGRESS", "RandoUnlockTeleportal", "s", target_id)
-    Scenario.ResetGlobalTeleport(actor)
 end
 
 local scenarios_with_teleport = {
@@ -229,5 +228,14 @@ function Scenario.OnLoadScenarioFinished()
     local platform = Game.GetActor(teleportal_id)
     if platform ~= nil then
         Blackboard.SetProp("GAME_PROGRESS", CurrentScenarioID .. platform.SMARTOBJECT.sUsableEntity, "b", true)
+    end
+end
+
+function Scenario.CheckArtifactsObtained(actor, diag)
+    if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") == 0 then
+        local oActor = Game.GetActor(actor)
+        if oActor ~= nil then
+            oActor.USABLE:ActiveDialogue(diag)
+        end
     end
 end

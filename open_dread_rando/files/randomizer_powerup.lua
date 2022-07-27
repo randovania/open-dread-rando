@@ -36,7 +36,7 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.IncreaseEnergy(granted)
     RandomizerPowerup.IncreaseAmmo(granted)
 
-    RandomizerPowerup.CheckArtifacts()
+    RandomizerPowerup.CheckArtifacts(granted)
 
     return granted
 end
@@ -168,16 +168,25 @@ function RandomizerPowerup.IncreaseAmmo(resource)
     RandomizerPowerup.IncreaseItemAmount(current_id, resource.quantity, resource.item_id)
 end
 
-function RandomizerPowerup.CheckArtifacts()
+function RandomizerPowerup.CheckArtifacts(resource)
     if Init.iNumRequiredArtifacts == 0 then return end
     if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") > 0 then return end
     
+    if resource.item_id:find("ITEM_RANDO_ARTIFACT", 1, true) then
+        GUI.AddEmmyMissionLogEntry("#MLOG_"..resource.item_id)
+    end
+
     -- check for all artifact items, which are numbered. if all are collected, grant metroidnization
     for i=1, Init.iNumRequiredArtifacts do
         if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_"..i) == 0 then return end
     end
 
     RandomizerPowerup.SetItemAmount("ITEM_METROIDNIZATION", 1)
+
+    Game.AddGUISF(0.1, "RandomizerPowerup.ShowArtifactMessage", "")
+end
+
+function RandomizerPowerup.ShowArtifactMessage()
     GUI.ShowMessage("#RANDO_ARTIFACTS_ALL", true, "")
 end
 
