@@ -78,3 +78,12 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     usable.tCaptionList = {
         "DIAG_ADAM_SHIP_2": list(hints) or ["DIAG_ADAM_SHIP_2_PAGE_1"]
     }
+
+    quiet_robe_usable = editor.resolve_actor_reference({
+        "scenario": "s030_baselab",
+        "layer": "default",
+        "actor": "accesspoint_001"
+    })
+    quiet_robe_usable.pComponents.USABLE.tCaptionList = {
+        "DIAG_ADAM_LAB_2": list(hints) or ["DIAG_ADAM_LAB_2_PAGE_1"]
+    }

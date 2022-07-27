@@ -648,7 +648,11 @@ function s030_baselab.OnEnter_AP_04()
 end
 
 function s030_baselab.OnEnter_AP_06()
-  Scenario.CheckRandoHint("accesspoint_001", "LAB_2")
+  if Init.iNumRequiredArtifacts == 0 then
+    Scenario.CheckRandoHint("accesspoint_001", "LAB_2")
+  else
+    Scenario.CheckArtifactsObtained("accesspoint_001", "DIAG_ADAM_LAB_2")
+  end
 end
 
 function s030_baselab.OnUsableFinishInteract(_ARG_0_)

@@ -230,3 +230,12 @@ function Scenario.OnLoadScenarioFinished()
         Blackboard.SetProp("GAME_PROGRESS", CurrentScenarioID .. platform.SMARTOBJECT.sUsableEntity, "b", true)
     end
 end
+
+function Scenario.CheckArtifactsObtained(actor, diag)
+    if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") == 0 then
+        local oActor = Game.GetActor(actor)
+        if oActor ~= nil then
+            oActor.USABLE:ActiveDialogue(diag)
+        end
+    end
+end
