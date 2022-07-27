@@ -47,6 +47,18 @@ def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
         patch.add_record(offset, data)
 
 
+def _add_version_sentinel(patch: ips.Patch, version: str):
+    # Replace `IsInSTEAM_PC_FINAL_RETAIL` with a custom name, so lua code can know if the exefs was properly patched
+    randomized_sentinel = VersionedPatch({
+        "1.0.0": (0x0158c3c2, b"HasRandomizerPatches\x00"),
+        "2.0.0": (0x0159bb43, b"HasRandomizerPatches\x00"),
+        "2.1.0": (0x015d9780, b"HasRandomizerPatches\x00"),
+    })
+
+    offset, data = randomized_sentinel[version]
+    patch.add_record(offset, data)
+
+
 def patch_exefs(exefs_patches: Path, configuration: dict):
     shutil.rmtree(exefs_patches, ignore_errors=True)
     exefs_patches.mkdir(parents=True, exist_ok=True)
@@ -54,6 +66,7 @@ def patch_exefs(exefs_patches: Path, configuration: dict):
     for version, exefs_hash in VERSIONS.items():
         patch = NSOPatch()
         _patch_corpius(patch, version, configuration)
+        _add_version_sentinel(patch, version)
         exefs_patches.joinpath(f"{exefs_hash}.ips").write_bytes(bytes(patch))
 
 

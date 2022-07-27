@@ -648,7 +648,11 @@ function s030_baselab.OnEnter_AP_04()
 end
 
 function s030_baselab.OnEnter_AP_06()
-  Scenario.CheckRandoHint("accesspoint_001", "LAB_2")
+  if Init.iNumRequiredArtifacts == 0 then
+    Scenario.CheckRandoHint("accesspoint_001", "LAB_2")
+  else
+    Scenario.CheckArtifactsObtained("accesspoint_001", "DIAG_ADAM_LAB_2")
+  end
 end
 
 function s030_baselab.OnUsableFinishInteract(_ARG_0_)
@@ -656,6 +660,19 @@ function s030_baselab.OnUsableFinishInteract(_ARG_0_)
     Scenario.SetRandoHintSeen()
   end
 end
+
+function s030_baselab.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s030_baselab.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s030_baselab.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
 
 
 

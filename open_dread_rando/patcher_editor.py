@@ -44,6 +44,10 @@ class PatcherEditor(FileTreeEditor):
 
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))
+    
+    def ensure_present_in_scenario(self, scenario: str, asset):
+        for pkg in self.get_level_pkgs(scenario):
+            self.ensure_present(pkg, asset)
 
     def resolve_actor_reference(self, ref: dict) -> Container:
         scenario = self.get_scenario(ref["scenario"])
@@ -80,4 +84,6 @@ class PatcherEditor(FileTreeEditor):
         scenario.actors_for_layer(layer).pop(actor_name)
         if map_category is not None:
             self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
-
+    
+    def get_asset_names_in_folder(self, folder: str) -> typing.Iterator[str]:
+        yield from (name for name in self._name_for_asset_id.values() if name.startswith(folder))

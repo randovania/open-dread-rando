@@ -43,6 +43,17 @@ function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallba
     Game.AddSF(0.5, Game.PlayCurrentEnvironmentMusic, "")
 end
 
+function Scenario.ReadFromPlayerBlackboard(prop_id, default)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    local value = Blackboard.GetProp(playerSection, prop_id)
+    return value or default
+end
+
+function Scenario.WriteToPlayerBlackboard(prop_id, type, value)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    Blackboard.SetProp(playerSection, prop_id, type, value)
+end
+
 local init_scenario = Scenario.InitScenario
 function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     local playerSection =  Game.GetPlayerBlackboardSectionName()
@@ -53,6 +64,14 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
             "Cross-checking seed hashes. The current patch's hash is %q, and the current save's hash is %q.",
             Init.sThisRandoIdentifier, tostring(currentSaveRandoIdentifier)
     ))
+
+    -- This function is added via an exefs patch. It not existing means either broken install or unknown executable
+    if not Game.HasRandomizerPatches then
+        return Scenario.ShowFatalErrorMessage({
+            "{c2}Error!{c0}|Unsupported Metroid Dread version.",
+            "Only {c6}1.0.0{c0} and {c6}2.1.0{c0} are supported.|Returning to title screen.",
+        })
+    end
 
     -- Cross-check the seed hash in the Blackboard with the one in Init.sThisRandoSeedHash to make sure they match.
     -- If they don't, show a warning to the player, and DO NOT save over their game!
@@ -110,5 +129,113 @@ function Scenario.ShowText()
     elseif Init.iNumRandoTextBoxes - textboxes_seen > 0 then
         textboxes_seen = textboxes_seen + 1
         GUI.ShowMessage("#RANDO_STARTING_TEXT_" .. textboxes_seen, true, "Scenario.ShowText")
+    end
+end
+
+
+local teleportal_names = {
+    "teleport_baselab_000",
+    "LE_Teleport_FromMagma",
+    "teleporter_magma_000",
+    "LE_Teleport_Secret",
+    "teleporter_forest_000",
+    "teleporter_cave_000",
+    "LE_Teleport_FromCave",
+    "teleport_baselab_000",
+    "teleport_cave_000",
+    "teleport_magma_000",
+    "teleporter_000",
+    "teleporter_aqua_000"
+}
+function Scenario.IsTeleportal(actor)
+    for _, name in ipairs(teleportal_names) do
+        if actor.sName == name then return true end
+    end
+    return false
+end
+
+function Scenario.DisableGlobalTeleport(actor)
+    if not Scenario.IsTeleportal(actor) then return end
+    if not Blackboard.GetProp("GAME_PROGRESS", "TeleportWorldUnlocked") then return end
+
+    local teleportal_id = Scenario.GetTeleportalID(actor)
+    if Blackboard.GetProp("GAME_PROGRESS", teleportal_id) then return end
+    Blackboard.SetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked", "b", true)
+    Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", false)
+end
+
+function Scenario.GetTeleportalID(actor)
+    return CurrentScenarioID .. actor.sName
+end
+
+function Scenario.ResetGlobalTeleport(actor)
+    if not Scenario.IsTeleportal(actor) then return end
+    if not Blackboard.GetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked") then return end
+
+    Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
+end
+
+function Scenario.SetTeleportalUsed(actor)
+    if not Scenario.IsTeleportal(actor) then return end
+
+    Scenario.ResetGlobalTeleport(actor)
+
+    local teleportal_id = Scenario.GetTeleportalID(actor)
+    local target_id = actor.USABLE.sTargetSpawnPoint
+    Blackboard.SetProp("GAME_PROGRESS", teleportal_id, "b", true)
+    Blackboard.SetProp("GAME_PROGRESS", "RandoUnlockTeleportal", "s", target_id)
+end
+
+local scenarios_with_teleport = {
+    s010_cave = "StartPoint0",
+    s020_magma = "savestation_000",
+    s030_baselab = "savestation_000",
+    s040_aqua = "savestation_000",
+    s050_forest = "savestation_000",
+    s070_basesanc = "savestation_000"
+}
+
+function Scenario.VisitAllTeleportScenarios()
+    if CurrentScenarioID == "s090_skybase" then
+        Blackboard.SetProp("GAME_PROGRESS", "RandoVisitScenarios", "b", true)
+    end
+
+    if not Blackboard.GetProp("GAME_PROGRESS", "RandoVisitScenarios") then return end
+
+    for scenario, spawn in pairs(scenarios_with_teleport) do
+        if not Blackboard.GetProp("GAME_PROGRESS", "RandoVisited"..scenario) then
+            Game.LoadScenario("c10_samus", scenario, spawn, "", 1)
+            return true
+        end
+    end
+
+    Blackboard.SetProp("GAME_PROGRESS", "RandoVisitScenarios", "b", false)
+    if CurrentScenarioID == "s090_skybase" then return false end
+    Game.LoadScenario("c10_samus", "s090_skybase", "elevator_shipyard_000_platform", "", 1)
+    return true
+end
+
+local original_onload = Scenario.OnLoadScenarioFinished
+function Scenario.OnLoadScenarioFinished()
+    original_onload()
+
+    Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
+
+    if Scenario.VisitAllTeleportScenarios() then return end
+
+    local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
+    if teleportal_id == nil then return end
+    local platform = Game.GetActor(teleportal_id)
+    if platform ~= nil then
+        Blackboard.SetProp("GAME_PROGRESS", CurrentScenarioID .. platform.SMARTOBJECT.sUsableEntity, "b", true)
+    end
+end
+
+function Scenario.CheckArtifactsObtained(actor, diag)
+    if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") == 0 then
+        local oActor = Game.GetActor(actor)
+        if oActor ~= nil then
+            oActor.USABLE:ActiveDialogue(diag)
+        end
     end
 end

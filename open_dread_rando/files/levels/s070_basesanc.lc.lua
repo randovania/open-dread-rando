@@ -324,22 +324,30 @@ function s070_basesanc.Delayed_Professor_CUT()
     oActor1.CUTSCENE:LaunchCutscene()
   end
 
-  local oActor2 = Game.GetActor("doorpowerpower_002")
-  if oActor2 ~= nil then
-    oActor2.LIFE:UnLockDoor()
-  end
+  s070_basesanc.TryUnlockProfessorDoor()
 
   Game.RemoveBossCameraCtrl()
 end
 
+local try_unlocking = false
+function s070_basesanc.TryUnlockProfessorDoor()
+  try_unlocking = true
+  s070_basesanc._TryUnlockProfessorDoor()
+end
 
-function s070_basesanc.OnAfter_Cutscene_40_Part3()
-  -- try again
+function s070_basesanc._TryUnlockProfessorDoor()
+  if not try_unlocking then return end
+
   local oActor2 = Game.GetActor("doorpowerpower_002")
   if oActor2 ~= nil then
     oActor2.LIFE:UnLockDoor()
   end
 
+  Game.AddSF(1, "s070_basesanc._TryUnlockProfessorDoor", "")
+end
+
+
+function s070_basesanc.OnAfter_Cutscene_40_Part3()
 
 end
 
@@ -901,6 +909,18 @@ function s070_basesanc.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
+function s070_basesanc.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s070_basesanc.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s070_basesanc.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
 
 
 
@@ -932,6 +952,10 @@ function s070_basesanc.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea,
         arena_door.LIFE:LockDoor()
       end
     end
+  end
+
+  if old_subarea == "collision_camera_005" and new_subarea == "collision_camera_004" then
+    try_unlocking = false
   end
 
   local L5_2 = Game.GetActor("SG_2ChozoRobots")

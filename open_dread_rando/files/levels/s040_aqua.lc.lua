@@ -234,6 +234,19 @@ function s040_aqua.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
+function s040_aqua.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s040_aqua.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s040_aqua.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
+
 
 
 
@@ -340,6 +353,10 @@ function s040_aqua.OnHydrogigaDead(_ARG_0_, _ARG_1_)
 
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.HYDROGIGA_DEAD, "b", true)
   s040_aqua.CheckHydrogiga()
+end
+
+function s040_aqua.OnHydrogigaDead_CUSTOM()
+  
 end
 
 function s040_aqua.Event_Tentacles_Alive(_ARG_0_)

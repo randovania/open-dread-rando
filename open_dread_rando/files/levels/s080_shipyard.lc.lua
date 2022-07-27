@@ -168,7 +168,7 @@ end
 
 
 function s080_shipyard.OnEndStrongReactionEvent()
-  Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_METROIDNIZATION", 1, true)
+  --Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_METROIDNIZATION", 1, true)
 end
 
 
@@ -433,6 +433,18 @@ function s080_shipyard.OnUsableFinishInteract(_ARG_0_)
   if _ARG_0_.sName == "accesspoint_000" then
     Scenario.SetRandoHintSeen()
   end
+end
+
+function s080_shipyard.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s080_shipyard.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s080_shipyard.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
 end
 
 

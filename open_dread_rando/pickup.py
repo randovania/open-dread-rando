@@ -228,9 +228,9 @@ class ActorDefPickup(BasePickup):
         resources = self.pickup["resources"]
         item_id: str = resources[0]["item_id"]
 
-        if len(resources) > 1 or resources[0]["quantity"] > 1 or item_id in EXPANSION_ITEM_IDS:
-            item_id = "ITEM_NONE"
-            self._patch_actordef_pickup_script_help(editor)
+        # if len(resources) > 1 or resources[0]["quantity"] > 1 or item_id in EXPANSION_ITEM_IDS:
+        item_id = "ITEM_NONE"
+        self._patch_actordef_pickup_script_help(editor)
 
         bmsad_path: str = self.pickup["pickup_actordef"]
         actordef = editor.get_file(bmsad_path, Bmsad)

@@ -1,3 +1,5 @@
+Game.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')
+
 function s090_skybase.main()
   Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
 end
@@ -234,4 +236,24 @@ function s090_skybase.cutsceneplayer_108_end()
     Game.LoadScenario("c10_samus", "s080_shipyard", "SP_Checkpoint_CommanderX", "", 1)
     Game.PlayCutsceneOnScenarioLoaded("cutsceneplayer_108", true, true, true, false, false, "", "", 0, 0, 0)
   end
+end
+
+function s090_skybase.OnUsablePrepareUse(actor)
+  Scenario.DisableGlobalTeleport(actor)
+end
+
+function s090_skybase.OnUsableCancelUse(actor)
+  Scenario.ResetGlobalTeleport(actor)
+end
+
+function s090_skybase.OnUsableUse(actor)
+  Scenario.SetTeleportalUsed(actor)
+end
+
+function s090_skybase.OnEnter_AP_10()
+  s090_skybase.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
+end
+
+function s090_skybase.OnExit_AP_10()
+  s090_skybase.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
 end

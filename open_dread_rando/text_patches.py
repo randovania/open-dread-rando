@@ -25,13 +25,16 @@ def patch_text(editor: PatcherEditor, key: str, value: str):
         text = editor.get_file(f"system/localization/{text_file}", Txt)
         text.strings[key] = value
 
+
 def get_text(editor: PatcherEditor, key: str, text_file: str = "us_english.txt") -> str:
     text = editor.get_file(f"system/localization/{text_file}", Txt)
     return text.strings[key]
 
+
 def apply_text_patches(editor: PatcherEditor, patches: dict[str, str]):
     for k, v in patches.items():
         patch_text(editor, k, v)
+
 
 def patch_hints(editor: PatcherEditor, hints: list[dict]):
     # patch mission log titles
@@ -44,7 +47,7 @@ def patch_hints(editor: PatcherEditor, hints: list[dict]):
     for hint in hints:
         ap_actor = editor.resolve_actor_reference(hint["accesspoint_actor"])
         usable = ap_actor.pComponents.USABLE
-        
+
         # don't lock any doors
         usable.vDoorsToChange = []
         usable.wpThermalDevice = ""
@@ -58,24 +61,35 @@ def patch_hints(editor: PatcherEditor, hints: list[dict]):
         }
         patch_text(editor, string_key, hint["text"])
 
+
 def patch_credits(editor: PatcherEditor):
     text = editor.get_file("system/localization/credits.txt", Txt)
     ordered_credits = list(text.strings.items())
 
-    rando_credits = {
-        "CREDIT_R_001_TITLE": "Randomizer Credits",
-        "CREDIT_R_002_SUBTITLE": "Game Patching",
-        "CREDIT_R_002": "Henrique Gemignani",
-        "CREDIT_R_003": "duncathan_salt",
-        "CREDIT_R_004_SUBTITLE": "Initial Logic Database",
-        "CREDIT_R_004": "KirbymastaH",
-        "CREDIT_R_005": "Dyceron",
-        "CREDIT_R_006_SUBTITLE": "Additional Art",
-        "CREDIT_R_007": "BigSharksZ",
-        "CREDIT_R_008": "SkyTheLucario",
-        "CREDIT_R_009_SUBTITLE": "     ",
-        "CREDIT_R_010": "With contributions from many others."
-    }
+    rando_credits = [
+        ("Randomizer Credits", "_TITLE"),
 
-    ordered_credits[1:1] = list(rando_credits.items())
-    text.strings = {k: v for k,v in ordered_credits}
+        ("Game Patching", "_SUBTITLE"),
+        ("Henrique 'Darkszero' Gemignani", ""),
+        ("duncathan_salt", ""),
+
+        ("Logic Database", "_SUBTITLE"),
+        ("KirbymastaH", ""),
+        ("Dyceron", ""),
+        ("XenoWars", ""),
+
+        ("Additional Art", "_SUBTITLE"),
+        ("BigSharksZ", ""),
+        ("SkyTheLucario", ""),
+
+        ("     ", "_SUBTITLE"),
+        ("With contributions from many others.", ""),
+        ("     ", "_SUBTITLE"),
+        ("     ", "_SUBTITLE"),
+    ]
+
+    ordered_credits[1:1] = [
+        (f"CREDIT_R_{i:03}{prefix}", item)
+        for i, (item, prefix) in enumerate(rando_credits)
+    ]
+    text.strings = {k: v for k, v in ordered_credits}

@@ -16,7 +16,6 @@
         "pickups": {
             "type": "array",
             "minItems": 146,
-            "maxItems": 148,
             "items": {
                 "type": "object",
                 "properties": {
@@ -311,9 +310,44 @@
                     "type": "boolean",
                     "description": "When enabled, the game starts with the X Parasites being released already.",
                     "default": false
+                },
+                "linear_damage_runs": {
+                    "type": "boolean",
+                    "description": "When enabled, damage over time from heated and cold rooms scales linearly instead of exponentially.",
+                    "default": false
+                },
+                "linear_dps": {
+                    "description": "How quickly you lose energy in damage rooms, in Damage per Second.",
+                    "type": "number",
+                    "default": 20
+                },
+                "enable_experiment_boss": {
+                    "type": "boolean",
+                    "description": "Enable the Experiment Z-57 boss fight when entering its arena through the Morph Ball Launcher after releasing the X.",
+                    "default": true
                 }
             },
             "additionalProperties": false
+        },
+        "objective": {
+            "type": "object",
+            "properties": {
+                "required_artifacts": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 12,
+                    "default": 9
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": []
+                }
+            },
+            "additionalProperties": false,
+            "default": {}
         },
         "door_patches": {
             "type": "array",

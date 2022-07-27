@@ -1183,21 +1183,21 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
     end
   elseif old_subarea == "collision_camera_003" and new_subarea == "collision_camera_018" then
     
-    local oActor = Game.GetActor("cutsceneplayer_49-1")
-    if oActor ~= nil then
-      oActor.CUTSCENE:TryLaunchCutscene()
-    end
+  --  local oActor = Game.GetActor("cutsceneplayer_49-1")
+  --  if oActor ~= nil then
+  --    oActor.CUTSCENE:TryLaunchCutscene()
+  --  end
   elseif old_subarea == "collision_camera_018" and new_subarea == "collision_camera_005" then
     
-    local oActor1 = Game.GetActor("cutsceneplayer_49-1")
-    if oActor1 ~= nil then
-      if oActor1.CUTSCENE:HasCutsceneBeenPlayed() == true then
-        local oActor2 = Game.GetActor("cutsceneplayer_49-2")
-        if oActor2 ~= nil then
-          oActor2.CUTSCENE:TryLaunchCutscene()
-        end
-      end
-    end
+  --  local oActor1 = Game.GetActor("cutsceneplayer_49-1")
+  --  if oActor1 ~= nil then
+  --    if oActor1.CUTSCENE:HasCutsceneBeenPlayed() == true then
+  --      local oActor2 = Game.GetActor("cutsceneplayer_49-2")
+  --      if oActor2 ~= nil then
+  --        oActor2.CUTSCENE:TryLaunchCutscene()
+  --      end
+  --    end
+  --  end
     
     if not CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED then
       Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED, "b", true)
@@ -2108,6 +2108,8 @@ function s010_cave.OnUsableCancelUse(_ARG_0_)
   elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(true)
   end
+
+  Scenario.ResetGlobalTeleport(actor)
 end
 
 function s010_cave.OnUsablePrepareUse(_ARG_0_)
@@ -2116,12 +2118,16 @@ function s010_cave.OnUsablePrepareUse(_ARG_0_)
   elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(false)
   end
+
+  Scenario.DisableGlobalTeleport(_ARG_0_)
 end
 
 function s010_cave.OnUsableUse(_ARG_0_)
   if _ARG_0_.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, "b", true)
   end
+
+  Scenario.SetTeleportalUsed(_ARG_0_)
 end
 
 
