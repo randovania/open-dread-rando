@@ -353,7 +353,6 @@ function s040_aqua.OnHydrogigaDead(_ARG_0_, _ARG_1_)
 
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.HYDROGIGA_DEAD, "b", true)
   s040_aqua.CheckHydrogiga()
-  Game.AddGUISF(0.5, "s040_aqua.OnHydrogigaDead_CUSTOM", "")
 end
 
 function s040_aqua.OnHydrogigaDead_CUSTOM()

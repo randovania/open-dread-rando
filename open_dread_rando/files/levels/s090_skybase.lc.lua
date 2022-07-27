@@ -1,3 +1,5 @@
+Game.DoFile('actors/items/randomizer_powerup/scripts/randomizer_powerup.lua')
+
 function s090_skybase.main()
   Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
 end

@@ -128,13 +128,14 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
     cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop()
 
     # Add the custom call when the boss dies
-    cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
-        "@type": "CLuaCallsLogicAction",
-        "sCallbackEntityName": "",
-        "sCallback": callback,
-        "bCallbackEntity": False,
-        "bCallbackPersistent": False,
-    })
+    if callback:
+        cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
+            "@type": "CLuaCallsLogicAction",
+            "sCallbackEntityName": "",
+            "sCallback": callback,
+            "bCallbackEntity": False,
+            "bCallbackPersistent": False,
+        })
 
 def apply_kraid_fixes(editor: PatcherEditor):
     magma = editor.get_scenario("s020_magma")
@@ -154,6 +155,13 @@ def apply_kraid_fixes(editor: PatcherEditor):
     kraid = CActor.parse(kraid_file.InnerValue)
     kraid.pComponents.AI.wpDeadCheckpointStartPoint = "{EMPTY}"
     kraid_file.InnerValue = CActor.build(kraid)
+
+def apply_drogyga_fixes(editor: PatcherEditor):
+    _apply_boss_cutscene_fixes(editor, {
+        "scenario": "s040_aqua",
+        "layer": "cutscenes",
+        "actor": "cutsceneplayer_65"
+    }, "CurrentScenario.OnHydrogigaDead_CUSTOM")
 
 def activate_emmi_zones(editor: PatcherEditor):
     # Remove the cutscene that plays when you enter the emmi zone for the first time
@@ -278,6 +286,12 @@ def patch_corpius_checkpoints(editor: PatcherEditor):
 def apply_experiment_fixes(editor: PatcherEditor):
     magma = editor.get_scenario("s020_magma")
 
+    _apply_boss_cutscene_fixes(editor, {
+        "scenario": "s020_magma",
+        "layer": "cutscenes",
+        "actor": "cutsceneplayer_81"
+    }, "")
+
     new_triggers = {
         "TriggerEnableCooldown": (5050.000, -5346.150, 0.000),
         "TriggerDisableCooldown": (5000.000, -7350.000, 0.000),
@@ -329,3 +343,4 @@ def apply_static_fixes(editor: PatcherEditor):
     fix_backdoor_white_cu(editor)
     patch_corpius_checkpoints(editor)
     apply_experiment_fixes(editor)
+    apply_drogyga_fixes(editor)

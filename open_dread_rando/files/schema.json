@@ -335,7 +335,7 @@
                 "required_artifacts": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 9,
+                    "maximum": 12,
                     "default": 9
                 },
                 "hints": {
