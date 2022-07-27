@@ -142,7 +142,6 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     # Pickups
     patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
-    apply_objective_patches(editor, configuration)
 
     # Hints
     if "hints" in configuration:
@@ -155,6 +154,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     if "text_patches" in configuration:
         apply_text_patches(editor, configuration["text_patches"])
     patch_credits(editor)
+
+    # Objective
+    apply_objective_patches(editor, configuration)
 
     # Cosmetic patches
     if "cosmetic_patches" in configuration:

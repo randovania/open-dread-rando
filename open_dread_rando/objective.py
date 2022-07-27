@@ -54,7 +54,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     trigger.lstActivationConditions.append(on_exit)
 
     # increase the height of the trigger to prevent jumping over it
-    segments = ap_trigger.pComponents.LOGICSHAPE.oPolyCollection.vPolys[0].oSegmentData
+    segments = ap_trigger.pComponents.LOGICSHAPE.pLogicShape.oPolyCollection.vPolys[0].oSegmentData
     for i in range(2):
         segments[i].vPos[1] += 1000
 
@@ -70,7 +70,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     apply_text_patches(editor, hints)
     
     mlogs = {
-        f"MLOG_ITEM_RANDO_ARTIFACT{i+1}": "Acquired {c1}{name}{c0}.".format(name=f"Metroid DNA {i+1}")
+        f"MLOG_ITEM_RANDO_ARTIFACT_{i+1}": f"Acquired {r'{c1}'}Metroid DNA {i+1}{r'{c0}'}"
         for i in range(12)
     }
     apply_text_patches(editor, mlogs)

@@ -93,7 +93,7 @@ PROBLEM_LAYERS = {
             "collision_camera_063",  # Kraid arena
         ],
         "s040_aqua": [
-            "collision_camera_004",  # Below Drogyga
+            "collision_camera_007",  # Below Drogyga
             "collision_camera_028",  # Drogyga arena
         ],
         "s070_basesanc": [
@@ -102,7 +102,12 @@ PROBLEM_LAYERS = {
     },
     "Cooldown": {
         "s020_magma": [
-            "collision_camera_004",
+            "collision_camera_004", # Z-57 Access
+        ]
+    },
+    "PostEmmy": {
+        "s070_basesanc": [
+            "collision_camera_040", # Purple Emmi Introduction
         ]
     }
 }
@@ -162,6 +167,10 @@ def apply_drogyga_fixes(editor: PatcherEditor):
         "layer": "cutscenes",
         "actor": "cutsceneplayer_65"
     }, "CurrentScenario.OnHydrogigaDead_CUSTOM")
+
+    # remove the trigger that deletes drogyga until after beating drogyga
+    aqua = editor.get_scenario("s040_aqua")
+    aqua.remove_actor_from_group("eg_collision_camera_007_Default", "TG_WaterPoolAfterHydrogiga", "Boss")
 
 def activate_emmi_zones(editor: PatcherEditor):
     # Remove the cutscene that plays when you enter the emmi zone for the first time
@@ -335,21 +344,6 @@ def apply_experiment_fixes(editor: PatcherEditor):
     }, "mapDoors")
 
 
-def apply_quiet_robe_fixes(editor: PatcherEditor):
-    cutscene_actors = [
-        "cut_fillmap_40",
-        "cutsceneplayer_40",
-        "cutsceneplayer_40b_part1",
-        "cutsceneplayer_40b_part2",
-        "cutscenetrigger_40",
-    ]
-
-    # ensure quiet robe cutscene is accessible after defeating wave emmi
-    basesanc = editor.get_scenario("s070_basesanc")
-    for actor in cutscene_actors:
-        basesanc.add_actor_to_group('eg_collision_camera_040_PostEmmy', actor)
-
-
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
@@ -359,4 +353,3 @@ def apply_static_fixes(editor: PatcherEditor):
     patch_corpius_checkpoints(editor)
     apply_experiment_fixes(editor)
     apply_drogyga_fixes(editor)
-    apply_quiet_robe_fixes(editor)
