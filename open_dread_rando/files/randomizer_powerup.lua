@@ -169,6 +169,7 @@ function RandomizerPowerup.IncreaseAmmo(resource)
 end
 
 function RandomizerPowerup.CheckArtifacts(resource)
+    if resource == nil then return end
     if Init.iNumRequiredArtifacts == 0 then return end
     if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") > 0 then return end
     
