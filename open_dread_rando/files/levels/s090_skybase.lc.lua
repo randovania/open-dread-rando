@@ -251,9 +251,9 @@ function s090_skybase.OnUsableUse(actor)
 end
 
 function s090_skybase.OnEnter_AP_10()
-  s090_skybase.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
+  Scenario.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
 end
 
 function s090_skybase.OnExit_AP_10()
-  s090_skybase.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
+  Scenario.CheckArtifactsObtained("accesspoint_000", "DIAG_ADAM_SHIP_2")
 end
