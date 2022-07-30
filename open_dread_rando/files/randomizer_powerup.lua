@@ -184,7 +184,8 @@ function RandomizerPowerup.CheckArtifacts(resource)
 
     RandomizerPowerup.SetItemAmount("ITEM_METROIDNIZATION", 1)
 
-    Game.AddGUISF(0.1, "RandomizerPowerup.ShowArtifactMessage", "")
+    -- popup currently disabled since it causes a softlock
+    --Game.AddGUISF(0.1, "RandomizerPowerup.ShowArtifactMessage", "")
 end
 
 function RandomizerPowerup.ShowArtifactMessage()
