@@ -14,6 +14,8 @@ Scenario.tRandoHintPropIDs = {
     SHIP_1 = Blackboard.RegisterLUAProp("HINT_SHIP_1", "bool")
 }
 
+Scenario.RandoTrueXRelease = Blackboard.RegisterLUAProp("X_RELEASE_TRUE", "bool")
+
 function Scenario.CheckRandoHint(ap_id, hint_id)
     local access_point = Game.GetActor(ap_id)
     local seen = Scenario.ReadFromBlackboard(Scenario.tRandoHintPropIDs[hint_id], false)
