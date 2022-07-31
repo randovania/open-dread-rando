@@ -188,17 +188,22 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     "item_powerbombtank": "ItemPowerbombExpansion",
     "itemsphere": MapIcon(
         icon_id="ItemNothing",
-        coords=(4, 0),
+        coords=(14, 7),
         label="NOTHING",
         is_global=False,
         full_zoom_scale=False
     ),
     "unknown": MapIcon(
         icon_id="ItemUnknown",
-        coords=(4, 0),
+        coords=(15, 7),
         label="UNKNOWN ITEM"
-    )
+    ),
 }
+ALL_ICONS.update({f"DNA_{i+1}": MapIcon(
+    icon_id=f"ItemDNA{i+1}",
+    coords=(13, 7),
+    label=f"METROID DNA {i+1}"
+) for i in range(12)})
 
 class MapIconEditor:
     def __init__(self, editor: PatcherEditor) -> None:
@@ -229,7 +234,7 @@ class MapIconEditor:
         if "coords" in custom_icon:
             coords = (custom_icon["coords"]["col"], custom_icon["coords"]["row"])
         else:
-            coords = (4, 0)
+            coords = (15, 7)
         icon = MapIcon(
             icon_id=f"ItemCustom{self.custom_icons}",
             coords=coords,
