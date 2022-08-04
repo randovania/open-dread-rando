@@ -14,6 +14,8 @@ Scenario.tRandoHintPropIDs = {
     SHIP_1 = Blackboard.RegisterLUAProp("HINT_SHIP_1", "bool")
 }
 
+Scenario.RandoTrueXRelease = Blackboard.RegisterLUAProp("X_RELEASE_TRUE", "bool")
+
 function Scenario.CheckRandoHint(ap_id, hint_id)
     local access_point = Game.GetActor(ap_id)
     local seen = Scenario.ReadFromBlackboard(Scenario.tRandoHintPropIDs[hint_id], false)
@@ -160,6 +162,7 @@ function Scenario.DisableGlobalTeleport(actor)
 
     local teleportal_id = Scenario.GetTeleportalID(actor)
     if Blackboard.GetProp("GAME_PROGRESS", teleportal_id) then return end
+    if Blackboard.GetProp("GAME_PROGRESS", "RandoMapSeen" .. actor.USABLE.sScenarioName) then return end
     Blackboard.SetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked", "b", true)
     Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", false)
 end
@@ -222,6 +225,8 @@ function Scenario.OnLoadScenarioFinished()
     Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
 
     if Scenario.VisitAllTeleportScenarios() then return end
+
+    Blackboard.SetProp("GAME_PROGRESS", "RandoMapSeen" .. CurrentScenarioID, "b", true)
 
     local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
     if teleportal_id == nil then return end
