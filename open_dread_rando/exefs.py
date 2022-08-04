@@ -1,7 +1,9 @@
 import shutil
 from pathlib import Path
+from typing import NamedTuple, Tuple
 
 import ips
+import keystone
 
 VERSIONS = {
     "1.0.0": "49161D9CCBC15DF944D0B6278A3C446C006B0BE8",
@@ -26,6 +28,30 @@ class VersionedPatch(dict):
     def __missing__(self, key):
         return self[max(self.keys())]
     # use the highest version with a patch defined
+
+class AsmVersion(NamedTuple):
+    offset: int
+    replacements: dict[str, str]
+
+
+class AsmPatch:
+    assembler = keystone.Ks(keystone.KS_ARCH_ARM64, keystone.KS_MODE_LITTLE_ENDIAN)
+
+    def __init__(self, asm_template: str, versions: dict[str, AsmVersion]) -> None:
+        self.asm_template = asm_template
+        self.versions = versions
+    
+    def _asm(self, version: str) -> bytes:
+        return self.asm_template.format_map(self.versions[version].replacements).encode('ascii')
+
+    def _data(self, version: str) -> bytes:
+        encoding, count = self.assembler.asm(self._asm(version), self.versions[version].offset, True)
+        return encoding
+    
+    def patch(self, version: str) -> Tuple[int, bytes]:
+        if version not in self.versions:
+            return None, None
+        return self.versions[version].offset, self._data(version)
 
 
 def _patch_corpius(patch: ips.Patch, version: str, configuration: dict):
