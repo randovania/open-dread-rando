@@ -257,7 +257,7 @@ end
 
 function s040_aqua.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
   if old_subarea == "collision_camera_010" and new_subarea == "collision_camera_014" then
-    s040_aqua.LaunchCutscene_32()
+    --s040_aqua.LaunchCutscene_32()
   elseif old_subarea ~= "collision_camera_029" or new_subarea == "collision_camera_028" then     
       
   end

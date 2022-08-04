@@ -164,6 +164,8 @@ class ActorPickup(BasePickup):
             map_actor = self.pickup["pickup_actor"]
 
         map_def = editor.get_scenario_file(map_actor["scenario"], Bmmap)
+        if map_actor["actor"] in map_def.ability_labels:
+            map_def.ability_labels.pop(map_actor["actor"])
         if map_actor["actor"] in map_def.items:
             icon = map_def.items.pop(map_actor["actor"])
             icon.sIconId = self.map_icon_editor.get_data(self.pickup)
@@ -204,6 +206,9 @@ class ActorPickup(BasePickup):
 
         # Powerup is in plain sight (except for the part we're using the sphere model)
         actor.pComponents.pop("LIFE", None)
+
+        actor.bEnabled = True
+        actor.pComponents.MODELUPDATER.bWantsEnabled = True
 
         # Dependencies
         for level_pkg in pkgs_for_level:
