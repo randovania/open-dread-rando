@@ -148,12 +148,12 @@ class ActorPickup(BasePickup):
                 "empty_string": "",
                 "root": "Root",
                 "fields": {
-                    "vInitScale": list(selected_model_data.transform.scale)
+                    "vInitScale":          list(selected_model_data.transform.scale),
+                    "vInitPosWorldOffset": list(selected_model_data.transform.position),
+                    "vInitAngWorldOffset": list(selected_model_data.transform.angle),
                 }
             }
-            actor.vPos = [a + b for a, b in zip(actor.vPos, selected_model_data.transform.position)]
-            actor.vAng = [a + b for a, b in zip(actor.vAng, selected_model_data.transform.angle)]
-
+            
         # Animation/BMSAS
         new_template["property"]["binaries"][0] = selected_model_data.bmsas
 
