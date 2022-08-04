@@ -833,6 +833,8 @@ function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, ne
     Game.StopMusic(true)
     Game.PlayCurrentEnvironmentMusic()
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 function s020_magma.Kraid_InitCutscene()

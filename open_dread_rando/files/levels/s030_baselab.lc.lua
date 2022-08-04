@@ -693,6 +693,8 @@ function s030_baselab.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, 
   if wide_door_right ~= nil then
     wide_door_right.LIFE:SetInvulnerable(disable_wide)
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 

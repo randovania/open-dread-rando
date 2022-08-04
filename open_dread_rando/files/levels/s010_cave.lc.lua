@@ -1212,6 +1212,8 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
       cu_door.LIFE:LockDoor()
     end
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 

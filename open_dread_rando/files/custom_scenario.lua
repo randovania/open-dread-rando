@@ -220,6 +220,26 @@ function Scenario.VisitAllTeleportScenarios()
     return true
 end
 
+function Scenario._UpdateProgressiveItemModels()
+    for name, actordef in pairs(Game.GetEntities()) do
+        local progressive_models = RandomizerPowerup.tProgressiveModels[actordef]
+        if progressive_models ~= nil then
+            for _, model in ipairs(progressive_models) do
+                if RandomizerPowerup.HasItem(model.item) then
+                    local pickup = Game.GetActor(name)
+                    pickup.MODELUPDATER.sModelAlias = model.alias
+                    pickup.MODELUPDATER:ForceUpdate()
+                    break
+                end
+            end
+        end
+    end
+end
+
+function Scenario.UpdateProgressiveItemModels()
+    Game.AddSF(0.1, "Scenario._UpdateProgressiveItemModels", "")
+end
+
 local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
@@ -227,6 +247,8 @@ function Scenario.OnLoadScenarioFinished()
     Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
 
     if Scenario.VisitAllTeleportScenarios() then return end
+
+    Scenario.UpdateProgressiveItemModels()
 
     Blackboard.SetProp("GAME_PROGRESS", "RandoMapSeen" .. CurrentScenarioID, "b", true)
 

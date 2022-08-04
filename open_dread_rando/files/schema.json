@@ -69,7 +69,12 @@
                             "$ref": "#/$defs/actor_reference_with_layer"
                         },
                         "model": {
-                            "type": "string"
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "description": "A list of model identifiers used by this pickup. Non-progressive items will only have one model identifier."
                         },
                         "map_icon": {
                             "type": "object",
