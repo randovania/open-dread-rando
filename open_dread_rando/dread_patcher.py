@@ -111,6 +111,16 @@ def add_custom_files(editor: PatcherEditor):
             continue
         relative = child.relative_to(custom_romfs).as_posix()
         editor.add_new_asset(str(relative), child.read_bytes(), [])
+    
+    lua_libraries = Path(__file__).parent.joinpath("files", "lua_libraries")
+    for child in lua_libraries.rglob("*"):
+        if not child.is_file():
+            continue
+        relative = child.relative_to(lua_libraries)
+        full_path = Path("system/scripts").joinpath(relative)
+        if full_path.suffix == ".lua":
+            full_path = full_path.with_suffix(".lc")
+        editor.add_new_asset(full_path.as_posix(), child.read_bytes(), ["packs/system/system.pkg"])
 
 
 def patch_extracted(input_path: Path, output_path: Path, configuration: dict):

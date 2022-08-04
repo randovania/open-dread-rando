@@ -240,6 +240,7 @@ end
 
 function s040_aqua.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s040_aqua.OnUsableUse(actor)

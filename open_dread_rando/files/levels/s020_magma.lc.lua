@@ -761,6 +761,7 @@ end
 
 function s020_magma.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s020_magma.OnUsableUse(actor)

@@ -271,6 +271,7 @@ end
 
 function s050_forest.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s050_forest.OnUsableUse(actor)
