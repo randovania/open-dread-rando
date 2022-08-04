@@ -53,6 +53,10 @@ end
 
 function s060_quarantine.InitFromBlackboard()
   Game.ReinitPlayerFromBlackboard()
+  if not Scenario.ReadFromBlackboard(Scenario.RandoTrueXRelease, false) then
+    Game.SetXparasite(false)
+    Blackboard.SetProp("GAME_PROGRESS", "QUARENTINE_OPENED", "b", false)
+  end
   s060_quarantine.CheckGatesOpened()
 end
 
@@ -99,6 +103,7 @@ function s060_quarantine.OnEntityGenerated(_ARG_0_, _ARG_1_)
 end
 
 function s060_quarantine.OnEnter_XParasite_Activated(_ARG_0_, _ARG_1_)
+  Scenario.WriteToBlackboard(Scenario.RandoTrueXRelease, "b", true)
   Game.SetXparasite(true)
 end
 
@@ -365,5 +370,9 @@ function s060_quarantine.OnUsableCancelUse(actor)
 end
 
 function s060_quarantine.OnUsableUse(actor)
+  if actor.sName == "wagontrain_forest_000" and Init.bDefaultXRelease then
+    Game.SetXparasite(true)
+    Blackboard.SetProp("GAME_PROGRESS", "QUARENTINE_OPENED", "b", true)
+  end
   Scenario.SetTeleportalUsed(actor)
 end

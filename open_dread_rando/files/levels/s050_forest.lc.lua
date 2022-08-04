@@ -301,7 +301,7 @@ function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, n
     
 
   if old_subarea == "collision_camera_039" and new_subarea == "collision_camera_032" then
-    s050_forest.LaunchCutscene_33()
+    --s050_forest.LaunchCutscene_33()
   end
   
   if old_subarea == "collision_camera_002" and old_actorgroup == "Default" then

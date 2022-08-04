@@ -148,12 +148,12 @@ class ActorPickup(BasePickup):
                 "empty_string": "",
                 "root": "Root",
                 "fields": {
-                    "vInitScale": list(selected_model_data.transform.scale)
+                    "vInitScale":          list(selected_model_data.transform.scale),
+                    "vInitPosWorldOffset": list(selected_model_data.transform.position),
+                    "vInitAngWorldOffset": list(selected_model_data.transform.angle),
                 }
             }
-            actor.vPos = [a + b for a, b in zip(actor.vPos, selected_model_data.transform.position)]
-            actor.vAng = [a + b for a, b in zip(actor.vAng, selected_model_data.transform.angle)]
-
+            
         # Animation/BMSAS
         new_template["property"]["binaries"][0] = selected_model_data.bmsas
 
@@ -164,6 +164,8 @@ class ActorPickup(BasePickup):
             map_actor = self.pickup["pickup_actor"]
 
         map_def = editor.get_scenario_file(map_actor["scenario"], Bmmap)
+        if map_actor["actor"] in map_def.ability_labels:
+            map_def.ability_labels.pop(map_actor["actor"])
         if map_actor["actor"] in map_def.items:
             icon = map_def.items.pop(map_actor["actor"])
             icon.sIconId = self.map_icon_editor.get_data(self.pickup)
@@ -204,6 +206,9 @@ class ActorPickup(BasePickup):
 
         # Powerup is in plain sight (except for the part we're using the sphere model)
         actor.pComponents.pop("LIFE", None)
+
+        actor.bEnabled = True
+        actor.pComponents.MODELUPDATER.bWantsEnabled = True
 
         # Dependencies
         for level_pkg in pkgs_for_level:
