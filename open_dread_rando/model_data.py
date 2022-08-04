@@ -345,8 +345,8 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mp_fxhologram_01.bsmat",
         ),
         transform=Transform(
-            scale = (-1.25, 1.25, 1.25),
-            position=(0.0, -30.0, 0.0),
+            scale = (-1.2, 1.2, 1.2),
+            position=(0.0, -0.0, 0.0),
         ),
     ),
 }
