@@ -54,7 +54,7 @@ function RandomizerPowerup.DisableInput()
     if oPlayer ~= nil then
         oPlayer.INPUT:IgnoreInput(true, false, "PickupObtained")
     end
-    Game.AddSF(0.1, RandomizerPowerup.RecoverInput, "")
+    Game.AddSF(0.1, "RandomizerPowerup.RecoverInput", "")
 end
 function RandomizerPowerup.RecoverInput()
     local oPlayer = Game.GetPlayer()
@@ -231,7 +231,7 @@ setmetatable(RandomizerPhantomCloak, {__index = RandomizerPowerup})
 function RandomizerPhantomCloak.OnPickedUp(actor, progression)
     RandomizerPowerup.ToggleInputsOnPickedUp(
         actor, progression, "ITEM_OPTIC_CAMOUFLAGE", {
-            {0.101, RandomizerPhantomCloak.Deactivate, ""}
+            {0.101, "RandomizerPhantomCloak.Deactivate", ""}
         }
     )
 end

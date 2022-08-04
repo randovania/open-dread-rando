@@ -368,6 +368,7 @@ end
 
 function s060_quarantine.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s060_quarantine.OnUsableUse(actor)

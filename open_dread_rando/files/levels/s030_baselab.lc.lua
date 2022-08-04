@@ -667,6 +667,7 @@ end
 
 function s030_baselab.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s030_baselab.OnUsableUse(actor)
