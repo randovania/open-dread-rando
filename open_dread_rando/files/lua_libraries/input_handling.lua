@@ -40,7 +40,6 @@ Input.buttons = {
 function Input.CheckInputs(...)
     local held = true
     local inputs = Game.IsDebugPadButtonPressed()
-    Input.LogInputs(inputs)
 
     for _, button in ipairs(arg) do
         held = held and Bit.btest(inputs, Input.buttons[button])

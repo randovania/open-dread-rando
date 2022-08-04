@@ -225,6 +225,8 @@ function Scenario.OnLoadScenarioFinished()
 
     if Scenario.VisitAllTeleportScenarios() then return end
 
+    Game.AddSF(0, "Scenario.CheckDebugInputs", "")
+
     local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
     if teleportal_id == nil then return end
     local platform = Game.GetActor(teleportal_id)
@@ -274,6 +276,7 @@ function Scenario.CheckWarpToStart(actor)
     if not Scenario.IsSaveStation(actor) then return end
     if not Init.bWarpToStart then return end
     
+    Input.LogInputs()
     if Input.CheckInputs("ZL", "ZR") then
         Scenario.WarpToStart()
     end
@@ -283,3 +286,13 @@ function Scenario.WarpToStart()
     Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
 end
 
+function Scenario.CheckDebugInputs()
+    local delay = 0
+
+    if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
+        delay = 0.5
+        RandomizerPowerup.DisableInput()
+        RandomizerPowerup.ChangeSuit()
+    end
+    Game.AddSF(delay, "Scenario.CheckDebugInputs", "")
+end
