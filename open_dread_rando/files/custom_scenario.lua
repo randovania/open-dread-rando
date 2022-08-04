@@ -229,6 +229,7 @@ function Scenario._UpdateProgressiveItemModels()
                     local pickup = Game.GetActor(name)
                     pickup.MODELUPDATER.sModelAlias = model.alias
                     pickup.MODELUPDATER:ForceUpdate()
+                    break
                 end
             end
         end

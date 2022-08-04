@@ -1,3 +1,4 @@
+import itertools
 from pathlib import Path
 
 from open_dread_rando import lua_util
@@ -51,25 +52,7 @@ class LuaEditor:
             return parent
         
         if actordef_name and len(pickup["model"]) > 1:
-            progressive_models = []
-            for i, model_name in enumerate(pickup["model"]):
-                if i == 0:
-                    continue
-                progressive_models.append({
-                    "item": lua_util.wrap_string(pickup_resources[i-1]["item_id"]),
-                    "alias": lua_util.wrap_string(model_name),
-                })
-            progressive_models.append({
-                "item": lua_util.wrap_string(pickup_resources[-1]["item_id"]),
-                "alias": lua_util.wrap_string(pickup["model"][-1])
-            })
-            progressive_models.reverse()
-
-            replacement = {
-                "actordef_name": actordef_name,
-                "progressive_models": progressive_models,
-            }
-            self.add_progressive_models(replacement)
+            self.add_progressive_models(pickup, actordef_name)
 
         hashable_progression = "_".join([f'{res["item_id"]}_{res["quantity"]}' for res in pickup_resources])
 
@@ -99,7 +82,24 @@ class LuaEditor:
         new_class = lua_util.replace_lua_template("randomizer_progressive_template.lua", replacement)
         self._powerup_script += new_class.encode("utf-8")
     
-    def add_progressive_models(self, replacement):
+    def add_progressive_models(self, pickup: dict, actordef_name: str):
+        progressive_models = [
+            {
+                "item": lua_util.wrap_string(resource["item_id"]),
+                "alias": lua_util.wrap_string(model_name),
+            }
+            for resource, model_name in itertools.chain(
+                zip(pickup["resources"], pickup["model"][1:]),
+                [(pickup["resources"][-1], pickup["model"][-1])],
+            )
+        ]
+        progressive_models.reverse()
+
+        replacement = {
+            "actordef_name": actordef_name,
+            "progressive_models": progressive_models,
+        }
+
         models = lua_util.replace_lua_template("progressive_model_template.lua", replacement)
         self._powerup_script += models.encode("utf-8")
 
