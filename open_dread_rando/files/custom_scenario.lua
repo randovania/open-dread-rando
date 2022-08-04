@@ -291,8 +291,9 @@ function Scenario.CheckDebugInputs()
 
     if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
         delay = 0.5
-        RandomizerPowerup.DisableInput()
-        RandomizerPowerup.ChangeSuit()
+        Game.ReinitPlayerFromBlackboard()
+        -- RandomizerPowerup.DisableInput()
+        -- RandomizerPowerup.ChangeSuit()
     end
     Game.AddSF(delay, "Scenario.CheckDebugInputs", "")
 end
