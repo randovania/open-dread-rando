@@ -261,6 +261,8 @@ function s040_aqua.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
   elseif old_subarea ~= "collision_camera_029" or new_subarea == "collision_camera_028" then     
       
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 function s040_aqua.LaunchCutscene_32()

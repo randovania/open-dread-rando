@@ -4,6 +4,8 @@ RandomizerPowerup = {}
 function RandomizerPowerup.main()
 end
 
+RandomizerPowerup.tProgressiveModels = {}
+
 RandomizerPowerup.Self = nil
 
 function RandomizerPowerup.SetItemAmount(item_id, quantity)
@@ -14,6 +16,9 @@ function RandomizerPowerup.SetItemAmount(item_id, quantity)
 end
 function RandomizerPowerup.GetItemAmount(item_id)
     return Game.GetItemAmount(Game.GetPlayerName(), item_id)
+end
+function RandomizerPowerup.HasItem(item_id)
+    return RandomizerPowerup.GetItemAmount(item_id) > 0
 end
 function RandomizerPowerup.IncreaseItemAmount(item_id, quantity, capacity)
     local target = RandomizerPowerup.GetItemAmount(item_id) + quantity
@@ -38,6 +43,8 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
 
     RandomizerPowerup.CheckArtifacts(granted)
 
+    Scenario.UpdateProgressiveItemModels()
+    
     return granted
 end
 
@@ -92,7 +99,7 @@ function RandomizerPowerup.ChangeSuit()
     local model_updater = Game.GetPlayer().MODELUPDATER
     for _, suit in ipairs(suits) do
         if suit.model == model_updater.sModelAlias then break end
-        if RandomizerPowerup.GetItemAmount(suit.item) > 0 then
+        if RandomizerPowerup.HasItem(suit.item) then
             Game.AddPSF(0.1, RandomizerPowerup.Delayed_ChangeSuit, "s", suit.model)
             break
         end
@@ -171,7 +178,7 @@ end
 function RandomizerPowerup.CheckArtifacts(resource)
     if resource == nil then return end
     if Init.iNumRequiredArtifacts == 0 then return end
-    if RandomizerPowerup.GetItemAmount("ITEM_METROIDNIZATION") > 0 then return end
+    if RandomizerPowerup.HasItem("ITEM_METROIDNIZATION") then return end
     
     if resource.item_id:find("ITEM_RANDO_ARTIFACT", 1, true) then
         GUI.AddEmmyMissionLogEntry("#MLOG_"..resource.item_id)
@@ -209,7 +216,7 @@ end
 
 function RandomizerPowerup.ToggleInputsOnPickedUp(actor, progression, item, SFs)
     SFs = SFs or {}
-    local has_item_already = RandomizerPowerup.GetItemAmount(item) > 0
+    local has_item_already = RandomizerPowerup.HasItem(item)
     RandomizerPowerup.OnPickedUp(actor, progression)
     if not has_item_already then
         RandomizerPowerup.DisableInput()

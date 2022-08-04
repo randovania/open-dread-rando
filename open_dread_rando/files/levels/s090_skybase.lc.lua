@@ -153,7 +153,7 @@ end
 
 
 function s090_skybase.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-
+  Scenario.UpdateProgressiveItemModels()
 end
 
 

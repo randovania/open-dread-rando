@@ -470,6 +470,8 @@ function s080_shipyard.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea,
   elseif old_subarea == "collision_camera_000" and new_subarea == "collision_camera_016" then
     Game.StopMusic(true)
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 function s080_shipyard.ClosePowerBombDoor()

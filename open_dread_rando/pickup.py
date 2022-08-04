@@ -103,7 +103,7 @@ class ActorPickup(BasePickup):
                 "value": quantity,
             }
 
-        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup["resources"])
+        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup)
 
         if item_id == "ITEM_WEAPON_POWER_BOMB":
             item_id = "ITEM_WEAPON_POWER_BOMB_MAX"
@@ -124,38 +124,64 @@ class ActorPickup(BasePickup):
         set_custom_params: dict = pickable["functions"][0]["params"]
         set_custom_params["Param1"]["value"] = "ITEM_NONE"
 
-        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup["resources"])
+        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup, actordef_name=bmsad["name"])
 
         return bmsad
 
-    def patch_model(self, editor: PatcherEditor, selected_model_data: model_data.ModelData, actor: Container,
+    def patch_model(self, editor: PatcherEditor, model_names: list[str], actor: Container,
                     new_template: dict):
-        # Update used model
-        new_template["property"]["model_name"] = selected_model_data.bcmdl_path
-        model_updater = new_template["property"]["components"]["MODELUPDATER"]
-        model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
+        if len(model_names) == 1:
+            selected_model_data = model_data.get_data(model_names[0])
 
-        # Apply grapple particles
-        if selected_model_data.grapple_fx:
-            grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad", Bmsad)
-            grapple_components = grapple.raw["property"]["components"]
-            components = new_template["property"]["components"]
-            components["MATERIALFX"] = grapple_components["MATERIALFX"]
-            components["FX"] = grapple_components["FX"]
+            # Update used model
+            new_template["property"]["model_name"] = selected_model_data.bcmdl_path
+            model_updater = new_template["property"]["components"]["MODELUPDATER"]
+            model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
 
-        if selected_model_data.transform is not None:
+            # Apply grapple particles
+            if selected_model_data.grapple_fx:
+                grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad", Bmsad)
+                grapple_components = grapple.raw["property"]["components"]
+                components = new_template["property"]["components"]
+                components["MATERIALFX"] = grapple_components["MATERIALFX"]
+                components["FX"] = grapple_components["FX"]
+
+            if selected_model_data.transform is not None:
+                model_updater["fields"] = {
+                    "empty_string": "",
+                    "root": "Root",
+                    "fields": {
+                        "vInitScale":          list(selected_model_data.transform.scale),
+                        "vInitPosWorldOffset": list(selected_model_data.transform.position),
+                        "vInitAngWorldOffset": list(selected_model_data.transform.angle),
+                    }
+                }
+                
+            # Animation/BMSAS
+            new_template["property"]["binaries"][0] = selected_model_data.bmsas
+        else:
+            default_model_data = model_data.get_data(model_names[0])
+            model_updater = new_template["property"]["components"]["MODELUPDATER"]
+            
+            new_template["property"]["model_name"] = default_model_data.bcmdl_path
+            model_updater["type"] = "CMultiModelUpdaterComponent"
             model_updater["fields"] = {
                 "empty_string": "",
                 "root": "Root",
                 "fields": {
-                    "vInitScale":          list(selected_model_data.transform.scale),
-                    "vInitPosWorldOffset": list(selected_model_data.transform.position),
-                    "vInitAngWorldOffset": list(selected_model_data.transform.angle),
+                    "dctModels": {
+                        name: model_data.get_data(name).bcmdl_path
+                        for name in model_names
+                    }
                 }
             }
-            
-        # Animation/BMSAS
-        new_template["property"]["binaries"][0] = selected_model_data.bmsas
+            model_updater["functions"] = []
+
+            new_template["property"]["binaries"][:0] = [model_data.get_data(name).bmsas for name in model_names]
+
+            actor.pComponents.MODELUPDATER["@type"] = "CMultiModelUpdaterComponent"
+            actor.pComponents.MODELUPDATER.sModelAlias = model_names[0]
+
 
     def patch_minimap_icon(self, editor: PatcherEditor, actor: Container):
         if "map_icon" in self.pickup and "original_actor" in self.pickup["map_icon"]:
@@ -182,9 +208,8 @@ class ActorPickup(BasePickup):
         new_template["name"] = f"randomizer_powerup_{self.pickup_id}"
 
         # Update model
-        model_name: str = self.pickup["model"]
-        selected_model_data = model_data.get_data(model_name)
-        self.patch_model(editor, selected_model_data, actor, new_template)
+        model_names: list[str] = self.pickup["model"]
+        self.patch_model(editor, model_names, actor, new_template)
 
         # Update minimap
         self.patch_minimap_icon(editor, actor)
@@ -213,9 +238,12 @@ class ActorPickup(BasePickup):
         # Dependencies
         for level_pkg in pkgs_for_level:
             editor.ensure_present(level_pkg, "system/animtrees/base.bmsat")
-            editor.ensure_present(level_pkg, selected_model_data.bmsas)
-            for dep in selected_model_data.dependencies:
-                editor.ensure_present(level_pkg, dep)
+
+            for name in model_names:
+                selected_model_data = model_data.get_data(name)
+                editor.ensure_present(level_pkg, selected_model_data.bmsas)
+                for dep in selected_model_data.dependencies:
+                    editor.ensure_present(level_pkg, dep)
 
         for pkg in pkgs_for_level:
             editor.ensure_present(pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
@@ -225,7 +253,7 @@ class ActorDefPickup(BasePickup):
     def _patch_actordef_pickup_script_help(self, editor: PatcherEditor):
         return self.lua_editor.patch_actordef_pickup_script(
             editor,
-            self.pickup["resources"],
+            self.pickup,
             self.pickup["pickup_lua_callback"],
         )
 
@@ -265,7 +293,7 @@ class CoreXPickup(ActorDefPickup):
     def _patch_actordef_pickup_script_help(self, editor: PatcherEditor):
         return self.lua_editor.patch_corex_pickup_script(
             editor,
-            self.pickup["resources"],
+            self.pickup,
             self.pickup["pickup_lua_callback"],
         )
 
@@ -283,7 +311,7 @@ class CutscenePickup(BasePickup):
     def patch(self, editor: PatcherEditor):
         self.lua_editor.patch_actordef_pickup_script(
             editor,
-            self.pickup["resources"],
+            self.pickup,
             self.pickup["pickup_lua_callback"],
             'GUI.ShowMessage({}, true, "")'.format(repr(self.pickup["caption"]))
         )

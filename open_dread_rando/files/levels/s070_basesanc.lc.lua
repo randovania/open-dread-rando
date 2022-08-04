@@ -979,6 +979,8 @@ function s070_basesanc.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea,
       Game.PushSetup("Post2ChozoRobots", false, true)
     end
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 

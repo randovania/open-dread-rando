@@ -180,6 +180,8 @@ function s060_quarantine.OnSubAreaChange(old_subarea, old_actorgroup, new_subare
       end
     end
   end
+
+  Scenario.UpdateProgressiveItemModels()
 end
 
 

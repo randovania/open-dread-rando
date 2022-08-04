@@ -69,7 +69,10 @@
                             "$ref": "#/$defs/actor_reference_with_layer"
                         },
                         "model": {
-                            "type": "string"
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         },
                         "map_icon": {
                             "type": "object",
