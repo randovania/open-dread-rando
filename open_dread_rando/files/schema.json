@@ -325,6 +325,11 @@
                     "type": "boolean",
                     "description": "Enable the Experiment Z-57 boss fight when entering its arena through the Morph Ball Launcher after releasing the X.",
                     "default": true
+                },
+                "warp_to_start": {
+                    "type": "boolean",
+                    "description": "Enable warping to the starting location from Save Stations.",
+                    "default": true
                 }
             },
             "additionalProperties": false

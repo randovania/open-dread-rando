@@ -2110,6 +2110,7 @@ function s010_cave.OnUsableCancelUse(_ARG_0_)
   end
 
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s010_cave.OnUsablePrepareUse(_ARG_0_)

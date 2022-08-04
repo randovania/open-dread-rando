@@ -244,6 +244,7 @@ end
 
 function s090_skybase.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s090_skybase.OnUsableUse(actor)

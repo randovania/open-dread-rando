@@ -441,6 +441,7 @@ end
 
 function s080_shipyard.OnUsableCancelUse(actor)
   Scenario.ResetGlobalTeleport(actor)
+  Scenario.CheckWarpToStart(actor)
 end
 
 function s080_shipyard.OnUsableUse(actor)

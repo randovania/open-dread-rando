@@ -1,5 +1,7 @@
 Game.ImportLibrary("system/scripts/scenario_original.lua")
 
+Game.DoFile("system/scripts/input_handling.lua")
+
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
     CAVE_2 = Blackboard.RegisterLUAProp("HINT_CAVE_2", "bool"),
@@ -239,3 +241,45 @@ function Scenario.CheckArtifactsObtained(actor, diag)
         end
     end
 end
+
+local save_names = {
+    'PRP_CV_AccessPoint001',
+    'PRP_CV_AccessPoint002',
+    'PRP_CV_MapStation001',
+    'PRP_CV_SaveStation001',
+    'PRP_CV_SaveStation002',
+    'PRP_CV_SaveStation003',
+    'PRP_CV_SaveStation004',
+    'accesspoint',
+    'accesspoint_000',
+    'accesspoint_001',
+    'maproom',
+    'maproom_000',
+    'savestation',
+    'savestation_000',
+    'savestation_001',
+    'savestation_002',
+}
+
+function Scenario.IsSaveStation(actor)
+    for _, name in ipairs(save_names) do
+        if actor.sName == name then
+            return true
+        end
+    end
+    return false
+end
+
+function Scenario.CheckWarpToStart(actor)
+    if not Scenario.IsSaveStation(actor) then return end
+    if not Init.bWarpToStart then return end
+    
+    if Input.CheckInputs("ZL", "ZR") then
+        Scenario.WarpToStart()
+    end
+end
+
+function Scenario.WarpToStart()
+    Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
+end
+
