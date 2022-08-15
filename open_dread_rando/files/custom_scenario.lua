@@ -320,9 +320,9 @@ function Scenario.CheckDebugInputs()
     if Scenario.IsUserInteractionEnabled(true) then
         if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
             delay = 0.5
-        Game.ReinitPlayerFromBlackboard()
-        -- RandomizerPowerup.DisableInput()
-        -- RandomizerPowerup.ChangeSuit()
+            -- Game.ReinitPlayerFromBlackboard()
+            RandomizerPowerup.DisableInput()
+            RandomizerPowerup.ChangeSuit()
         end
     end
 
