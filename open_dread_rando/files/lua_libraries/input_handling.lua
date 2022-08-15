@@ -41,9 +41,11 @@ function Input.CheckInputs(...)
     local held = true
     local inputs = Game.IsDebugPadButtonPressed()
 
+    push_debug_print_override()
     for _, button in ipairs(arg) do
         held = held and Bit.btest(inputs, Input.buttons[button])
     end
+    pop_debug_print_override()
 
     return held
 end
@@ -51,12 +53,14 @@ end
 function Input.LogInputs(inputs)
     inputs = inputs or Game.IsDebugPadButtonPressed()
 
+    push_debug_print_override()
     local state = "Inputs held: "
     for name, bit in pairs(Input.buttons) do
         if Bit.btest(inputs, bit) then
             state = state .. name .. ", "
         end
     end
+    pop_debug_print_override()
 
     Game.LogWarn(0, state)
 end

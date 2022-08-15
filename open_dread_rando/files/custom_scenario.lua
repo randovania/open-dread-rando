@@ -314,13 +314,18 @@ function Scenario.WarpToStart()
 end
 
 function Scenario.CheckDebugInputs()
+    push_debug_print_override()
     local delay = 0
 
-    if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
-        delay = 0.5
+    if Scenario.IsUserInteractionEnabled(true) then
+        if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
+            delay = 0.5
         Game.ReinitPlayerFromBlackboard()
         -- RandomizerPowerup.DisableInput()
         -- RandomizerPowerup.ChangeSuit()
+        end
     end
+
     Game.AddSF(delay, "Scenario.CheckDebugInputs", "")
+    pop_debug_print_override()
 end

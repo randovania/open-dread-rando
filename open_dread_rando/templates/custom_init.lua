@@ -61,6 +61,10 @@ function Init.CreateNewGameData(difficulty)
 end
 
 Game.SetForceSkipCutscenes(true)
+
+push_debug_print_override = push_debug_print_override or function() end
+pop_debug_print_override = pop_debug_print_override or function() end
+
 Game.LogWarn(0, "Finished modded system/init.lc")
 
 end)
