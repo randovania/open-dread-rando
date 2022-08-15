@@ -136,26 +136,8 @@ function Scenario.ShowText()
     end
 end
 
-
-local teleportal_names = {
-    "teleport_baselab_000",
-    "LE_Teleport_FromMagma",
-    "teleporter_magma_000",
-    "LE_Teleport_Secret",
-    "teleporter_forest_000",
-    "teleporter_cave_000",
-    "LE_Teleport_FromCave",
-    "teleport_baselab_000",
-    "teleport_cave_000",
-    "teleport_magma_000",
-    "teleporter_000",
-    "teleporter_aqua_000"
-}
 function Scenario.IsTeleportal(actor)
-    for _, name in ipairs(teleportal_names) do
-        if actor.sName == name then return true end
-    end
-    return false
+    return Scenario.GetCharclass(actor) == "teleporter"
 end
 
 function Scenario.DisableGlobalTeleport(actor)
@@ -271,32 +253,28 @@ function Scenario.CheckArtifactsObtained(actor, diag)
     end
 end
 
-local save_names = {
-    'PRP_CV_AccessPoint001',
-    'PRP_CV_AccessPoint002',
-    'PRP_CV_MapStation001',
-    'PRP_CV_SaveStation001',
-    'PRP_CV_SaveStation002',
-    'PRP_CV_SaveStation003',
-    'PRP_CV_SaveStation004',
-    'accesspoint',
-    'accesspoint_000',
-    'accesspoint_001',
-    'maproom',
-    'maproom_000',
-    'savestation',
-    'savestation_000',
-    'savestation_001',
-    'savestation_002',
+local save_charclasses = {
+    savestation=true,
+    accesspoint=true,
+    maproom=true,
 }
 
-function Scenario.IsSaveStation(actor)
-    for _, name in ipairs(save_names) do
-        if actor.sName == name then
-            return true
-        end
+function Scenario.GetCharclass(actor)
+    if type(actor) == "userdata" and actor.sName ~= nil then
+        actor = actor.sName
+    elseif type(actor) ~= "string" then
+        Game.LogWarn(0, "Invalid argument for GetCharclass, " .. actor .. " is neither an actor nor a string")
+        return nil
     end
-    return false
+
+    local charclass = Game.GetEntities()[actor]
+    Game.LogWarn(0, charclass)
+    return charclass
+end
+
+function Scenario.IsSaveStation(actor)
+    local charclass = Scenario.GetCharclass(actor)
+    return save_charclasses[charclass] ~= nil
 end
 
 function Scenario.CheckWarpToStart(actor)
