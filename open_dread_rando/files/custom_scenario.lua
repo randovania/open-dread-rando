@@ -136,26 +136,8 @@ function Scenario.ShowText()
     end
 end
 
-
-local teleportal_names = {
-    "teleport_baselab_000",
-    "LE_Teleport_FromMagma",
-    "teleporter_magma_000",
-    "LE_Teleport_Secret",
-    "teleporter_forest_000",
-    "teleporter_cave_000",
-    "LE_Teleport_FromCave",
-    "teleport_baselab_000",
-    "teleport_cave_000",
-    "teleport_magma_000",
-    "teleporter_000",
-    "teleporter_aqua_000"
-}
 function Scenario.IsTeleportal(actor)
-    for _, name in ipairs(teleportal_names) do
-        if actor.sName == name then return true end
-    end
-    return false
+    return Scenario.GetCharclass(actor) == "teleporter"
 end
 
 function Scenario.DisableGlobalTeleport(actor)
@@ -271,32 +253,28 @@ function Scenario.CheckArtifactsObtained(actor, diag)
     end
 end
 
-local save_names = {
-    'PRP_CV_AccessPoint001',
-    'PRP_CV_AccessPoint002',
-    'PRP_CV_MapStation001',
-    'PRP_CV_SaveStation001',
-    'PRP_CV_SaveStation002',
-    'PRP_CV_SaveStation003',
-    'PRP_CV_SaveStation004',
-    'accesspoint',
-    'accesspoint_000',
-    'accesspoint_001',
-    'maproom',
-    'maproom_000',
-    'savestation',
-    'savestation_000',
-    'savestation_001',
-    'savestation_002',
+local save_charclasses = {
+    savestation=true,
+    accesspoint=true,
+    maproom=true,
 }
 
-function Scenario.IsSaveStation(actor)
-    for _, name in ipairs(save_names) do
-        if actor.sName == name then
-            return true
-        end
+function Scenario.GetCharclass(actor)
+    if type(actor) == "userdata" and actor.sName ~= nil then
+        actor = actor.sName
+    elseif type(actor) ~= "string" then
+        Game.LogWarn(0, "Invalid argument for GetCharclass, " .. actor .. " is neither an actor nor a string")
+        return nil
     end
-    return false
+
+    local charclass = Game.GetEntities()[actor]
+    Game.LogWarn(0, charclass)
+    return charclass
+end
+
+function Scenario.IsSaveStation(actor)
+    local charclass = Scenario.GetCharclass(actor)
+    return save_charclasses[charclass] ~= nil
 end
 
 function Scenario.CheckWarpToStart(actor)
@@ -305,22 +283,63 @@ function Scenario.CheckWarpToStart(actor)
     
     Input.LogInputs()
     if Input.CheckInputs("ZL", "ZR") then
-        Scenario.WarpToStart()
+        Scenario.TeleportToStartPoint(Init.sStartingScenario, Init.sStartingActor)
     end
-end
-
-function Scenario.WarpToStart()
-    Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
 end
 
 function Scenario.CheckDebugInputs()
+    push_debug_print_override()
     local delay = 0
 
-    if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
-        delay = 0.5
-        Game.ReinitPlayerFromBlackboard()
-        -- RandomizerPowerup.DisableInput()
-        -- RandomizerPowerup.ChangeSuit()
+    if Scenario.IsUserInteractionEnabled(true) then
+        if Input.CheckInputs("ZL", "ZR", "DPAD_UP") then
+            delay = 0.5
+            -- Game.ReinitPlayerFromBlackboard()
+            RandomizerPowerup.DisableInput()
+            RandomizerPowerup.ChangeSuit()
+        end
     end
+
     Game.AddSF(delay, "Scenario.CheckDebugInputs", "")
+    pop_debug_print_override()
+end
+
+fTeleportStartDelay = 0.2
+fTeleportFadeOutTime = 0.5
+fTeleportBlackScreenTime = 0.5
+fTeleportFadeInTime = 0.5
+
+function Scenario.TeleportToStartPoint(scenario, startpoint)
+    if Scenario.CurrentScenarioID ~= scenario then
+        Game.LoadScenario("c10_samus", scenario, startpoint, "", 1)
+    else
+        Scenario.TeleportToLocalStartPoint(startpoint)
+    end
+end
+
+function Scenario.TeleportToLocalStartPoint(startpoint)
+    Scenario.DisableInput()
+    if startpoint == nil then
+        startpoint = Blackboard.GetProp(Game.GetPlayerBlackboardSectionName(), "StartPoint")
+    end
+    Game.AddSF(fTeleportStartDelay, "Scenario.OnTeleportFadeOut", "s", startpoint)
+end
+  
+  
+function Scenario.OnTeleportFadeOut(startpoint)
+    Game.FadeOut(fTeleportFadeOutTime)
+    Game.AddSF(fTeleportFadeOutTime + fTeleportBlackScreenTime, "Scenario.OnStartPointTeleport", "s", startpoint)
+end
+  
+  
+function Scenario.OnStartPointTeleport(startpoint)
+    Game.TeleportEntityToStartPoint(Game.GetPlayerName(), startpoint, fTeleportFadeInTime, true)
+    Game.FadeIn(0.1, fTeleportFadeInTime)
+    Game.AddSF(0, "Scenario.OnTeleportFinished", "")
+end
+  
+  
+function Scenario.OnTeleportFinished()
+    Scenario.EnableInput()
+    Game.ReinitPlayerFromBlackboard()
 end

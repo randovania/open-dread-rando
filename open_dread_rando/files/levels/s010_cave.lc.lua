@@ -2096,18 +2096,18 @@ end
 
 
 
-function s010_cave.OnUsableFinishInteract(_ARG_0_)
-  if _ARG_0_.sName == "PRP_CV_AccessPoint001" or _ARG_0_.sName == "PRP_CV_AccessPoint002" then
+function s010_cave.OnUsableFinishInteract(actor)
+  if actor.sName == "PRP_CV_AccessPoint001" or actor.sName == "PRP_CV_AccessPoint002" then
     Scenario.SetRandoHintSeen()
-  elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
+  elseif actor.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(true)
   end
 end
 
-function s010_cave.OnUsableCancelUse(_ARG_0_)
-  if _ARG_0_.sName == "PRP_CV_AccessPoint001" then
+function s010_cave.OnUsableCancelUse(actor)
+  if actor.sName == "PRP_CV_AccessPoint001" then
     s010_cave.OnTutoMapOptionsBegins(true)
-  elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
+  elseif actor.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(true)
   end
 
@@ -2115,22 +2115,22 @@ function s010_cave.OnUsableCancelUse(_ARG_0_)
   Scenario.CheckWarpToStart(actor)
 end
 
-function s010_cave.OnUsablePrepareUse(_ARG_0_)
-  if _ARG_0_.sName == "PRP_CV_AccessPoint001" then
+function s010_cave.OnUsablePrepareUse(actor)
+  if actor.sName == "PRP_CV_AccessPoint001" then
     s010_cave.OnTutoMapOptionsBegins(false)
-  elseif _ARG_0_.sName == "PRP_CV_MapStation001" then
+  elseif actor.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(false)
   end
 
-  Scenario.DisableGlobalTeleport(_ARG_0_)
+  Scenario.DisableGlobalTeleport(actor)
 end
 
-function s010_cave.OnUsableUse(_ARG_0_)
-  if _ARG_0_.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
+function s010_cave.OnUsableUse(actor)
+  if actor.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, "b", true)
   end
 
-  Scenario.SetTeleportalUsed(_ARG_0_)
+  Scenario.SetTeleportalUsed(actor)
 end
 
 

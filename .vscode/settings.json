@@ -1,6 +1,7 @@
 {
     "Lua.diagnostics.disable": [
-        "undefined-global"
+        "undefined-global",
+        "lowercase-global"
     ],
     "Lua.runtime.builtin": {
         "debug": "disable"
