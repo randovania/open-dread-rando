@@ -2,6 +2,7 @@ import copy
 
 import construct
 from mercury_engine_data_structures.formats.dread_types import CActor, CTriggerComponent_EEvent
+from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando import door_patcher
 from open_dread_rando.logger import LOG
@@ -344,6 +345,12 @@ def apply_experiment_fixes(editor: PatcherEditor):
     }, "mapDoors")
 
 
+def apply_main_menu_fixes(editor: PatcherEditor):
+    extras = editor.get_file("gui/scripts/extrasmenucomposition.bmscp", Bmscp)
+    listcomp = extras.get_child("Content.ListComposition").lstChildren
+    listcomp.pop(2) # remove the credits button from the extras menu
+
+
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
@@ -353,3 +360,4 @@ def apply_static_fixes(editor: PatcherEditor):
     patch_corpius_checkpoints(editor)
     apply_experiment_fixes(editor)
     apply_drogyga_fixes(editor)
+    apply_main_menu_fixes(editor)
