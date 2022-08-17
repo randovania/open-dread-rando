@@ -163,7 +163,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     # Text patches
     if "text_patches" in configuration:
         apply_text_patches(editor, configuration["text_patches"])
-    patch_credits(editor)
+    patch_credits(editor, configuration["spoiler_log"])
 
     # Objective
     apply_objective_patches(editor, configuration)
