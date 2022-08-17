@@ -392,6 +392,14 @@
                 "additionalProperties": false
             },
             "default": []
+        },
+        "spoiler_log": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "description": "A dict mapping item names to a string describing their location.",
+            "default": {}
         }
     },
     "required": [

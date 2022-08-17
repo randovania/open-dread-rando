@@ -62,7 +62,7 @@ def patch_hints(editor: PatcherEditor, hints: list[dict]):
         patch_text(editor, string_key, hint["text"])
 
 
-def patch_credits(editor: PatcherEditor):
+def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
     text = editor.get_file("system/localization/credits.txt", Txt)
     ordered_credits = list(text.strings.items())
 
@@ -84,9 +84,16 @@ def patch_credits(editor: PatcherEditor):
 
         ("     ", "_SUBTITLE"),
         ("With contributions from many others.", ""),
-        ("     ", "_SUBTITLE"),
-        ("     ", "_SUBTITLE"),
     ]
+
+    if spoiler_log:
+        rando_credits.append(("     ", "_SUBTITLE"))
+        rando_credits.append(("Major Item Locations", "_TITLE"))
+    for item, loc in spoiler_log.items():
+        rando_credits.append((item, "_SUBTITLE"))
+        rando_credits.append((loc, ""))
+    
+    rando_credits.append(("     ", "_SUBTITLE"))
 
     ordered_credits[1:1] = [
         (f"CREDIT_R_{i:03}{prefix}", item)
