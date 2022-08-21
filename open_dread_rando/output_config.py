@@ -14,7 +14,7 @@ class OutputCompatibility(Enum):
             mod_path = out_path.joinpath("DreadRandovania")
             exefs_patches = mod_path.joinpath("exefs")
             romfs = mod_path.joinpath("romfs")
-            exefs = None
+            exefs = mod_path.joinpath("exefs")
 
         elif self == OutputCompatibility.ATMOSPHERE:
             exefs_patches = out_path.joinpath("exefs_patches", "DreadRandovania")
