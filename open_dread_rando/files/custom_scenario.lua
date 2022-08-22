@@ -1,6 +1,8 @@
 Game.ImportLibrary("system/scripts/scenario_original.lua")
 
 Game.DoFile("system/scripts/input_handling.lua")
+Game.DoFile("system/scripts/data_structures.lua")
+Game.DoFile("system/scripts/guilib.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -226,6 +228,8 @@ local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
 
+    Scenario.InitGui()
+
     Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
 
     if Scenario.VisitAllTeleportScenarios() then return end
@@ -342,4 +346,53 @@ end
 function Scenario.OnTeleportFinished()
     Scenario.EnableInput()
     Game.ReinitPlayerFromBlackboard()
+end
+
+function Scenario.InitGui()
+    Game.LogWarn(0, "Creating GUI")
+    local ui = GUILib("RandoUI")
+    ui:AddContainer("Content")
+    ui:Get("Content"):AddLabel("Popup", "", {
+        MinCharWidth = "14",
+        -- X = "0.5", Y = "0.2",
+        CenterX = "0.0", CenterY = "-0.3",
+        Font = "digital_hefty",
+        TextAlignment = "Centered",
+        TextVerticalAlignment = "Centered",
+        ScaleX = "1.0", ScaleY = "1.0",
+        Visible = false
+    })
+    ui:Show()
+    Scenario.GUI = ui
+end
+
+Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
+
+function Scenario.QueueAsyncPopup(text, time)
+    local empty = Scenario.QueuedPopups:empty()
+    Scenario.QueuedPopups:push({Text = text, Time = time or 5.0})
+    if empty then
+        Scenario.ShowNextAsyncPopup()
+    end
+end
+
+function Scenario.ShowNextAsyncPopup()
+    if Scenario.QueuedPopups:empty() then return end
+    local popup = Scenario.QueuedPopups:peek()
+    Scenario.ShowAsyncPopup(popup.Text, popup.Time)
+end
+
+function Scenario.ShowAsyncPopup(text, time)
+    Game.LogWarn(0, "Showing text '"..text.."' for "..time.." seconds")
+
+    local popup = Scenario.GUI:Get("Content"):Get("Popup")
+    popup:SetText(text)
+    popup:SetProperties({Visible = true})
+    Game.AddGUISF(time, "Scenario.HideAsyncPopup", "")
+end
+
+function Scenario.HideAsyncPopup()
+    Scenario.QueuedPopups:pop()
+    Scenario.GUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
+    Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
 end
