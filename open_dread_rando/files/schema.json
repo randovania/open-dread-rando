@@ -103,6 +103,13 @@
                                             "type": "object",
                                             "properties": {
                                                 "label": {
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "player": {
+                                                    "type": "string"
+                                                },
+                                                "base_icon": {
                                                     "type": "string"
                                                 },
                                                 "coords": {
