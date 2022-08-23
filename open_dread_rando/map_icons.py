@@ -183,35 +183,35 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     ),
     "item_energytank": MapIcon(
         icon_id="ItemEnergyTankR",
-        coords=(0, 5),
+        coords=(5, 0),
         label="ENERGY TANK",
         is_global=False,
         full_zoom_scale=False
     ),
     "item_energyfragment": MapIcon(
         icon_id="ItemEnergyFragmentR",
-        coords=(0, 6),
+        coords=(6, 0),
         label="ENERGY PART",
         is_global=False,
         full_zoom_scale=False
     ),
     "item_missiletank": MapIcon(
         icon_id="ItemMissileTankR",
-        coords=(0, 7),
+        coords=(7, 0),
         label="MISSILE TANK",
         is_global=False,
         full_zoom_scale=False
     ),
     "item_missiletankplus": MapIcon(
         icon_id="ItemMissileTankPlusR",
-        coords=(0, 8),
+        coords=(8, 0),
         label="MISSILE TANK+",
         is_global=False,
         full_zoom_scale=False
     ),
     "item_powerbombtank": MapIcon(
         icon_id="ItemPowerbombExpansionR",
-        coords=(0, 9),
+        coords=(9, 0),
         label="POWER BOMB TANK",
         is_global=False,
         full_zoom_scale=False
