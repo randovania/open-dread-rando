@@ -228,7 +228,10 @@ local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
 
+    Scenario.HideAsyncPopup()
     Scenario.InitGui()
+    Scenario.ShowingPopup = false
+    Scenario.ShowNextAsyncPopup()
 
     Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
 
@@ -348,9 +351,11 @@ function Scenario.OnTeleportFinished()
     Game.ReinitPlayerFromBlackboard()
 end
 
+Scenario.NumUIs = 0
 function Scenario.InitGui()
     Game.LogWarn(0, "Creating GUI")
-    local ui = GUILib("RandoUI")
+    Scenario.NumUIs = Scenario.NumUIs +1
+    local ui = GUILib("RandoUI"..Scenario.NumUIs)
     ui:AddContainer("Content")
     ui:Get("Content"):AddLabel("Popup", "", {
         MinCharWidth = "14",
@@ -367,22 +372,23 @@ function Scenario.InitGui()
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
+Scenario.ShowingPopup = false
 
 function Scenario.QueueAsyncPopup(text, time)
-    local empty = Scenario.QueuedPopups:empty()
     Scenario.QueuedPopups:push({Text = text, Time = time or 5.0})
-    if empty then
-        Scenario.ShowNextAsyncPopup()
-    end
 end
 
 function Scenario.ShowNextAsyncPopup()
-    if Scenario.QueuedPopups:empty() then return end
+    if Scenario.QueuedPopups:empty() then
+        Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+        return
+    end
     local popup = Scenario.QueuedPopups:peek()
     Scenario.ShowAsyncPopup(popup.Text, popup.Time)
 end
 
 function Scenario.ShowAsyncPopup(text, time)
+    Scenario.ShowingPopup = true
     Game.LogWarn(0, "Showing text '"..text.."' for "..time.." seconds")
 
     local popup = Scenario.GUI:Get("Content"):Get("Popup")
@@ -392,7 +398,10 @@ function Scenario.ShowAsyncPopup(text, time)
 end
 
 function Scenario.HideAsyncPopup()
-    Scenario.QueuedPopups:pop()
+    Scenario.ShowingPopup = false
+    if not Scenario.QueuedPopups:empty() then
+        Scenario.QueuedPopups:pop()
+    end
     Scenario.GUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
     Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
 end
