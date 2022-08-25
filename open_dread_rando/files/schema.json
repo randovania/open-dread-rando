@@ -293,6 +293,26 @@
                 "config"
             ]
         },
+        "constant_environment_damage": {
+            "description": "Each property, when not null, will change the damage from that type to be that much per second",
+            "default": {},
+            "type": "object",
+            "properties": {
+                "heat": {
+                    "title": "Heated Rooms",
+                    "$ref": "#/$defs/constant_damage_value"
+                },
+                "cold": {
+                    "title": "Cold Rooms",
+                    "$ref": "#/$defs/constant_damage_value"
+                },
+                "lava": {
+                    "title": "Lava",
+                    "$ref": "#/$defs/constant_damage_value"
+                }
+            },
+            "additionalProperties": false
+        },
         "game_patches": {
             "type": "object",
             "properties": {
@@ -315,16 +335,6 @@
                     "type": "boolean",
                     "description": "When enabled, the game starts with the X Parasites being released already.",
                     "default": false
-                },
-                "linear_damage_runs": {
-                    "type": "boolean",
-                    "description": "When enabled, damage over time from heated and cold rooms scales linearly instead of exponentially.",
-                    "default": false
-                },
-                "linear_dps": {
-                    "description": "How quickly you lose energy in damage rooms, in Damage per Second.",
-                    "type": "number",
-                    "default": 20
                 },
                 "enable_experiment_boss": {
                     "type": "boolean",
@@ -489,6 +499,19 @@
                 "s070_basesanc",
                 "s080_shipyard",
                 "s090_skybase"
+            ]
+        },
+        "constant_damage_value": {
+            "default": null,
+            "anyOf": [
+                {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                },
+                {
+                    "type": "null"
+                }
             ]
         }
     }
