@@ -181,11 +181,41 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         coords=(6, 7),
         label="SCREW ATTACK"
     ),
-    "item_energytank": "ItemEnergyTank",
-    "item_energyfragment": "ItemEnergyFragment",
-    "item_missiletank": "ItemMissileTank",
-    "item_missiletankplus": "ItemMissileTankPlus",
-    "item_powerbombtank": "ItemPowerbombExpansion",
+    "item_energytank": MapIcon(
+        icon_id="ItemEnergyTankR",
+        coords=(5, 0),
+        label="ENERGY TANK",
+        is_global=False,
+        full_zoom_scale=False
+    ),
+    "item_energyfragment": MapIcon(
+        icon_id="ItemEnergyFragmentR",
+        coords=(6, 0),
+        label="ENERGY PART",
+        is_global=False,
+        full_zoom_scale=False
+    ),
+    "item_missiletank": MapIcon(
+        icon_id="ItemMissileTankR",
+        coords=(7, 0),
+        label="MISSILE TANK",
+        is_global=False,
+        full_zoom_scale=False
+    ),
+    "item_missiletankplus": MapIcon(
+        icon_id="ItemMissileTankPlusR",
+        coords=(8, 0),
+        label="MISSILE TANK+",
+        is_global=False,
+        full_zoom_scale=False
+    ),
+    "item_powerbombtank": MapIcon(
+        icon_id="ItemPowerbombExpansionR",
+        coords=(9, 0),
+        label="POWER BOMB TANK",
+        is_global=False,
+        full_zoom_scale=False
+    ),
     "itemsphere": MapIcon(
         icon_id="ItemNothing",
         coords=(14, 7),
@@ -231,18 +261,31 @@ class MapIconEditor:
             return self._get_icon(map_icon["icon_id"])
         
         custom_icon: dict = map_icon["custom_icon"]
-        if "coords" in custom_icon:
-            coords = (custom_icon["coords"]["col"], custom_icon["coords"]["row"])
+
+        if "base_icon" in custom_icon:
+            icon = ALL_ICONS.get(custom_icon["base_icon"], ALL_ICONS["unknown"])
+            label = custom_icon["label"]
+            if "player" in custom_icon:
+                label = f"{custom_icon['player'].upper()}'S {icon.label}"
+            icon = dataclasses.replace(icon,
+                icon_id=f"ItemCustom{self.custom_icons}",
+                label=label
+            )   
+
         else:
-            coords = (15, 7)
-        icon = MapIcon(
-            icon_id=f"ItemCustom{self.custom_icons}",
-            coords=coords,
-            label=custom_icon["label"],
-            is_global=custom_icon.get("is_global", True),
-            full_zoom_scale=custom_icon.get("full_zoom_scale", True),
-            **custom_icon.get("extras", {})
-        )
+            if "coords" in custom_icon:
+                coords = (custom_icon["coords"]["col"], custom_icon["coords"]["row"])
+            else:
+                coords = (15, 7)
+            icon = MapIcon(
+                icon_id=f"ItemCustom{self.custom_icons}",
+                coords=coords,
+                label=custom_icon["label"],
+                is_global=custom_icon.get("is_global", True),
+                full_zoom_scale=custom_icon.get("full_zoom_scale", True),
+                **custom_icon.get("extras", {})
+            )
+        
         self.custom_icons += 1
         self.add_icon(icon)
         return icon.icon_id
