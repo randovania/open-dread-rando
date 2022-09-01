@@ -130,9 +130,6 @@ def remove_problematic_x_layers(editor: PatcherEditor):
 def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str):
     cutscene_player = editor.resolve_actor_reference(cutscene_ref)
 
-    # Remove the checkpoint save
-    cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop()
-
     # Add the custom call when the boss dies
     if callback:
         cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.append({
@@ -151,16 +148,6 @@ def apply_kraid_fixes(editor: PatcherEditor):
         "layer": "cutscenes",
         "actor": "cutsceneplayer_61"
     }, "CurrentScenario.OnKraidDeath_CUSTOM")
-
-    # Remove the checkpoint after killing Kraid
-    # (not sure if this is necessary)
-    kraid_spawn = magma.follow_link(
-        "Root:pScenario:rEntitiesLayer:dctSublayers:Boss:dctActors:SP_Kraid"
-    )
-    kraid_file = kraid_spawn.pComponents.SPAWNPOINT.voActorBlueprint[0]
-    kraid = CActor.parse(kraid_file.InnerValue)
-    kraid.pComponents.AI.wpDeadCheckpointStartPoint = "{EMPTY}"
-    kraid_file.InnerValue = CActor.build(kraid)
 
 def apply_drogyga_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
@@ -284,10 +271,6 @@ def fix_backdoor_white_cu(editor: PatcherEditor):
 
 def patch_corpius_checkpoints(editor: PatcherEditor):
     cave = editor.get_scenario("s010_cave")
-
-    # Remove CSaveGameLogicAction for SP_Scorpius_scorpius_dead on the cutscene after killing Corpius
-    cutscene = cave.follow_link("Root:pScenario:rEntitiesLayer:dctSublayers:Cutscenes:dctActors:cutsceneplayer_57")
-    cutscene.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA.pop(0)
 
     # Fix checkpoint before Corpius fight not working if the X were released
     cave.add_actor_to_group("eg_collision_camera_072_PostXRelease", "SP_Checkpoint_Scorpius")

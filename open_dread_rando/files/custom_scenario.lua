@@ -228,7 +228,13 @@ local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
 
-    Scenario.HideAsyncPopup()
+    exclude_function_from_logging("ShowNextAsyncPopup")
+    exclude_function_from_logging("HideAsyncPopup")
+    exclude_function_from_logging("CheckDebugInputs")
+
+    if Scenario.RandoUI ~= nil then
+        Scenario.HideAsyncPopup()
+    end
     Scenario.InitGui()
     Scenario.ShowingPopup = false
     Scenario.ShowNextAsyncPopup()
@@ -368,7 +374,7 @@ function Scenario.InitGui()
         Visible = false
     })
     ui:Show()
-    Scenario.GUI = ui
+    Scenario.RandoUI = ui
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
@@ -379,29 +385,34 @@ function Scenario.QueueAsyncPopup(text, time)
 end
 
 function Scenario.ShowNextAsyncPopup()
+    push_debug_print_override()
     if Scenario.QueuedPopups:empty() then
         Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+        pop_debug_print_override()
         return
     end
     local popup = Scenario.QueuedPopups:peek()
     Scenario.ShowAsyncPopup(popup.Text, popup.Time)
+    pop_debug_print_override()
 end
 
 function Scenario.ShowAsyncPopup(text, time)
     Scenario.ShowingPopup = true
     Game.LogWarn(0, "Showing text '"..text.."' for "..time.." seconds")
 
-    local popup = Scenario.GUI:Get("Content"):Get("Popup")
+    local popup = Scenario.RandoUI:Get("Content"):Get("Popup")
     popup:SetText(text)
     popup:SetProperties({Visible = true})
     Game.AddGUISF(time, "Scenario.HideAsyncPopup", "")
 end
 
 function Scenario.HideAsyncPopup()
+    push_debug_print_override()
     Scenario.ShowingPopup = false
     if not Scenario.QueuedPopups:empty() then
         Scenario.QueuedPopups:pop()
     end
-    Scenario.GUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
+    Scenario.RandoUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
     Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+    pop_debug_print_override()
 end
