@@ -228,7 +228,9 @@ local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
 
-    Scenario.HideAsyncPopup()
+    if Scenario.RandoUI ~= nil then
+        Scenario.HideAsyncPopup()
+    end
     Scenario.InitGui()
     Scenario.ShowingPopup = false
     Scenario.ShowNextAsyncPopup()
@@ -368,7 +370,7 @@ function Scenario.InitGui()
         Visible = false
     })
     ui:Show()
-    Scenario.GUI = ui
+    Scenario.RandoUI = ui
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
@@ -391,7 +393,7 @@ function Scenario.ShowAsyncPopup(text, time)
     Scenario.ShowingPopup = true
     Game.LogWarn(0, "Showing text '"..text.."' for "..time.." seconds")
 
-    local popup = Scenario.GUI:Get("Content"):Get("Popup")
+    local popup = Scenario.RandoUI:Get("Content"):Get("Popup")
     popup:SetText(text)
     popup:SetProperties({Visible = true})
     Game.AddGUISF(time, "Scenario.HideAsyncPopup", "")
@@ -402,6 +404,6 @@ function Scenario.HideAsyncPopup()
     if not Scenario.QueuedPopups:empty() then
         Scenario.QueuedPopups:pop()
     end
-    Scenario.GUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
+    Scenario.RandoUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
     Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
 end
