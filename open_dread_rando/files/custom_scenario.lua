@@ -228,6 +228,10 @@ local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
 
+    exclude_function_from_logging("ShowNextAsyncPopup")
+    exclude_function_from_logging("HideAsyncPopup")
+    exclude_function_from_logging("CheckDebugInputs")
+
     if Scenario.RandoUI ~= nil then
         Scenario.HideAsyncPopup()
     end
@@ -381,12 +385,15 @@ function Scenario.QueueAsyncPopup(text, time)
 end
 
 function Scenario.ShowNextAsyncPopup()
+    push_debug_print_override()
     if Scenario.QueuedPopups:empty() then
         Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+        pop_debug_print_override()
         return
     end
     local popup = Scenario.QueuedPopups:peek()
     Scenario.ShowAsyncPopup(popup.Text, popup.Time)
+    pop_debug_print_override()
 end
 
 function Scenario.ShowAsyncPopup(text, time)
@@ -400,10 +407,12 @@ function Scenario.ShowAsyncPopup(text, time)
 end
 
 function Scenario.HideAsyncPopup()
+    push_debug_print_override()
     Scenario.ShowingPopup = false
     if not Scenario.QueuedPopups:empty() then
         Scenario.QueuedPopups:pop()
     end
     Scenario.RandoUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
     Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+    pop_debug_print_override()
 end

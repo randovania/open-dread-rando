@@ -64,6 +64,7 @@ Game.SetForceSkipCutscenes(true)
 
 push_debug_print_override = push_debug_print_override or function() end
 pop_debug_print_override = pop_debug_print_override or function() end
+exclude_function_from_logging = exclude_function_from_logging or function(name) end
 
 Game.LogWarn(0, "Finished modded system/init.lc")
 
