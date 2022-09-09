@@ -69,14 +69,22 @@ def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
     rando_credits = [
         ("Randomizer Credits", "_TITLE"),
 
-        ("Game Patching", "_SUBTITLE"),
+        ("Project Leads", "_SUBTITLE"),
         ("Henrique 'Darkszero' Gemignani", ""),
         ("duncathan_salt", ""),
+
+        ("Game Patching", "_SUBTITLE"),
+        ("stuckpixel", ""),
+        ("ScorelessPine", ""),
+        ("Arcanox", ""),
+        ("Migs", ""),
 
         ("Logic Database", "_SUBTITLE"),
         ("KirbymastaH", ""),
         ("Dyceron", ""),
         ("XenoWars", ""),
+        ("Izzychu", ""),
+        ("Hugoshido", ""),
 
         ("Additional Art", "_SUBTITLE"),
         ("BigSharksZ", ""),
