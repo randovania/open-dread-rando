@@ -324,10 +324,6 @@ function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, n
       end
     end
   end
-  
-  if old_subarea == "collision_camera_036" and new_subarea == "collision_camera_026" and FOREST_POSTXRELEASE_APPLIED == false then
-    GUI.ShowMessage("You have entered the Golzuna boss arena without releasing the X. Since the X doesn't spawn this is a softlock. Restart from checkpoint to continue.", true, "")
-  end
 
   Scenario.UpdateProgressiveItemModels()
 end
@@ -857,6 +853,11 @@ end
 
 
 function s050_forest.LockDoorSuperGoliathArena(_ARG_0_, _ARG_1_)
+  -- provide warning when player falls into arena without finishing Elun
+  if Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED") == false then
+    GUI.ShowMessage("You have entered the Golzuna boss arena without releasing the X. Since the X doesn't spawn this is a softlock. Restart from checkpoint to continue.", true, "")
+  end
+
   local oActor = Game.GetActor("doorpowerclosed_003")
   if oActor ~= nil then
     oActor.LIFE:LockDoor()
