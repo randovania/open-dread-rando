@@ -19,6 +19,7 @@ from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickup import pickup_object_for
 from open_dread_rando.static_fixes import apply_static_fixes
 from open_dread_rando.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
+from open_dread_rando.tilegroup_patcher import patch_tilegroup
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
@@ -160,6 +161,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     for door in configuration["door_patches"]:
         patch_door(editor, door)
+    
+    for tile_group in configuration["tile_group_patches"]:
+        patch_tilegroup(editor, tile_group)
 
     # Text patches
     if "text_patches" in configuration:
