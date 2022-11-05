@@ -166,6 +166,7 @@ function s020_magma.OnEmmyAbilityObtainedFadeOutCompleted()
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
+    oActor.CENTRALUNIT:UnlockDoors()
   end
 end
 
@@ -208,7 +209,7 @@ end
 
 function s020_magma.OnCheckpoint_MorphBall()
 
-  s020_magma.OnLockEmmyDoors()
+  s020_magma.OnUnlockEmmyDoors()
 end
 
 

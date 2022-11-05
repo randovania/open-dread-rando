@@ -408,6 +408,7 @@ function s070_basesanc.OnEmmyAbilityObtainedFadeOutCompleted()
   local L0_2 = Game.GetActor("centralunitmagmacontroller")
   if L0_2 ~= nil then
     L0_2.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
+    L0_2.CENTRALUNIT:UnlockDoors()
   end
 end
 
