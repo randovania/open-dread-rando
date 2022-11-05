@@ -266,7 +266,7 @@ end
 
 
 function s030_baselab.OnCheckpoint_SpeedBooster()
-  s030_baselab.OnLockEmmyDoors()
+  s030_baselab.OnUnlockEmmyDoors()
 end
 
 

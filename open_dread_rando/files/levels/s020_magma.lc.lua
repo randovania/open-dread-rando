@@ -209,7 +209,7 @@ end
 
 function s020_magma.OnCheckpoint_MorphBall()
 
-  s020_magma.OnLockEmmyDoors()
+  s020_magma.OnUnlockEmmyDoors()
 end
 
 
