@@ -141,13 +141,21 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
         })
 
 def apply_kraid_fixes(editor: PatcherEditor):
-    magma = editor.get_scenario("s020_magma")
-
-    _apply_boss_cutscene_fixes(editor, {
+    cutscene_player = editor.resolve_actor_reference({
         "scenario": "s020_magma",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_61"
-    }, "CurrentScenario.OnKraidDeath_CUSTOM")
+    })
+
+    callbacks_after_cutscene = cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA
+    # Add the custom call when the boss dies but insert it before cp is saved
+    callbacks_after_cutscene.insert(len(callbacks_after_cutscene) - 1, {
+        "@type": "CLuaCallsLogicAction",
+        "sCallbackEntityName": "",
+        "sCallback": "CurrentScenario.OnKraidDeath_CUSTOM",
+        "bCallbackEntity": False,
+        "bCallbackPersistent": False,
+    })
 
 def apply_drogyga_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
