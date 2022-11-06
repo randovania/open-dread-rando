@@ -1,7 +1,7 @@
 from open_dread_rando.patcher_editor import PatcherEditor
 
 def is_tilegroup(actor):
-    return "TILEGROUP" in actor.pComponents and "CBreakableTileGroupComponent" == actor.pComponents.TILEGROUP["@type"]
+    return "TILEGROUP" in actor.pComponents and actor.pComponents.TILEGROUP["@type"] == "CBreakableTileGroupComponent"
 
 def patch_tilegroup(editor: PatcherEditor, group: dict):
     """
