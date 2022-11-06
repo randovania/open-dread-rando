@@ -410,6 +410,38 @@
             },
             "default": []
         },
+        "tile_group_patches": {
+            "type": "array",
+            "description": "Changes breakable tile group types",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "actor": {
+                        "$ref": "#/$defs/actor_reference_with_layer"
+                    },
+                    "tiletype": {
+                        "type": "string",
+                        "enum": [
+                            "POWERBEAM",
+                            "BOMB",
+                            "MISSILE",
+                            "SUPERMISSILE",
+                            "POWERBOMB",
+                            "SCREWATTACK",
+                            "WEIGHT",
+                            "BABYHATCHLING",
+                            "SPEEDBOOST"
+                        ]
+                    }
+                },
+                "required": [
+                    "actor",
+                    "tiletype"
+                ],
+                "additionalProperties": false
+            },
+            "default": []
+        },
         "spoiler_log": {
             "type": "object",
             "additionalProperties": {
