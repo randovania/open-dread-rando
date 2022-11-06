@@ -1,4 +1,5 @@
 import copy
+from typing import Optional
 
 import construct
 from mercury_engine_data_structures.formats.dread_types import CActor, CTriggerComponent_EEvent
@@ -127,28 +128,31 @@ def remove_problematic_x_layers(editor: PatcherEditor):
             ]
 
 
-def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str, is_kraid: bool = False):
+def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str, insert_callback_at: Optional[int] = None):
     cutscene_player = editor.resolve_actor_reference(cutscene_ref)
     callbacks_after_cutscene = cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA
-    # kraid's item drop needs to be placed before the cp is saved
-    placement = len(callbacks_after_cutscene) - 1 if is_kraid else len(callbacks_after_cutscene)
 
     # Add the custom call when the boss dies
     if callback:
-        callbacks_after_cutscene.insert(placement, {
+        callback_action = {
             "@type": "CLuaCallsLogicAction",
             "sCallbackEntityName": "",
             "sCallback": callback,
             "bCallbackEntity": False,
             "bCallbackPersistent": False,
-        })
+        }
+        if insert_callback_at is None:
+            callbacks_after_cutscene.append(callback_action)
+        else:
+            i = insert_callback_at
+            callbacks_after_cutscene[i:i] = [callback_action]
 
 def apply_kraid_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_61"
-    }, "CurrentScenario.OnKraidDeath_CUSTOM", True)
+    }, "CurrentScenario.OnKraidDeath_CUSTOM", -1)
 
 def apply_drogyga_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
