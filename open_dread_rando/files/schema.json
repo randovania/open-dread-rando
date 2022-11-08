@@ -300,6 +300,11 @@
                 "config"
             ]
         },
+        "enable_remote_lua": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, the game will start a socket that receives lua code to run"
+        },
         "constant_environment_damage": {
             "description": "Each property, when not null, will change the damage from that type to be that much per second",
             "default": {},

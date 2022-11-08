@@ -35,6 +35,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
+    enable_remote_lua: bool = configuration.get("enable_remote_lua", False)
 
     energy_per_tank = configuration["energy_per_tank"]
     energy_per_part = energy_per_tank / 4
@@ -74,6 +75,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
             patch_text(editor, f"RANDO_STARTING_TEXT_{textboxes}", box_text)
 
     replacement = {
+        "enable_remote_lua": enable_remote_lua,
         "new_game_inventory": final_inventory,
         "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
         "starting_actor": lua_util.wrap_string(starting_location["actor"]),

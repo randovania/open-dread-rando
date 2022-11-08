@@ -31,10 +31,25 @@ function RandomizerPowerup.IncreaseItemAmount(item_id, quantity, capacity)
     RandomizerPowerup.SetItemAmount(item_id, target)
 end
 
+function RandomizerPowerup.PropertyForLocation(locationIdentifier)
+    return "Location_Collected_" .. locationIdentifier
+end
+
+function RandomizerPowerup.MarkLocationCollected(locationIdentifier)
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    local propName = RandomizerPowerup.PropertyForLocation(locationIdentifier)
+    Game.LogWarn(0, propName)
+    Blackboard.SetProp(playerSection, propName, "b", true)
+end
+
 function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.Self = actor
     local name = "Boss"
-    if actor ~= nil then name = actor.sName end
+    if actor ~= nil then
+        name = actor.sName
+        RandomizerPowerup.MarkLocationCollected(string.format("%s_%s", Scenario.CurrentScenarioID, name))
+    end
+
     Game.LogWarn(0, "Collected pickup: " .. name)
     local granted = RandomizerPowerup.ProgressivePickup(actor, progression)
     -- RandomizerPowerup.ChangeSuit()
