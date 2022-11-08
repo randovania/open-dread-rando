@@ -30,7 +30,8 @@
                         ]
                     },
                     "caption": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The message displayed when this pickup is collected"
                     },
                     "resources": {
                         "type": "array",
@@ -38,7 +39,7 @@
                             "type": "object",
                             "properties": {
                                 "item_id": {
-                                    "type": "string"
+                                    "$ref": "#/$defs/item_id"
                                 },
                                 "quantity": {
                                     "type": "number"
@@ -47,7 +48,8 @@
                             "required": [
                                 "item_id",
                                 "quantity"
-                            ]
+                            ],
+                            "additionalProperties": false
                         }
                     }
                 },
@@ -221,7 +223,13 @@
             "description": "Saves all modified files to a _debug sub-directory."
         },
         "starting_items": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "ITEM_LIFE_SHARDS": {"type": "number", "maximum": 3}
+            },
+            "propertyNames": {
+                "$ref": "#/$defs/item_id"
+            }
         },
         "starting_text": {
             "type": "array",
@@ -556,6 +564,59 @@
                 {
                     "type": "null"
                 }
+            ]
+        },
+        "item_id": {
+            "type": "string",
+            "enum": [
+                "ITEM_NONE",
+                "ITEM_WEAPON_WIDE_BEAM",
+                "ITEM_WEAPON_PLASMA_BEAM",
+                "ITEM_WEAPON_WAVE_BEAM",
+                "ITEM_WEAPON_HYPER_BEAM",
+                "ITEM_WEAPON_CHARGE_BEAM",
+                "ITEM_WEAPON_DIFFUSION_BEAM",
+                "ITEM_WEAPON_GRAPPLE_BEAM",
+                "ITEM_WEAPON_SUPER_MISSILE",
+                "ITEM_WEAPON_ICE_MISSILE",
+                "ITEM_MULTILOCKON",
+                "ITEM_OPTIC_CAMOUFLAGE",
+                "ITEM_GHOST_AURA",
+                "ITEM_SONAR",
+                "ITEM_VARIA_SUIT",
+                "ITEM_GRAVITY_SUIT",
+                "ITEM_HYPER_SUIT",
+                "ITEM_MORPH_BALL",
+                "ITEM_WEAPON_BOMB",
+                "ITEM_WEAPON_LINE_BOMB",
+                "ITEM_WEAPON_POWER_BOMB",
+                "ITEM_MAGNET_GLOVE",
+                "ITEM_SPEED_BOOSTER",
+                "ITEM_DOUBLE_JUMP",
+                "ITEM_SPACE_JUMP",
+                "ITEM_SCREW_ATTACK",
+                "ITEM_ENERGY_TANKS",
+                "ITEM_LIFE_SHARDS",
+                "ITEM_MAX_LIFE",
+                "ITEM_CURRENT_LIFE",
+                "ITEM_WEAPON_MISSILE_CURRENT",
+                "ITEM_WEAPON_MISSILE_MAX",
+                "ITEM_WEAPON_POWER_BOMB_CURRENT",
+                "ITEM_WEAPON_POWER_BOMB_MAX",
+                "ITEM_FLOOR_SLIDE",
+                "ITEM_METROIDNIZATION",
+                "ITEM_RANDO_ARTIFACT_1",
+                "ITEM_RANDO_ARTIFACT_2",
+                "ITEM_RANDO_ARTIFACT_3",
+                "ITEM_RANDO_ARTIFACT_4",
+                "ITEM_RANDO_ARTIFACT_5",
+                "ITEM_RANDO_ARTIFACT_6",
+                "ITEM_RANDO_ARTIFACT_7",
+                "ITEM_RANDO_ARTIFACT_8",
+                "ITEM_RANDO_ARTIFACT_9",
+                "ITEM_RANDO_ARTIFACT_10",
+                "ITEM_RANDO_ARTIFACT_11",
+                "ITEM_RANDO_ARTIFACT_12"
             ]
         }
     }
