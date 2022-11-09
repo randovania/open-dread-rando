@@ -56,8 +56,31 @@ _SHIELD_ACTOR_REFS = {
     "wpRightDoorShieldEntity_super_missile": {"scenario": "s050_forest", "layer": "default", "actor": "doorshieldsupermissile_002"}
 }
 
+def create_shield(editor: PatcherEditor, door: dict, link_name: str):
+    doorActor = editor.resolve_actor_reference(door["actor"])
+    door_type = door["door_type"]
+    life_comp = doorActor.pComponents.LIFE
+    scenarioStr = door["actor"]["scenario"]
+
+    dir = "L" if link_name == "wpLeftDoorShieldEntity" else "R"
+
+    # copy a shield actor ref over
+    aShieldActor = copy.deepcopy(editor.resolve_actor_reference(_SHIELD_ACTOR_REFS[f"{link_name}_{door_type}"]))
+    aShieldActor.sName = f"{doorActor.sName}_{dir}"
+    currentScenario = editor.get_scenario(scenarioStr)
+    currentScenario.actors_for_layer('default')[aShieldActor.sName] = aShieldActor
+    editor.copy_actor_groups(scenarioStr, doorActor.sName, aShieldActor.sName)
+    aShieldActor.vPos = [c for c in doorActor.vPos]
+
+    # ensure asset is present in new scenario
+    for asset in editor.get_asset_names_in_folder("/".join(_SHIELD_ACTOR_DEF_FOR_TYPE[door_type].split("/",3)[:3])):
+        editor.ensure_present_in_scenario(scenarioStr, asset)
+    
+    # add reference to shield onto the door
+    newlink = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{aShieldActor.sName}"
+    life_comp[link_name] = newlink
+
 def patch_door(editor: PatcherEditor, door: dict):
-    print(f"======{door['actor']}")
     actor = editor.resolve_actor_reference(door["actor"])
 
     if not is_door(actor):
@@ -68,38 +91,22 @@ def patch_door(editor: PatcherEditor, door: dict):
 
     life_comp = actor.pComponents.LIFE
     if need_shield:
-        print(f"======{door_type}")
+        # change door to the correct type
+        actor.oActorDefLink = f"actordef:{_DOOR_ACTOR_DEF_FOR_TYPE[door_type]}"
+        # add shields
         for link_name in ["wpLeftDoorShieldEntity", "wpRightDoorShieldEntity"]:
             link = life_comp[link_name]
-            print(f"=======link={link}")
             if link != '{EMPTY}':
                 aShieldActor = editor.resolve_actor_reference(reference_for_link(link, door["actor"]["scenario"]))
-                aShieldActor.oActorDefLink = _SHIELD_ACTOR_DEF_FOR_TYPE[door_type]
+                aShieldActor.oActorDefLink = f"actordef:{_SHIELD_ACTOR_DEF_FOR_TYPE[door_type]}"
 
                 # ensure asset is present in new scenario
                 folder = "/".join(_SHIELD_ACTOR_DEF_FOR_TYPE[door_type].split("/",3)[:3])
-                print(f"##########{folder}")
                 for asset in editor.get_asset_names_in_folder(folder):
                     editor.ensure_present_in_scenario(door["actor"]["scenario"], asset)
-                    print(f"***********{asset} in {door['actor']['scenario']}")
-            """ else:
-                # copy a shield actor ref over
-                aShieldActor = copy.deepcopy(editor.resolve_actor_reference(_SHIELD_ACTOR_REFS[f"{link_name}_{door_type}"]))
-                currentScenario = editor.get_scenario(door["actor"]["scenario"])
-                currentScenario.actors_for_layer('default')[f"{link_name}_{actor.sName}"] = aShieldActor
-                editor.copy_actor_groups(door["actor"]["scenario"], actor.sName, aShieldActor.sName)
-                aShieldActor.vPos = actor.vPos
+            else:
+                create_shield(editor, door, link_name)
 
-                # ensure asset is present in new scenario
-                # str thing is slightly cursed but it splits on slashes to the third one, takes those split strings and joins them with slashes
-                for asset in editor.get_asset_names_in_folder("/".join(_SHIELD_ACTOR_DEF_FOR_TYPE[door_type].split("/",3)[:3])):
-                    editor.ensure_present_in_scenario(door["actor"]["scenario"], asset)
-                
-                # add reference to shield onto the door
-                newlink = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{aShieldActor.sName}"
-                life_comp[link_name] = newlink """
-
-        #raise NotImplementedError("Adding shields to doors is not implemented")
     else:
         for link_name in ["wpLeftDoorShieldEntity", "wpRightDoorShieldEntity"]:
             link = life_comp[link_name]
