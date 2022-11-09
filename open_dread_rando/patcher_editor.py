@@ -85,5 +85,19 @@ class PatcherEditor(FileTreeEditor):
         if map_category is not None:
             self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
     
+    def copy_actor_groups(self, scenario_name: str, base_actor_name: str, new_actor_name: str):
+        """
+        Copies a base actor's groups to a new actor's groups
+        
+        param baseRef: the actor that you are copying groups from
+        param newRef: the actor that will have the same actor groups as baseRef
+        """
+        scenario = self.get_scenario(scenario_name)
+        for group_name in scenario.all_actor_groups():
+            if(scenario.is_actor_in_group(group_name, base_actor_name)):
+                scenario.add_actor_to_group(group_name, new_actor_name)
+            else:
+                scenario.remove_actor_from_group(group_name, new_actor_name)
+
     def get_asset_names_in_folder(self, folder: str) -> typing.Iterator[str]:
         yield from (name for name in self._name_for_asset_id.values() if name.startswith(folder))
