@@ -19,6 +19,7 @@ from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickup import pickup_object_for
 from open_dread_rando.static_fixes import apply_static_fixes
 from open_dread_rando.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
+from open_dread_rando.tilegroup_patcher import patch_tilegroup
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
@@ -34,6 +35,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
+    enable_remote_lua: bool = configuration.get("enable_remote_lua", False)
 
     energy_per_tank = configuration["energy_per_tank"]
     energy_per_part = energy_per_tank / 4
@@ -73,6 +75,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
             patch_text(editor, f"RANDO_STARTING_TEXT_{textboxes}", box_text)
 
     replacement = {
+        "enable_remote_lua": enable_remote_lua,
         "new_game_inventory": final_inventory,
         "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
         "starting_actor": lua_util.wrap_string(starting_location["actor"]),
@@ -160,6 +163,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     for door in configuration["door_patches"]:
         patch_door(editor, door)
+    
+    for tile_group in configuration["tile_group_patches"]:
+        patch_tilegroup(editor, tile_group)
 
     # Text patches
     if "text_patches" in configuration:

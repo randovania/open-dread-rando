@@ -2,6 +2,24 @@ Game.ImportLibrary("system/scripts/init_original.lua")
 
 local initOk, errorMsg = pcall(function()
 
+RemoteLua = RemoteLua or { Init = function() end, }
+RL = RemoteLua
+
+if TEMPLATE("enable_remote_lua") then
+    Game.LogWarn(0, "Starting remote lua")
+    RemoteLua.Init()
+end
+
+function RemoteLua.ReceivedPickups()
+    local playerSection =  Game.GetPlayerBlackboardSectionName()
+    return Blackboard.GetProp(playerSection, "ReceivedPickups") or 0
+end
+
+function RemoteLua.SetReceivedPickups(count)
+    local playerSection =  Game.GetPlayerBlackboardSectionName()
+    Blackboard.SetProp(playerSection, "ReceivedPickups", "f", count)
+end
+
 Init.tNewGameInventory = TEMPLATE("new_game_inventory")
 
 Init.iNumRandoTextBoxes = TEMPLATE("textbox_count")

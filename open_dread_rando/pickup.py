@@ -20,6 +20,9 @@ EXPANSION_ITEM_IDS = {
     "ITEM_WEAPON_MISSILE_MAX",
     "ITEM_WEAPON_POWER_BOMB_MAX",
     "ITEM_WEAPON_POWER_BOMB",
+
+    # For multiworld
+    "ITEM_NONE",
 }
 
 

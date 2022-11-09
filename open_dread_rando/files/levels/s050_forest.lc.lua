@@ -392,6 +392,7 @@ function s050_forest.OnEmmyAbilityObtainedFadeOutCompleted()
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
+    oActor.CENTRALUNIT:UnlockDoors()
   end
 end
 
@@ -853,6 +854,11 @@ end
 
 
 function s050_forest.LockDoorSuperGoliathArena(_ARG_0_, _ARG_1_)
+  -- provide warning when player falls into arena without finishing Elun
+  if Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED") == false then
+    GUI.ShowMessage("You have entered the Golzuna boss arena without releasing the X. Since the X doesn't spawn this is a softlock. Restart from checkpoint to continue.", true, "")
+  end
+
   local oActor = Game.GetActor("doorpowerclosed_003")
   if oActor ~= nil then
     oActor.LIFE:LockDoor()

@@ -7,6 +7,7 @@ function CoreX_SuperGoliath.LaunchDamageSound(A0_2)
 end
 
 function CoreX_SuperGoliath.OnBigXAbsorbed(A0_2)
+  RandomizerPowerup.MarkLocationCollected("s050_forest_golzuna")
   if TEMPLATE("golzuna") then
     GUI.ShowMessage("#GUI_ITEM_ACQUIRED_LINE_BOMB", true, 'TEMPLATE("golzuna").OnPickedUp', false)
   end

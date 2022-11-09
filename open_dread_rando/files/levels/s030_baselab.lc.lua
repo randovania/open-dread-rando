@@ -211,6 +211,7 @@ function s030_baselab.OnEmmyAbilityObtainedFadeOutCompleted()
   local oActor = Game.GetActor("centralunitmagmacontroller") 
   if oActor ~= nil then
     oActor.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
+    oActor.CENTRALUNIT:UnlockDoors()
   end
 end
 
@@ -265,7 +266,7 @@ end
 
 
 function s030_baselab.OnCheckpoint_SpeedBooster()
-  s030_baselab.OnLockEmmyDoors()
+  s030_baselab.OnUnlockEmmyDoors()
 end
 
 
