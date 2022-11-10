@@ -56,6 +56,69 @@ _SHIELD_ACTOR_REFS = {
     "wpRightDoorShieldEntity_super_missile": {"scenario": "s050_forest", "layer": "default", "actor": "doorshieldsupermissile_002"}
 }
 
+_SPECIAL_DOOR_REFS = {
+    "phantom_cloak": {"scenario": "s010_cave", "layer": "default", "actor": "Door049 (PR-PR)"},
+    "phase_shift": {"scenario": "s040_aqua", "layer": "default", "actor": "doorshutter_001"},
+    "footstep_platform": {"scenario": "s040_aqua", "layer": "default", "actor": "footstepplatform_001"}
+}
+
+def copy_actor(editor: PatcherEditor, door: dict, actorRef: dict, sName: str, offset: tuple =(0,0,0)):
+    """
+    Copies an actor ref into the same scenario as the door, stored at the location of the door ref
+    """
+    doorActor = editor.resolve_actor_reference(door["actor"])
+    scenarioStr = door["actor"]["scenario"]
+
+    actor = copy.deepcopy(editor.resolve_actor_reference(actorRef))
+    actor.sName = sName
+    currentScenario = editor.get_scenario(scenarioStr)
+    currentScenario.actors_for_layer('default')[actor.sName] = actor
+    actor.vPos = [c + offset for c, offset in zip(doorActor.vPos, offset)]
+
+    return actor
+
+def change_door(editor: PatcherEditor, door: dict):
+    """
+    Changes a Door into a new door type listed in _SPECIAL_DOOR_REFS
+    @param editor: the editor
+    @param door: the dictionary passed to patch_door()
+    @returns: the new Door actor
+    """
+    sName = editor.resolve_actor_reference(door["actor"]).sName
+    door_type = door["door_type"]
+
+    newDoor = copy_actor(editor, door, _SPECIAL_DOOR_REFS[door_type], f"{sName}_new")
+    editor.copy_actor_groups(door["actor"]["scenario"], sName, f"{sName}_new")
+
+    # delete old door
+    editor.remove_entity(door["actor"], None)
+
+    # reference new door
+    door["actor"]["actor"] = newDoor.sName
+
+    return newDoor
+
+def add_footstep_platforms(editor: PatcherEditor, door: dict):
+    """
+    Add footstep platforms to the door
+    @param editor: the editor
+    @param door: the dictionary passed to patch_door"""
+    doorActor = editor.resolve_actor_reference(door["actor"])
+    scenario = door["actor"]["scenario"]
+
+    # copy both footsteps and actor groups
+    footstepL = copy_actor(editor, door, _SPECIAL_DOOR_REFS["footstep_platform"], f"{doorActor.sName}_footstepL", (-300, -100, 0))
+    footstepR = copy_actor(editor, door, _SPECIAL_DOOR_REFS["footstep_platform"], f"{doorActor.sName}_footstepR", (300, -100, 0))
+    editor.copy_actor_groups(scenario, doorActor.sName, footstepL.sName)
+    editor.copy_actor_groups(scenario, doorActor.sName, footstepR.sName)
+
+    # link footsteps to door
+    footstepL.pComponents.FOOTSTEP.wpActivableEntity = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{doorActor.sName}"
+    footstepL.pComponents.FOOTSTEP.wpPartnerFootStepPlatformEntity = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{footstepR.sName}"
+    footstepR.pComponents.FOOTSTEP.wpActivableEntity = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{doorActor.sName}"
+    footstepR.pComponents.FOOTSTEP.wpPartnerFootStepPlatformEntity = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{footstepL.sName}"
+
+
 def create_shield(editor: PatcherEditor, door: dict, link_name: str):
     doorActor = editor.resolve_actor_reference(door["actor"])
     door_type = door["door_type"]
@@ -65,12 +128,10 @@ def create_shield(editor: PatcherEditor, door: dict, link_name: str):
     dir = "L" if link_name == "wpLeftDoorShieldEntity" else "R"
 
     # copy a shield actor ref over
-    aShieldActor = copy.deepcopy(editor.resolve_actor_reference(_SHIELD_ACTOR_REFS[f"{link_name}_{door_type}"]))
-    aShieldActor.sName = f"{doorActor.sName}_{dir}"
-    currentScenario = editor.get_scenario(scenarioStr)
-    currentScenario.actors_for_layer('default')[aShieldActor.sName] = aShieldActor
+    aShieldActor = copy_actor(editor, door, _SHIELD_ACTOR_REFS[f"{link_name}_{door_type}"], f"{doorActor.sName}_{dir}")
+    
+    # copy its actor groups as well
     editor.copy_actor_groups(scenarioStr, doorActor.sName, aShieldActor.sName)
-    aShieldActor.vPos = [c for c in doorActor.vPos]
 
     # ensure asset is present in new scenario
     for asset in editor.get_asset_names_in_folder("/".join(_SHIELD_ACTOR_DEF_FOR_TYPE[door_type].split("/",3)[:3])):
@@ -88,8 +149,16 @@ def patch_door(editor: PatcherEditor, door: dict):
 
     door_type = door["door_type"]
     need_shield = door_type in {"wide_beam", "plasma_beam", "wave_beam", "missile", "super_missile"}
+    replace_door = door_type in {"phantom_cloak", "phase_shift"}
 
     life_comp = actor.pComponents.LIFE
+    
+    # change door if it's becoming a cloak or flashshift door
+    if replace_door:
+        actor = change_door(editor, door)
+        if(door_type == "phase_shift"):
+            add_footstep_platforms(editor, door)
+    
     if need_shield:
         # change door to the correct type
         actor.oActorDefLink = f"actordef:{_DOOR_ACTOR_DEF_FOR_TYPE[door_type]}"
