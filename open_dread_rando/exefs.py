@@ -28,6 +28,7 @@ class VersionedPatch(dict):
         return self[max(self.keys())]
     # use the highest version with a patch defined
 
+
 class AsmVersion(NamedTuple):
     offset: int
     replacements: dict[str, str]
@@ -49,7 +50,7 @@ class AsmPatch:
     
     def patch(self, version: str) -> Tuple[int, bytes]:
         if version not in self.versions:
-            return None, None
+            raise RuntimeError(f"Unsupported version: {version}")
         return self.versions[version].offset, self._data(version)
 
 
@@ -97,6 +98,7 @@ debug_input = AsmPatch(
     }
 )
 
+
 def _add_debug_input(patch: ips.Patch, version: str):
     offset, data = debug_input.patch(version)
     if offset is not None:
@@ -104,7 +106,6 @@ def _add_debug_input(patch: ips.Patch, version: str):
 
 
 def patch_exefs(exefs_patches: Path, configuration: dict):
-    shutil.rmtree(exefs_patches, ignore_errors=True)
     exefs_patches.mkdir(parents=True, exist_ok=True)
 
     for version, exefs_hash in VERSIONS.items():
@@ -116,7 +117,6 @@ def patch_exefs(exefs_patches: Path, configuration: dict):
 
 
 def include_depackager(exefs_path: Path):
-    shutil.rmtree(exefs_path, ignore_errors=True)
     exefs_path.mkdir(parents=True, exist_ok=True)
 
     dread_depackager = Path(__file__).parent.joinpath("files", "dread_depackager")
