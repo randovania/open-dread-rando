@@ -1,3 +1,4 @@
+import copy
 import shutil
 import typing
 from pathlib import Path
@@ -98,6 +99,64 @@ class PatcherEditor(FileTreeEditor):
                 scenario.add_actor_to_group(group_name, new_actor_name)
             else:
                 scenario.remove_actor_from_group(group_name, new_actor_name)
+    
+    def copy_actor(self, scenario: str, coords, templateActor: Container, newName: str, offset: tuple =(0,0,0)):
+        """
+        Copies an actor into a scenario at a specific location
+
+        @param scenario: the scenario to place the door
+        @param coords: the position coordinate to place the door
+        @param actor: The actor to be copied into door's scenario
+        @param sName: The name of the new actor
+        @param offset: a tuple containing the offset coordinates, if any
+        @returns: the new copied actor
+        """
+        #print(coords)
+        newActor = copy.deepcopy(templateActor)
+        newActor.sName = newName
+        currentScenario = self.get_scenario(scenario)
+        currentScenario.actors_for_layer('default')[newActor.sName] = newActor
+        newActor.vPos = [float(c) + offset for c, offset in zip(coords, offset)]
+
+        return newActor
+    
+    def find_type_of_actor(self, scenarioStr: str, actordef: str, layer: str = "default"):
+        """
+        Returns a list of all actors on the given layer in the scenario
+        
+        param scenario: the scenario string
+        param layer: an optional layer to filter, standard layer is default
+        param actordef: the actor definition (bmsad) to filter for
+        returns: a list of all actors that match the criteria"""
+        scenario = self.get_scenario(scenarioStr)
+        actors_on_layer = scenario.actors_for_layer(layer)
+        filtered = []
+        for actor in actors_on_layer:
+            a = self.resolve_actor_reference({"actor": actor, "layer": layer, "scenario": scenarioStr})
+            if a.oActorDefLink.split(':')[1] == actordef:
+                filtered.append(actor)
+        return filtered
+    
+    def reference_for_link(self, link: str, scenario: str) -> dict:
+        """
+        Changes a link string (wp data type) into a reference dict
+        
+        param link: a reference string consisting of 7 components separated by colons
+        param scenario: the scenario this actor is in
+        returns: a reference dict
+        """
+        split_link = link.split(":")
+        if len(split_link) != 7:
+            raise ValueError(f"Expected 7 components in {link}, got {len(split_link)}")
+
+        layer = split_link[4]
+        actor = split_link[6]
+
+        return {
+            "scenario": scenario,
+            "layer": layer,
+            "actor": actor,
+        }
 
     def get_asset_names_in_folder(self, folder: str) -> typing.Iterator[str]:
         yield from (name for name in self._name_for_asset_id.values() if name.startswith(folder))
