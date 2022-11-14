@@ -110,7 +110,7 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
 def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
     door_editor = DoorPatcher(editor)
     for door in doors_config:
-        door_editor.patch_door(door)
+        door_editor.patch_door(door["actor"], door["door_type"])
 
 def add_custom_files(editor: PatcherEditor):
     custom_romfs = Path(__file__).parent.joinpath("files", "romfs")

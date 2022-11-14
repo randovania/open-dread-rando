@@ -122,12 +122,13 @@ class PatcherEditor(FileTreeEditor):
     
     def find_type_of_actor(self, scenarioStr: str, actordef: str, layer: str = "default"):
         """
-        Returns a list of all actors on the given layer in the scenario
+        Returns a list of actors with given actordef in the scenario
         
         param scenario: the scenario string
         param layer: an optional layer to filter, standard layer is default
         param actordef: the actor definition (bmsad) to filter for
-        returns: a list of all actors that match the criteria"""
+        returns: a list of all actors that match the criteria
+        """
         scenario = self.get_scenario(scenarioStr)
         actors_on_layer = scenario.actors_for_layer(layer)
         filtered = []
