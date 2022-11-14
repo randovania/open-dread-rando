@@ -140,6 +140,10 @@ class DoorPatcher:
         creates a list of all doortype enums, and filters them by various means until there is one remaining
         raises an exception if door is not a patchable type
         """
+        # make sure it's a door
+        if not is_door(door):
+            raise ValueError(f"Actor {door.sName} in scenario {scenario} is not a door!")
+        
         # filter enums by door's actorref
         door_actor_ref = door.oActorDefLink.split(':')[1]
         possible_enum_values = list()
