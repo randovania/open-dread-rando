@@ -29,44 +29,43 @@ class MinimapIconData(Enum):
     SHIELD_MISSILE = ("BlockageMissile", (-300, -150, 0, 300))
     SHIELD_SUPER_MISSILE = ("BlockageSuperMissile", (-300, -150, 0, 300))
 
-    def __init__(self, iconId: str, oBoxOffsets: tuple[float, float, float, float], directional: bool =True):
+    def __init__(self, icon_id: str, oBoxOffsets: tuple[float, float, float, float]):
         """
-        Initializes a new MinimapIconData with the given icon id and offsets for the right-facing direction
+        Initializes a new MinimapIconData with the given icon id and offsets for the left-facing direction
         """
-        self.iconId = iconId
-        self.directional = directional
-        self.oBoxMin = (oBoxOffsets[0], oBoxOffsets[2])
-        self.oBoxMax = (oBoxOffsets[1], oBoxOffsets[3])
+        self.icon_id = icon_id
+        self.oBox_min = (oBoxOffsets[0], oBoxOffsets[2])
+        self.oBox_max = (oBoxOffsets[1], oBoxOffsets[3])
     
-    def create_mapDoor(self, vPos: ListContainer[float, float, float]) -> Container:
+    def create_mapDoor(self, vPos: list[float, float, float]) -> Container:
         """creates a mapDoor for a given element"""
         cont = Container()
         cont["vPos"] = ListContainer([vPos[0], vPos[1]])
-        cont["oBoxL"] = Container()
-        cont["oBoxL"]["Min"] = ListContainer([vPos[0] + self.oBoxMin[0], vPos[1] - self.oBoxMin[1]])
-        cont["oBoxL"]["Max"] = ListContainer([vPos[0] + self.oBoxMax[0], vPos[1] + self.oBoxMax[1]])
-        cont["oBoxR"] = Container()
-        cont["oBoxR"]["Min"] = ListContainer([vPos[0] - self.oBoxMax[0], vPos[1] - self.oBoxMin[1]])
-        cont["oBoxR"]["Max"] = ListContainer([vPos[0] - self.oBoxMin[0], vPos[1] + self.oBoxMax[1]])
-        cont["sLeftIconId"] = f"{self.iconId}L"
-        cont["sRightIconId"] = f"{self.iconId}R"
+        cont["oBoxL"] = Container(
+            Min=ListContainer([vPos[0] + self.oBox_min[0], vPos[1] - self.oBox_min[1]]),
+            Max=ListContainer([vPos[0] + self.oBox_max[0], vPos[1] + self.oBox_max[1]]))
+        cont["oBoxR"] = Container(
+            Min = ListContainer([vPos[0] - self.oBox_max[0], vPos[1] - self.oBox_min[1]]),
+            Max = ListContainer([vPos[0] - self.oBox_min[0], vPos[1] + self.oBox_max[1]]))
+        cont["sLeftIconId"] = f"{self.icon_id}L"
+        cont["sRightIconId"] = f"{self.icon_id}R"
         cont["aRoomIds"] = ListContainer()
         
         return cont
 
-    def create_mapBlockage(self, vPos: ListContainer[float, float, float], dir: str) -> Container:
+    def create_mapBlockage(self, vPos: list[float, float, float], dir: str) -> Container:
         """Creates a mapBlockage for a shield in a given direction"""
         cont = Container()
         cont["vPos"] = ListContainer([vPos[0], vPos[1]])
 
         # get delta, which depends on shield dir. 
         # shield L needs no adjustments so delta is zero. shield R needs to be moved oBoxMin[0] + oBoxMax[0] to the right. 
-        delta = 0 if dir == "L" else -(self.oBoxMin[0] + self.oBoxMax[0])
+        delta = 0 if dir == "L" else -(self.oBox_min[0] + self.oBox_max[0])
 
-        cont["oBox"] = Container()
-        cont["oBox"]["Min"] = ListContainer([vPos[0] + self.oBoxMin[0] + delta, vPos[1] + self.oBoxMin[1]])
-        cont["oBox"]["Max"] = ListContainer([vPos[0] + self.oBoxMax[0] + delta, vPos[1] + self.oBoxMax[1]])
-        cont["sIconId"] = f"{self.iconId}{dir}"
+        cont["oBox"] = Container(
+            Min=ListContainer([vPos[0] + self.oBox_min[0] + delta, vPos[1] + self.oBox_min[1]]),
+            Max=ListContainer([vPos[0] + self.oBox_max[0] + delta, vPos[1] + self.oBox_max[1]]))
+        cont["sIconId"] = f"{self.icon_id}{dir}"
         cont["bFlipX"] = False
         cont["bFlipY"] = False
 
@@ -125,6 +124,9 @@ class DoorType(Enum):
         
         raise ValueError(f"{type} is not a patchable door! Please check DoorType enum for list of patchable doors.")
 
+def is_door(actor: Container):
+    return "LIFE" in actor.pComponents and "CDoorLifeComponent" == actor.pComponents.LIFE["@type"]
+
 class DoorPatcher:
     """An API to patch doors. Call patch_door() to use. """
     def __init__(self, editor: PatcherEditor) -> None:
@@ -157,13 +159,14 @@ class DoorPatcher:
         
         if shield_actor is not None:
             # remove non shielded doors if shield exists
-            possible_enum_values = list(filter(lambda e: (e.need_shield is True), possible_enum_values))
+            possible_enum_values = [e for e in possible_enum_values if e.need_shield]
 
             # check shields
             shield_actor_ref = shield_actor.oActorDefLink.split(':')[1]
-            possible_enum_values = list(filter(lambda e: (e.shield.actordef == shield_actor_ref), possible_enum_values))
+            possible_enum_values = [e for e in possible_enum_values if e.shield.actordef == shield_actor_ref]
         else:
-            possible_enum_values = list(filter(lambda e: (e.need_shield is False), possible_enum_values))
+            # remove shielded doors if shield does not exist
+            possible_enum_values = [e for e in possible_enum_values if not e.need_shield]
 
         if len(possible_enum_values) == 1:
             return possible_enum_values[0]

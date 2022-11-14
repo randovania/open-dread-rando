@@ -37,7 +37,7 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
 
         for layer_name, actor_name, actor in list(scenario.all_actors()):
             # Continue if this isn't a door
-            if not ("LIFE" in actor.pComponents and "CDoorLifeComponent" == actor.pComponents.LIFE["@type"]):
+            if not door_patcher.is_door(actor):
                 continue
 
             if actor.oActorDefLink != "actordef:actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad":
