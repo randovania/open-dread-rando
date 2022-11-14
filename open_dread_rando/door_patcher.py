@@ -118,7 +118,7 @@ class DoorType(Enum):
         self.shield = shield_actordef
     
     @classmethod
-    def get_type(type: str):
+    def get_type(cls, type: str):
         for e in DoorType:
             if e.type == type:
                 return e
