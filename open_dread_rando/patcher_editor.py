@@ -88,7 +88,7 @@ class PatcherEditor(FileTreeEditor):
     
     def copy_actor_groups(self, scenario_name: str, base_actor_name: str, new_actor_name: str):
         """
-        Copies a base actor's groups to a new actor's groups
+        Copies a base actor's groups to a new actor's groups. Both actors must be in the same scenario. 
         
         param baseRef: the actor that you are copying groups from
         param newRef: the actor that will have the same actor groups as baseRef
