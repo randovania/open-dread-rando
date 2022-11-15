@@ -20,6 +20,16 @@ function RemoteLua.SetReceivedPickups(count)
     Blackboard.SetProp(playerSection, "ReceivedPickups", "f", count)
 end
 
+local orig_update = RemoteLua.Update
+if type(orig_update) == "function" then
+    exclude_function_from_logging("Update")
+    function RemoteLua.Update()
+        push_debug_print_override()
+        orig_update()
+        pop_debug_print_override()
+    end
+end
+
 Init.tNewGameInventory = TEMPLATE("new_game_inventory")
 
 Init.iNumRandoTextBoxes = TEMPLATE("textbox_count")

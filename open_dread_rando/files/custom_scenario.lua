@@ -387,7 +387,7 @@ end
 function Scenario.ShowNextAsyncPopup()
     push_debug_print_override()
     if Scenario.QueuedPopups:empty() then
-        Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+        Game.AddGUISF(0, "Scenario.ShowNextAsyncPopup", "")
         pop_debug_print_override()
         return
     end
