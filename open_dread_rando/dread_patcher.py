@@ -7,7 +7,7 @@ from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util, game_patches
 from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
-from open_dread_rando.door_patcher import patch_door
+from open_dread_rando.door_patcher import DoorPatcher
 from open_dread_rando.environmental_damage import apply_constant_damage
 from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
@@ -107,6 +107,10 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
         except NotImplementedError as e:
             LOG.warning(e)
 
+def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
+    door_editor = DoorPatcher(editor)
+    for door in doors_config:
+        door_editor.patch_door(door["actor"], door["door_type"])
 
 def add_custom_files(editor: PatcherEditor):
     custom_romfs = Path(__file__).parent.joinpath("files", "romfs")
@@ -161,8 +165,8 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     if "hints" in configuration:
         patch_hints(editor, configuration["hints"])
 
-    for door in configuration["door_patches"]:
-        patch_door(editor, door)
+    #Doors
+    patch_doors(editor, configuration["door_patches"])
     
     for tile_group in configuration["tile_group_patches"]:
         patch_tilegroup(editor, tile_group)

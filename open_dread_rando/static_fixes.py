@@ -36,6 +36,7 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
         map_blockages = bmmap.raw.Root.mapBlockages
 
         for layer_name, actor_name, actor in list(scenario.all_actors()):
+            # Continue if this isn't a door
             if not door_patcher.is_door(actor):
                 continue
 

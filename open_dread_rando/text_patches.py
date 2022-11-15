@@ -78,6 +78,7 @@ def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
         ("ScorelessPine", ""),
         ("Arcanox", ""),
         ("Migs", ""),
+        ("hyperbola0", ""),
 
         ("Logic Database", "_SUBTITLE"),
         ("KirbymastaH", ""),
