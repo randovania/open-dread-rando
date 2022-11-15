@@ -104,6 +104,7 @@ need_shield: whether the actor needs a shield
 shield: the shield's ActorData
 """
 class DoorType(Enum):
+    FRAME = ("door_frame", ActorData.DOOR_FRAME, False, None, True, False)
     POWER = ("power_beam", ActorData.DOOR_POWER)
     CHARGE = ("charge_beam", ActorData.DOOR_CHARGE)
     WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM)
