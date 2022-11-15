@@ -20,6 +20,7 @@ function RemoteLua.SetReceivedPickups(count)
     Blackboard.SetProp(playerSection, "ReceivedPickups", "f", count)
 end
 
+exclude_function_from_logging = exclude_function_from_logging or function(_) end
 local orig_update = RemoteLua.Update
 if type(orig_update) == "function" then
     exclude_function_from_logging("Update")
