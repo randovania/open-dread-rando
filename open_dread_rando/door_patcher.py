@@ -23,6 +23,7 @@ class MinimapIconData(Enum):
     DOOR_POWER = ("DoorPower", (-150, -50, 0, 300))
     DOOR_CHARGE = ("DoorCharge", (-150, -50, 0, 300))
     DOOR_GRAPPLE = ("DoorGrapple", (-150, -50, 0, 300))
+    DOOR_PRESENCE = ("DoorPresence", (-150, -50, 0, 300))
     SHIELD_WIDE_BEAM = ("DoorWide", (-300, -150, 0, 300))
     SHIELD_PLASMA_BEAM = ("BlockagePlasma", (-300, -150, 0, 300))
     SHIELD_WAVE_BEAM = ("BlockageWave", (-300, -150, 0, 300))
@@ -78,18 +79,20 @@ actordef: the actordef for the actor
 minimapData: the MinimapIconData for this type
 """
 class ActorData(Enum):
-    DOOR_FRAME = ("actors/props/doorframe/charclasses/doorframe.bmsad", MinimapIconData.DOOR_FRAME)
-    DOOR_POWER = ("actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad", MinimapIconData.DOOR_POWER)
-    DOOR_CHARGE = ("actors/props/doorchargecharge/charclasses/doorchargecharge.bmsad", MinimapIconData.DOOR_CHARGE)
-    DOOR_GRAPPLE = ("actors/props/doorgrapplegrapple/charclasses/doorgrapplegrapple.bmsad", MinimapIconData.DOOR_GRAPPLE)
-    SHIELD_WIDE_BEAM = ("actors/props/doorwidebeam/charclasses/doorwidebeam.bmsad", MinimapIconData.SHIELD_WIDE_BEAM)
-    SHIELD_PLASMA_BEAM = ("actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsad", MinimapIconData.SHIELD_PLASMA_BEAM)
-    SHIELD_WAVE_BEAM = ("actors/props/doorwavebeam/charclasses/doorwavebeam.bmsad", MinimapIconData.SHIELD_WAVE_BEAM)
-    SHIELD_MISSILE = ("actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsad", MinimapIconData.SHIELD_MISSILE)
-    SHIELD_SUPER_MISSILE = ("actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsad", MinimapIconData.SHIELD_SUPER_MISSILE)
+    DOOR_FRAME = (["doorframe"], MinimapIconData.DOOR_FRAME)
+    DOOR_POWER = (["doorpowerpower", "doorpowerclosed", "doorclosedpower"], MinimapIconData.DOOR_POWER)
+    DOOR_CHARGE = (["doorchargecharge", "doorchargeclosed", "doorclosedcharge"], MinimapIconData.DOOR_CHARGE)
+    DOOR_GRAPPLE = (["doorgrapplegrapple", "doorgrappleclosed", "doorclosedgrapple"], MinimapIconData.DOOR_GRAPPLE)
+    DOOR_PRESENCE = (["doorpresencepresence", "doorframepresence", "doorpresenceframe"], MinimapIconData.DOOR_PRESENCE)
+    SHIELD_WIDE_BEAM = (["doorwidebeam"], MinimapIconData.SHIELD_WIDE_BEAM)
+    SHIELD_PLASMA_BEAM = (["door_shield_plasma"], MinimapIconData.SHIELD_PLASMA_BEAM)
+    SHIELD_WAVE_BEAM = (["doorwavebeam"], MinimapIconData.SHIELD_WAVE_BEAM)
+    SHIELD_MISSILE = (["doorshieldmissile"], MinimapIconData.SHIELD_MISSILE)
+    SHIELD_SUPER_MISSILE = (["doorshieldsupermissile"], MinimapIconData.SHIELD_SUPER_MISSILE)
 
-    def __init__(self, actordef: str, minimap: MinimapIconData):
-        self.actordef = actordef
+    def __init__(self, actordef: list[str], minimap: MinimapIconData):
+        # generate actordefs
+        self.actordefs = [f"actors/props/{v}/charclasses/{v}.bmsad" for v in actordef]
         self.minimapData = minimap
 
 """
@@ -109,12 +112,15 @@ class DoorType(Enum):
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
     GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE)
+    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False)
 
-    def __init__(self, rdv_door_type: str, shield_data: ActorData, need_shield: bool =False, shield_actordef: ActorData =None):
+    def __init__(self, rdv_door_type: str, shield_data: ActorData, need_shield: bool =False, shield_actordef: ActorData =None, can_be_removed: bool =True, can_be_added: bool =True):
         self.type = rdv_door_type
         self.need_shield = need_shield
         self.door = shield_data
         self.shield = shield_actordef
+        self.can_be_removed = can_be_removed
+        self.can_be_added = can_be_added
     
     @classmethod
     def get_type(cls, type: str):
@@ -148,8 +154,9 @@ class DoorPatcher:
         door_actor_ref = door.oActorDefLink.split(':')[1]
         possible_enum_values = list()
         for type in DoorType:
-            if door_actor_ref == type.door.actordef:
-                possible_enum_values.append(type)
+            for tdef in type.door.actordefs:
+                if door_actor_ref == tdef:
+                    possible_enum_values.append(type)
         
         if len(possible_enum_values) == 1:
             return possible_enum_values[0]
@@ -167,7 +174,7 @@ class DoorPatcher:
 
             # check shields
             shield_actor_ref = shield_actor.oActorDefLink.split(':')[1]
-            possible_enum_values = [e for e in possible_enum_values if e.shield.actordef == shield_actor_ref]
+            possible_enum_values = [e for e in possible_enum_values if e.shield.actordefs[0] == shield_actor_ref]
         else:
             # remove shielded doors if shield does not exist
             possible_enum_values = [e for e in possible_enum_values if not e.need_shield]
@@ -186,11 +193,17 @@ class DoorPatcher:
         """
 
         scenario = door_ref["scenario"]
-        door_type = DoorType.get_type(door_type)
         doorActor = self.editor.resolve_actor_reference(door_ref)
+
+        # get the type of door we are patching to
+        door_type = DoorType.get_type(door_type)
+        if door_type.can_be_added is False:
+            raise ValueError(f"Door type {door_type} cannot be patched in!")
 
         # get the type of door we are patching
         door_in_scenario_type = self.door_actor_to_type(doorActor, scenario)
+        if door_in_scenario_type.can_be_removed is False:
+            raise ValueError(f"Base game door {door_in_scenario_type.type} cannot be patched!\nRequested door: {door_ref['actor']} in {scenario}")
         
         self.door_to_basic(doorActor, door_in_scenario_type, scenario)
         self.power_to_door_type(doorActor, door_type, scenario)
@@ -227,14 +240,14 @@ class DoorPatcher:
 
     # turns the door into a power beam door
     def any_door_to_power(self, door: Container, scenario: str):
-        door.oActorDefLink = f"actordef:{ActorData.DOOR_POWER.actordef}"
+        door.oActorDefLink = f"actordef:{ActorData.DOOR_POWER.actordefs[0]}"
         self.update_minimap_for_doors(door, DoorType.POWER, scenario)
     
     def power_to_door_type(self, door: Container, door_type: DoorType, scenario: str):
         # set door and ensure door assets are present
         self.set_door_type(door, door_type, scenario)
         
-        door_actor_folder = Path(door_type.door.actordef).parent.parent.as_posix()
+        door_actor_folder = Path(door_type.door.actordefs[0]).parent.parent.as_posix()
         for asset in self.editor.get_asset_names_in_folder(door_actor_folder):
             self.editor.ensure_present_in_scenario(scenario, asset)
 
@@ -250,19 +263,20 @@ class DoorPatcher:
             self.update_minimap_for_shield(shieldL, door_type.shield, "L", scenario)
             self.update_minimap_for_shield(shieldR, door_type.shield, "R", scenario)
 
-            shield_actor_folder = Path(door_type.shield.actordef).parent.parent.as_posix()
+            shield_actor_folder = Path(door_type.shield.actordefs[0]).parent.parent.as_posix()
             for asset in self.editor.get_asset_names_in_folder(shield_actor_folder):
                 self.editor.ensure_present_in_scenario(scenario, asset)
     
     def set_door_type(self, door: Container, door_type: DoorType, scenario: str):
-        door.oActorDefLink = f"actordef:{door_type.door.actordef}"
+        # set actor def to two sided actordef
+        door.oActorDefLink = f"actordef:{door_type.door.actordefs[0]}"
         self.update_minimap_for_doors(door, door_type, scenario)
 
     def create_shield(self, scenario: str, door: Container, shield_data: ActorData, dir: str):
         # make shields
         shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, f"{door.sName}{dir}")
         self.editor.copy_actor_groups(scenario, door.sName, shield.sName)
-        shield.oActorDefLink = f"actordef:{shield_data.actordef}"
+        shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
         shield.vAng[1] = shield.vAng[1] if dir == "L" else -shield.vAng[1]
 
         return shield
