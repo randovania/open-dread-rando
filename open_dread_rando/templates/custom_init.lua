@@ -21,10 +21,13 @@ function RemoteLua.SetReceivedPickups(count)
 end
 
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
+push_debug_print_override = push_debug_print_override or function() end
+pop_debug_print_override = pop_debug_print_override or function() end
+
 local orig_update = RemoteLua.Update
 if type(orig_update) == "function" then
-    exclude_function_from_logging("Update")
     function RemoteLua.Update()
+        exclude_function_from_logging("Update")
         push_debug_print_override()
         orig_update()
         pop_debug_print_override()
