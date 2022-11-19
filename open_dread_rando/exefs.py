@@ -40,14 +40,14 @@ class AsmPatch:
     def __init__(self, asm_template: str, versions: dict[str, AsmVersion]) -> None:
         self.asm_template = asm_template
         self.versions = versions
-    
+
     def _asm(self, version: str) -> bytes:
         return self.asm_template.format_map(self.versions[version].replacements).encode('ascii')
 
     def _data(self, version: str) -> bytes:
         encoding, count = self.assembler.asm(self._asm(version), self.versions[version].offset, True)
         return encoding
-    
+
     def patch(self, version: str) -> Tuple[int, bytes]:
         if version not in self.versions:
             raise RuntimeError(f"Unsupported version: {version}")

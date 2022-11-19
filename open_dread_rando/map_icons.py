@@ -35,6 +35,7 @@ class MapIcon:
             bFullZoomScale=self.full_zoom_scale
         )
 
+
 ALL_ICONS: dict[str, Union[MapIcon, str]] = {
     "powerup_speedbooster": MapIcon(
         icon_id="ItemSpeedBooster",
@@ -229,11 +230,12 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         label="UNKNOWN ITEM"
     ),
 }
-ALL_ICONS.update({f"DNA_{i+1}": MapIcon(
-    icon_id=f"ItemDNA{i+1}",
+ALL_ICONS.update({f"DNA_{i + 1}": MapIcon(
+    icon_id=f"ItemDNA{i + 1}",
     coords=(13, 7),
-    label=f"METROID DNA {i+1}"
+    label=f"METROID DNA {i + 1}"
 ) for i in range(12)})
+
 
 class MapIconEditor:
     def __init__(self, editor: PatcherEditor) -> None:
@@ -247,7 +249,7 @@ class MapIconEditor:
             return icon
         self.add_icon(icon)
         return icon.icon_id
-    
+
     def add_icon(self, icon: MapIcon):
         if icon.icon_id not in self.mapdefs.icons:
             icon.add_to_defs(self.mapdefs, self.editor)
@@ -259,7 +261,7 @@ class MapIconEditor:
         map_icon: dict = pickup["map_icon"]
         if "icon_id" in map_icon:
             return self._get_icon(map_icon["icon_id"])
-        
+
         custom_icon: dict = map_icon["custom_icon"]
 
         if "base_icon" in custom_icon:
@@ -268,9 +270,9 @@ class MapIconEditor:
             if "player" in custom_icon:
                 label = f"{custom_icon['player'].upper()}'S {icon.label}"
             icon = dataclasses.replace(icon,
-                icon_id=f"ItemCustom{self.custom_icons}",
-                label=label
-            )   
+                                       icon_id=f"ItemCustom{self.custom_icons}",
+                                       label=label
+                                       )
 
         else:
             if "coords" in custom_icon:
@@ -285,8 +287,7 @@ class MapIconEditor:
                 full_zoom_scale=custom_icon.get("full_zoom_scale", True),
                 **custom_icon.get("extras", {})
             )
-        
+
         self.custom_icons += 1
         self.add_icon(icon)
         return icon.icon_id
-    

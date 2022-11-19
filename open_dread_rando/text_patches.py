@@ -101,7 +101,7 @@ def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
     for item, loc in spoiler_log.items():
         rando_credits.append((item, "_SUBTITLE"))
         rando_credits.append((loc, ""))
-    
+
     rando_credits.append(("     ", "_SUBTITLE"))
 
     ordered_credits[1:1] = [

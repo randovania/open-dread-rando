@@ -1,7 +1,9 @@
 import copy
-from open_dread_rando.text_patches import apply_text_patches, patch_text
-from open_dread_rando.patcher_editor import PatcherEditor
+
 from mercury_engine_data_structures.formats.dread_types import CTriggerComponent_EEvent
+
+from open_dread_rando.patcher_editor import PatcherEditor
+from open_dread_rando.text_patches import apply_text_patches, patch_text
 
 
 # when playing with artifacts, ensure that sufficient artifact items are shuffled
@@ -9,7 +11,7 @@ from mercury_engine_data_structures.formats.dread_types import CTriggerComponent
 def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     if configuration["objective"]["required_artifacts"] == 0:
         return
-    
+
     patch_text(
         editor,
         "RANDO_ARTIFACTS_ALL",
@@ -38,7 +40,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
         itorash.actors_for_layer('default')[actor.sName] = actor
         itorash.add_actor_to_group('eg_collision_camera_001_Default', actor.sName)
         actor.vPos = [c + offset for c, offset in zip(actor.vPos, new_origin)]
-    
+
     for charclass in [
         "actors/props/weightactivatedplatform_access",
         "actors/props/accesspoint",
@@ -46,7 +48,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     ]:
         for asset in editor.get_asset_names_in_folder(charclass):
             editor.ensure_present_in_scenario("s090_skybase", asset)
-    
+
     trigger = ap_trigger.pComponents.TRIGGER
     on_exit = copy.deepcopy(trigger.lstActivationConditions[0])
     on_exit.eEvent = CTriggerComponent_EEvent.OnExit
@@ -64,13 +66,13 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     usable.wpThermalDevice = ""
 
     hints = {
-        f"DIAG_ADAM_SHIP_2_PAGE_{i+1}": hint
+        f"DIAG_ADAM_SHIP_2_PAGE_{i + 1}": hint
         for i, hint in enumerate(configuration['objective']['hints'])
     }
     apply_text_patches(editor, hints)
-    
+
     mlogs = {
-        f"MLOG_ITEM_RANDO_ARTIFACT_{i+1}": f"Acquired {r'{c1}'}Metroid DNA {i+1}{r'{c0}'}"
+        f"MLOG_ITEM_RANDO_ARTIFACT_{i + 1}": f"Acquired {r'{c1}'}Metroid DNA {i + 1}{r'{c0}'}"
         for i in range(12)
     }
     apply_text_patches(editor, mlogs)

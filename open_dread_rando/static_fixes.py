@@ -2,7 +2,6 @@ import copy
 from typing import Optional
 
 import construct
-from mercury_engine_data_structures.formats.dread_types import CActor, CTriggerComponent_EEvent
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando import door_patcher
@@ -105,12 +104,12 @@ PROBLEM_LAYERS = {
     },
     "Cooldown": {
         "s020_magma": [
-            "collision_camera_004", # Z-57 Access
+            "collision_camera_004",  # Z-57 Access
         ]
     },
     "PostEmmy": {
         "s070_basesanc": [
-            "collision_camera_040", # Purple Emmi Introduction
+            "collision_camera_040",  # Purple Emmi Introduction
         ]
     }
 }
@@ -129,7 +128,8 @@ def remove_problematic_x_layers(editor: PatcherEditor):
             ]
 
 
-def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str, insert_callback_at: Optional[int] = None):
+def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str,
+                               insert_callback_at: Optional[int] = None):
     cutscene_player = editor.resolve_actor_reference(cutscene_ref)
     callbacks_after_cutscene = cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA
 
@@ -148,12 +148,14 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
             i = insert_callback_at
             callbacks_after_cutscene[i:i] = [callback_action]
 
+
 def apply_kraid_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_61"
     }, "CurrentScenario.OnKraidDeath_CUSTOM", -1)
+
 
 def apply_drogyga_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
@@ -165,6 +167,7 @@ def apply_drogyga_fixes(editor: PatcherEditor):
     # remove the trigger that deletes drogyga until after beating drogyga
     aqua = editor.get_scenario("s040_aqua")
     aqua.remove_actor_from_group("eg_collision_camera_007_Default", "TG_WaterPoolAfterHydrogiga", "Boss")
+
 
 def activate_emmi_zones(editor: PatcherEditor):
     # Remove the cutscene that plays when you enter the emmi zone for the first time
@@ -307,15 +310,16 @@ def apply_experiment_fixes(editor: PatcherEditor):
         ap_trigger.sName = name
         ap_trigger.vPos = pos
 
-        ap_trigger.pComponents.TRIGGER.lstActivationConditions[0].vLogicActions[0].sCallback = f"CurrentScenario.OnEnter_{name}"
+        ap_trigger.pComponents.TRIGGER.lstActivationConditions[0].vLogicActions[
+            0].sCallback = f"CurrentScenario.OnEnter_{name}"
 
         magma.actors_for_layer('default')[name] = ap_trigger
         magma.add_actor_to_group("eg_collision_camera_004_PostXRelease", name)
-    
+
     # make thermal doors always closed during the fight
     for name in ["trap_thermal_horizontal_000", "trap_thermal_horizontal_005"]:
         magma.remove_actor_from_group("eg_collision_camera_009_Cooldown", name)
-        
+
         trap = copy.deepcopy(editor.resolve_actor_reference({
             "scenario": "s020_magma",
             "layer": "default",
@@ -325,7 +329,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
         trap.sName = f"{name}_EXPERIMENT"
         magma.actors_for_layer('default')[trap.sName] = trap
         magma.add_actor_to_group('eg_collision_camera_009_Cooldown', trap.sName)
-    
+
     # disable closing the thermal door permanently after experiment
     editor.remove_entity({
         "scenario": "s020_magma",
@@ -337,7 +341,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
 def apply_main_menu_fixes(editor: PatcherEditor):
     extras = editor.get_file("gui/scripts/extrasmenucomposition.bmscp", Bmscp)
     listcomp = extras.get_child("Content.ListComposition").lstChildren
-    listcomp.pop(2) # remove the credits button from the extras menu
+    listcomp.pop(2)  # remove the credits button from the extras menu
 
 
 def apply_static_fixes(editor: PatcherEditor):

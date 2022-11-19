@@ -1,7 +1,8 @@
-import io
 from typing import Any
-from open_dread_rando.patcher_editor import PatcherEditor
+
 from mercury_engine_data_structures.formats.ini import Ini
+
+from open_dread_rando.patcher_editor import PatcherEditor
 
 
 def apply_cosmetic_patches(editor: PatcherEditor, cosmetic: dict):

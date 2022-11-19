@@ -50,7 +50,7 @@ class LuaEditor:
         parent = self.get_parent_for(pickup_resources[0]["item_id"])
         if not boss and len(pickup_resources) == 1:
             return parent
-        
+
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
 
@@ -81,7 +81,7 @@ class LuaEditor:
     def add_progressive_class(self, replacement):
         new_class = lua_util.replace_lua_template("randomizer_progressive_template.lua", replacement)
         self._powerup_script += new_class.encode("utf-8")
-    
+
     def add_progressive_models(self, pickup: dict, actordef_name: str):
         progressive_models = [
             {
