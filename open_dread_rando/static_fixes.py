@@ -149,6 +149,13 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
             callbacks_after_cutscene[i:i] = [callback_action]
 
 
+def apply_corpius_fixes(editor: PatcherEditor):
+    _apply_boss_cutscene_fixes(editor, {
+        "scenario": "s010_cave",
+        "layer": "Cutscenes",
+        "actor": "cutsceneplayer_57"
+    }, "CurrentScenario.OnCorpiusDeath_CUSTOM", 0)
+
 def apply_kraid_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
@@ -349,6 +356,7 @@ def apply_static_fixes(editor: PatcherEditor):
     activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
     apply_kraid_fixes(editor)
+    apply_corpius_fixes(editor)
     fix_backdoor_white_cu(editor)
     patch_corpius_checkpoints(editor)
     apply_experiment_fixes(editor)
