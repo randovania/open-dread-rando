@@ -121,14 +121,14 @@ class DoorType(Enum):
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, ["actors/props/door"])
 
     def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
-                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, additional_asset_folders: list[str] = []):
+                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, additional_asset_folders: list[str] = None):
         self.type = rdv_door_type
         self.need_shield = need_shield
         self.door = door_data
         self.shield = shield_data
         self.can_be_removed = can_be_removed
         self.can_be_added = can_be_added
-        self.required_asset_folders = additional_asset_folders
+        self.required_asset_folders = [] if additional_asset_folders is None else additional_asset_folders
         self.required_asset_folders.append(Path(self.door.actordefs[0]).parent.parent.as_posix())
         if self.need_shield:
             self.required_asset_folders.append(Path(self.shield.actordefs[0]).parent.parent.as_posix())
