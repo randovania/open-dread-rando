@@ -169,7 +169,7 @@ def apply_drogyga_fixes(editor: PatcherEditor):
         "scenario": "s040_aqua",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_65"
-    }, "CurrentScenario.OnHydrogigaDead_CUSTOM")
+    }, "CurrentScenario.OnHydrogigaDead_CUSTOM", -1)
 
     # remove the trigger that deletes drogyga until after beating drogyga
     aqua = editor.get_scenario("s040_aqua")
