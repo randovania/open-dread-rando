@@ -299,7 +299,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
         "scenario": "s020_magma",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_81"
-    }, "")
+    }, "CurrentScenario.OnExperimentDeath_CUSTOM", 0)
 
     new_triggers = {
         "TriggerEnableCooldown": (5050.000, -5346.150, 0.000),

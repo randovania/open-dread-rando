@@ -865,7 +865,7 @@ function s020_magma.OnCutscene78Started()
   Game.SetSFXVolume(L0_2, 0)
 end
 
-function s020_magma.OnCutscene81Ended()
+function s020_magma.OnExperimentDeath_CUSTOM()
     
     
   s020_magma.Cooldown_Deactivation()
