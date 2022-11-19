@@ -1,3 +1,5 @@
+import pprint
+
 from mercury_engine_data_structures.formats import Txt
 
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -62,45 +64,54 @@ def patch_hints(editor: PatcherEditor, hints: list[dict]):
         patch_text(editor, string_key, hint["text"])
 
 
+_PROJECT_MEMBERS = {
+    "Project Leads": [
+        "Henrique 'Darkszero' Gemignani",
+        "duncathan_salt",
+    ],
+    "Game Patching": [
+        "stuckpixel",
+        "ScorelessPine",
+        "Arcanox",
+        "Migs",
+        "hyperbola0",
+    ],
+    "Logic Database": [
+        "KirbymastaH",
+        "Dyceron",
+        "XenoWars",
+        "Izzychu",
+        "Hugoshido",
+    ],
+    "Additional Art": [
+        "BigSharksZ",
+        "SkyTheLucario"
+    ],
+    "     ": [
+        "With contributions from many others.",
+    ]
+}
+
+
 def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
     text = editor.get_file("system/localization/credits.txt", Txt)
     ordered_credits = list(text.strings.items())
 
     rando_credits = [
         ("Randomizer Credits", "_TITLE"),
-
-        ("Project Leads", "_SUBTITLE"),
-        ("Henrique 'Darkszero' Gemignani", ""),
-        ("duncathan_salt", ""),
-
-        ("Game Patching", "_SUBTITLE"),
-        ("stuckpixel", ""),
-        ("ScorelessPine", ""),
-        ("Arcanox", ""),
-        ("Migs", ""),
-        ("hyperbola0", ""),
-
-        ("Logic Database", "_SUBTITLE"),
-        ("KirbymastaH", ""),
-        ("Dyceron", ""),
-        ("XenoWars", ""),
-        ("Izzychu", ""),
-        ("Hugoshido", ""),
-
-        ("Additional Art", "_SUBTITLE"),
-        ("BigSharksZ", ""),
-        ("SkyTheLucario", ""),
-
-        ("     ", "_SUBTITLE"),
-        ("With contributions from many others.", ""),
     ]
+
+    for group, group_members in _PROJECT_MEMBERS.items():
+        rando_credits.append((group, "_SUBTITLE"))
+        for member in group_members:
+            rando_credits.append((member, ""))
 
     if spoiler_log:
         rando_credits.append(("     ", "_SUBTITLE"))
         rando_credits.append(("Major Item Locations", "_TITLE"))
-    for item, loc in spoiler_log.items():
-        rando_credits.append((item, "_SUBTITLE"))
-        rando_credits.append((loc, ""))
+        for item, loc in spoiler_log.items():
+            rando_credits.append((item, "_SUBTITLE"))
+            rando_credits.append((loc, ""))
 
     rando_credits.append(("     ", "_SUBTITLE"))
 

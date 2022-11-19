@@ -310,8 +310,8 @@ def apply_experiment_fixes(editor: PatcherEditor):
         ap_trigger.sName = name
         ap_trigger.vPos = pos
 
-        ap_trigger.pComponents.TRIGGER.lstActivationConditions[0].vLogicActions[
-            0].sCallback = f"CurrentScenario.OnEnter_{name}"
+        activation_conditions = ap_trigger.pComponents.TRIGGER.lstActivationConditions
+        activation_conditions[0].vLogicActions[0].sCallback = f"CurrentScenario.OnEnter_{name}"
 
         magma.actors_for_layer('default')[name] = ap_trigger
         magma.add_actor_to_group("eg_collision_camera_004_PostXRelease", name)
