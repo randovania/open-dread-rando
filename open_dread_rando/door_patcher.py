@@ -32,7 +32,7 @@ class MinimapIconData(Enum):
     SHIELD_MISSILE = ("BlockageMissile", (-300, -150, 0, 300))
     SHIELD_SUPER_MISSILE = ("BlockageSuperMissile", (-300, -150, 0, 300))
 
-    def __init__(self, icon_id: str, offsets: Sequence[float, float, float, float]):
+    def __init__(self, icon_id: str, offsets: tuple[float, float, float, float]):
         """
         Initializes a new MinimapIconData with the given icon id and offsets for the left-facing direction
         """
@@ -40,7 +40,7 @@ class MinimapIconData(Enum):
         self.oBox_min = (offsets[0], offsets[2])
         self.oBox_max = (offsets[1], offsets[3])
 
-    def create_map_door(self, pos: Sequence[float, float, float]) -> Container:
+    def create_map_door(self, pos: Sequence[float]) -> Container:
         """creates a mapDoor for a given element"""
         cont = Container()
         cont["vPos"] = ListContainer([pos[0], pos[1]])
@@ -56,7 +56,7 @@ class MinimapIconData(Enum):
 
         return cont
 
-    def create_map_blockage(self, pos: Sequence[float, float, float], dir: str) -> Container:
+    def create_map_blockage(self, pos: Sequence[float], dir: str) -> Container:
         """Creates a mapBlockage for a shield in a given direction"""
         cont = Container()
         cont["vPos"] = ListContainer([pos[0], pos[1]])
@@ -117,17 +117,21 @@ class DoorType(Enum):
     WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
-    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE)
-    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False)
+    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True, ["actors/props/door"])
+    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, ["actors/props/door"])
 
-    def __init__(self, rdv_door_type: str, shield_data: ActorData, need_shield: bool = False,
-                 shield_actordef: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True):
+    def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
+                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, additional_asset_folders: list[str] = None):
         self.type = rdv_door_type
         self.need_shield = need_shield
-        self.door = shield_data
-        self.shield = shield_actordef
+        self.door = door_data
+        self.shield = shield_data
         self.can_be_removed = can_be_removed
         self.can_be_added = can_be_added
+        self.required_asset_folders = [] if additional_asset_folders is None else additional_asset_folders
+        self.required_asset_folders.append(Path(self.door.actordefs[0]).parent.parent.as_posix())
+        if self.need_shield:
+            self.required_asset_folders.append(Path(self.shield.actordefs[0]).parent.parent.as_posix())
 
     @classmethod
     def get_type(cls, type: str):
@@ -255,12 +259,8 @@ class DoorPatcher:
         self.update_minimap_for_doors(door, DoorType.POWER, scenario)
 
     def power_to_door_type(self, door: Container, door_type: DoorType, scenario: str):
-        # set door and ensure door assets are present
+        # set door
         self.set_door_type(door, door_type, scenario)
-
-        door_actor_folder = Path(door_type.door.actordefs[0]).parent.parent.as_posix()
-        for asset in self.editor.get_asset_names_in_folder(door_actor_folder):
-            self.editor.ensure_present_in_scenario(scenario, asset)
 
         # if needed, set shield and ensure shield assets are present
         if door_type.need_shield:
@@ -275,9 +275,10 @@ class DoorPatcher:
 
             self.update_minimap_for_shield(shield_l, door_type.shield, "L", scenario)
             self.update_minimap_for_shield(shield_r, door_type.shield, "R", scenario)
-
-            shield_actor_folder = Path(door_type.shield.actordefs[0]).parent.parent.as_posix()
-            for asset in self.editor.get_asset_names_in_folder(shield_actor_folder):
+        
+        # ensure assets are present
+        for folder in door_type.required_asset_folders:
+            for asset in self.editor.get_asset_names_in_folder(folder):
                 self.editor.ensure_present_in_scenario(scenario, asset)
 
     def set_door_type(self, door: Container, door_type: DoorType, scenario: str):
