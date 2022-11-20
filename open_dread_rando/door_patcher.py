@@ -285,6 +285,8 @@ class DoorPatcher:
         # set actor def to two-sided actordef
         door.oActorDefLink = f"actordef:{door_type.door.actordefs[0]}"
         self.update_minimap_for_doors(door, door_type, scenario)
+        if door_type is DoorType.GRAPPLE:
+            door.pComponents.LIFE.bStayOpen = False
 
     def create_shield(self, scenario: str, door: Container, shield_data: ActorData, dir: str):
         # make shields
