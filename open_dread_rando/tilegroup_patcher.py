@@ -1,7 +1,9 @@
 from open_dread_rando.patcher_editor import PatcherEditor
 
+
 def is_tilegroup(actor):
     return "TILEGROUP" in actor.pComponents and actor.pComponents.TILEGROUP["@type"] == "CBreakableTileGroupComponent"
+
 
 def patch_tilegroup(editor: PatcherEditor, group: dict):
     """
@@ -14,7 +16,7 @@ def patch_tilegroup(editor: PatcherEditor, group: dict):
 
     if not is_tilegroup(actor):
         raise ValueError(f"Actor at {group['actor']} is not a breakable tile group.")
-    
+
     gridTiles = actor.pComponents.TILEGROUP.aGridTiles
     for tile in gridTiles:
         tile.eTileType = group["tiletype"]

@@ -127,7 +127,9 @@ class ActorPickup(BasePickup):
         set_custom_params: dict = pickable["functions"][0]["params"]
         set_custom_params["Param1"]["value"] = "ITEM_NONE"
 
-        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup, actordef_name=bmsad["name"])
+        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup,
+                                                                                               actordef_name=bmsad[
+                                                                                                   "name"])
 
         return bmsad
 
@@ -143,7 +145,8 @@ class ActorPickup(BasePickup):
 
             # Apply grapple particles
             if selected_model_data.grapple_fx:
-                grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad", Bmsad)
+                grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad",
+                                          Bmsad)
                 grapple_components = grapple.raw["property"]["components"]
                 components = new_template["property"]["components"]
                 components["MATERIALFX"] = grapple_components["MATERIALFX"]
@@ -154,18 +157,18 @@ class ActorPickup(BasePickup):
                     "empty_string": "",
                     "root": "Root",
                     "fields": {
-                        "vInitScale":          list(selected_model_data.transform.scale),
+                        "vInitScale": list(selected_model_data.transform.scale),
                         "vInitPosWorldOffset": list(selected_model_data.transform.position),
                         "vInitAngWorldOffset": list(selected_model_data.transform.angle),
                     }
                 }
-                
+
             # Animation/BMSAS
             new_template["property"]["binaries"][0] = selected_model_data.bmsas
         else:
             default_model_data = model_data.get_data(model_names[0])
             model_updater = new_template["property"]["components"]["MODELUPDATER"]
-            
+
             new_template["property"]["model_name"] = default_model_data.bcmdl_path
             model_updater["type"] = "CMultiModelUpdaterComponent"
             model_updater["fields"] = {
@@ -184,7 +187,6 @@ class ActorPickup(BasePickup):
 
             actor.pComponents.MODELUPDATER["@type"] = "CMultiModelUpdaterComponent"
             actor.pComponents.MODELUPDATER.sModelAlias = model_names[0]
-
 
     def patch_minimap_icon(self, editor: PatcherEditor, actor: Container):
         if "map_icon" in self.pickup and "original_actor" in self.pickup["map_icon"]:

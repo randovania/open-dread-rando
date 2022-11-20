@@ -45,7 +45,7 @@ class PatcherEditor(FileTreeEditor):
 
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))
-    
+
     def ensure_present_in_scenario(self, scenario: str, asset):
         for pkg in self.get_level_pkgs(scenario):
             self.ensure_present(pkg, asset)
@@ -85,7 +85,7 @@ class PatcherEditor(FileTreeEditor):
         scenario.actors_for_layer(layer).pop(actor_name)
         if map_category is not None:
             self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
-    
+
     def copy_actor_groups(self, scenario_name: str, base_actor_name: str, new_actor_name: str):
         """
         Copies a base actor's groups to a new actor's groups. Both actors must be in the same scenario. 
@@ -95,12 +95,12 @@ class PatcherEditor(FileTreeEditor):
         """
         scenario = self.get_scenario(scenario_name)
         for group_name in scenario.all_actor_groups():
-            if(scenario.is_actor_in_group(group_name, base_actor_name)):
+            if (scenario.is_actor_in_group(group_name, base_actor_name)):
                 scenario.add_actor_to_group(group_name, new_actor_name)
             else:
                 scenario.remove_actor_from_group(group_name, new_actor_name)
-    
-    def copy_actor(self, scenario: str, coords, templateActor: Container, newName: str, offset: tuple =(0,0,0)):
+
+    def copy_actor(self, scenario: str, coords, templateActor: Container, newName: str, offset: tuple = (0, 0, 0)):
         """
         Copies an actor into a scenario at a specific location
 
@@ -111,7 +111,7 @@ class PatcherEditor(FileTreeEditor):
         @param offset: a tuple containing the offset coordinates, if any
         @returns: the new copied actor
         """
-        #print(coords)
+        # print(coords)
         newActor = copy.deepcopy(templateActor)
         newActor.sName = newName
         currentScenario = self.get_scenario(scenario)
@@ -119,7 +119,7 @@ class PatcherEditor(FileTreeEditor):
         newActor.vPos = [float(c) + offset for c, offset in zip(coords, offset)]
 
         return newActor
-    
+
     def find_type_of_actor(self, scenarioStr: str, actordef: str, layer: str = "default"):
         """
         Returns a list of actors with given actordef in the scenario
@@ -137,7 +137,7 @@ class PatcherEditor(FileTreeEditor):
             if a.oActorDefLink.split(':')[1] == actordef:
                 filtered.append(actor)
         return filtered
-    
+
     def reference_for_link(self, link: str, scenario: str) -> dict:
         """
         Changes a link string (wp data type) into a reference dict

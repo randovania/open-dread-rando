@@ -107,10 +107,12 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
         except NotImplementedError as e:
             LOG.warning(e)
 
+
 def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
     door_editor = DoorPatcher(editor)
     for door in doors_config:
         door_editor.patch_door(door["actor"], door["door_type"])
+
 
 def add_custom_files(editor: PatcherEditor):
     custom_romfs = Path(__file__).parent.joinpath("files", "romfs")
@@ -119,7 +121,7 @@ def add_custom_files(editor: PatcherEditor):
             continue
         relative = child.relative_to(custom_romfs).as_posix()
         editor.add_new_asset(str(relative), child.read_bytes(), [])
-    
+
     lua_libraries = Path(__file__).parent.joinpath("files", "lua_libraries")
     for child in lua_libraries.rglob("*"):
         if not child.is_file():
@@ -165,9 +167,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     if "hints" in configuration:
         patch_hints(editor, configuration["hints"])
 
-    #Doors
+    # Doors
     patch_doors(editor, configuration["door_patches"])
-    
+
     for tile_group in configuration["tile_group_patches"]:
         patch_tilegroup(editor, tile_group)
 
@@ -218,5 +220,3 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     editor.save_modifications(out_romfs, output_format=output_format)
 
     LOG.info("Done")
-
-

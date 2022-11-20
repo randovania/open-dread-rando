@@ -8,6 +8,7 @@ class Transform:
     angle: Tuple[float, float, float] = (0.0, 0.0, 0.0)
     scale: Tuple[float, float, float] = (1.0, 1.0, 1.0)
 
+
 @dataclasses.dataclass(frozen=True)
 class ModelData:
     bcmdl_path: str
@@ -345,7 +346,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mp_fxhologram_01.bsmat",
         ),
         transform=Transform(
-            scale = (-1.25, 1.25, 1.25),
+            scale=(-1.25, 1.25, 1.25),
             position=(0.0, -30.0, 0.0),
         ),
     ),
