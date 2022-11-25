@@ -343,6 +343,11 @@ def apply_main_menu_fixes(editor: PatcherEditor):
     listcomp = extras.get_child("Content.ListComposition").lstChildren
     listcomp.pop(2)  # remove the credits button from the extras menu
 
+def disable_hanubia_cutscene(editor: PatcherEditor):
+    # disable cutscene 12 (hanubia - tank room) because it teleports samus to the lower section (bad for door rando)
+    cutscene_player = editor.resolve_actor_reference({"scenario": "s080_shipyard", "layer": "cutscenes", "actor": "cutsceneplayer_12"})
+    cutscene_player.bEnabled = False
+
 
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
@@ -354,3 +359,4 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_experiment_fixes(editor)
     apply_drogyga_fixes(editor)
     apply_main_menu_fixes(editor)
+    disable_hanubia_cutscene(editor)
