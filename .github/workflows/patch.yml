@@ -1,0 +1,30 @@
+name: Patcher
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  starter_preset_patcher:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Create venv
+        run: python -m venv venv
+
+      - name: Install Python packages
+        run: venv/bin/python -m pip install --upgrade pip setuptools
+
+      - name: Install
+        run: venv/bin/python -m pip install -e .
+
+      - name: Export
+        run:
+          venv/bin/python -m open_dread_rando --input-path "$DREAD_PATH" --output-path export/ --input-json tests/test_files/starter_preset_patcher.json
