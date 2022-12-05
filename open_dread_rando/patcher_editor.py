@@ -6,6 +6,7 @@ from pathlib import Path
 from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
+from mercury_engine_data_structures.game_check import Game
 
 T = typing.TypeVar("T")
 
@@ -22,7 +23,7 @@ class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]
 
     def __init__(self, root: Path):
-        super().__init__(root)
+        super().__init__(root, target_game=Game.DREAD)
         self.memory_files = {}
 
     def get_file(self, path: str, type_hint: typing.Type[T] = BaseResource) -> T:
