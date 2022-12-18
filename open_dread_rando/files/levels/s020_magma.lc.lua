@@ -865,7 +865,7 @@ function s020_magma.OnCutscene78Started()
   Game.SetSFXVolume(L0_2, 0)
 end
 
-function s020_magma.OnExperimentDeath_CUSTOM()
+function s020_magma.OnCutscene81Ended()
     
     
   s020_magma.Cooldown_Deactivation()
@@ -873,6 +873,9 @@ function s020_magma.OnExperimentDeath_CUSTOM()
   Blackboard.SetProp("s010_cave", "SubareaSetupID[collision_camera_080]", "s", "Default>PostXRelease")
   Scenario.WriteToPlayerBlackboard("RANDO_DEFEATED_EXPERIMENT", "b", true)
   Game.SetPlayerInteractMovementState()
+end
+
+function s020_magma.OnExperimentDeath_CUSTOM()
 end
 
 function s020_magma.OnCutscene81Skipped()
