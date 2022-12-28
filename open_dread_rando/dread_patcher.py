@@ -21,6 +21,7 @@ from open_dread_rando.static_fixes import apply_static_fixes
 from open_dread_rando.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
 from open_dread_rando.tilegroup_patcher import patch_tilegroup
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
+from construct import ListContainer
 
 T = typing.TypeVar("T")
 
@@ -113,6 +114,14 @@ def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
     for door in doors_config:
         door_editor.patch_door(door["actor"], door["door_type"])
 
+def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
+    # create custom spawn point
+    _EXAMPLE_SP = {"scenario": "s010_cave", "layer": "default", "actor": "StartPoint0"}
+    base_actor = editor.resolve_actor_reference(_EXAMPLE_SP)
+    for new_spawn in spawn_config:
+        new_spawn_pos = ListContainer((new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
+        editor.copy_actor(new_spawn["new_actor"]["scenario"], new_spawn_pos, base_actor, new_spawn["new_actor"]["actor"])
+
 
 def add_custom_files(editor: PatcherEditor):
     custom_romfs = Path(__file__).parent.joinpath("files", "romfs")
@@ -169,6 +178,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     # Doors
     patch_doors(editor, configuration["door_patches"])
+
+    # custom spawn points
+    patch_spawn_points(editor, configuration["new_spawn_points"])
 
     for tile_group in configuration["tile_group_patches"]:
         patch_tilegroup(editor, tile_group)
