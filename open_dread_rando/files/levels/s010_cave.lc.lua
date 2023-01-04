@@ -2289,3 +2289,6 @@ function s010_cave.cutsceneplayer_57_delayed()
     oActor.bEnabled = false
   end
 end
+
+function s010_cave.OnCorpiusDeath_CUSTOM()
+end
