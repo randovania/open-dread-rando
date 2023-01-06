@@ -466,11 +466,15 @@
                     },
                     "location": {
                         "$ref": "#/$defs/position"
+                    },
+                    "collision_camera_name": {
+                        "type": "string"
                     }
                 },
                 "required": [
                     "new_actor",
-                    "location"
+                    "location",
+                    "collision_camera_name"
                 ],
                 "additionalProperties": false
             },
