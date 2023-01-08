@@ -3913,6 +3913,20 @@
             "{c1}Metroid DNA 1{c0} is guarded by {c2}Corpius{c0}.|{c1}Metroid DNA 2{c0} is guarded by {c2}Kraid{c0}.|{c1}Metroid DNA 3{c0} is guarded by {c2}E.M.M.I.-06WB{c0}."
         ]
     },
+    "new_spawn_points": [
+        {
+            "new_actor": {
+                "actor": "SP_RDV_000",
+                "scenario": "s020_magma"
+            },
+            "location": {
+                "x": 14158.38,
+                "y": -1720.86,
+                "z": 0.0
+            },
+            "collision_camera_name": "collision_camera_006"
+        }
+    ],
     "mod_compatibility": "ryujinx",
     "mod_category": "romfs"
 }

@@ -455,6 +455,31 @@
             },
             "default": []
         },
+        "new_spawn_points": {
+            "type": "array",
+            "description": "Creates new spawn points",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "new_actor": {
+                        "$ref": "#/$defs/actor_reference"
+                    },
+                    "location": {
+                        "$ref": "#/$defs/position"
+                    },
+                    "collision_camera_name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "new_actor",
+                    "location",
+                    "collision_camera_name"
+                ],
+                "additionalProperties": false
+            },
+            "default": []
+        },
         "spoiler_log": {
             "type": "object",
             "additionalProperties": {
@@ -617,6 +642,25 @@
                 "ITEM_RANDO_ARTIFACT_10",
                 "ITEM_RANDO_ARTIFACT_11",
                 "ITEM_RANDO_ARTIFACT_12"
+            ]
+        },
+        "position": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "type": "number"
+                },
+                "y": {
+                    "type": "number"
+                },
+                "z": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "x",
+                "y",
+                "z"
             ]
         }
     }
