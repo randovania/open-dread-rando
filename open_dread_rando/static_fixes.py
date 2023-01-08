@@ -149,6 +149,13 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
             callbacks_after_cutscene[i:i] = [callback_action]
 
 
+def apply_corpius_fixes(editor: PatcherEditor):
+    _apply_boss_cutscene_fixes(editor, {
+        "scenario": "s010_cave",
+        "layer": "Cutscenes",
+        "actor": "cutsceneplayer_57"
+    }, "CurrentScenario.OnCorpiusDeath_CUSTOM", 0)
+
 def apply_kraid_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
@@ -162,7 +169,7 @@ def apply_drogyga_fixes(editor: PatcherEditor):
         "scenario": "s040_aqua",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_65"
-    }, "CurrentScenario.OnHydrogigaDead_CUSTOM")
+    }, "CurrentScenario.OnHydrogigaDead_CUSTOM", -1)
 
     # remove the trigger that deletes drogyga until after beating drogyga
     aqua = editor.get_scenario("s040_aqua")
@@ -292,7 +299,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
         "scenario": "s020_magma",
         "layer": "cutscenes",
         "actor": "cutsceneplayer_81"
-    }, "")
+    }, "CurrentScenario.OnExperimentDeath_CUSTOM", 0)
 
     new_triggers = {
         "TriggerEnableCooldown": (5050.000, -5346.150, 0.000),
@@ -343,14 +350,21 @@ def apply_main_menu_fixes(editor: PatcherEditor):
     listcomp = extras.get_child("Content.ListComposition").lstChildren
     listcomp.pop(2)  # remove the credits button from the extras menu
 
+def disable_hanubia_cutscene(editor: PatcherEditor):
+    # disable cutscene 12 (hanubia - tank room) because it teleports samus to the lower section (bad for door rando)
+    cutscene_player = editor.resolve_actor_reference({"scenario": "s080_shipyard", "layer": "cutscenes", "actor": "cutsceneplayer_12"})
+    cutscene_player.bEnabled = False
+
 
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
     apply_kraid_fixes(editor)
+    apply_corpius_fixes(editor)
     fix_backdoor_white_cu(editor)
     patch_corpius_checkpoints(editor)
     apply_experiment_fixes(editor)
     apply_drogyga_fixes(editor)
     apply_main_menu_fixes(editor)
+    disable_hanubia_cutscene(editor)

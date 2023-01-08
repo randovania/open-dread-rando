@@ -875,6 +875,9 @@ function s020_magma.OnCutscene81Ended()
   Game.SetPlayerInteractMovementState()
 end
 
+function s020_magma.OnExperimentDeath_CUSTOM()
+end
+
 function s020_magma.OnCutscene81Skipped()
 
   local oActor = Game.GetActor("fan_cooldown_000")

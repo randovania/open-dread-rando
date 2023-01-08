@@ -338,12 +338,13 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
     ),
 
     "powerup_powerbomb": ModelData(
-        bcmdl_path="actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
+        bcmdl_path="actors/items/powerup_powerbomb/models/powerup_powerbomb.bcmdl",
         bmsas="actors/items/item_powerbombtank/charclasses/item_powerbombtank.bmsas",
         dependencies=(
             "actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
-            "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mat01.bsmat",
-            "actors/items/item_powerbombtank/models/imats/item_powerbombtank_mp_fxhologram_01.bsmat",
+            # use more leading zeros because path needs to be the same length as for item_powerbombtank
+            "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_mat0001.bsmat",
+            "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_mp_fxhologram_0001.bsmat",
         ),
         transform=Transform(
             scale=(-1.25, 1.25, 1.25),
