@@ -80,7 +80,7 @@ _PROJECT_MEMBERS = {
         "KirbymastaH",
         "Dyceron",
         "XenoWars",
-        "Izzychu",
+        "Mayberry",
         "Hugoshido",
     ],
     "Additional Art": [
