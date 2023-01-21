@@ -51,7 +51,7 @@ class LuaEditor:
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
 
-        hashable_progression = "_".join([f'{res["item_id"]}_{res["quantity"]}' for res in pickup_resources])
+        hashable_progression = "_".join([f'{res["item_id"]}_{res["quantity"]}' for res in pickup_resources]).replace("-", "")
 
         if hashable_progression in self._progressive_classes.keys():
             return self._progressive_classes[hashable_progression]
