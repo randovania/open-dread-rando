@@ -149,9 +149,10 @@ def is_door(actor: Container):
 class DoorPatcher:
     """An API to patch doors. Call patch_door() to use. """
 
-    def __init__(self, editor: PatcherEditor) -> None:
+    def __init__(self, editor: PatcherEditor, show_shields: bool = False) -> None:
         # get actors from reference dicts
         self.editor = editor
+        self.show_shields_on_minimap = show_shields
         self.SHIELD = editor.resolve_actor_reference(_EXAMPLE_SHIELD)
 
     def door_actor_to_type(self, door: Container, scenario: str) -> DoorType:
@@ -273,8 +274,9 @@ class DoorPatcher:
             life_comp[
                 "wpRightDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_r.sName}"
 
-            self.update_minimap_for_shield(shield_l, door_type.shield, "L", scenario)
-            self.update_minimap_for_shield(shield_r, door_type.shield, "R", scenario)
+            if self.show_shields_on_minimap:
+                self.update_minimap_for_shield(shield_l, door_type.shield, "L", scenario)
+                self.update_minimap_for_shield(shield_r, door_type.shield, "R", scenario)
         
         # ensure assets are present
         for folder in door_type.required_asset_folders:
@@ -294,6 +296,8 @@ class DoorPatcher:
         self.editor.copy_actor_groups(scenario, door.sName, shield.sName)
         shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
         shield.vAng[1] = shield.vAng[1] if dir == "L" else -shield.vAng[1]
+        if (shield_data is ActorData.SHIELD_WIDE_BEAM):
+            shield.pComponents.LIFE['@type'] = 'CBeamDoorLifeComponent'
 
         return shield
 

@@ -7,6 +7,7 @@ from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
 from mercury_engine_data_structures.game_check import Game
+from open_dread_rando.logger import LOG
 
 T = typing.TypeVar("T")
 
@@ -85,7 +86,11 @@ class PatcherEditor(FileTreeEditor):
 
         scenario.actors_for_layer(layer).pop(actor_name)
         if map_category is not None:
-            self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
+            category = self.get_scenario_map(reference["scenario"]).raw.Root[map_category]
+            if actor_name in category:
+                category.pop(actor_name)
+            else:
+                LOG.debug(f"Entity {actor_name} in scenario {reference['scenario']} does not exist in map category {map_category}")
 
     def copy_actor_groups(self, scenario_name: str, base_actor_name: str, new_actor_name: str):
         """
