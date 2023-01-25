@@ -86,11 +86,7 @@ class PatcherEditor(FileTreeEditor):
 
         scenario.actors_for_layer(layer).pop(actor_name)
         if map_category is not None:
-            category = self.get_scenario_map(reference["scenario"]).raw.Root[map_category]
-            if actor_name in category:
-                category.pop(actor_name)
-            else:
-                LOG.debug(f"Entity {actor_name} in scenario {reference['scenario']} does not exist in map category {map_category}")
+            self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
 
     def copy_actor_groups(self, scenario_name: str, base_actor_name: str, new_actor_name: str):
         """
