@@ -184,7 +184,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         patch_hints(editor, configuration["hints"])
 
     # Doors
-    patch_doors(editor, configuration["door_patches"]["doors"], configuration["door_patches"]["show_shields_on_minimap"])
+    patch_doors(editor, configuration["door_patches"], configuration["show_shields_on_minimap"])
 
     # custom spawn points
     patch_spawn_points(editor, configuration["new_spawn_points"])
