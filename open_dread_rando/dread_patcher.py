@@ -3,6 +3,7 @@ import shutil
 import typing
 from pathlib import Path
 
+from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util, game_patches
@@ -21,7 +22,6 @@ from open_dread_rando.static_fixes import apply_static_fixes
 from open_dread_rando.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
 from open_dread_rando.tilegroup_patcher import patch_tilegroup
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
-from construct import ListContainer
 
 T = typing.TypeVar("T")
 
@@ -114,6 +114,7 @@ def patch_doors(editor: PatcherEditor, doors_config: list[dict], show_shields: b
     for door in doors_config:
         door_editor.patch_door(door["actor"], door["door_type"])
 
+
 def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
     # create custom spawn point
     _EXAMPLE_SP = {"scenario": "s010_cave", "layer": "default", "actor": "StartPoint0"}
@@ -122,7 +123,8 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
         scenario_name = new_spawn["new_actor"]["scenario"]
         new_actor_name = new_spawn["new_actor"]["actor"]
         collision_camera_name = new_spawn["collision_camera_name"]
-        new_spawn_pos = ListContainer((new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
+        new_spawn_pos = ListContainer(
+            (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
 
         scenario = editor.get_scenario(scenario_name)
 
@@ -149,10 +151,14 @@ def add_custom_files(editor: PatcherEditor):
         editor.add_new_asset(full_path.as_posix(), child.read_bytes(), ["packs/system/system.pkg"])
 
 
+def validate(configuration: dict):
+    DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
+
+
 def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files from %s", input_path)
 
-    DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
+    validate(configuration)
 
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()

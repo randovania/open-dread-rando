@@ -391,7 +391,7 @@
         },
         "show_shields_on_minimap": {
             "type": "boolean",
-            "default": "false"
+            "default": false
         },
         "door_patches": {
             "type": "array",
