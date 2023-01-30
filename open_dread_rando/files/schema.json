@@ -390,38 +390,47 @@
             "default": {}
         },
         "door_patches": {
-            "type": "array",
-            "description": "Changes the door types",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "actor": {
-                        "$ref": "#/$defs/actor_reference_with_layer"
-                    },
-                    "door_type": {
-                        "type": "string",
-                        "enum": [
-                            "frame",
-                            "power_beam",
-                            "charge_beam",
-                            "wide_beam",
-                            "plasma_beam",
-                            "wave_beam",
-                            "missile",
-                            "super_missile",
-                            "grapple_beam",
-                            "phantom_cloak",
-                            "phase_shift"
-                        ]
-                    }
+            "type": "object",
+            "properties": {
+                "show_shields_on_minimap": {
+                    "type": "boolean",
+                    "default": "false"
                 },
-                "required": [
-                    "actor",
-                    "door_type"
-                ],
-                "additionalProperties": false
-            },
-            "default": []
+                "doors": {
+                    "type": "array",
+                    "description": "Changes the door types",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "actor": {
+                                "$ref": "#/$defs/actor_reference_with_layer"
+                            },
+                            "door_type": {
+                                "type": "string",
+                                "enum": [
+                                    "frame",
+                                    "power_beam",
+                                    "charge_beam",
+                                    "wide_beam",
+                                    "plasma_beam",
+                                    "wave_beam",
+                                    "missile",
+                                    "super_missile",
+                                    "grapple_beam",
+                                    "phantom_cloak",
+                                    "phase_shift"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "actor",
+                            "door_type"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "default": []
+                }
+            }
         },
         "tile_group_patches": {
             "type": "array",
