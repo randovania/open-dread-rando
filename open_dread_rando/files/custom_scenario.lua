@@ -3,6 +3,7 @@ Game.ImportLibrary("system/scripts/scenario_original.lua")
 Game.DoFile("system/scripts/input_handling.lua")
 Game.DoFile("system/scripts/data_structures.lua")
 Game.DoFile("system/scripts/guilib.lua")
+Game.DoFile("system/scripts/death_counter.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -293,7 +294,7 @@ end
 function Scenario.CheckWarpToStart(actor)
     if not Scenario.IsSaveStation(actor) then return end
     if not Init.bWarpToStart then return end
-    
+
     Input.LogInputs()
     if Input.CheckInputs("ZL", "ZR") then
         Scenario.TeleportToStartPoint(Init.sStartingScenario, Init.sStartingActor)
@@ -337,21 +338,21 @@ function Scenario.TeleportToLocalStartPoint(startpoint)
     end
     Game.AddSF(fTeleportStartDelay, "Scenario.OnTeleportFadeOut", "s", startpoint)
 end
-  
-  
+
+
 function Scenario.OnTeleportFadeOut(startpoint)
     Game.FadeOut(fTeleportFadeOutTime)
     Game.AddSF(fTeleportFadeOutTime + fTeleportBlackScreenTime, "Scenario.OnStartPointTeleport", "s", startpoint)
 end
-  
-  
+
+
 function Scenario.OnStartPointTeleport(startpoint)
     Game.TeleportEntityToStartPoint(Game.GetPlayerName(), startpoint, fTeleportFadeInTime, true)
     Game.FadeIn(0.1, fTeleportFadeInTime)
     Game.AddSF(0, "Scenario.OnTeleportFinished", "")
 end
-  
-  
+
+
 function Scenario.OnTeleportFinished()
     Scenario.EnableInput()
     Game.ReinitPlayerFromBlackboard()
@@ -375,6 +376,8 @@ function Scenario.InitGui()
     })
     ui:Show()
     Scenario.RandoUI = ui
+
+    DeathCounter.Create()
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
