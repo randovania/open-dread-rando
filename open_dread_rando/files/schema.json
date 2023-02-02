@@ -302,10 +302,14 @@
             "properties": {
                 "config": {
                     "type": "object"
+                },
+                "lua": {
+                    "type": "object"
                 }
             },
             "required": [
-                "config"
+                "config",
+                "lua"
             ]
         },
         "enable_remote_lua": {

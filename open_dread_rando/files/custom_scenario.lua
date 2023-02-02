@@ -377,7 +377,9 @@ function Scenario.InitGui()
     ui:Show()
     Scenario.RandoUI = ui
 
-    DeathCounter.Create()
+    if Init.bEnableDeathCounter then
+        DeathCounter.Create()
+    end
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
