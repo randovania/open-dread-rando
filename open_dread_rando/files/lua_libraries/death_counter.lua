@@ -8,7 +8,7 @@ function DeathCounter.Create()
 	local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
 	local container = GUI.CreateDisplayObject(hud, "DeathCounter", "CDisplayObjectContainer", {
 		X = "0.025",
-		Y = "0.1925",
+		Y = "0.1975",
 		ScaleX = "1.0",
 		ScaleY = "1.0",
 		Angle = "0.0",
@@ -21,7 +21,7 @@ function DeathCounter.Create()
 	DeathCounter.CreateBackgroundComposition(container)
 
 	local label = GUI.CreateDisplayObject(container, "DeathCounter_Label", "CLabel", {
-		X = "0.005",
+		X = "0.0075",
 		Y = "0.0",
 		ScaleX = "1.0",
 		ScaleY = "1.0",
@@ -56,9 +56,28 @@ function DeathCounter.CreateBackgroundComposition(container)
 		SizeY = "0.04",
 		Autosize = false,
 		SpriteSheetItem = "HUD_TILESET/BACKGROUND",
+		BlendMode = "AlphaBlend",
+		USelMode = "Scale",
+		VSelMode = "Scale",
 		ColorR = "1.0",
 		ColorG = "1.0",
 		ColorB = "1.0",
+		ColorA = "1.0",
+	})
+
+	GUI.CreateDisplayObject(container, "Frame_top", "CSprite", {
+		X = "0.0",
+		Y = "0.0",
+		SizeX = "0.05",
+		SizeY = "0.015",
+		Autosize = false,
+		SpriteSheetItem = "HUD_TILESET/FRAME_TOP",
+		BlendMode = "AlphaBlend",
+		USelMode = "Scale",
+		VSelMode = "Scale",
+		ColorR = "0.8773584961891174",
+		ColorG = "0.8773584961891174",
+		ColorB = "0.8773584961891174",
 		ColorA = "1.0",
 	})
 end
