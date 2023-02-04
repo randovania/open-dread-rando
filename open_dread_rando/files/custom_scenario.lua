@@ -108,6 +108,10 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
         Game.AddSF(0.9, Init.SaveGameAtStartingLocation, "")
         Game.AddSF(0.8, Scenario.ShowText, "")
     end
+
+    if Init.bEnableDeathCounter then
+        DeathCounter.OnScenarioInitialized()
+    end
 end
 
 local fatal_messages_seen = 0
@@ -378,7 +382,7 @@ function Scenario.InitGui()
     Scenario.RandoUI = ui
 
     if Init.bEnableDeathCounter then
-        DeathCounter.Create()
+        DeathCounter.Init()
     end
 end
 
