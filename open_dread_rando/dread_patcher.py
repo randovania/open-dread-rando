@@ -90,7 +90,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
-        "enable_death_counter": cosmetic_options.get("enable_death_counter")
+        "enable_death_counter": cosmetic_options["enable_death_counter"]
     }
 
     replacement.update(configuration.get("game_patches", {}))
