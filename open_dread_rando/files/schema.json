@@ -302,10 +302,28 @@
             "properties": {
                 "config": {
                     "type": "object"
+                },
+                "lua": {
+                    "type": "object",
+                    "properties": {
+                        "custom_init": {
+                            "type": "object",
+                            "properties": {
+                                "enable_death_counter": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Enables an in-game death counter shown in the player's HUD"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
                 }
             },
             "required": [
-                "config"
+                "config",
+                "lua"
             ]
         },
         "enable_remote_lua": {

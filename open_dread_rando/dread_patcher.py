@@ -32,6 +32,7 @@ def _read_schema():
 
 
 def create_custom_init(editor: PatcherEditor, configuration: dict):
+    cosmetic_options: dict = configuration["cosmetic_patches"]["lua"]["custom_init"]
     inventory: dict[str, int] = configuration["starting_items"]
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
@@ -88,7 +89,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "linear_damage_runs": configuration.get("linear_damage_runs"),
         "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
-        "required_artifacts": configuration["objective"]["required_artifacts"]
+        "required_artifacts": configuration["objective"]["required_artifacts"],
+        "enable_death_counter": cosmetic_options["enable_death_counter"]
     }
 
     replacement.update(configuration.get("game_patches", {}))

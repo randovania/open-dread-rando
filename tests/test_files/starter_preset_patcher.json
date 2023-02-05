@@ -3864,6 +3864,11 @@
                 "bShowEnemyDamage": false,
                 "bShowPlayerDamage": true
             }
+        },
+        "lua": {
+            "custom_init": {
+                "enable_death_counter": true
+            }
         }
     },
     "energy_per_tank": 100,
