@@ -93,7 +93,6 @@ class LuaEditor:
                 [(pickup["resources"][-1], pickup["model"][-1])],
             )
         ]
-        progressive_models.reverse()
 
         replacement = {
             "actordef_name": actordef_name,
