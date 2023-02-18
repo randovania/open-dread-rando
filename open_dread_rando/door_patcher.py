@@ -6,6 +6,7 @@ import copy
 
 from construct import Container, ListContainer
 
+from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor
 
 # copied from existing entity, so we don't have to make a whole shield
@@ -155,15 +156,8 @@ class DoorPatcher:
         # get actors from reference dicts
         self.editor = editor
         self.available_shield_ids = {
-            "s010_cave": list(range(0,100)),
-            "s020_magma": list(range(0,100)),
-            "s030_baselab": list(range(0,100)),
-            "s040_aqua": list(range(0,100)),
-            "s050_forest": list(range(0,100)),
-            "s060_quarantine": list(range(0,100)),
-            "s070_basesanc": list(range(0,100)),
-            "s080_shipyard": list(range(0,100)),
-            "s090_skybase": list(range(0,100))
+            scenario: list(range(100))
+            for scenario in ALL_SCENARIOS
         }
         self.SHIELD = editor.resolve_actor_reference(_EXAMPLE_SHIELD)
         self.rename_all_shields()
@@ -267,9 +261,7 @@ class DoorPatcher:
 
             # free the shield id if this is a rando shield
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
-            shieldId = int(shieldActor.sName.split("_")[1]) if "RandoShield" in shieldActor.sName else None
-            if shieldId is not None:
-                insort(self.available_shield_ids[scenario], shieldId) 
+            self.reclaim_old_shield_id(shieldActor.sName, scenario)
             self.editor.remove_entity(self.editor.reference_for_link(link, scenario), "mapBlockages")
             life_comp[link_name] = '{EMPTY}'
 
@@ -307,7 +299,7 @@ class DoorPatcher:
 
     def create_shield(self, scenario: str, door: Container, shield_data: ActorData, dir: str):
         # make a new RandoShield by popping the lowest actor
-        shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, f"RandoShield_{self.available_shield_ids[scenario].pop(0)}")
+        shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, self.get_shield_id(scenario))
 
         self.editor.copy_actor_groups(scenario, door.sName, shield.sName)
         shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
@@ -331,17 +323,22 @@ class DoorPatcher:
         map_blockages[shield.sName] = patched_container
 
     def remove_all_shields(self):
-        for scenario in ["s010_cave", "s020_magma", "s030_baselab", "s040_aqua", "s050_forest", "s060_quarantine", "s070_basesanc", "s080_shipyard", "s090_skybase"]:
+        for scenario in ALL_SCENARIOS:
             bmmap = self.editor.get_scenario_map(scenario)
             bmmap.raw.Root.mapBlockages = Container()
     
     def rename_all_shields(self):
-        for scenario in ["s010_cave", "s020_magma", "s030_baselab", "s040_aqua", "s050_forest", "s060_quarantine", "s070_basesanc", "s080_shipyard", "s090_skybase"]:
+        for scenario in ALL_SCENARIOS:
             brfld = self.editor.get_scenario(scenario)
+            
+            # we have to cache doors that have shields here and rename them outside the loop, as otherwise it will rename actors in the actor list and confuse the program. 
             shielded_doors = []
             for layer_name, actor_name, actor in list(brfld.all_actors()):
+
+                # this is the door added to the Artaria CU. For some reason is_door crashes on this so we add a check here. 
                 if actor_name == "DreadRando_CUDoor":
                     continue
+
                 if not is_door(actor):
                     continue
 
@@ -365,17 +362,15 @@ class DoorPatcher:
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
             old_sName = shieldActor.sName
 
-            # skip hdoors
+            # skip hdoors (doors where the environment covers one side of the door) as they have terrain attached to the ShieldEntity links
             if "db_hdoor" in old_sName:
                 continue
 
             # reclaim old shield id if this is a RandoShield
-            shieldId = int(shieldActor.sName.split("_")[1]) if "RandoShield" in shieldActor.sName else None
-            if shieldId is not None:
-                insort(self.available_shield_ids[scenario], shieldId)
+            self.reclaim_old_shield_id(shieldActor.sName, scenario)
             
             # grab the lowest open id and rename it
-            new_id = f"RandoShield_{self.available_shield_ids[scenario].pop(0)}"
+            new_id = self.get_shield_id(scenario)
             shieldActor.sName = new_id
             life_comp[link_name] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{new_id}"
 
@@ -389,3 +384,13 @@ class DoorPatcher:
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
             mapBlockages[new_id] = copy.deepcopy(mapBlockages[old_sName])
             mapBlockages.pop(old_sName)
+
+    def get_shield_id(self, scenario: str):
+        # since the available shield ids is auto sorted, just pop the first value
+        return f"RandoShield_{self.available_shield_ids[scenario].pop(0)}"
+    
+    def reclaim_old_shield_id(self, sName: str, scenario: str):
+        # if it's a RandoShield, reclaim the old id after the underscore
+        shieldId = int(sName.split("_")[1]) if "RandoShield" in sName else None
+        if shieldId is not None:
+            insort(self.available_shield_ids[scenario], shieldId)
