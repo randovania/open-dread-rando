@@ -407,10 +407,6 @@
             "additionalProperties": false,
             "default": {}
         },
-        "show_shields_on_minimap": {
-            "type": "boolean",
-            "default": false
-        },
         "door_patches": {
             "type": "array",
             "description": "Changes the door types",

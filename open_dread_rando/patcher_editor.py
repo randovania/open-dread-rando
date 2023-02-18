@@ -55,7 +55,8 @@ class PatcherEditor(FileTreeEditor):
     def resolve_actor_reference(self, ref: dict) -> Container:
         scenario = self.get_scenario(ref["scenario"])
         layer = ref.get("layer", "default")
-        return scenario.actors_for_layer(layer)[ref["actor"]]
+        actor = scenario.actors_for_layer(layer)
+        return actor[ref["actor"]]
 
     def flush_modified_assets(self):
         for name, resource in self.memory_files.items():

@@ -1,6 +1,8 @@
+from bisect import insort
 from enum import Enum
 from pathlib import Path
 from typing import Sequence
+import copy
 
 from construct import Container, ListContainer
 
@@ -149,14 +151,22 @@ def is_door(actor: Container):
 class DoorPatcher:
     """An API to patch doors. Call patch_door() to use. """
 
-    def __init__(self, editor: PatcherEditor, show_shields: bool = False) -> None:
+    def __init__(self, editor: PatcherEditor) -> None:
         # get actors from reference dicts
         self.editor = editor
-        self.show_shields_on_minimap = show_shields
+        self.available_shield_ids = {
+            "s010_cave": list(range(0,100)),
+            "s020_magma": list(range(0,100)),
+            "s030_baselab": list(range(0,100)),
+            "s040_aqua": list(range(0,100)),
+            "s050_forest": list(range(0,100)),
+            "s060_quarantine": list(range(0,100)),
+            "s070_basesanc": list(range(0,100)),
+            "s080_shipyard": list(range(0,100)),
+            "s090_skybase": list(range(0,100))
+        }
         self.SHIELD = editor.resolve_actor_reference(_EXAMPLE_SHIELD)
-
-        if not self.show_shields_on_minimap:
-            self.remove_all_shields()
+        self.rename_all_shields()
 
     def door_actor_to_type(self, door: Container, scenario: str) -> DoorType:
         """
@@ -254,8 +264,13 @@ class DoorPatcher:
             link = life_comp[link_name]
             if link == '{EMPTY}':
                 continue  # skip shield if not linked
-            mapBlockages = "mapBlockages" if self.show_shields_on_minimap else None
-            self.editor.remove_entity(self.editor.reference_for_link(link, scenario), mapBlockages)
+
+            # free the shield id if this is a rando shield
+            shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
+            shieldId = int(shieldActor.sName.split("_")[1]) if "RandoShield" in shieldActor.sName else None
+            if shieldId is not None:
+                insort(self.available_shield_ids[scenario], shieldId) 
+            self.editor.remove_entity(self.editor.reference_for_link(link, scenario), "mapBlockages")
             life_comp[link_name] = '{EMPTY}'
 
     # turns the door into a power beam door
@@ -277,10 +292,6 @@ class DoorPatcher:
                 "wpLeftDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_l.sName}"
             life_comp[
                 "wpRightDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_r.sName}"
-
-            if self.show_shields_on_minimap:
-                self.update_minimap_for_shield(shield_l, door_type.shield, "L", scenario)
-                self.update_minimap_for_shield(shield_r, door_type.shield, "R", scenario)
         
         # ensure assets are present
         for folder in door_type.required_asset_folders:
@@ -295,14 +306,16 @@ class DoorPatcher:
             door.pComponents.LIFE.bStayOpen = False
 
     def create_shield(self, scenario: str, door: Container, shield_data: ActorData, dir: str):
-        # make shields
-        shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, f"{door.sName}{dir}")
+        # make a new RandoShield by popping the lowest actor
+        shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, f"RandoShield_{self.available_shield_ids[scenario].pop(0)}")
+
         self.editor.copy_actor_groups(scenario, door.sName, shield.sName)
         shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
         shield.vAng[1] = shield.vAng[1] if dir == "L" else -shield.vAng[1]
         if (shield_data is ActorData.SHIELD_WIDE_BEAM):
             shield.pComponents.LIFE['@type'] = 'CBeamDoorLifeComponent'
 
+        self.update_minimap_for_shield(shield, shield_data, dir, scenario)
         return shield
 
     def update_minimap_for_doors(self, door: Container, door_type: DoorType, scenario: str):
@@ -321,3 +334,58 @@ class DoorPatcher:
         for scenario in ["s010_cave", "s020_magma", "s030_baselab", "s040_aqua", "s050_forest", "s060_quarantine", "s070_basesanc", "s080_shipyard", "s090_skybase"]:
             bmmap = self.editor.get_scenario_map(scenario)
             bmmap.raw.Root.mapBlockages = Container()
+    
+    def rename_all_shields(self):
+        for scenario in ["s010_cave", "s020_magma", "s030_baselab", "s040_aqua", "s050_forest", "s060_quarantine", "s070_basesanc", "s080_shipyard", "s090_skybase"]:
+            brfld = self.editor.get_scenario(scenario)
+            shielded_doors = []
+            for layer_name, actor_name, actor in list(brfld.all_actors()):
+                if actor_name == "DreadRando_CUDoor":
+                    continue
+                if not is_door(actor):
+                    continue
+
+                if actor.oActorDefLink[9:] not in ActorData.DOOR_POWER.actordefs:
+                    continue
+
+                shielded_doors.append(actor)
+            
+            for door in shielded_doors:
+                self.rename_shields(door, scenario)
+            
+
+    def rename_shields(self, door: Container, scenario: str):
+        life_comp = door.pComponents.LIFE
+        for link_name in ["wpLeftDoorShieldEntity", "wpRightDoorShieldEntity"]:
+            link = life_comp[link_name]
+            if link == "{EMPTY}":
+                continue
+            
+            # get shield actor and cache its sName
+            shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
+            old_sName = shieldActor.sName
+
+            # skip hdoors
+            if "db_hdoor" in old_sName:
+                continue
+
+            # reclaim old shield id if this is a RandoShield
+            shieldId = int(shieldActor.sName.split("_")[1]) if "RandoShield" in shieldActor.sName else None
+            if shieldId is not None:
+                insort(self.available_shield_ids[scenario], shieldId)
+            
+            # grab the lowest open id and rename it
+            new_id = f"RandoShield_{self.available_shield_ids[scenario].pop(0)}"
+            shieldActor.sName = new_id
+            life_comp[link_name] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{new_id}"
+
+            # make new actor, copy its groups, delete it
+            brfld = self.editor.get_scenario(scenario)
+            brfld.actors_for_layer('default')[new_id] = shieldActor
+            self.editor.copy_actor_groups(scenario, old_sName, new_id)
+            brfld.actors_for_layer('default').pop(old_sName)
+
+            # update the minimap entry as well
+            mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
+            mapBlockages[new_id] = copy.deepcopy(mapBlockages[old_sName])
+            mapBlockages.pop(old_sName)

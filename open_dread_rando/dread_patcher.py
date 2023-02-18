@@ -111,10 +111,10 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
             LOG.warning(e)
 
 
-def patch_doors(editor: PatcherEditor, doors_config: list[dict], show_shields: bool = False):
-    door_editor = DoorPatcher(editor, show_shields)
+def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
+    door_patcher = DoorPatcher(editor)
     for door in doors_config:
-        door_editor.patch_door(door["actor"], door["door_type"])
+        door_patcher.patch_door(door["actor"], door["door_type"])
 
 
 def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
@@ -192,7 +192,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         patch_hints(editor, configuration["hints"])
 
     # Doors
-    patch_doors(editor, configuration["door_patches"], configuration["show_shields_on_minimap"])
+    patch_doors(editor, configuration["door_patches"])
 
     # custom spawn points
     patch_spawn_points(editor, configuration["new_spawn_points"])
