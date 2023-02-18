@@ -5,6 +5,7 @@ import construct
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando import door_patcher
+from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
 
@@ -18,18 +19,8 @@ def flip_icon_id(icon_id: str) -> str:
 
 
 def apply_one_sided_door_fixes(editor: PatcherEditor):
-    all_scenarios = [
-        "s010_cave",
-        "s020_magma",
-        "s030_baselab",
-        "s040_aqua",
-        "s050_forest",
-        "s060_quarantine",
-        "s070_basesanc",
-        "s080_shipyard",
-    ]
 
-    for scenario_name in all_scenarios:
+    for scenario_name in ALL_SCENARIOS:
         scenario = editor.get_scenario(scenario_name)
         bmmap = editor.get_scenario_map(scenario_name)
         map_blockages = bmmap.raw.Root.mapBlockages

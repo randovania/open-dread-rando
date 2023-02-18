@@ -2,6 +2,7 @@ import itertools
 from pathlib import Path
 
 from open_dread_rando import lua_util
+from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 
 
@@ -33,13 +34,9 @@ class LuaEditor:
         }
 
     def _read_levels(self) -> dict[str, dict]:
-        scenarios = {
-            "s010_cave", "s020_magma", "s030_baselab", "s040_aqua", "s050_forest",
-            "s060_quarantine", "s070_basesanc", "s080_shipyard", "s090_skybase"
-        }
         return {
             scenario: {"script": _read_level_lua(scenario), "edited": False}
-            for scenario in scenarios
+            for scenario in ALL_SCENARIOS
         }
 
     def get_parent_for(self, item_id) -> str:

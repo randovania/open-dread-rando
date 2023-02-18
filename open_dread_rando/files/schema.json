@@ -409,6 +409,7 @@
         },
         "show_shields_on_minimap": {
             "type": "boolean",
+            "description": "Deprecated. Used to remove shields from the minimaps in Door Lock Rando.",
             "default": false
         },
         "door_patches": {
