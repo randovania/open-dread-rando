@@ -4,6 +4,7 @@ local initOk, errorMsg = pcall(function()
 
 RemoteLua = RemoteLua or { Init = function() end, }
 RL = RemoteLua
+RemoteLogHook = false
 
 if TEMPLATE("enable_remote_lua") then
     Game.LogWarn(0, "Starting remote lua")
@@ -23,6 +24,16 @@ end
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
 push_debug_print_override = push_debug_print_override or function() end
 pop_debug_print_override = pop_debug_print_override or function() end
+
+local orig_log = Game.LogWarn
+function Game.LogWarn(_, message)
+    orig_log(_, message)
+    push_debug_print_override()
+    if RemoteLogHook then
+        RemoteLua.SendLog(message)
+    end
+    pop_debug_print_override()
+end
 
 local orig_update = RemoteLua.Update
 if type(orig_update) == "function" then
