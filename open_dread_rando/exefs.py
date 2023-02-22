@@ -104,6 +104,21 @@ def _add_debug_input(patch: ips.Patch, version: str):
     if offset is not None:
         patch.add_record(offset, data)
 
+def _patch_door_lock_buffer(patch: ips.Patch, version: str):
+    """ Update capacities in unknown allocator to avoid doorlock crash
+    changes size of buffer inside data field initializer (I think)
+    size of linked-list buffer increased from 500 to 700. 
+    if 0x33250c in 1.0.0 is crashing, it's likely that this is still too small. 
+    original instruction: MOV w2,#0x1f4
+    patched instruction: MOV w2,#0x2bc
+    """
+    buffer_size = {
+        "1.0.0": (0x00ae6f70, bytes.fromhex('82578052')),
+        "2.1.0": (0x00ae9d70, bytes.fromhex('82578052')),
+    }
+
+    offset, data = buffer_size[version]
+    patch.add_record(offset, data)
 
 def patch_exefs(exefs_patches: Path, configuration: dict):
     exefs_patches.mkdir(parents=True, exist_ok=True)
@@ -113,6 +128,7 @@ def patch_exefs(exefs_patches: Path, configuration: dict):
         _patch_corpius(patch, version, configuration)
         _add_version_sentinel(patch, version)
         _add_debug_input(patch, version)
+        _patch_door_lock_buffer(patch, version)
         exefs_patches.joinpath(f"{exefs_hash}.ips").write_bytes(bytes(patch))
 
 
