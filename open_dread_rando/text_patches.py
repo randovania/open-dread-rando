@@ -1,5 +1,3 @@
-import pprint
-
 from mercury_engine_data_structures.formats import Txt
 
 from open_dread_rando.patcher_editor import PatcherEditor
