@@ -163,7 +163,7 @@ class DoorPatcher:
         }
         self.SHIELD = editor.resolve_actor_reference(_EXAMPLE_SHIELD)
         self.rename_all_shields()
-        self.patch_doorpresence_colision()
+        self.patch_doorpresence_collision()
 
     def door_actor_to_type(self, door: Container, scenario: str) -> DoorType:
         """
@@ -398,10 +398,10 @@ class DoorPatcher:
         if shieldId is not None:
             insort(self.available_shield_ids[scenario], shieldId)
     
-    def patch_doorpresence_colision(self):
+    def patch_doorpresence_collision(self):
         # extends the door collider in doorpresence actor to 300x300 to maintain the size of normal doors
         # this looks a bit bad, but it'll do until we figure out how to edit navmeshes
         # (or whatever is storing the intended hitboxes for doors)
         doorpresence = self.editor.get_file("actors/props/doorpresence/collisions/doorpresence.bmscd", Bmscc)
         door_collider = doorpresence.raw.layers[0].entries[0]
-        door_collider.data.max = ListContainer([300.0,300.0])
+        door_collider.data.max = ListContainer([300.0,320.0])
