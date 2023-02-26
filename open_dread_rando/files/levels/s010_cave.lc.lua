@@ -377,7 +377,8 @@ end
 
 
 function s010_cave.OnProtoEmmyCantClimbCutsceneStart()   
-  Game.SetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL", MORPH_BALL_AT_PROTO_EMMY)
+  local cur_morph_ball_amount = Game.GetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL")
+  Game.SetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL", math.max(cur_morph_ball_amount, MORPH_BALL_AT_PROTO_EMMY))
   local oActor = Game.GetActor("LM_AfterEmmyProtoClimbSequence_Emmy")
   if CurrentScenario.oEmmyProtoEntity ~= nil and oActor ~= nil then
     CurrentScenario.oEmmyProtoEntity.bEnabled = false
