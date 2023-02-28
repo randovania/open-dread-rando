@@ -1,14 +1,5 @@
 Game.ImportLibrary("system/scripts/class.lua", false)
-
-local function merge(table1, table2)
-    if not table2 then
-        return
-    end
-
-    for k, v in pairs(table2) do
-        table1[k] = v
-    end
-end
+Game.ImportLibrary("system/scripts/utils.lua", false)
 
 -- #region GUILib
 
@@ -17,16 +8,25 @@ end
 ---@field root userdata
 ---@field main userdata
 ---@field children table
-GUILib = class.New(function(obj, guiName)
+---@operator call(): GUILib
+GUILib = class.New(function(obj, guiName, parent)
     obj.name = guiName
     obj.root = nil
     obj.main = nil
     obj.children = {}
     obj.root = GUI.CreateDisplayObjectEx(guiName, "CDisplayObjectContainer", {StageID = "Up", X = "0.0", Y = "0.0", SizeX = "1.0", SizeY = "1.0", ScaleX = "1.0", ScaleY = "1.0", ColorA = "1.0"})
-    obj.main = GUI.CreateDisplayObject((obj.root), guiName.."Main", "CDisplayObjectContainer", {StageID = "Up", X = "0.0", Y = "0.0", SizeX = "1.0", SizeY = "1.0", ScaleX = "1.0", ScaleY = "1.0", ColorA = "1.0"})
+    obj.main = GUI.CreateDisplayObject(obj.root, guiName.."Main", "CDisplayObjectContainer", {StageID = "Up", X = "0.0", Y = "0.0", SizeX = "1.0", SizeY = "1.0", ScaleX = "1.0", ScaleY = "1.0", ColorA = "1.0"})
 
-    GUI.GetDisplayObject("[Root]"):AddChild((obj.root))
+    if not parent then
+        parent = GUI.GetDisplayObject("[Root]")
+    end
+
+    parent:AddChild(obj.root)
 end)
+
+function GUILib:Destroy()
+    GUI.DestroyDisplayObject(self.root)
+end
 
 function GUILib:Get(childName)
     for _, child in pairs(self.children) do
@@ -37,26 +37,11 @@ function GUILib:Get(childName)
     return nil
 end
 
-function GUILib:AddContainer(containerName, ContainerProperties)
-    if ContainerProperties == nil then
-        ContainerProperties = {StageID = "Up", X = "0.0", Y = "0.0", SizeX = "1.0", SizeY = "1.0", ScaleX = "1.0", ScaleY = "1.0", ColorA = "1.0", Enabled = true, Visible = true}
-    end
-    ContainerProperties["StageID"] = "Up"
-
-    table.insert(self.children, Container(containerName, ContainerProperties, self.main))
-    return self:Get(containerName)
+function GUILib:AddContainer(containerName, containerProperties)
+    local container = Container(containerName, containerProperties, self.main)
+    table.insert(self.children, container)
+    return container
 end
-
-function GUILib:AddSprite(spriteName, spritePath, spriteProperties)
-    if spriteProperties ~= nil then
-        spriteProperties["SpriteSheetItem"] = spritePath
-    else
-        spriteProperties = { X = "0.00000", Y = "0.00000", SizeX = "1.00000", SizeY = "1.00000", ScaleX = "1.00000", ScaleY = "1.00000", Angle = "0.00000", FlipX = false, FlipY = false, ColorR = "0.0000", ColorG = "0.00000", ColorB = "0.00000", ColorA = "1.00000", Enabled = true, Visible = true, Autosize = false, SpriteSheetItem = spritePath, USelMode = "Scale", VSelMode = "Scale"}
-    end
-    table.insert(self.children, Sprite(spriteName, spriteProperties, self.main))
-    return self:Get(spriteName)
-end
-
 
 function GUILib:AddMenu(menuName, ContainerProperties) --We need a way to add a menu and its children to this list
     if ContainerProperties == nil then
@@ -69,35 +54,34 @@ function GUILib:AddMenu(menuName, ContainerProperties) --We need a way to add a 
 end
 
 function GUILib:Show()
-    -- Game.LogWarn(0, "TRYING TO SHOW GUI")
-    GUI.SetProperties((self.root), {
+    GUI.SetProperties(self.root, {
         Enabled = true,
         Visible = true,
         FadeColorR = "-1.0",
         FadeColorG = "-1.0",
         FadeColorB = "-1.0",
         FadeColorA = "1.0",
-    FadeTime = "0.5"
+        FadeTime = "0.5"
     })
 
-    GUI.SetProperties((self.main), {
+    GUI.SetProperties(self.main, {
         Enabled = true,
         Visible = true
     })
 end
 
 function GUILib:Hide()
-    GUI.SetProperties((self.root), {
+    GUI.SetProperties(self.root, {
         Enabled = false,
         Visible = false,
         FadeColorR = "-1.0",
         FadeColorG = "-1.0",
         FadeColorB = "-1.0",
         FadeColorA = "1.0",
-    FadeTime = "0.5"
+        FadeTime = "0.5"
     })
 
-    GUI.SetProperties((self.main), {
+    GUI.SetProperties(self.main, {
         Enabled = false,
         Visible = false
     })
@@ -108,23 +92,34 @@ end
 -- #region Container
 
 ---@class Container
+---@field init fun(self: Container, name: string, properties: table, parent: userdata)
 ---@field name string
 ---@field container userdata
 ---@field parent userdata
----@field parameters table
+---@field properties table
 ---@field children table
-Container = class.New(function(obj, containerName, containerParameters, containerParent)
+---@operator call(): Container
+Container = class.New(function(obj, containerName, containerProperties, containerParent)
+    -- Populate default properties
+    containerProperties = utils.Merge({
+        StageID = "Up",
+        X = "0.0",
+        Y = "0.0",
+        Angle = "0.0",
+        SizeX = "1.0",
+        SizeY = "1.0",
+        ScaleX = "1.0",
+        ScaleY = "1.0",
+        ColorA = "1.0",
+        Enabled = true,
+        Visible = true,
+    }, containerProperties or {})
+
 	obj.name = containerName
-	obj.container = nil
 	obj.parent = containerParent
-	obj.parameters = {}
+	obj.properties = containerProperties
 	obj.children = {}
-
-	--We will have one root and main container that everything else will\should be parented to
-	--Check if they exist and create them otherwise.
-
-	obj.container = GUI.CreateDisplayObject(obj.parent, containerName, "CDisplayObjectContainer", containerParameters)
-	obj.parameters = containerParameters
+	obj.container = GUI.CreateDisplayObject(obj.parent, containerName, "CDisplayObjectContainer", containerProperties)
 end)
 
 function Container:Get(childName)
@@ -143,24 +138,57 @@ function Container:SetProperties(props)
 end
 
 function Container:AddLabel(labelName, labelText, labelProperties)
-    local properties = { MinCharWidth = "14", X = "0.0", Y = "0.0", Font = "digital_hefty", TextAlignment = "Left", VerticalTextAlignment = "Center", ScaleX = "1.0", ScaleY = "1.0", Text = labelText }
-    merge(properties, labelProperties)
-
-    local label = Label(labelName, labelText, properties, self.container)
+    local label = Label(labelName, labelText, labelProperties, self.container)
     table.insert(self.children, label)
     return label
+end
+
+function Container:AddSprite(spriteName, spritePath, spriteProperties)
+    if spritePath then
+        spriteProperties = spriteProperties or {}
+        spriteProperties["SpriteSheetItem"] = spritePath
+    end
+
+    local sprite = Sprite(spriteName, spriteProperties, self.container)
+    table.insert(self.children, sprite)
+    return sprite
 end
 
 --#endregion Container
 
 --#region Label
 
+---@class Label
+---@field name string
+---@field text userdata
+---@field label userdata
+---@field parent userdata
+---@operator call(): Label
 Label = class.New(function(obj, labelName, labelText, labelProperties, labelParent)
+    -- Populate default properties
+    labelText = labelText or ""
+    labelProperties = utils.Merge({
+        X = "0.0",
+        Y = "0.0",
+        Angle = "0.0",
+        Font = "digital_hefty",
+        TextAlignment = "Left",
+        TextVerticalAlignment = "Centered",
+        ScaleX = "1.0",
+        ScaleY = "1.0",
+        Text = labelText,
+        Enabled = true,
+        Visible = true,
+        Autosize = true,
+		ColorR = "1.0",
+		ColorG = "1.0",
+		ColorB = "1.0",
+		ColorA = "1.0",
+    }, labelProperties or {})
+
 	obj.name = labelName
 	obj.text = labelText
-	obj.label = nil
 	obj.parent = labelParent
-
 	obj.label = GUI.CreateDisplayObject(labelParent, labelName, "CLabel", labelProperties)
 end)
 
@@ -172,7 +200,7 @@ end
 
 function Label:SetText(lblText)
     self.text = lblText
-    GUI.SetLabelText(self.label,self.text)
+    GUI.SetLabelText(self.label, self.text)
     return self.text
 end
 
@@ -201,10 +229,38 @@ end
 
 --#region Sprite
 
-Sprite = class.New(function(obj, spriteName, spriteProperties, spriteRoot)
-	obj.name = spriteName
+---@class Sprite
+---@field name string
+---@field sprite userdata
+---@field parent userdata
+---@operator call(): Sprite
+Sprite = class.New(function(obj, spriteName, spriteProperties, spriteParent)
+    -- Populate default properties
+    spriteProperties = utils.Merge({
+        X = "0.0",
+        Y = "0.0",
+        SizeX = "1.0",
+        SizeY = "1.0",
+        ScaleX = "1.0",
+        ScaleY = "1.0",
+        Angle = "0.0",
+        FlipX = false,
+        FlipY = false,
+        ColorR = "0.0",
+        ColorG = "0.0",
+        ColorB = "0.0",
+        ColorA = "1.0",
+        Enabled = true,
+        Visible = true,
+        Autosize = false,
+		BlendMode = "AlphaBlend",
+        USelMode = "Scale",
+        VSelMode = "Scale",
+    }, spriteProperties or {})
 
-	obj.sprite = spriteRoot:AddChild(GUI.CreateDisplayObjectEx(spriteName, "CSprite", spriteProperties))
+	obj.name = spriteName
+	obj.sprite = spriteParent:AddChild(GUI.CreateDisplayObjectEx(spriteName, "CSprite", spriteProperties))
+    obj.parent = spriteParent
 end)
 
 function Sprite:SetProperties(props)
