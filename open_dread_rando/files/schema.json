@@ -328,7 +328,7 @@
         },
         "enable_remote_lua": {
             "type": "boolean",
-            "default": true,
+            "default": false,
             "description": "When true, the game will start a socket that receives lua code to run"
         },
         "constant_environment_damage": {
