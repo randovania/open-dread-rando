@@ -40,6 +40,7 @@ function RandomizerPowerup.MarkLocationCollected(locationIdentifier)
     local propName = RandomizerPowerup.PropertyForLocation(locationIdentifier)
     Game.LogWarn(0, propName)
     Blackboard.SetProp(playerSection, propName, "b", true)
+    RemoteLua.SendLocationCollected(locationIdentifier)
 end
 
 function RandomizerPowerup.OnPickedUp(actor, progression)

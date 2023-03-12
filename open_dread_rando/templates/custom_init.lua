@@ -2,9 +2,8 @@ Game.ImportLibrary("system/scripts/init_original.lua")
 
 local initOk, errorMsg = pcall(function()
 
-RemoteLua = RemoteLua or { Init = function() end, }
+RemoteLua = RemoteLua or { Init = function() end, SendLog = function(message) end, SendLocationCollected = function(identifier) end }
 RL = RemoteLua
-RemoteLogHook = false
 
 if TEMPLATE("enable_remote_lua") then
     Game.LogWarn(0, "Starting remote lua")
@@ -29,9 +28,7 @@ local orig_log = Game.LogWarn
 function Game.LogWarn(_, message)
     orig_log(_, message)
     push_debug_print_override()
-    if RemoteLogHook then
-        RemoteLua.SendLog(message)
-    end
+    RemoteLua.SendLog(message)
     pop_debug_print_override()
 end
 
