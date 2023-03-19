@@ -82,6 +82,7 @@ _PROJECT_MEMBERS = {
         "XenoWars",
         "Mayberry",
         "Hugoshido",
+        "Tyranisaur",
     ],
     "Additional Art": [
         "BigSharksZ",
