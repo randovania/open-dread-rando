@@ -38,7 +38,6 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
     enable_remote_lua: bool = configuration.get("enable_remote_lua", False)
-    enable_room_ids: bool = configuration.get("enable_room_ids", False)
 
     energy_per_tank = configuration["energy_per_tank"]
     energy_per_part = energy_per_tank / 4
@@ -79,7 +78,6 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 
     replacement = {
         "enable_remote_lua": enable_remote_lua,
-        "enable_room_ids": enable_room_ids,
         "new_game_inventory": final_inventory,
         "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
         "starting_actor": lua_util.wrap_string(starting_location["actor"]),
@@ -92,7 +90,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
-        "enable_death_counter": cosmetic_options["enable_death_counter"]
+        "enable_death_counter": cosmetic_options["enable_death_counter"],
+        "enable_room_ids": cosmetic_options["enable_room_ids"]
     }
 
     replacement.update(configuration.get("game_patches", {}))

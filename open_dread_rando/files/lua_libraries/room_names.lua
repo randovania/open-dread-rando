@@ -1,5 +1,5 @@
 RoomNameGui = RoomNameGui or {
-    currentRoomId = nil,
+    currentRoomName = nil,
     currentCollisionCamera = nil
 }
 
@@ -10,8 +10,8 @@ function RoomNameGui.Init()
 
     local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
     local container = GUI.CreateDisplayObject(hud, "RoomNameGui", "CDisplayObjectContainer", {
-        X = "0.05",
-		Y = "0.1975",
+        X = "0.025",
+		Y = "0.9",
 		ScaleX = "1.0",
 		ScaleY = "1.0",
 		Angle = "0.0",
@@ -23,7 +23,7 @@ function RoomNameGui.Init()
 
     RoomNameGui.CreateBackgroundComposition(container)
 
-    local label = GUI.CreateDisplayObject(container, "RoomName_Label", "CLabel", {
+    local label = GUI.CreateDisplayObject(container, "RoomNameGui_Label", "CLabel", {
 		X = "0.0075",
 		Y = "0.0",
 		ScaleX = "1.0",
@@ -46,7 +46,7 @@ function RoomNameGui.Init()
 
     RoomNameGui.ui = container
     RoomNameGui.label = label
-    RoomNameGui.update()
+	Game.AddGUISF(10, "RoomNameGui.Update", 's', "ASDF")
 end
 
 function RoomNameGui.CreateBackgroundComposition(container)
@@ -83,16 +83,18 @@ function RoomNameGui.CreateBackgroundComposition(container)
 	})
 end
 
-function RoomNameGui.Update(newCollisionCamera)
+function RoomNameGui.Update(new_cc)
     local label = RoomNameGui.label
 
 	if not label then
+		GUI.ShowMessage("WTF", true, "")
 		return
 	end
-
-    if type(newCollisionCamera) ~= "string" then
-        Game.LogWarn(0, "RoomNameGui received invalid cc on update")
-    end
-
-    GUI.SetLabelText(label, "Room: " .. newCollisionCamera)
+	
+	if type(new_cc) ~= "string" then
+		GUI.ShowMessage("Not String", true, "")
+	end
+	
+	GUI.SetLabelText(label, "Room: " .. new_cc)
+	GUI.ShowMessage("Should be \nRoom: " .. new_cc, true, "")
 end

@@ -431,6 +431,7 @@ function Scenario.HideAsyncPopup()
     pop_debug_print_override()
 end
 
-function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-    RoomNameGui.Update(new_subarea)
+function Scenario.UpdateRoomName(new_subarea)
+    Game.LogWarn(0, "New cc: " .. new_subarea)
+    Game.AddGUISF(1, "RoomNameGui.Update", 's', new_subarea)
 end
