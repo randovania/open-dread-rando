@@ -4,6 +4,7 @@ Game.DoFile("system/scripts/input_handling.lua")
 Game.DoFile("system/scripts/data_structures.lua")
 Game.DoFile("system/scripts/guilib.lua")
 Game.DoFile("system/scripts/death_counter.lua")
+Game.DoFile("system/scripts/room_names.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -384,6 +385,10 @@ function Scenario.InitGui()
     if Init.bEnableDeathCounter then
         DeathCounter.Init()
     end
+
+    if Init.bEnableRoomIds then
+        RoomNameGui.Init()
+    end
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
@@ -424,4 +429,8 @@ function Scenario.HideAsyncPopup()
     Scenario.RandoUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
     Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
     pop_debug_print_override()
+end
+
+function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
+    RoomNameGui.Update(new_subarea)
 end

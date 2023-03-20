@@ -313,6 +313,11 @@
                                     "type": "boolean",
                                     "default": false,
                                     "description": "Enables an in-game death counter shown in the player's HUD"
+                                },
+                                "enable_room_ids": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Shows the room name on the player's HUD"
                                 }
                             },
                             "additionalProperties": false
