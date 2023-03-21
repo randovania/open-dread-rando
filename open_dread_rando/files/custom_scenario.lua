@@ -387,8 +387,8 @@ function Scenario.InitGui()
     end
 
     if Init.bEnableRoomIds then
-        RoomNameGui.Init()
         RoomNameGui.BuildCameraDict()
+        RoomNameGui.Init()
     end
 end
 

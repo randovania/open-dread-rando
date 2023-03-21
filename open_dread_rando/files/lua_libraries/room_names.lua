@@ -419,7 +419,7 @@ function RoomNameGui.Init()
 
     local label = GUI.CreateDisplayObject(container, "RoomNameGui_Label", "CText", {
 		X = "0.0075",
-		Y = "0.001",
+		Y = "0.01",
 		ScaleX = "1.0",
 		ScaleY = "1.0",
 		Angle = "0.0",
@@ -448,6 +448,10 @@ function RoomNameGui.Init()
 
     RoomNameGui.ui = container
     RoomNameGui.label = label
+	
+	local current_cc = Game.GetCurrentSubAreaId()
+	local current_scenario = RoomNameGui.ScenarioToName(Game.GetScenarioID())
+	RoomNameGui.Update(current_scenario, current_cc)
 end
 
 function RoomNameGui.CreateBackgroundComposition(container)
@@ -455,7 +459,7 @@ function RoomNameGui.CreateBackgroundComposition(container)
 		X = "0.0",
 		Y = "0.0",
 		SizeX = "0.6",
-		SizeY = "0.08",
+		SizeY = "0.06",
 		Autosize = false,
 		SpriteSheetItem = "HUD_TILESET/BACKGROUND",
 		BlendMode = "AlphaBlend",
@@ -470,8 +474,8 @@ function RoomNameGui.CreateBackgroundComposition(container)
 	GUI.CreateDisplayObject(container, "Frame_top", "CSprite", {
 		X = "0.0",
 		Y = "0.0",
-		SizeX = "0.3",
-		SizeY = "0.04",
+		SizeX = "0.05",
+		SizeY = "0.015",
 		Autosize = false,
 		SpriteSheetItem = "HUD_TILESET/FRAME_TOP",
 		BlendMode = "AlphaBlend",
@@ -482,6 +486,22 @@ function RoomNameGui.CreateBackgroundComposition(container)
 		ColorB = "0.8773584961891174",
 		ColorA = "1.0",
 	})
+end
+
+function RoomNameGui.ScenarioToName(scenario)
+	local dict = {
+		s010_cave = "Artaria",
+		s020_magma = "Cataris",
+		s030_baselab = "Dairon",
+		s040_aqua = "Burenia",
+		s050_forest = "Ghavoran",
+		s060_quarantine = "Elun",
+		s070_basesanc = "Ferenia",
+		s080_shipyard = "Hanubia",
+		s090_skybase = "Itorash"
+	}
+
+	return dict[scenario]
 end
 
 function RoomNameGui.Update(scenario, new_cc)
