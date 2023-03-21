@@ -458,7 +458,7 @@ function RoomNameGui.CreateBackgroundComposition(container)
 	GUI.CreateDisplayObject(container, "Background", "CSprite", {
 		X = "0.0",
 		Y = "0.0",
-		SizeX = "0.6",
+		SizeX = "0.3",
 		SizeY = "0.06",
 		Autosize = false,
 		SpriteSheetItem = "HUD_TILESET/BACKGROUND",
