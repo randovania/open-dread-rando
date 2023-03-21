@@ -983,6 +983,7 @@ function s070_basesanc.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea,
   end
 
   Scenario.UpdateProgressiveItemModels()
+  Scenario.UpdateRoomName("Ferenia", new_subarea)
 end
 
 

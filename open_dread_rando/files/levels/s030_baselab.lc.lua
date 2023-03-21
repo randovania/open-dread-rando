@@ -696,6 +696,7 @@ function s030_baselab.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, 
   end
 
   Scenario.UpdateProgressiveItemModels()
+  Scenario.UpdateRoomName("Dairon", new_subarea)
 end
 
 

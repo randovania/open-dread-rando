@@ -326,6 +326,7 @@ function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, n
   end
 
   Scenario.UpdateProgressiveItemModels()
+  Scenario.UpdateRoomName("Ghavoran", new_subarea)
 end
 
 function s050_forest.LaunchCutscene_33()

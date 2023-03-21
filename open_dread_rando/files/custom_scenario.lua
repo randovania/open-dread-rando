@@ -388,6 +388,7 @@ function Scenario.InitGui()
 
     if Init.bEnableRoomIds then
         RoomNameGui.Init()
+        RoomNameGui.BuildCameraDict()
     end
 end
 
@@ -431,7 +432,6 @@ function Scenario.HideAsyncPopup()
     pop_debug_print_override()
 end
 
-function Scenario.UpdateRoomName(new_subarea)
-    Game.LogWarn(0, "New cc: " .. new_subarea)
-    Game.AddGUISF(1, "RoomNameGui.Update", 's', new_subarea)
+function Scenario.UpdateRoomName(scenario, new_subarea)
+    RoomNameGui.Update(scenario, new_subarea)
 end

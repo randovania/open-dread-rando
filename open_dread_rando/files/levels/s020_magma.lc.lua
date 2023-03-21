@@ -836,6 +836,7 @@ function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, ne
   end
 
   Scenario.UpdateProgressiveItemModels()
+  Scenario.UpdateRoomName("Cataris", new_subarea)
 end
 
 function s020_magma.Kraid_InitCutscene()
