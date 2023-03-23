@@ -229,6 +229,22 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         coords=(15, 7),
         label="UNKNOWN ITEM"
     ),
+    "BlockageIceL": MapIcon(
+        icon_id="BlockageIceL",
+        coords=(1,3),
+        disabled_id="BlockageDisabledL",
+        label="ICE MISSILE COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageIceR": MapIcon(
+        icon_id="BlockageIceR",
+        coords=(1,3),
+        disabled_id="BlockageDisabledR",
+        label="ICE MISSILE COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    )
 }
 ALL_ICONS.update({f"DNA_{i + 1}": MapIcon(
     icon_id=f"ItemDNA{i + 1}",
@@ -291,3 +307,14 @@ class MapIconEditor:
         self.custom_icons += 1
         self.add_icon(icon)
         return icon.icon_id
+
+    def fix_icons_for_vanilla_shields(self):
+        for shield in ["BlockageMissile", "BlockageSuperMissile", "PropWideBeamBox", "BlockagePlasma", "BlockageWave"]:
+            left = self.mapdefs.raw.Root.mapIconDefs[f"{shield}L"]
+            right = self.mapdefs.raw.Root.mapIconDefs[f"{shield}R"]
+            for field in ["uSpriteRow", "uSpriteCol", "sDisabledIconId"]:
+                right[field] = left[field]
+
+    def add_all_new_door_icons(self):
+        for icon in ["BlockageIceL", "BlockageIceR"]:
+            self.add_icon(ALL_ICONS[icon])

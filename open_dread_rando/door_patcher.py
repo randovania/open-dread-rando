@@ -34,6 +34,7 @@ class MinimapIconData(Enum):
     SHIELD_WAVE_BEAM = ("BlockageWave", (-300, -150, 0, 300))
     SHIELD_MISSILE = ("BlockageMissile", (-300, -150, 0, 300))
     SHIELD_SUPER_MISSILE = ("BlockageSuperMissile", (-300, -150, 0, 300))
+    SHIELD_ICE_MISSILE = ("BlockageIce", (-300, -150, 0, 300))
 
     def __init__(self, icon_id: str, offsets: tuple[float, float, float, float]):
         """
@@ -73,7 +74,7 @@ class MinimapIconData(Enum):
             Min=ListContainer([pos[0] + self.oBox_min[0] + delta, pos[1] + self.oBox_min[1]]),
             Max=ListContainer([pos[0] + self.oBox_max[0] + delta, pos[1] + self.oBox_max[1]]))
         cont["sIconId"] = f"{self.icon_id}{dir}"
-        cont["bFlipX"] = False
+        cont["bFlipX"] = False if dir == "L" else True
         cont["bFlipY"] = False
 
         return cont
@@ -96,6 +97,7 @@ class ActorData(Enum):
     SHIELD_WAVE_BEAM = (["doorwavebeam"], MinimapIconData.SHIELD_WAVE_BEAM)
     SHIELD_MISSILE = (["doorshieldmissile"], MinimapIconData.SHIELD_MISSILE)
     SHIELD_SUPER_MISSILE = (["doorshieldsupermissile"], MinimapIconData.SHIELD_SUPER_MISSILE)
+    SHIELD_ICE_MISSILE = (["shield_icemissile"], MinimapIconData.SHIELD_ICE_MISSILE)
 
     def __init__(self, actordef: list[str], minimap: MinimapIconData):
         # generate actordefs
@@ -120,6 +122,7 @@ class DoorType(Enum):
     WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
+    ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True, ["actors/props/doorshieldmissile"])
     GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True, ["actors/props/door"])
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, ["actors/props/door"])
 
@@ -383,6 +386,8 @@ class DoorPatcher:
             # update the minimap entry as well
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
             mapBlockages[new_id] = copy.deepcopy(mapBlockages[old_sName])
+            if link_name.startswith("wpRight"):
+                mapBlockages[new_id]["bFlipX"] = True
             mapBlockages.pop(old_sName)
 
     def get_shield_id(self, scenario: str):

@@ -8,6 +8,7 @@ from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util, game_patches
 from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
+from open_dread_rando.custom_door_types import create_all_shield_assets
 from open_dread_rando.door_patcher import DoorPatcher
 from open_dread_rando.environmental_damage import apply_constant_damage
 from open_dread_rando.exefs import include_depackager, patch_exefs
@@ -98,10 +99,9 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
-def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
+def patch_pickups(editor: PatcherEditor, map_icon_editor: MapIconEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
-    map_icon_editor = MapIconEditor(editor)
 
     for i, pickup in enumerate(pickups_config):
         LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
@@ -111,7 +111,11 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
             LOG.warning(e)
 
 
-def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
+def patch_doors(editor: PatcherEditor, map_icon_editor: MapIconEditor, doors_config: list[dict]):
+    map_icon_editor.fix_icons_for_vanilla_shields()
+    map_icon_editor.add_all_new_door_icons()
+    create_all_shield_assets(editor)
+
     door_patcher = DoorPatcher(editor)
     for door in doors_config:
         door_patcher.patch_door(door["actor"], door["door_type"])
@@ -163,6 +167,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     validate(configuration)
 
     editor = PatcherEditor(input_path)
+    map_icon_editor = MapIconEditor(editor)
     lua_scripts = LuaEditor()
 
     apply_static_fixes(editor)
@@ -185,14 +190,14 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     # Pickups
-    patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
+    patch_pickups(editor, map_icon_editor, lua_scripts, configuration["pickups"], configuration)
 
     # Hints
     if "hints" in configuration:
         patch_hints(editor, configuration["hints"])
 
     # Doors
-    patch_doors(editor, configuration["door_patches"])
+    patch_doors(editor, map_icon_editor, configuration["door_patches"])
 
     # custom spawn points
     patch_spawn_points(editor, configuration["new_spawn_points"])

@@ -1,0 +1,354 @@
+{
+    "version": 33554447,
+    "name": "doorshieldmissile",
+    "type": "CCharClass",
+    "property": {
+      "model_name": "actors/props/doorshieldmissile/models/doorshieldmissile.bcmdl",
+      "unk_1": 0,
+      "unk_2": 8,
+      "unk_3": 0,
+      "sub_actors": [],
+      "unk_4": [
+        -1,
+        60,
+        40,
+        1,
+        0,
+        80,
+        80,
+        80,
+        0
+      ],
+      "magic": 4294967295,
+      "unk_5": 0,
+      "unk_6": "",
+      "unk_7": 0,
+      "components": {
+        "COLLISION": {
+          "type": "CCollisionComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": {
+            "empty_string": "",
+            "root": "Root",
+            "fields": {
+              "eDefaultCollisionMaterial": 5
+            }
+          },
+          "extra_fields": {},
+          "functions": [],
+          "dependencies": {
+            "file": "actors/props/doorshieldmissile/collisions/doorshieldmissile.bmscd",
+            "unk": 256
+          }
+        },
+        "MODELUPDATER": {
+          "type": "CModelUpdaterComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": null,
+          "extra_fields": {},
+          "functions": [
+            {
+              "name": "LoadModel",
+              "unk": 1,
+              "params": {
+                "Param1": {
+                  "type": "s",
+                  "value": "actors/props/doorshieldmissile/models/doorshieldmissile.bcmdl"
+                }
+              }
+            },
+            {
+              "name": "SetCullingSphere",
+              "unk": 0,
+              "params": {
+                "Param1": {
+                  "type": "f",
+                  "value": 1200
+                },
+                "Param2": {
+                  "type": "f",
+                  "value": 0
+                },
+                "Param3": {
+                  "type": "f",
+                  "value": 0
+                },
+                "Param4": {
+                  "type": "f",
+                  "value": 0
+                }
+              }
+            }
+          ],
+          "dependencies": null
+        },
+        "ANIMATION": {
+          "type": "CAnimationComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": {
+            "empty_string": "",
+            "root": "Root",
+            "fields": {
+              "sInitialAction": "relax",
+              "sAnimTree": "system/animtrees/base.bmsat"
+            }
+          },
+          "extra_fields": {},
+          "functions": [],
+          "dependencies": null
+        },
+        "MATERIALFX": {
+          "type": "CMaterialFXComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": null,
+          "extra_fields": {},
+          "functions": [],
+          "dependencies": null
+        },
+        "FX": {
+          "type": "CFXComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": null,
+          "extra_fields": {},
+          "functions": [],
+          "dependencies": [
+            {
+              "file": "actors/props/doorshieldmissile/fx/shieldmissilefx.bcmdl",
+              "unk1": 1,
+              "unk2": 3,
+              "unk3": 0
+            },
+            {
+              "file": "actors/props/doorshieldmissile/fx/explosion_shieldparticle.bcptl",
+              "unk1": 1,
+              "unk2": 0,
+              "unk3": 0
+            }
+          ]
+        },
+        "LIFE": {
+          "type": "CDoorShieldLifeComponent",
+          "unk_1": [
+            3500,
+            5
+          ],
+          "fields": {
+            "empty_string": "",
+            "root": "Root",
+            "fields": {
+              "bDisolveByMaterial": true,
+              "fTimeToStartDisolve": 0.20000000298023224,
+              "eDoorShieldType": 2147483647,
+              "oDamageSourceFactor": {
+                "fPowerBeamFactor": 1,
+                "fWideBeamFactor": 1,
+                "fPlasmaBeamFactor": 1,
+                "fWaveBeamFactor": 1,
+                "fGrappleBeamFactor": 1,
+                "fHyperBeamFactor": 1,
+                "fChargePowerBeamFactor": 1,
+                "fChargeWideBeamFactor": 1,
+                "fChargePlasmaBeamFactor": 1,
+                "fChargeWaveBeamFactor": 1,
+                "fMeleeChargePowerBeamFactor": 1,
+                "fMeleeChargeWideBeamFactor": 1,
+                "fMeleeChargePlasmaBeamFactor": 1,
+                "fMeleeChargeWaveBeamFactor": 1,
+                "fMissileFactor": 1,
+                "fSuperMissileFactor": 1,
+                "fIceMissileFactor": 1,
+                "fMultiLockonMissileFactor": 1,
+                "fBombFactor": 1,
+                "fLineBombFactor": 1,
+                "fPowerBombFactor": 1,
+                "fScrewAttackFactor": 1,
+                "fDashMeleeFactor": 1,
+                "fSpeedBoosterFactor": 1,
+                "fShineSparkFactor": 1
+              }
+            }
+          },
+          "extra_fields": {},
+          "functions": [
+            {
+              "name": "AddDamageSource",
+              "unk": 1,
+              "params": {
+                "Param1": {
+                  "type": "s",
+                  "value": "HYPER_BEAM"
+                }
+              }
+            },
+            {
+              "name": "SetValue",
+              "unk": 1,
+              "params": {
+                "Param1": {
+                  "type": "s",
+                  "value": "sKillSound"
+                },
+                "Param2": {
+                  "type": "s",
+                  "value": "props/genericdoor/door_missilecrash.wav"
+                }
+              }
+            }
+          ],
+          "dependencies": null
+        },
+        "NAVMESHITEM": {
+          "type": "CNavMeshItemComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": {
+            "empty_string": "",
+            "root": "Root",
+            "fields": {
+              "eType": 2
+            }
+          },
+          "extra_fields": {},
+          "functions": [
+            {
+              "name": "CreateStage",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "right"
+                }
+              }
+            },
+            {
+              "name": "AddStageCollider",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "right"
+                },
+                "Collider": {
+                  "type": "s",
+                  "value": "collision_R"
+                }
+              }
+            },
+            {
+              "name": "SetStageSide",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "right"
+                },
+                "Side": {
+                  "type": "s",
+                  "value": "Right"
+                }
+              }
+            },
+            {
+              "name": "CreateStage",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "left"
+                }
+              }
+            },
+            {
+              "name": "AddStageCollider",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "left"
+                },
+                "Collider": {
+                  "type": "s",
+                  "value": "collision_L"
+                }
+              }
+            },
+            {
+              "name": "SetStageSide",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "left"
+                },
+                "Side": {
+                  "type": "s",
+                  "value": "Left"
+                }
+              }
+            },
+            {
+              "name": "CreateStage",
+              "unk": 1,
+              "params": {
+                "Stage": {
+                  "type": "s",
+                  "value": "destroyed"
+                }
+              }
+            }
+          ],
+          "dependencies": null
+        },
+        "AUDIO": {
+          "type": "CAudioComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": {
+            "empty_string": "",
+            "root": "Root",
+            "fields": {
+              "bMuteOutsideCamera": true
+            }
+          },
+          "extra_fields": {},
+          "functions": [],
+          "dependencies": null
+        },
+        "TIMELINECOMPONENT": {
+          "type": "CTimelineComponent",
+          "unk_1": [
+            4294967295,
+            4294967294
+          ],
+          "fields": null,
+          "extra_fields": {},
+          "functions": [],
+          "dependencies": null
+        }
+      },
+      "binaries": [
+        "actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
+        "actors/props/doorshieldmissile/charclasses/timeline.bmsas"
+      ],
+      "sources": []
+    }
+  }
