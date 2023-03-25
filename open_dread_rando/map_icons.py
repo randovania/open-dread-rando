@@ -245,6 +245,22 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         label="ICE MISSILE COVER",
         offset=(0.800000011920929, -0.4000000059604645),
         auto_scale=False
+    ),
+    "BlockageDiffusionL": MapIcon(
+        icon_id="BlockageDiffusionL",
+        coords=(3,3),
+        disabled_id="BlockageDisabledL",
+        label="DIFFUSION BEAM COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageDiffusionR": MapIcon(
+        icon_id="BlockageDiffusionR",
+        coords=(3,3),
+        disabled_id="BlockageDisabledR",
+        label="DIFFUSION BEAM COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
     )
 }
 ALL_ICONS.update({f"DNA_{i + 1}": MapIcon(
@@ -316,6 +332,9 @@ class MapIconEditor:
             right = self.mapdefs.raw.Root.mapIconDefs[f"{shield}R"]
             for field in ["uSpriteRow", "uSpriteCol", "sDisabledIconId"]:
                 right[field] = left[field]
+            
+            # flip the x-offset on the right one
+            right["vAnchorOffset"][0] = -1 * left["vAnchorOffset"][0]
     
     def mirror_bmmap_icons(self):
         # mirrors props and blockages of mirrored bmmdef icons in each scenario
@@ -330,15 +349,13 @@ class MapIconEditor:
             for sName in props:
                 actor = props[sName]
                 if actor["sIconId"] in props_to_fix: 
-                    actor["sIconId"] = f"{actor['sIconId'][:-1]}L" # change to a left icon id
                     actor["bFlipX"] = True
             
             for sName in blockages:
                 actor = blockages[sName]
                 if actor["sIconId"] in blockages_to_fix:
-                    actor["sIconId"] = f"{actor['sIconId'][:-1]}L" # change to a left icon id
                     actor["bFlipX"] = True
 
     def add_all_new_door_icons(self):
-        for icon in ["BlockageIceL", "BlockageIceR"]:
+        for icon in ["BlockageIceL", "BlockageIceR", "BlockageDiffusionL", "BlockageDiffusionR"]:
             self.add_icon(ALL_ICONS[icon])
