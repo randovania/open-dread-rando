@@ -112,7 +112,6 @@ def patch_pickups(editor: PatcherEditor, map_icon_editor: MapIconEditor, lua_scr
 
 
 def patch_doors(editor: PatcherEditor, map_icon_editor: MapIconEditor, doors_config: list[dict]):
-    map_icon_editor.fix_icons_for_vanilla_shields()
     map_icon_editor.add_all_new_door_icons()
     create_all_shield_assets(editor)
 
@@ -170,7 +169,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     map_icon_editor = MapIconEditor(editor)
     lua_scripts = LuaEditor()
 
-    apply_static_fixes(editor)
+    apply_static_fixes(editor, map_icon_editor)
 
     # Copy custom files
     add_custom_files(editor)

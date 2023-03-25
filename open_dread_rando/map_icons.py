@@ -3,6 +3,7 @@ from typing import Tuple, Union
 
 from mercury_engine_data_structures.formats import Bmmdef
 
+from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.text_patches import patch_text
 
@@ -308,12 +309,35 @@ class MapIconEditor:
         self.add_icon(icon)
         return icon.icon_id
 
-    def fix_icons_for_vanilla_shields(self):
-        for shield in ["BlockageMissile", "BlockageSuperMissile", "PropWideBeamBox", "BlockagePlasma", "BlockageWave"]:
+    def mirror_bmmdef_icons(self):
+        # mirrors vanilla shields, grapple and wide boxes, and 2x1 grapples. 
+        for shield in ["BlockageMissile", "BlockageSuperMissile", "DoorWide", "BlockagePlasma", "BlockageWave", "PropGrappleBox", "PropWideBeamBox", "PropGrappleBlock"]:
             left = self.mapdefs.raw.Root.mapIconDefs[f"{shield}L"]
             right = self.mapdefs.raw.Root.mapIconDefs[f"{shield}R"]
             for field in ["uSpriteRow", "uSpriteCol", "sDisabledIconId"]:
                 right[field] = left[field]
+    
+    def mirror_bmmap_icons(self):
+        # mirrors props and blockages of mirrored bmmdef icons in each scenario
+        props_to_fix = ["PropGrappleBoxR", "PropWideBeamBoxR", "PropGrappleBlockR"]
+        blockages_to_fix = ["BlockageMissileR", "BlockageSuperMissileR", "DoorWideR", "BlockagePlasmaR", "BlockageWaveR"]
+
+        for scenario in ALL_SCENARIOS:
+            mmap = self.editor.get_scenario_map(scenario)
+            props = mmap.get_category("mapProps")
+            blockages = mmap.get_category("mapBlockages")
+
+            for sName in props:
+                actor = props[sName]
+                if actor["sIconId"] in props_to_fix: 
+                    actor["sIconId"] = f"{actor['sIconId'][:-1]}L" # change to a left icon id
+                    actor["bFlipX"] = True
+            
+            for sName in blockages:
+                actor = blockages[sName]
+                if actor["sIconId"] in blockages_to_fix:
+                    actor["sIconId"] = f"{actor['sIconId'][:-1]}L" # change to a left icon id
+                    actor["bFlipX"] = True
 
     def add_all_new_door_icons(self):
         for icon in ["BlockageIceL", "BlockageIceR"]:

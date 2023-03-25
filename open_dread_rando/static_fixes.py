@@ -7,6 +7,7 @@ from mercury_engine_data_structures.formats.gui_files import Bmscp
 from open_dread_rando import door_patcher
 from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.logger import LOG
+from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor
 
 
@@ -346,8 +347,11 @@ def disable_hanubia_cutscene(editor: PatcherEditor):
     cutscene_player = editor.resolve_actor_reference({"scenario": "s080_shipyard", "layer": "cutscenes", "actor": "cutsceneplayer_12"})
     cutscene_player.bEnabled = False
 
+def fix_map_icons(map_editor: MapIconEditor):
+    map_editor.mirror_bmmdef_icons()
+    map_editor.mirror_bmmap_icons()
 
-def apply_static_fixes(editor: PatcherEditor):
+def apply_static_fixes(editor: PatcherEditor, map_editor: MapIconEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
@@ -359,3 +363,4 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_drogyga_fixes(editor)
     apply_main_menu_fixes(editor)
     disable_hanubia_cutscene(editor)
+    fix_map_icons(map_editor)
