@@ -1,8 +1,8 @@
+import copy
 from bisect import insort
 from enum import Enum
 from pathlib import Path
 from typing import Sequence
-import copy
 
 from construct import Container, ListContainer
 
@@ -117,7 +117,8 @@ class DoorType(Enum):
     FRAME = ("frame", ActorData.DOOR_FRAME)
     POWER = ("power_beam", ActorData.DOOR_POWER)
     CHARGE = ("charge_beam", ActorData.DOOR_CHARGE)
-    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True, ["actors/props/doorshieldmissile"])
+    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True,
+                 ["actors/props/doorshieldmissile"])
     PLASMA_BEAM = ("plasma_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_PLASMA_BEAM)
     WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
@@ -126,7 +127,8 @@ class DoorType(Enum):
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, True, ["actors/props/door", "actors/props/doorpresence"])
 
     def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
-                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, additional_asset_folders: list[str] = None):
+                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True,
+                 additional_asset_folders: list[str] = None):
         self.type = rdv_door_type
         self.need_shield = need_shield
         self.door = door_data
@@ -229,7 +231,9 @@ class DoorPatcher:
         door_in_scenario_type = self.door_actor_to_type(door_actor, scenario)
         if door_in_scenario_type.can_be_removed is False:
             raise ValueError(
-                f"Base game door {door_in_scenario_type.type} cannot be patched!\nRequested door: {door_ref['actor']} in {scenario}")
+                f"Base game door {door_in_scenario_type.type} cannot be patched!"
+                f"\nRequested door: {door_ref['actor']} in {scenario}"
+            )
 
         self.door_to_basic(door_actor, door_in_scenario_type, scenario)
         self.power_to_door_type(door_actor, door_type, scenario)
@@ -284,10 +288,12 @@ class DoorPatcher:
             shield_l = self.create_shield(scenario, door, door_type.shield, "L")
             shield_r = self.create_shield(scenario, door, door_type.shield, "R")
             life_comp[
-                "wpLeftDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_l.sName}"
+                "wpLeftDoorShieldEntity"
+            ] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_l.sName}"
             life_comp[
-                "wpRightDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_r.sName}"
-        
+                "wpRightDoorShieldEntity"
+            ] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_r.sName}"
+
         # ensure assets are present
         for folder in door_type.required_asset_folders:
             for asset in self.editor.get_asset_names_in_folder(folder):
@@ -329,16 +335,17 @@ class DoorPatcher:
         for scenario in ALL_SCENARIOS:
             bmmap = self.editor.get_scenario_map(scenario)
             bmmap.raw.Root.mapBlockages = Container()
-    
+
     def rename_all_shields(self):
         for scenario in ALL_SCENARIOS:
             brfld = self.editor.get_scenario(scenario)
-            
-            # we have to cache doors that have shields here and rename them outside the loop, as otherwise it will rename actors in the actor list and confuse the program. 
+
+            # we have to cache doors that have shields here and rename them outside the loop, as otherwise it
+            # will rename actors in the actor list and confuse the program.
             shielded_doors = []
             for layer_name, actor_name, actor in list(brfld.all_actors()):
-
-                # this is the door added to the Artaria CU. For some reason is_door crashes on this so we add a check here. 
+                # this is the door added to the Artaria CU. For some reason is_door crashes on this, so we add a
+                # check here.
                 if actor_name == "DreadRando_CUDoor":
                     continue
 
@@ -349,10 +356,9 @@ class DoorPatcher:
                     continue
 
                 shielded_doors.append(actor)
-            
+
             for door in shielded_doors:
                 self.rename_shields(door, scenario)
-            
 
     def rename_shields(self, door: Container, scenario: str):
         life_comp = door.pComponents.LIFE
@@ -360,18 +366,19 @@ class DoorPatcher:
             link = life_comp[link_name]
             if link == "{EMPTY}":
                 continue
-            
+
             # get shield actor and cache its sName
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
             old_sName = shieldActor.sName
 
-            # skip hdoors (doors where the environment covers one side of the door) as they have terrain attached to the ShieldEntity links
+            # skip hdoors (doors where the environment covers one side of the door) as they have terrain attached
+            # to the ShieldEntity links
             if "db_hdoor" in old_sName:
                 continue
 
             # reclaim old shield id if this is a RandoShield
             self.reclaim_old_shield_id(shieldActor.sName, scenario)
-            
+
             # grab the lowest open id and rename it
             new_id = self.get_shield_id(scenario)
             shieldActor.sName = new_id
@@ -391,7 +398,7 @@ class DoorPatcher:
     def get_shield_id(self, scenario: str):
         # since the available shield ids is auto sorted, just pop the first value
         return f"RandoShield_{self.available_shield_ids[scenario].pop(0)}"
-    
+
     def reclaim_old_shield_id(self, sName: str, scenario: str):
         # if it's a RandoShield, reclaim the old id after the underscore
         shieldId = int(sName.split("_")[1]) if "RandoShield" in sName else None
