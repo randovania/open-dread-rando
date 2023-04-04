@@ -64,9 +64,9 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     }
     final_inventory.update(inventory)
 
-    def chunks(l, n):
-        for i in range(0, len(l), n):
-            yield l[i:i + n]
+    def chunks(array, n):
+        for i in range(0, len(array), n):
+            yield array[i:i + n]
 
     textboxes = 0
     for group in starting_text:
