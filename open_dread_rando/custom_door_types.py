@@ -3,16 +3,11 @@ import functools
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Type
 
-from construct import Container
-from mercury_engine_data_structures.formats import Bmsad, Bmmap
+from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando import model_data
-from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.text_patches import patch_text
 
 @functools.cache
 def _template_read_shieldcover():
@@ -68,10 +63,6 @@ class BaseShield:
         }
 
         life_funcs.append(new_func)
-
-    def get_template_copy(self):
-        template = DoorTemplates.COVER.value
-        return
 
     def patch(self, editor: PatcherEditor):
         template_bmsad = _template_read_shieldcover()

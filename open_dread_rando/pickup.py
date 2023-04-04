@@ -10,7 +10,6 @@ from mercury_engine_data_structures.formats import Bmsad, Bmmap
 
 from open_dread_rando import model_data
 from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.text_patches import patch_text
 

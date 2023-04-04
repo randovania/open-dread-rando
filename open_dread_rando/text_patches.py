@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pprint
 import typing
 
 from mercury_engine_data_structures.formats import Txt

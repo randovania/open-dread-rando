@@ -7,7 +7,6 @@ from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
 from mercury_engine_data_structures.game_check import Game
-from open_dread_rando.logger import LOG
 from open_dread_rando.map_icons import MapIconEditor
 
 T = typing.TypeVar("T")
@@ -163,6 +162,9 @@ class PatcherEditor(FileTreeEditor):
             "layer": layer,
             "actor": actor,
         }
+
+    def build_link(self, sname: str, layer: str = "default"):
+        return f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer}:dctActors:{sname}"
 
     def get_asset_names_in_folder(self, folder: str) -> typing.Iterator[str]:
         yield from (name for name in self._name_for_asset_id.values() if name.startswith(folder))

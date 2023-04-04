@@ -119,18 +119,24 @@ class DoorType(Enum):
     FRAME = ("frame", ActorData.DOOR_FRAME)
     POWER = ("power_beam", ActorData.DOOR_POWER)
     CHARGE = ("charge_beam", ActorData.DOOR_CHARGE)
-    DIFFUSION = ("diffusion_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_DIFFUSION_BEAM, True, True, ["actors/props/door_shield_plasma"])
-    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True, ["actors/props/doorshieldmissile"])
+    DIFFUSION = ("diffusion_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_DIFFUSION_BEAM, True, True, 
+                 ["actors/props/door_shield_plasma"])
+    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True, 
+                 ["actors/props/doorshieldmissile"])
     PLASMA_BEAM = ("plasma_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_PLASMA_BEAM)
     WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
-    ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True, ["actors/props/doorshieldmissile"])
-    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True, ["actors/props/door"])
-    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, ["actors/props/door"])
+    ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True, 
+                   ["actors/props/doorshieldmissile"])
+    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True, 
+               ["actors/props/door"])
+    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, 
+                ["actors/props/door"])
 
     def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
-                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, additional_asset_folders: list[str] = None):
+                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, 
+                 additional_asset_folders: list[str] = None):
         self.type = rdv_door_type
         self.need_shield = need_shield
         self.door = door_data
@@ -148,7 +154,7 @@ class DoorType(Enum):
             if e.type == type:
                 return e
 
-        raise ValueError(f"{type} is not a patchable door! Please check DoorType enum for list of patchable doors.")
+        raise ValueError(f"{type} is not a patchable door!")
 
 
 def is_door(actor: Container):
@@ -232,7 +238,8 @@ class DoorPatcher:
         door_in_scenario_type = self.door_actor_to_type(door_actor, scenario)
         if door_in_scenario_type.can_be_removed is False:
             raise ValueError(
-                f"Base game door {door_in_scenario_type.type} cannot be patched!\nRequested door: {door_ref['actor']} in {scenario}")
+                f"Base game door {door_in_scenario_type.type} cannot be patched!" + \
+                    f"Requested door: {door_ref['actor']} in {scenario}")
 
         self.door_to_basic(door_actor, door_in_scenario_type, scenario)
         self.power_to_door_type(door_actor, door_type, scenario)
@@ -286,10 +293,8 @@ class DoorPatcher:
 
             shield_l = self.create_shield(scenario, door, door_type.shield, "L")
             shield_r = self.create_shield(scenario, door, door_type.shield, "R")
-            life_comp[
-                "wpLeftDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_l.sName}"
-            life_comp[
-                "wpRightDoorShieldEntity"] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{shield_r.sName}"
+            life_comp["wpLeftDoorShieldEntity"] = self.editor.build_link(shield_l.sName)
+            life_comp["wpRightDoorShieldEntity"] = self.editor.build_link(shield_r.sName)
         
         # ensure assets are present
         for folder in door_type.required_asset_folders:
@@ -337,11 +342,13 @@ class DoorPatcher:
         for scenario in ALL_SCENARIOS:
             brfld = self.editor.get_scenario(scenario)
             
-            # we have to cache doors that have shields here and rename them outside the loop, as otherwise it will rename actors in the actor list and confuse the program. 
+            # we have to cache doors that have shields here and rename them outside the loop, 
+            # as otherwise it will rename actors in the actor list and confuse the program. 
             shielded_doors = []
             for layer_name, actor_name, actor in list(brfld.all_actors()):
 
-                # this is the door added to the Artaria CU. For some reason is_door crashes on this so we add a check here. 
+                # this is the door added to the Artaria CU. 
+                # For some reason is_door crashes on this so we add a check here. 
                 if actor_name == "DreadRando_CUDoor":
                     continue
 
@@ -368,7 +375,8 @@ class DoorPatcher:
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
             old_sName = shieldActor.sName
 
-            # skip hdoors (doors where the environment covers one side of the door) as they have terrain attached to the ShieldEntity links
+            # skip hdoors (doors where the environment covers one side of the door) 
+            # as they have terrain attached to the ShieldEntity links
             if "db_hdoor" in old_sName:
                 continue
 
@@ -378,7 +386,7 @@ class DoorPatcher:
             # grab the lowest open id and rename it
             new_id = self.get_shield_id(scenario)
             shieldActor.sName = new_id
-            life_comp[link_name] = f"Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:{new_id}"
+            life_comp[link_name] = self.editor.build_link(new_id)
 
             # make new actor, copy its groups, delete it
             brfld = self.editor.get_scenario(scenario)
@@ -390,7 +398,8 @@ class DoorPatcher:
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
             mapBlockages[new_id] = copy.deepcopy(mapBlockages[old_sName])
 
-            # flip the icon on rightfacing shields in order to optimize the icons file, allowing room for new assets in custom_door_types.py
+            # flip the icon on rightfacing shields in order to optimize the icons file, 
+            # allowing room for new assets in custom_door_types.py
             if link_name.startswith("wpRight"):
                 mapBlockages[new_id]["bFlipX"] = True
             mapBlockages.pop(old_sName)

@@ -330,7 +330,8 @@ class MapIconEditor:
 
     def mirror_bmmdef_icons(self):
         # mirrors vanilla shields, grapple and wide boxes, and 2x1 grapples. 
-        for shield in ["BlockageMissile", "BlockageSuperMissile", "DoorWide", "BlockagePlasma", "BlockageWave", "PropGrappleBox", "PropWideBeamBox", "PropGrappleBlock"]:
+        for shield in ["BlockageMissile", "BlockageSuperMissile", "DoorWide", "BlockagePlasma", "BlockageWave", 
+                       "PropGrappleBox", "PropWideBeamBox", "PropGrappleBlock"]:
             left = self.mapdefs.raw.Root.mapIconDefs[f"{shield}L"]
             right = self.mapdefs.raw.Root.mapIconDefs[f"{shield}R"]
             for field in ["uSpriteRow", "uSpriteCol", "sDisabledIconId"]:
@@ -342,7 +343,8 @@ class MapIconEditor:
     def mirror_bmmap_icons(self):
         # mirrors props and blockages of mirrored bmmdef icons in each scenario
         props_to_fix = ["PropGrappleBoxR", "PropWideBeamBoxR", "PropGrappleBlockR"]
-        blockages_to_fix = ["BlockageMissileR", "BlockageSuperMissileR", "DoorWideR", "BlockagePlasmaR", "BlockageWaveR"]
+        blockages_to_fix = ["BlockageMissileR", "BlockageSuperMissileR", "DoorWideR", 
+                            "BlockagePlasmaR", "BlockageWaveR"]
 
         for scenario in ALL_SCENARIOS:
             mmap = self.editor.get_scenario_map(scenario)
