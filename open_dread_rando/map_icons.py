@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import dataclasses
-from typing import Tuple, Union
+from typing import Tuple, Union, TYPE_CHECKING
 
 from mercury_engine_data_structures.formats import Bmmdef
 
 from open_dread_rando.common_data import ALL_SCENARIOS
-from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.text_patches import patch_text
+if TYPE_CHECKING:
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 
 @dataclasses.dataclass(frozen=True)

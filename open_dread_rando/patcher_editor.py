@@ -8,6 +8,7 @@ from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
 from mercury_engine_data_structures.game_check import Game
 from open_dread_rando.logger import LOG
+from open_dread_rando.map_icons import MapIconEditor
 
 T = typing.TypeVar("T")
 
@@ -22,10 +23,12 @@ def extension_for_type(type_hint: typing.Type[T]) -> str:
 
 class PatcherEditor(FileTreeEditor):
     memory_files: dict[str, BaseResource]
+    map_icon_editor: MapIconEditor
 
     def __init__(self, root: Path):
         super().__init__(root, target_game=Game.DREAD)
         self.memory_files = {}
+        self.map_icon_editor = MapIconEditor(self)
 
     def get_file(self, path: str, type_hint: typing.Type[T] = BaseResource) -> T:
         if path not in self.memory_files:

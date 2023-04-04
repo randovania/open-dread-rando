@@ -99,20 +99,20 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
-def patch_pickups(editor: PatcherEditor, map_icon_editor: MapIconEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
+def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
 
     for i, pickup in enumerate(pickups_config):
         LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
         try:
-            pickup_object_for(lua_scripts, pickup, i, configuration, map_icon_editor).patch(editor)
+            pickup_object_for(lua_scripts, pickup, i, configuration).patch(editor)
         except NotImplementedError as e:
             LOG.warning(e)
 
 
-def patch_doors(editor: PatcherEditor, map_icon_editor: MapIconEditor, doors_config: list[dict]):
-    map_icon_editor.add_all_new_door_icons()
+def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
+    editor.map_icon_editor.add_all_new_door_icons()
     create_all_shield_assets(editor)
 
     door_patcher = DoorPatcher(editor)
@@ -166,10 +166,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     validate(configuration)
 
     editor = PatcherEditor(input_path)
-    map_icon_editor = MapIconEditor(editor)
     lua_scripts = LuaEditor()
 
-    apply_static_fixes(editor, map_icon_editor)
+    apply_static_fixes(editor)
 
     # Copy custom files
     add_custom_files(editor)
@@ -189,14 +188,14 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     # Pickups
-    patch_pickups(editor, map_icon_editor, lua_scripts, configuration["pickups"], configuration)
+    patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
 
     # Hints
     if "hints" in configuration:
         patch_hints(editor, configuration["hints"])
 
     # Doors
-    patch_doors(editor, map_icon_editor, configuration["door_patches"])
+    patch_doors(editor, configuration["door_patches"])
 
     # custom spawn points
     patch_spawn_points(editor, configuration["new_spawn_points"])

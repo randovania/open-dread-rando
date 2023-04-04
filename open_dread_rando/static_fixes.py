@@ -351,7 +351,7 @@ def fix_map_icons(map_editor: MapIconEditor):
     map_editor.mirror_bmmdef_icons()
     map_editor.mirror_bmmap_icons()
 
-def apply_static_fixes(editor: PatcherEditor, map_editor: MapIconEditor):
+def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
     apply_one_sided_door_fixes(editor)
@@ -363,4 +363,4 @@ def apply_static_fixes(editor: PatcherEditor, map_editor: MapIconEditor):
     apply_drogyga_fixes(editor)
     apply_main_menu_fixes(editor)
     disable_hanubia_cutscene(editor)
-    fix_map_icons(map_editor)
+    fix_map_icons(editor.map_icon_editor)
