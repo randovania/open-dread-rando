@@ -1,13 +1,15 @@
+import copy
 from bisect import insort
 from enum import Enum
 from pathlib import Path
 from typing import Sequence
-import copy
 
 from construct import Container, ListContainer
 
 from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor
+
+from mercury_engine_data_structures.formats import Bmscc
 
 # copied from existing entity, so we don't have to make a whole shield
 _EXAMPLE_SHIELD = {"scenario": "s010_cave", "layer": "default", "actor": "Door003_missileShield"}
@@ -173,6 +175,7 @@ class DoorPatcher:
         }
         self.SHIELD = editor.resolve_actor_reference(_EXAMPLE_SHIELD)
         self.rename_all_shields()
+        self.patch_doorpresence_collision()
 
     def door_actor_to_type(self, door: Container, scenario: str) -> DoorType:
         """
@@ -337,7 +340,7 @@ class DoorPatcher:
         for scenario in ALL_SCENARIOS:
             bmmap = self.editor.get_scenario_map(scenario)
             bmmap.raw.Root.mapBlockages = Container()
-    
+
     def rename_all_shields(self):
         for scenario in ALL_SCENARIOS:
             brfld = self.editor.get_scenario(scenario)
@@ -359,10 +362,9 @@ class DoorPatcher:
                     continue
 
                 shielded_doors.append(actor)
-            
+
             for door in shielded_doors:
                 self.rename_shields(door, scenario)
-            
 
     def rename_shields(self, door: Container, scenario: str):
         life_comp = door.pComponents.LIFE
@@ -370,7 +372,7 @@ class DoorPatcher:
             link = life_comp[link_name]
             if link == "{EMPTY}":
                 continue
-            
+
             # get shield actor and cache its sName
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
             old_sName = shieldActor.sName
@@ -382,7 +384,7 @@ class DoorPatcher:
 
             # reclaim old shield id if this is a RandoShield
             self.reclaim_old_shield_id(shieldActor.sName, scenario)
-            
+
             # grab the lowest open id and rename it
             new_id = self.get_shield_id(scenario)
             shieldActor.sName = new_id
@@ -407,9 +409,17 @@ class DoorPatcher:
     def get_shield_id(self, scenario: str):
         # since the available shield ids is auto sorted, just pop the first value
         return f"RandoShield_{self.available_shield_ids[scenario].pop(0)}"
-    
+
     def reclaim_old_shield_id(self, sName: str, scenario: str):
         # if it's a RandoShield, reclaim the old id after the underscore
         shieldId = int(sName.split("_")[1]) if "RandoShield" in sName else None
         if shieldId is not None:
             insort(self.available_shield_ids[scenario], shieldId)
+    
+    def patch_doorpresence_collision(self):
+        # extends the door collider in doorpresence actor to 300x300 to maintain the size of normal doors
+        # this looks a bit bad, but it'll do until we figure out how to edit navmeshes
+        # (or whatever is storing the intended hitboxes for doors)
+        doorpresence = self.editor.get_file("actors/props/doorpresence/collisions/doorpresence.bmscd", Bmscc)
+        door_collider = doorpresence.raw.layers[0].entries[0]
+        door_collider.data.max = ListContainer([300.0,320.0])
