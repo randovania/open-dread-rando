@@ -433,15 +433,7 @@
                             "wave_beam",
                             "missile",
                             "super_missile",
-                            "ice_missile",
-                            "storm_missile",
-                            "bomb",
-                            "cross_bomb",
-                            "power_bomb",
-                            "grapple_beam",
-                            "phantom_cloak",
-                            "phase_shift",
-                            "screw_attack"
+                            "ice_missile"
                         ]
                     }
                 },

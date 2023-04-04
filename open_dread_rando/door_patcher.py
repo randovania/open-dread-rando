@@ -389,6 +389,8 @@ class DoorPatcher:
             # update the minimap entry as well
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
             mapBlockages[new_id] = copy.deepcopy(mapBlockages[old_sName])
+
+            # flip the icon on rightfacing shields in order to optimize the icons file, allowing room for new assets in custom_door_types.py
             if link_name.startswith("wpRight"):
                 mapBlockages[new_id]["bFlipX"] = True
             mapBlockages.pop(old_sName)

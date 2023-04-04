@@ -83,8 +83,6 @@ class BaseShield:
 
         for w in self.data["weaknesses"]:
             self.add_weakness(w, new_template)
-        
-        print(new_template["property"]["components"]["LIFE"])
 
         editor.add_new_asset(self.data["actordef"], Bmsad(new_template, editor.target_game), [])
 
