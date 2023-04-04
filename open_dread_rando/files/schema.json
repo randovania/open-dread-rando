@@ -314,10 +314,21 @@
                                     "default": false,
                                     "description": "Enables an in-game death counter shown in the player's HUD"
                                 },
-                                "enable_room_ids": {
-                                    "type": "boolean",
-                                    "default": false,
-                                    "description": "Shows the room name on the player's HUD"
+                                "room_ids": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean",
+                                            "default": "false",
+                                            "description": "Enables showing Room IDs on the player's HUD"
+                                        },
+                                        "fade_time": {
+                                            "type": "number",
+                                            "default": -1,
+                                            "description": "The time for the message to disappear, or -1 to never hide"
+                                        }
+                                    },
+                                    "additionalProperties": false
                                 }
                             },
                             "additionalProperties": false

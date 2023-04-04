@@ -1,5 +1,6 @@
 RoomNameGui = RoomNameGui or {
-    cameraDict = nil
+    cameraDict = nil,
+	fadeTime = -1
 }
 
 function RoomNameGui.BuildCameraDict()
@@ -397,7 +398,8 @@ function RoomNameGui.GetRoomName(scenario, camera)
 	return rando_name
 end
 
-function RoomNameGui.Init()
+function RoomNameGui.Init(time_to_fade)
+	RoomNameGui.fadeTime = time_to_fade
     if RoomNameGui.ui then
         GUI.DestroyDisplayObject(RoomNameGui.ui)
     end
@@ -504,7 +506,9 @@ function RoomNameGui.ScenarioToName(scenario)
 	return dict[scenario]
 end
 
-function RoomNameGui.Update(scenario, new_cc)
+-- updates the room name gui label
+-- optional time_to_fade arg will set visibility to false after the time in seconds. -1 means it does not fade. 
+function RoomNameGui.Update(scenario, new_cc, time_to_fade)
     local label = RoomNameGui.label
 
 	if not label then
@@ -519,9 +523,28 @@ function RoomNameGui.Update(scenario, new_cc)
 	
 	local room_name = RoomNameGui.GetRoomName(scenario, new_cc)
 	if room_name == nil then
-		Game.LogWarn(0, "Couldn't find name for " .. scenario .. " / " .. new_cc)
-		GUI.SetTextText(label, "Room: " .. scenario .. " / " .. new_cc)
+		Game.LogWarn(0, string.format("Couldn't find name for %s/%s", scenario, new_cc))
+		GUI.SetTextText(label, string.format("Room: %s", new_cc))
 	else
-		GUI.SetTextText(label, "Room: " .. scenario .. " / " .. room_name)
+		GUI.SetTextText(label, string.format("Room: %s", room_name))
+	end
+	
+	RoomNameGui.SetUIVisibility(true)
+	if RoomNameGui.fadeTime ~= -1 then
+		Game.AddGUISF(RoomNameGui.fadeTime, "RoomNameGui.SetUIVisibility", 'b', false)
+	end
+end
+
+function RoomNameGui.FadeUIVisibility(alpha)
+	local ui = RoomNameGui.ui
+	if not ui then
+		Game.LogWarn(0, "No ui for RoomNameGui")
+		return
+	end
+
+	-- TODO fade alpha by 0.00625 every frame 
+	alpha = alpha - 0.00625
+	if alpha > 0 then
+		Game.AddGUISF(0.016, "RoomNameGui.FadeUIVisibility", 'f', alpha)
 	end
 end

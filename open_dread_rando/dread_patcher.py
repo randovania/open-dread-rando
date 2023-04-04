@@ -91,7 +91,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
-        "enable_room_ids": cosmetic_options["enable_room_ids"]
+        "enable_room_ids": cosmetic_options["room_id"]["enabled"],
+        "room_id_fade_time": cosmetic_options["room_id"]["fade_time"],
     }
 
     replacement.update(configuration.get("game_patches", {}))

@@ -46,6 +46,7 @@ Init.iNumRequiredArtifacts = TEMPLATE("required_artifacts")
 Init.bWarpToStart = TEMPLATE("warp_to_start")
 Init.bEnableDeathCounter = TEMPLATE("enable_death_counter")
 Init.bEnableRoomIds = TEMPLATE("enable_room_ids")
+Init.bRoomIdFadeTime = TEMPLATE("room_id_fade_time")
 
 Game.LogWarn(0, "Inventory:")
 for k, v in pairs(Init.tNewGameInventory) do
