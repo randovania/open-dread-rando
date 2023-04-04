@@ -28,6 +28,7 @@ function RandomizerPowerup.IncreaseItemAmount(item_id, quantity, capacity)
         end
         target = math.min(target, capacity)
     end
+    target = math.max(target, 0)
     RandomizerPowerup.SetItemAmount(item_id, target)
 end
 
@@ -59,7 +60,7 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.CheckArtifacts(granted)
 
     Scenario.UpdateProgressiveItemModels()
-    
+
     return granted
 end
 
@@ -160,13 +161,13 @@ function RandomizerPowerup.IncreaseEnergy(resource)
 
     local new_max = RandomizerPowerup.GetItemAmount("ITEM_MAX_LIFE") + energy
     new_max = math.min(new_max, MAX_ENERGY)
-    
+
     local new_current = new_max
     if item_id == "ITEM_LIFE_SHARDS" and Init.bImmediateEnergyParts then
         new_current = RandomizerPowerup.GetItemAmount("ITEM_CURRENT_LIFE") + energy
         new_current = math.min(new_current, new_max)
     end
-    
+
     RandomizerPowerup.SetItemAmount("ITEM_MAX_LIFE", new_max)
     RandomizerPowerup.SetItemAmount("ITEM_CURRENT_LIFE", new_current)
 
@@ -194,7 +195,7 @@ function RandomizerPowerup.CheckArtifacts(resource)
     if resource == nil then return end
     if Init.iNumRequiredArtifacts == 0 then return end
     if RandomizerPowerup.HasItem("ITEM_METROIDNIZATION") then return end
-    
+
     if resource.item_id:find("ITEM_RANDO_ARTIFACT", 1, true) then
         GUI.AddEmmyMissionLogEntry("#MLOG_"..resource.item_id)
     end
