@@ -8,12 +8,12 @@ from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util, game_patches
 from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
+from open_dread_rando.custom_door_types import create_all_shield_assets
 from open_dread_rando.door_patcher import DoorPatcher
 from open_dread_rando.environmental_damage import apply_constant_damage
 from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.objective import apply_objective_patches
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -64,9 +64,9 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
     }
     final_inventory.update(inventory)
 
-    def chunks(l, n):
-        for i in range(0, len(l), n):
-            yield l[i:i + n]
+    def chunks(array, n):
+        for i in range(0, len(array), n):
+            yield array[i:i + n]
 
     textboxes = 0
     for group in starting_text:
@@ -103,17 +103,19 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
-    map_icon_editor = MapIconEditor(editor)
 
     for i, pickup in enumerate(pickups_config):
         LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
         try:
-            pickup_object_for(lua_scripts, pickup, i, configuration, map_icon_editor).patch(editor)
+            pickup_object_for(lua_scripts, pickup, i, configuration).patch(editor)
         except NotImplementedError as e:
             LOG.warning(e)
 
 
 def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
+    editor.map_icon_editor.add_all_new_door_icons()
+    create_all_shield_assets(editor)
+
     door_patcher = DoorPatcher(editor)
     for door in doors_config:
         door_patcher.patch_door(door["actor"], door["door_type"])

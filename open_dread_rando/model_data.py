@@ -351,6 +351,25 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             position=(0.0, -30.0, 0.0),
         ),
     ),
+
+    "shield_icemissile": ModelData(
+        bcmdl_path="actors/props/shield_icemissile/models/shield_icemissile.bcmdl",
+        bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
+        dependencies=(
+            "actors/props/shield_icemissile/models/shield_icemissile.bcmdl",
+            "actors/props/shield_icemissile/models/imats/shield_icemissile_mp_opaque_01.bsmat"
+        )
+    ),
+
+    "shield_diffusion": ModelData(
+        bcmdl_path="actors/props/shield___diffusion/models/shield_diffusion.bcmdl",
+        bmsas="actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsas",
+        dependencies=(
+            "actors/props/shield___diffusion/models/shield_diffusion.bcmdl",
+            "actors/props/shield___diffusion/models/imats/shield_diffusion_matfx.bsmat",
+            "actors/props/shield___diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat"
+        )
+    )
 }
 
 

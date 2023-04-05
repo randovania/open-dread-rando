@@ -7,6 +7,7 @@ from mercury_engine_data_structures.formats.gui_files import Bmscp
 from open_dread_rando import door_patcher
 from open_dread_rando.common_data import ALL_SCENARIOS
 from open_dread_rando.logger import LOG
+from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor
 
 
@@ -341,11 +342,19 @@ def apply_main_menu_fixes(editor: PatcherEditor):
     listcomp = extras.get_child("Content.ListComposition").lstChildren
     listcomp.pop(2)  # remove the credits button from the extras menu
 
+
 def disable_hanubia_cutscene(editor: PatcherEditor):
     # disable cutscene 12 (hanubia - tank room) because it teleports samus to the lower section (bad for door rando)
-    cutscene_player = editor.resolve_actor_reference({"scenario": "s080_shipyard", "layer": "cutscenes", "actor": "cutsceneplayer_12"})
+    cutscene_player = editor.resolve_actor_reference({
+        "scenario": "s080_shipyard",
+        "layer": "cutscenes",
+        "actor": "cutsceneplayer_12",
+    })
     cutscene_player.bEnabled = False
 
+def fix_map_icons(map_editor: MapIconEditor):
+    map_editor.mirror_bmmdef_icons()
+    map_editor.mirror_bmmap_icons()
 
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
@@ -359,3 +368,4 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_drogyga_fixes(editor)
     apply_main_menu_fixes(editor)
     disable_hanubia_cutscene(editor)
+    fix_map_icons(editor.map_icon_editor)

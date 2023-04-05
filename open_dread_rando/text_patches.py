@@ -1,8 +1,11 @@
-import pprint
+from __future__ import annotations
+
+import typing
 
 from mercury_engine_data_structures.formats import Txt
 
-from open_dread_rando.patcher_editor import PatcherEditor
+if typing.TYPE_CHECKING:
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 # may want to edit all the localization files?
 ALL_TEXT_FILES = {

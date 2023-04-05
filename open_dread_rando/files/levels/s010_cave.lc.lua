@@ -68,6 +68,7 @@ local L11_1 = false
 local L12_1 = ""
 local CAVES_TUTO_MAP_DONE = false
 local CAVES_TUTO_MAP_ROOM_DONE = false
+local MORPH_BALL_AT_PROTO_EMMY = 0
 
 
 
@@ -376,7 +377,8 @@ end
 
 
 function s010_cave.OnProtoEmmyCantClimbCutsceneStart()   
-    
+  local cur_morph_ball_amount = Game.GetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL")
+  Game.SetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL", math.max(cur_morph_ball_amount, MORPH_BALL_AT_PROTO_EMMY))
   local oActor = Game.GetActor("LM_AfterEmmyProtoClimbSequence_Emmy")
   if CurrentScenario.oEmmyProtoEntity ~= nil and oActor ~= nil then
     CurrentScenario.oEmmyProtoEntity.bEnabled = false
@@ -1782,6 +1784,8 @@ function s010_cave.Check_WakeUpCU_Completed(_ARG_0_)
 end
 
 function s010_cave.OnCutscene34Ended()
+  MORPH_BALL_AT_PROTO_EMMY = Game.GetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL")
+  Game.SetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL", 0)
   local oActor = Game.GetActor("Door058 (PW-PW)")
   if oActor ~= nil then
     oActor.LIFE:ForceOpenDoor(false, "0034protoemmyappears")
