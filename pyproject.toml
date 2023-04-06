@@ -6,3 +6,6 @@ license = "GNU GPLv3"
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
 write_to = "open_dread_rando/version.py"
+
+[tool.ruff]
+line-length = 120

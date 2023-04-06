@@ -427,14 +427,13 @@
                             "frame",
                             "power_beam",
                             "charge_beam",
+                            "diffusion_beam",
                             "wide_beam",
                             "plasma_beam",
                             "wave_beam",
                             "missile",
                             "super_missile",
-                            "grapple_beam",
-                            "phantom_cloak",
-                            "phase_shift"
+                            "ice_missile"
                         ]
                     }
                 },

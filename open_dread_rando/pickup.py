@@ -10,7 +10,6 @@ from mercury_engine_data_structures.formats import Bmsad, Bmmap
 
 from open_dread_rando import model_data
 from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.text_patches import patch_text
 
@@ -41,13 +40,11 @@ class PickupType(Enum):
 
 
 class BasePickup:
-    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int, configuration: dict,
-                 map_icon_editor: MapIconEditor):
+    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int, configuration: dict):
         self.lua_editor = lua_editor
         self.pickup = pickup
         self.pickup_id = pickup_id
         self.configuration = configuration
-        self.map_icon_editor = map_icon_editor
 
     def patch(self, editor: PatcherEditor):
         raise NotImplementedError()
@@ -199,7 +196,7 @@ class ActorPickup(BasePickup):
             map_def.ability_labels.pop(map_actor["actor"])
         if map_actor["actor"] in map_def.items:
             icon = map_def.items.pop(map_actor["actor"])
-            icon.sIconId = self.map_icon_editor.get_data(self.pickup)
+            icon.sIconId = editor.map_icon_editor.get_data(self.pickup)
             map_def.items[actor.sName] = icon
 
     def patch(self, editor: PatcherEditor):
@@ -331,7 +328,6 @@ _PICKUP_TYPE_TO_CLASS: dict[PickupType, Type[BasePickup]] = {
 }
 
 
-def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int, configuration: dict,
-                      map_icon_editor: MapIconEditor) -> "BasePickup":
+def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int, configuration: dict) -> "BasePickup":
     pickup_type = PickupType(pickup["pickup_type"])
-    return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id, configuration, map_icon_editor)
+    return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id, configuration)
