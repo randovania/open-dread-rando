@@ -91,8 +91,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
-        "enable_room_ids": False if cosmetic_options["room_ids"] is "NEVER" else True,
-        "room_id_fade_time": -1 if cosmetic_options["room_ids"] is not "WITH_FADE" else 3,
+        "enable_room_ids": False if cosmetic_options["room_ids"] == "NEVER" else True,
+        "room_id_fade_time": -1 if cosmetic_options["room_ids"] != "WITH_FADE" else 3,
     }
 
     replacement.update(configuration.get("game_patches", {}))
@@ -102,7 +102,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     py_dict: dict = configuration["cosmetic_patches"]["lua"]["room_dict"]
     
-    file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}).encode("ascii")
+    file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}, True).encode("ascii")
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):

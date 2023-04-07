@@ -12,10 +12,10 @@ def _files() -> Path:
     return Path(__file__).parent.joinpath("files")
 
 
-def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
+def replace_lua_template(file: str, replacement: dict[str, str], wrap_strings: bool = False) -> str:
     code = _templates().joinpath(file).read_text()
     for key, content in replacement.items():
-        code = code.replace(f'TEMPLATE("{key}")', lua_convert(content))
+        code = code.replace(f'TEMPLATE("{key}")', lua_convert(content, wrap_strings))
 
     unknown_templates = re.findall(r'TEMPLATE\("([^"]+)"\)', code)
 
@@ -25,20 +25,20 @@ def replace_lua_template(file: str, replacement: dict[str, str]) -> str:
     return code
 
 
-def lua_convert(data) -> str:
+def lua_convert(data, wrap_strings: bool = False) -> str:
     if isinstance(data, list):
         return "{\n" + "\n".join(
-            "{},".format(lua_convert(item))
+            "{},".format(lua_convert(item, wrap_strings))
             for item in data
         ) + "\n}"
     if isinstance(data, dict):
         return "{\n" + "\n".join(
-            "{} = {},".format(key, lua_convert(value))
+            "{} = {},".format(key, lua_convert(value, wrap_strings))
             for key, value in data.items()
         ) + "\n}"
     if isinstance(data, bool):
         return "true" if data else "false"
-    if isinstance(data, str):
+    if wrap_strings and isinstance(data, str):
         return wrap_string(data)
     return str(data)
 

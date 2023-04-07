@@ -1,8 +1,8 @@
-dofile("system/scripts/cc_to_room_name.lc")
+Game.DoFile("system/scripts/cc_to_room_name.lc")
 
 RoomNameGui = RoomNameGui or {
     cameraDict = RANDO_CC_DICTIONARY,
-	fadeTime = -1.0,
+	fadeTime = Init.bRoomIdFadeTime,
 	fadeOutSFID = nil,
 }
 
@@ -24,7 +24,7 @@ function RoomNameGui.GetRoomName(scenario, camera)
 end
 
 function RoomNameGui.Init(time_to_fade)
-	RoomNameGui.fadeTime = time_to_fade
+	--RoomNameGui.fadeTime = time_to_fade
     if RoomNameGui.ui then
         GUI.DestroyDisplayObject(RoomNameGui.ui)
     end
@@ -77,7 +77,7 @@ function RoomNameGui.Init(time_to_fade)
     RoomNameGui.label = label
 	
 	local current_cc = Game.GetCurrentSubAreaId()
-	local current_scenario = RoomNameGui.ScenarioToName(Game.GetScenarioID())
+	local current_scenario = Game.GetScenarioID()
 	RoomNameGui.Update(current_scenario, current_cc)
 end
 
@@ -140,6 +140,8 @@ function RoomNameGui.Update(scenario, new_cc)
 		Game.LogWarn(0, "No Label for RoomNameGui")
 		return
 	end
+
+	RoomNameGui.Fade("1.0")
 	
 	if type(new_cc) ~= "string" then
 		GUI.LogWarn(0, "collision camera is not string")
@@ -153,23 +155,23 @@ function RoomNameGui.Update(scenario, new_cc)
 	else
 		GUI.SetTextText(label, string.format("Room: %s", room_name))
 	end
-	
-	RoomNameGui.SetUIVisibility(true)
-	if RoomNameGui.fadeTime ~= -1 then
+
+	if RoomNameGui.fadeTime ~= nil and RoomNameGui.fadeTime ~= -1 then
 		if RoomNameGui.fadeOutSFID ~= nil then
-			Game.DelSFById(RoomNameGui.fadeOutSFID)
+			Game.DelSFByID(RoomNameGui.fadeOutSFID)
 		end
-		RoomNameGui.fadeOutSFID = Game.AddGUISF(RoomNameGui.fadeTime, "RoomNameGui.FadeOut", "")
+		RoomNameGui.fadeOutSFID = Game.AddGUISF(RoomNameGui.fadeTime, "RoomNameGui.Fade", "s", "0.0")
 	end
 end
 
-function RoomNameGui.FadeOut()
+-- fades out or in
+-- @param fade_dir the value assigned to FadeColorRGB
+function RoomNameGui.Fade(fade_val)
 	local ui = RoomNameGui.ui
 	if not ui then
 		Game.LogWarn(0, "No ui for RoomNameGui")
 		return
 	end
 
-	-- TODO fade alpha by 0.00625 every frame 
-	GUI.SetProperties(ui, {FadeColorR = "-1.0", FadeColorG = "-1.0", FadeColorB = "-1.0", FadeColorA = "0.0", FadeTime = "0.5"})
+	GUI.SetProperties(ui, {FadeColorR = "-1.0", FadeColorG = "-1.0", FadeColorB = "-1.0", FadeColorA = fade_val, FadeTime = "0.5"})
 end
