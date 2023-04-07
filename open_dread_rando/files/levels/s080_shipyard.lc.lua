@@ -472,8 +472,7 @@ function s080_shipyard.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea,
     Game.StopMusic(true)
   end
 
-  Scenario.UpdateProgressiveItemModels()
-  Scenario.UpdateRoomName("Hanubia", new_subarea)
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 function s080_shipyard.ClosePowerBombDoor()

@@ -1215,8 +1215,7 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
     end
   end
 
-  Scenario.UpdateProgressiveItemModels()
-  Scenario.UpdateRoomName("Artaria", new_subarea)
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 

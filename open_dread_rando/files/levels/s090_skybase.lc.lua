@@ -153,8 +153,7 @@ end
 
 
 function s090_skybase.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-  Scenario.UpdateProgressiveItemModels()
-  Scenario.UpdateRoomName("Itorash", new_subarea)
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 

@@ -181,8 +181,7 @@ function s060_quarantine.OnSubAreaChange(old_subarea, old_actorgroup, new_subare
     end
   end
 
-  Scenario.UpdateProgressiveItemModels()
-  Scenario.UpdateRoomName("Elun", new_subarea)
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 

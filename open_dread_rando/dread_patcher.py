@@ -91,14 +91,20 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
-        "enable_room_ids": cosmetic_options["room_id"]["enabled"],
-        "room_id_fade_time": cosmetic_options["room_id"]["fade_time"],
+        "enable_room_ids": False if cosmetic_options["room_ids"] is "NEVER" else True,
+        "room_id_fade_time": -1 if cosmetic_options["room_ids"] is not "WITH_FADE" else 3,
     }
 
     replacement.update(configuration.get("game_patches", {}))
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
+def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
+    py_dict: dict = configuration["cosmetic_patches"]["lua"]["room_dict"]
+    lua_table = lua_util.lua_convert(py_dict)
+    
+    file = lua_util.replace_lua_template("cc_to_room_id.lua", { "room_dict" : lua_table}).encode("ascii")
+    editor.add_new_asset("system/scripts/cc_to_room_name.lua", file, ["packs/system/system.pkg"])
 
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC
@@ -180,6 +186,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         "system/scripts/init.lc",
         create_custom_init(editor, configuration).encode("ascii"),
     )
+
+    # Update cc_to_room_name.lua
+    create_collision_camera_table(editor, configuration)
 
     # Update scenario.lc
     lua_util.replace_script(editor, "system/scripts/scenario", "custom_scenario.lua")

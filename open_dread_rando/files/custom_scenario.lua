@@ -363,6 +363,11 @@ function Scenario.OnTeleportFinished()
     Game.ReinitPlayerFromBlackboard()
 end
 
+function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
+    Scenario.UpdateProgressiveItemModels()
+    Scenario.UpdateRoomName(Game.GetScenarioID(), new_subarea)
+end
+
 Scenario.NumUIs = 0
 function Scenario.InitGui()
     Game.LogWarn(0, "Creating GUI")
@@ -387,7 +392,6 @@ function Scenario.InitGui()
     end
 
     if Init.bEnableRoomIds then
-        RoomNameGui.BuildCameraDict()
         RoomNameGui.Init()
     end
 end

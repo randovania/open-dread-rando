@@ -315,23 +315,17 @@
                                     "description": "Enables an in-game death counter shown in the player's HUD"
                                 },
                                 "room_ids": {
-                                    "type": "object",
-                                    "properties": {
-                                        "enabled": {
-                                            "type": "boolean",
-                                            "default": "false",
-                                            "description": "Enables showing Room IDs on the player's HUD"
-                                        },
-                                        "fade_time": {
-                                            "type": "number",
-                                            "default": -1,
-                                            "description": "The time for the message to disappear, or -1 to never hide"
-                                        }
-                                    },
-                                    "additionalProperties": false
+                                    "type": "string",
+                                    "default": "NEVER",
+                                    "description": "The type of room name shown on GUI"
                                 }
                             },
                             "additionalProperties": false
+                        },
+                        "room_dict": {
+                            "type": "object",
+                            "description": "A dictionary of dictionaries mapping scenario and collision camera to room name in the database",
+                            "additionalProperties": true
                         }
                     },
                     "additionalProperties": false
