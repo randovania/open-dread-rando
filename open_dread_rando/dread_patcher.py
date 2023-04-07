@@ -101,10 +101,9 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 
 def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     py_dict: dict = configuration["cosmetic_patches"]["lua"]["room_dict"]
-    lua_table = lua_util.lua_convert(py_dict)
     
-    file = lua_util.replace_lua_template("cc_to_room_id.lua", { "room_dict" : lua_table}).encode("ascii")
-    editor.add_new_asset("system/scripts/cc_to_room_name.lua", file, ["packs/system/system.pkg"])
+    file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}).encode("ascii")
+    editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     # add to the TOC

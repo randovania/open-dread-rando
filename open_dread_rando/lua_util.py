@@ -38,6 +38,8 @@ def lua_convert(data) -> str:
         ) + "\n}"
     if isinstance(data, bool):
         return "true" if data else "false"
+    if isinstance(data, str):
+        return wrap_string(data)
     return str(data)
 
 

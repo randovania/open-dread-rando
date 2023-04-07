@@ -1,3 +1,1 @@
-RANDO_CC_DICTIONARY = {
-    TEMPLATE("room_dict")
-}
+RANDO_CC_DICTIONARY = TEMPLATE("room_dict")

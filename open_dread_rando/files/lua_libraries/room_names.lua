@@ -1,4 +1,4 @@
-dofile("system/scripts/cc_to_room_name.lua")
+dofile("system/scripts/cc_to_room_name.lc")
 
 RoomNameGui = RoomNameGui or {
     cameraDict = RANDO_CC_DICTIONARY,
@@ -133,7 +133,7 @@ end
 
 -- updates the room name gui label
 -- optional time_to_fade arg will set visibility to false after the time in seconds. -1 means it does not fade. 
-function RoomNameGui.Update(scenario, new_cc, time_to_fade)
+function RoomNameGui.Update(scenario, new_cc)
     local label = RoomNameGui.label
 
 	if not label then
