@@ -365,7 +365,7 @@ end
 
 function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
     Scenario.UpdateProgressiveItemModels()
-    Scenario.UpdateRoomName(Game.GetScenarioID(), new_subarea)
+    Scenario.UpdateRoomName(new_subarea)
 end
 
 Scenario.NumUIs = 0
@@ -436,6 +436,6 @@ function Scenario.HideAsyncPopup()
     pop_debug_print_override()
 end
 
-function Scenario.UpdateRoomName(scenario, new_subarea)
-    RoomNameGui.Update(scenario, new_subarea)
+function Scenario.UpdateRoomName(new_subarea)
+    RoomNameGui.Update(new_subarea)
 end

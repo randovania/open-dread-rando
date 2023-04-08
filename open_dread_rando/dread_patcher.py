@@ -8,6 +8,7 @@ from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando import elevator, lua_util, game_patches
 from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
+from open_dread_rando.constants import FadeTimes
 from open_dread_rando.custom_door_types import create_all_shield_assets
 from open_dread_rando.door_patcher import DoorPatcher
 from open_dread_rando.environmental_damage import apply_constant_damage
@@ -92,7 +93,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "required_artifacts": configuration["objective"]["required_artifacts"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
         "enable_room_ids": False if cosmetic_options["room_ids"] == "NEVER" else True,
-        "room_id_fade_time": -1 if cosmetic_options["room_ids"] != "WITH_FADE" else 3,
+        "room_id_fade_time": 
+            FadeTimes.NO_FADE.value if cosmetic_options["room_ids"] != "WITH_FADE" else FadeTimes.ROOM_FADE.value,
     }
 
     replacement.update(configuration.get("game_patches", {}))
