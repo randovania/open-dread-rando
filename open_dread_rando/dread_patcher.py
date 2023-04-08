@@ -182,6 +182,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     # Update scenario.lc
     lua_util.replace_script(editor, "system/scripts/scenario", "custom_scenario.lua")
 
+    # Update msmenu_mainmenu
+    lua_util.replace_script(editor, "gui/scripts/msemenu_mainmenu", "msemenu_mainmenu.lua")
+
     # Elevators
     if "elevators" in configuration:
         elevator.patch_elevators(editor, configuration["elevators"])
