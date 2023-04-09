@@ -167,6 +167,12 @@ function Container:AddLabel(labelName, labelText, labelProperties)
     return label
 end
 
+function Container:AddText(textName, textText, textProperties)
+    local text = Text(textName, textText, textProperties, self.container)
+    table.insert(self.children, text)
+    return text
+end
+
 function Container:AddSprite(spriteName, spritePath, spriteProperties)
     if spritePath then
         spriteProperties = spriteProperties or {}
@@ -314,6 +320,7 @@ end
 function Label:SetText(lblText)
     self.text = lblText
     GUI.SetLabelText(self.label, self.text)
+    self.label:ForceRedraw()
     return self.text
 end
 
