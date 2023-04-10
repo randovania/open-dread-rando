@@ -317,9 +317,9 @@
                                 "enable_room_name_display": {
                                     "type": "string",
                                     "enum": [
-                                        "never",
-                                        "always",
-                                        "with_fade"
+                                        "Never",
+                                        "Always",
+                                        "When entering a new room"
                                     ],
                                     "default": "never",
                                     "description": "The type of room name shown on GUI"
