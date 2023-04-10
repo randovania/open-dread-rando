@@ -314,18 +314,34 @@
                                     "default": false,
                                     "description": "Enables an in-game death counter shown in the player's HUD"
                                 },
-                                "room_ids": {
+                                "enable_room_name_display": {
                                     "type": "string",
-                                    "default": "NEVER",
+                                    "enum": [
+                                        "never",
+                                        "always",
+                                        "with_fade"
+                                    ],
+                                    "default": "never",
                                     "description": "The type of room name shown on GUI"
                                 }
                             },
                             "additionalProperties": false
                         },
-                        "room_dict": {
+                        "camera_names_dict": {
                             "type": "object",
                             "description": "A dictionary of dictionaries mapping scenario and collision camera to room name in the database",
-                            "additionalProperties": true
+                            "additionalProperties": false,
+                            "patternProperties": {
+                                ".*": {
+                                    "type": "object",
+                                    "additionalProperties": false,
+                                    "patternProperties": {
+                                        ".*": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
                         }
                     },
                     "additionalProperties": false
@@ -443,7 +459,9 @@
                             "wave_beam",
                             "missile",
                             "super_missile",
-                            "ice_missile"
+                            "ice_missile",
+                            "grapple_beam",
+                            "sensor_door"
                         ]
                     }
                 },

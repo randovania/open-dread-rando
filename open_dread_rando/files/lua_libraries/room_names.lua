@@ -31,27 +31,27 @@ function RoomNameGui.Init(time_to_fade)
     end
 
     local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
-	local ui = GUILib("RoomName", hud)
-	local container = ui:AddContainer("Content", {
+    local ui = GUILib("RoomName", hud)
+    local container = ui:AddContainer("Content", {
         X = 0.025,
         Y = 0.925,
         SizeX = 0.2,
         SizeY = 0.04,
     })
 
-	container:AddSprite("Background", "HUD_TILESET/BACKGROUND", {
-		SizeX = 0.3,
-		SizeY = 0.06,
-	})
-	container:AddSprite("Frame_top", "HUD_TILESET/FRAME_TOP", {
-		X = -0.0005,
-		Y = -0.0005,
-		SizeX = 0.05,
-		SizeY = 0.015,
-		ColorR = 0.8773584961891174,
-		ColorG = 0.8773584961891174,
-		ColorB = 0.8773584961891174,
-	})
+    container:AddSprite("Background", "HUD_TILESET/BACKGROUND", {
+        SizeX = 0.3,
+        SizeY = 0.06,
+    })
+    container:AddSprite("Frame_top", "HUD_TILESET/FRAME_TOP", {
+        X = -0.0005,
+        Y = -0.0005,
+        SizeX = 0.05,
+        SizeY = 0.015,
+        ColorR = 0.8773584961891174,
+        ColorG = 0.8773584961891174,
+        ColorB = 0.8773584961891174,
+    })
 
     local label = container:AddLabel("RoomNameGui_Text", "Room: Unknown", {
         X = "0.0075",
@@ -59,7 +59,7 @@ function RoomNameGui.Init(time_to_fade)
         SizeX = "0.2",
         SizeY = "0.04",
         Font = "digital_small",
-		Autosize = false,
+        Autosize = false,
     })
 
     RoomNameGui.ui = container
