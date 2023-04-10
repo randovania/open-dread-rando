@@ -27,7 +27,8 @@ end
 function RoomNameGui.Init(time_to_fade)
     --RoomNameGui.fadeTime = time_to_fade
     if RoomNameGui.ui then
-        GUI.DestroyDisplayObject(RoomNameGui.ui)
+        RoomNameGui.ui:Destroy()
+		RoomNameGui.ui = nil
     end
 
     local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
