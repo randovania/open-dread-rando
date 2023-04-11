@@ -92,9 +92,9 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
-        "enable_room_ids": False if cosmetic_options["enable_room_name_display"] == "Never" else True,
+        "enable_room_ids": False if cosmetic_options["enable_room_name_display"] == "NEVER" else True,
         "room_id_fade_time": FadeTimes.NO_FADE.value if (
-            cosmetic_options["enable_room_name_display"] != "When entering a new room"
+            cosmetic_options["enable_room_name_display"] != "WITH_FADE"
             ) else FadeTimes.ROOM_FADE.value,
     }
 
