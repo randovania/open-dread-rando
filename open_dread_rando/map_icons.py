@@ -278,7 +278,87 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         label="DIFFUSION BEAM COVER",
         offset=(0.800000011920929, -0.4000000059604645),
         auto_scale=False
-    )
+    ),
+    "BlockageStormL": MapIcon(
+        icon_id="BlockageStormL",
+        coords=(5,3),
+        disabled_id="BlockageDisabledL",
+        label="STORM MISSILE COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageStormR": MapIcon(
+        icon_id="BlockageStormR",
+        coords=(5,3),
+        disabled_id="BlockageDisabledR",
+        label="STORM MISSILE COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageScrewL": MapIcon(
+        icon_id="BlockageScrewL",
+        coords=(5,1),
+        disabled_id="BlockageDisabledL",
+        label="SCREW ATTACK COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageScrewR": MapIcon(
+        icon_id="BlockageScrewR",
+        coords=(5,1),
+        disabled_id="BlockageDisabledR",
+        label="SCREW ATTACK COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageBombL": MapIcon(
+        icon_id="BlockageBombL",
+        coords=(7,3),
+        disabled_id="BlockageDisabledL",
+        label="BOMB COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageBombR": MapIcon(
+        icon_id="BlockageBombR",
+        coords=(7,3),
+        disabled_id="BlockageDisabledR",
+        label="BOMB COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageCrossBombL": MapIcon(
+        icon_id="BlockageCrossBombL",
+        coords=(9,3),
+        disabled_id="BlockageDisabledL",
+        label="CROSS BOMB COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageCrossBombR": MapIcon(
+        icon_id="BlockageCrossBombR",
+        coords=(9,3),
+        disabled_id="BlockageDisabledR",
+        label="CROSS BOMB COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockagePowerBombL": MapIcon(
+        icon_id="BlockagePowerBombL",
+        coords=(11,3),
+        disabled_id="BlockageDisabledL",
+        label="POWER BOMB COVER",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockagePowerBombR": MapIcon(
+        icon_id="BlockagePowerBombR",
+        coords=(11,3),
+        disabled_id="BlockageDisabledR",
+        label="POWER BOMB COVER",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
 }
 ALL_ICONS.update({f"DNA_{i + 1}": MapIcon(
     icon_id=f"ItemDNA{i + 1}",
@@ -376,5 +456,7 @@ class MapIconEditor:
                     actor["bFlipX"] = True
 
     def add_all_new_door_icons(self):
-        for icon in ["BlockageIceL", "BlockageIceR", "BlockageDiffusionL", "BlockageDiffusionR"]:
+        for icon in ["BlockageIceL", "BlockageIceR", "BlockageDiffusionL", "BlockageDiffusionR",
+                     "BlockageStormL", "BlockageStormR", "BlockageBombL", "BlockageBombR",
+                     "BlockageCrossBombL", "BlockageCrossBombR", "BlockagePowerBombL", "BlockagePowerBombR"]:
             self.add_icon(ALL_ICONS[icon])

@@ -474,9 +474,13 @@
                             "wave_beam",
                             "missile",
                             "super_missile",
+                            "storm_missile",
                             "ice_missile",
                             "grapple_beam",
-                            "sensor_door"
+                            "sensor_door",
+                            "bomb",
+                            "cross_bomb",
+                            "power_bomb"
                         ]
                     }
                 },

@@ -404,7 +404,44 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/props/shield___diffusion/models/imats/shield_diffusion_matfx.bsmat",
             "actors/props/shield___diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat"
         )
-    )
+    ),
+
+    "shield_storm_mssl": ModelData(
+        bcmdl_path="actors/props/shield_storm_mssl/models/shield_storm_mssl.bcmdl",
+        bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
+        dependencies=(
+            "actors/props/shield_storm_mssl/models/shield_storm_mssl.bcmdl",
+            "actors/props/shield_storm_mssl/models/imats/shield_storm_mssl_mp_opaque_01.bsmat"
+        )
+    ),
+
+    "shield_standard_bombs0": ModelData(
+        bcmdl_path="actors/props/shield_standard_bombs0/models/shield_standard_bombs0.bcmdl",
+        bmsas="actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsas",
+        dependencies=(
+            "actors/props/shield_standard_bombs0/models/shield_standard_bombs0.bcmdl",
+            "actors/props/shield_standard_bombs0/models/imats/shield_standard_bombs0_mp_opaque_01.bsmat"
+        )
+    ),
+
+    "shield_cross_bomb": ModelData(
+        bcmdl_path="actors/props/shield_cross_bomb/models/shield_cross_bomb.bcmdl",
+        bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
+        dependencies=(
+            "actors/props/shield_cross_bomb/models/shield_cross_bomb.bcmdl",
+            "actors/props/shield_cross_bomb/models/imats/shield_cross_bomb_mp_opaque_01.bsmat"
+        )
+    ),
+
+    "shield_powerbomb": ModelData(
+        bcmdl_path="actors/props/shield__power_bomb/models/shield_powerbomb.bcmdl",
+        bmsas="actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsas",
+        dependencies=(
+            "actors/props/shield__power_bomb/models/shield_powerbomb.bcmdl",
+            "actors/props/shield__power_bomb/models/imats/shield__power_bomb_matfx.bsmat",
+            "actors/props/shield__power_bomb/models/imats/shield__power_bomb_mp_opaque_01.bsmat"
+        )
+    ),
 }
 
 
