@@ -317,12 +317,12 @@
                                 "enable_room_name_display": {
                                     "type": "string",
                                     "enum": [
-                                        "Never",
-                                        "Always",
-                                        "When entering a new room"
+                                        "NEVER",
+                                        "ALWAYS",
+                                        "WITH_FADE"
                                     ],
-                                    "default": "Never",
-                                    "description": "The type of room name shown on GUI"
+                                    "default": "NEVER",
+                                    "description": "Configures how the room name is displayed on the HUD. Defaults to disabled."
                                 }
                             },
                             "additionalProperties": false

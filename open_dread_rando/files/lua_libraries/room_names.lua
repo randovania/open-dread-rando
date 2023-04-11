@@ -24,11 +24,10 @@ function RoomNameGui.GetRoomName(camera)
     return rando_name
 end
 
-function RoomNameGui.Init(time_to_fade)
-    --RoomNameGui.fadeTime = time_to_fade
+function RoomNameGui.Init()
     if RoomNameGui.ui then
         RoomNameGui.ui:Destroy()
-		RoomNameGui.ui = nil
+        RoomNameGui.ui = nil
     end
 
     local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
