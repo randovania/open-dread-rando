@@ -321,7 +321,7 @@
                                         "Always",
                                         "When entering a new room"
                                     ],
-                                    "default": "never",
+                                    "default": "Never",
                                     "description": "The type of room name shown on GUI"
                                 }
                             },
@@ -331,6 +331,7 @@
                             "type": "object",
                             "description": "A dictionary of dictionaries mapping scenario and collision camera to room name in the database",
                             "additionalProperties": false,
+                            "default": {},
                             "patternProperties": {
                                 ".*": {
                                     "type": "object",
