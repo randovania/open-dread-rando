@@ -695,7 +695,7 @@ function s030_baselab.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, 
     wide_door_right.LIFE:SetInvulnerable(disable_wide)
   end
 
-  Scenario.UpdateProgressiveItemModels()
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 

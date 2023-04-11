@@ -6,7 +6,7 @@ from typing import Sequence
 
 from construct import Container, ListContainer
 
-from open_dread_rando.common_data import ALL_SCENARIOS
+from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor
 
 from mercury_engine_data_structures.formats import Bmscc

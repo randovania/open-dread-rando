@@ -2,7 +2,7 @@ import itertools
 from pathlib import Path
 
 from open_dread_rando import lua_util
-from open_dread_rando.common_data import ALL_SCENARIOS
+from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 
 

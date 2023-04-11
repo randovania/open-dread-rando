@@ -4,6 +4,7 @@ Game.DoFile("system/scripts/input_handling.lua")
 Game.DoFile("system/scripts/data_structures.lua")
 Game.DoFile("system/scripts/guilib.lua")
 Game.DoFile("system/scripts/death_counter.lua")
+Game.DoFile("system/scripts/room_names.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -362,6 +363,11 @@ function Scenario.OnTeleportFinished()
     Game.ReinitPlayerFromBlackboard()
 end
 
+function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
+    Scenario.UpdateProgressiveItemModels()
+    Scenario.UpdateRoomName(new_subarea)
+end
+
 Scenario.NumUIs = 0
 function Scenario.InitGui()
     Game.LogWarn(0, "Creating GUI")
@@ -383,6 +389,10 @@ function Scenario.InitGui()
 
     if Init.bEnableDeathCounter then
         DeathCounter.Init()
+    end
+
+    if Init.bEnableRoomIds then
+        RoomNameGui.Init()
     end
 end
 
@@ -424,4 +434,8 @@ function Scenario.HideAsyncPopup()
     Scenario.RandoUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
     Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
     pop_debug_print_override()
+end
+
+function Scenario.UpdateRoomName(new_subarea)
+    RoomNameGui.Update(new_subarea)
 end
