@@ -5,7 +5,7 @@ import construct
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando import door_patcher
-from open_dread_rando.common_data import ALL_SCENARIOS
+from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.logger import LOG
 from open_dread_rando.map_icons import MapIconEditor
 from open_dread_rando.patcher_editor import PatcherEditor

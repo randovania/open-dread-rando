@@ -314,6 +314,7 @@ end
 function Label:SetText(lblText)
     self.text = lblText
     GUI.SetLabelText(self.label, self.text)
+    self.label:ForceRedraw()
     return self.text
 end
 

@@ -263,7 +263,7 @@ function s040_aqua.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
       
   end
 
-  Scenario.UpdateProgressiveItemModels()
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 function s040_aqua.LaunchCutscene_32()

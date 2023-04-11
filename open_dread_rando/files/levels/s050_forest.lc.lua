@@ -325,7 +325,7 @@ function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, n
     end
   end
 
-  Scenario.UpdateProgressiveItemModels()
+  Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
 end
 
 function s050_forest.LaunchCutscene_33()
