@@ -433,6 +433,7 @@
                             "wave_beam",
                             "missile",
                             "super_missile",
+                            "grapple_beam",
                             "ice_missile"
                         ]
                     }
