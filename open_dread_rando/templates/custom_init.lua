@@ -18,7 +18,7 @@ RemoteLua = RemoteLua or {
     GetGameStateAndSend = function() end,
     UpdateRDVClient = function(new_scenario) end
 }
--- RemoteLua without bootstraped
+-- workaround for enable_remote_lua is true but no bootstrap code was received so far
 function RemoteLua.UpdateRDVClient(new_scenario)
 end
 

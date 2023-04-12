@@ -379,7 +379,7 @@ function Scenario.InitGui()
         X = "0.3", 
         Y = "0.2",
         SizeX = "0.4",
-		SizeY = "0.04",
+        SizeY = "0.04",
         CenterX = "0.0", CenterY = "-0.3",
         Font = "digital_hefty",
         TextAlignment = "Centered",
