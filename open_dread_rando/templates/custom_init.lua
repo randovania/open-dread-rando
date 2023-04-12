@@ -10,15 +10,9 @@ RemoteLua = RemoteLua or {
     SendInventory = function(message) end,
     SendIndices = function(message) end,
     SendReceivedPickups = function(message) end,
-    SendNewGameState = function(message) end,
-    -- defined by rdv
-    GetInventoryAndSend = function() end,
-    GetCollectedIndicesAndSend = function() end,
-    GetReceivedPickupsAndSend = function() end,
-    GetGameStateAndSend = function() end,
-    UpdateRDVClient = function(new_scenario) end
+    SendNewGameState = function(message) end
 }
--- workaround for enable_remote_lua is true but no bootstrap code was received so far
+-- stub for UpdateRDVClient, which will be redefined by bootstrap code of randovania
 function RemoteLua.UpdateRDVClient(new_scenario)
 end
 
