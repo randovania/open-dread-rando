@@ -2,31 +2,42 @@ Game.ImportLibrary("system/scripts/init_original.lua")
 
 local initOk, errorMsg = pcall(function()
 
-RemoteLua = RemoteLua or { Init = function() end, }
+RemoteLua = RemoteLua or { 
+    -- defined by exlaunch
+    Init = function() end,
+    Update = function() end,
+    SendLog = function(message) end,
+    SendInventory = function(message) end,
+    SendIndices = function(message) end,
+    SendReceivedPickups = function(message) end,
+    SendNewGameState = function(message) end
+}
+-- stub for UpdateRDVClient, which will be redefined by bootstrap code of randovania
+function RemoteLua.UpdateRDVClient(new_scenario)
+end
+
 RL = RemoteLua
-
-if TEMPLATE("enable_remote_lua") then
-    Game.LogWarn(0, "Starting remote lua")
-    RemoteLua.Init()
-end
-
-function RemoteLua.ReceivedPickups()
-    local playerSection =  Game.GetPlayerBlackboardSectionName()
-    return Blackboard.GetProp(playerSection, "ReceivedPickups") or 0
-end
-
-function RemoteLua.SetReceivedPickups(count)
-    local playerSection =  Game.GetPlayerBlackboardSectionName()
-    Blackboard.SetProp(playerSection, "ReceivedPickups", "f", count)
-end
 
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
 push_debug_print_override = push_debug_print_override or function() end
 pop_debug_print_override = pop_debug_print_override or function() end
 
-local orig_update = RemoteLua.Update
+local orig_log = Game.LogWarn
+if TEMPLATE("enable_remote_lua") then
+    Game.LogWarn(0, "Starting remote lua")
+    RL.Init()
+
+    function Game.LogWarn(_, message)
+        orig_log(_, message)
+        push_debug_print_override()
+        RL.SendLog(message)
+        pop_debug_print_override()
+    end
+end
+
+local orig_update = RL.Update
 if type(orig_update) == "function" then
-    function RemoteLua.Update()
+    function RL.Update()
         exclude_function_from_logging("Update")
         push_debug_print_override()
         orig_update()
@@ -96,10 +107,6 @@ function Init.CreateNewGameData(difficulty)
 end
 
 Game.SetForceSkipCutscenes(true)
-
-push_debug_print_override = push_debug_print_override or function() end
-pop_debug_print_override = pop_debug_print_override or function() end
-exclude_function_from_logging = exclude_function_from_logging or function(name) end
 
 Game.LogWarn(0, "Finished modded system/init.lc")
 

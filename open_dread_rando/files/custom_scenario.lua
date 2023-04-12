@@ -254,6 +254,7 @@ function Scenario.OnLoadScenarioFinished()
     Blackboard.SetProp("GAME_PROGRESS", "RandoMapSeen" .. CurrentScenarioID, "b", true)
 
     Game.AddSF(0, "Scenario.CheckDebugInputs", "")
+    RL.UpdateRDVClient(true)
 
     local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
     if teleportal_id == nil then return end
@@ -375,13 +376,16 @@ function Scenario.InitGui()
     local ui = GUILib("RandoUI"..Scenario.NumUIs)
     ui:AddContainer("Content")
     ui:Get("Content"):AddLabel("Popup", "", {
-        MinCharWidth = "14",
-        -- X = "0.5", Y = "0.2",
+        X = "0.3", 
+        Y = "0.2",
+        SizeX = "0.4",
+        SizeY = "0.04",
         CenterX = "0.0", CenterY = "-0.3",
         Font = "digital_hefty",
         TextAlignment = "Centered",
         TextVerticalAlignment = "Centered",
         ScaleX = "1.0", ScaleY = "1.0",
+        Enabled = true,
         Visible = false
     })
     ui:Show()

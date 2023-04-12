@@ -60,7 +60,7 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.CheckArtifacts(granted)
 
     Scenario.UpdateProgressiveItemModels()
-
+    RL.UpdateRDVClient(false)
     return granted
 end
 
