@@ -78,6 +78,7 @@ _PROJECT_MEMBERS = {
         "Arcanox",
         "Migs",
         "hyperbola0",
+        "Thanatos",
     ],
     "Logic Database": [
         "KirbymastaH",
