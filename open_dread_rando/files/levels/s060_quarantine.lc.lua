@@ -3,17 +3,17 @@ end
 s060_quarantine.HasRandomizerChanges = true
 
 function s060_quarantine.SetupDebugGameBlackboard()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
 
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
@@ -53,6 +53,7 @@ end
 
 function s060_quarantine.InitFromBlackboard()
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   if not Scenario.ReadFromBlackboard(Scenario.RandoTrueXRelease, false) then
     Game.SetXparasite(false)
     Blackboard.SetProp("GAME_PROGRESS", "QUARENTINE_OPENED", "b", false)
@@ -108,23 +109,23 @@ function s060_quarantine.OnEnter_XParasite_Activated(_ARG_0_, _ARG_1_)
 end
 
 function s060_quarantine.OnEnter_TG_QuarentineOpen(_ARG_0_, _ARG_1_)
-    
+
   local oActor1 = Game.GetActor("ev_gatesealed_opened")
   if oActor1 ~= nil then
     oActor1.bEnabled = true
   end
-  
+
   local oActor2 = Game.GetActor("ev_gatesealed_closed")
   if oActor2 ~= nil then
     oActor2.NAVMESHITEM:SetStage("removed")
     oActor2.bEnabled = false
   end
-  
+
   local oActor3 = Game.GetActor("ev_gatesealed_second")
   if oActor3 ~= nil then
     oActor3.EVENTPROP:LaunchEvent()
   end
-  
+
   if _ARG_0_ ~= nil then
     _ARG_0_.bEnabled = false
   end
@@ -142,36 +143,36 @@ end
 
 
 function s060_quarantine.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-  
-    
-  
-  
+
+
+
+
   local L5_2 = Game.GetActor("TG_PostChozoWarriorEnemies")
   local L6_2 = Game.GetActor("SG_ChozoWarriorX")
-  
+
   if old_subarea == "collision_camera_007" and new_subarea == "collision_camera_004" then
     Game.SaveGameToSnapshot("ChozoWarriorX_Quarantine")
     s060_quarantine.LaunchCutscene_67()
   end
-  
+
   if old_subarea == "collision_camera_012" and new_subarea == "collision_camera_011" then
     s060_quarantine.LaunchCutscene_113()
   end
-  
+
   if old_subarea == "collision_camera_003" and new_subarea == "collision_camera_002" then
     local L7_2 = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
     if L7_2 == true then
       s060_quarantine.LaunchCutscene_4()
     end
   end
-  
+
   if old_subarea == "collision_camera_003" and new_subarea == "collision_camera_005" then
     s060_quarantine.LaunchCutscene_13()
   end
-  
+
   if old_subarea == "collision_camera_004" and L6_2 ~= nil then
     print(L6_2.SPAWNGROUP.iNumDeaths)
-  
+
     if L6_2.SPAWNGROUP.iNumDeaths > 1 then
       Game.PopSetup("SP_ChozoWarriorX_Phase2_chozowarriorx_Boss_Defeated", true, true)
       Game.PushSetup("PostChozoWarriorX", true, true)
@@ -268,7 +269,7 @@ function s060_quarantine.OnEnter_EnablePostPlasmaEnemies(_ARG_0_, _ARG_1_)
   local L4_2 = Game.GetActor("SG_GooShockerX_000")
   local L5_2 = Game.GetActor("SG_X_Cell_000")
   local L6_2 = Game.GetActor("TG_Disable_SG_X_Cell_000")
-  
+
   if L6_2 ~= nil then
     L6_2.bEnabled = true
   end
@@ -293,7 +294,7 @@ end
 
 function s060_quarantine.Disable_SG_X_Cell(_ARG_0_, _ARG_1_)
   local oActor = Game.GetActor("SG_X_Cell_000")
-  
+
   if oActor ~= nil then
     oActor.SPAWNGROUP:DisableSpawnGroup()
   end

@@ -364,6 +364,16 @@ function Scenario.OnTeleportFinished()
     Game.ReinitPlayerFromBlackboard()
 end
 
+function Scenario.SetTunableValue(category, property, value)
+    local tunableData = msemenu.GetTunableData(category, property)
+
+    tunableData.category[tunableData.property] = value
+end
+
+function Scenario.InitFromBlackboard()
+    RandomizerPowerup.ApplyTunableChanges()
+end
+
 function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
     Scenario.UpdateProgressiveItemModels()
     Scenario.UpdateRoomName(new_subarea)
@@ -376,7 +386,7 @@ function Scenario.InitGui()
     local ui = GUILib("RandoUI"..Scenario.NumUIs)
     ui:AddContainer("Content")
     ui:Get("Content"):AddLabel("Popup", "", {
-        X = "0.3", 
+        X = "0.3",
         Y = "0.2",
         SizeX = "0.4",
         SizeY = "0.04",

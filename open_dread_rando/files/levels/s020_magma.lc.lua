@@ -7,17 +7,17 @@ end
 
 
 function s020_magma.SetupDebugGameBlackboard()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -64,15 +64,16 @@ local MAGMA_POSTXRELEASE_APPLIED = false
 
 
 function s020_magma.InitFromBlackboard()
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   MAGMA_COOLDOWN_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.MAGMA_COOLDOWN_APPLIED, false)
   MAGMA_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.MAGMA_POSTXRELEASE_APPLIED, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
@@ -150,14 +151,14 @@ end
 
 function s020_magma.OnEmmyMagmaDead()
 
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     Game.PushSetup("PostEmmy", true, true)
 end
 
@@ -172,7 +173,7 @@ end
 
 
 function s020_magma.DelayedOnEmmyMagmaDead()
-    
+
   GUI.ShowMessage("#PLACEHOLDER_EMMYMAGMA_KILLED", true, "")
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
@@ -186,7 +187,7 @@ end
 
 
 function s020_magma.OnUnlockEmmyDoors()
-    
+
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:UnlockDoors()
@@ -197,7 +198,7 @@ end
 
 
 function s020_magma.OnLockEmmyDoors()
-    
+
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:LockDoors()
@@ -218,12 +219,12 @@ end
 
 function s020_magma.PatrolRoutesGeneration()
   local oEmmy = Game.GetActor("SP_Emmy")
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
   if oEmmy ~= nil then
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_01")
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_02")
@@ -258,23 +259,23 @@ function s020_magma.PatrolRoutesGeneration()
 end
 
 function s020_magma.PatrolRoutesFinalNodesAssignation()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_41" }, 0)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_38" }, 1)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_02", { "WorldGraph_4", "WorldGraph_36" }, 0)
@@ -351,8 +352,8 @@ s020_magma.tEmmyDoor = nil
 
 
 function s020_magma.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
-    
-    
+
+
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     if _ARG_1_ then
       if CurrentScenario.oEmmyEntity ~= nil then
@@ -377,21 +378,21 @@ function s020_magma.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
   end
 end
 
-function s020_magma.HardEmmyRelocationDoor(_ARG_0_) 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+function s020_magma.HardEmmyRelocationDoor(_ARG_0_)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   print("Door: Hard " .. _ARG_0_.sName)
   if _ARG_0_.sName == "dooremmy" then
     s020_magma.tEmmyDoor = {
@@ -458,21 +459,21 @@ function s020_magma.HardEmmyRelocationDoor(_ARG_0_)
 end
 
 function s020_magma.EmmyRelocationDoor(_ARG_0_)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   if _ARG_0_.sName == "dooremmy" then
     s020_magma.tEmmyDoor = {
       "LM_EmmyEntrancePoint_005",
@@ -556,7 +557,7 @@ end
 
 
 
-function s020_magma.OnEnter_ChangeCamera_000_B() 
+function s020_magma.OnEnter_ChangeCamera_000_B()
   Game.SetCollisionCameraLocked("collision_camera_000_B", true)
   print("OnEnter_ChangeCamera_000_B")
 end
@@ -651,7 +652,7 @@ function s020_magma.Disable_MagnetRailCam()
 end
 
 function s020_magma.Disable_CamToKraid()
-    
+
   local oActor = Game.GetActor("CameraRail_PathToKraid")
   if oActor ~= nil then
     oActor.bEnabled = false
@@ -667,7 +668,7 @@ end
 function s020_magma.Cooldown_Activation()
   s020_magma.Cooldown_Deactivation()
   -- Cooldown has been removed from rando
-  
+
   -- if MAGMA_COOLDOWN_APPLIED == false then
   --   Game.PushSetup("Cooldown", true, true)
   --   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.MAGMA_COOLDOWN_APPLIED, "b", true)
@@ -676,7 +677,7 @@ function s020_magma.Cooldown_Activation()
 end
 
 function s020_magma.Cooldown_Deactivation()
-    
+
 
   Game.SetCooldownFlag(false)
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.COOLDOWN_FINISHED, "b", true)
@@ -730,8 +731,8 @@ end
 
 
 function s020_magma.OnEnter_FadeOutCooldownX()
-    
-    
+
+
   print("FADE OUT COOLDOW-X")
   Game.FadeOut(0.6)
   s020_magma.fSFXVolume = Game.GetSFXVolume()
@@ -798,11 +799,11 @@ end
 
 
 function s020_magma.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-    
-    
-    
-    
-    
+
+
+
+
+
   if s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade) then
     s020_magma.Kraid_InitCutscene()
   end
@@ -840,7 +841,7 @@ end
 
 function s020_magma.Kraid_InitCutscene()
   Game.PushSetup("Kraid_Stage_01", true, true)
-  local oActor1 = Game.GetActor("cutsceneplayer_59") 
+  local oActor1 = Game.GetActor("cutsceneplayer_59")
   if oActor1 ~= nil then
     oActor1.CUTSCENE:TryLaunchCutscene()
   end
@@ -851,11 +852,11 @@ function s020_magma.Kraid_InitCutscene()
 end
 
 function s020_magma.OnCutscene78Started()
-    
-    
-    
-    
-    
+
+
+
+
+
   Game.SetActorVolumeOverride("Samus", 0, 0, "ALL")
   local L0_2 = 1
 
@@ -866,8 +867,8 @@ function s020_magma.OnCutscene78Started()
 end
 
 function s020_magma.OnCutscene81Ended()
-    
-    
+
+
   s020_magma.Cooldown_Deactivation()
   Game.PushSetup("PostCooldown", true, true)
   Blackboard.SetProp("s010_cave", "SubareaSetupID[collision_camera_080]", "s", "Default>PostXRelease")
@@ -918,15 +919,15 @@ function s020_magma.OnKraidGenerated(_ARG_0_, _ARG_1_)
 end
 
 function s020_magma.OnEnter_Kraid_Activation_Stage_02()
-    
-    
-    
+
+
+
   Game.PushSetup("Kraid_Stage_02", true, true)
   local oActor1 = Game.GetActor("ev_kraid_platform")
   if oActor1 ~= nil then
     oActor1.CHANGE_STAGE_NAVMESH_ITEM:RefreshNavMeshState()
   end
-  local oActor2 = Game.GetActor("ev_kraid_structure") 
+  local oActor2 = Game.GetActor("ev_kraid_structure")
   if oActor2 ~= nil then
     oActor2.CHANGE_STAGE_NAVMESH_ITEM:RefreshNavMeshState()
   end
@@ -957,7 +958,7 @@ end
 
 
 function s020_magma.OnEnter_Kraid_Activation_Stage_02(_ARG_0_, _ARG_1_)
-    
+
 
   Game.AddSF(0.1, "s020_magma.Delayed_Kraid_Activation_Stage_02", "")
   local oPlayer = Game.GetPlayer()
@@ -968,9 +969,9 @@ end
 
 
 function s020_magma.Delayed_Kraid_Activation_Stage_02()
-    
-    
-    
+
+
+
   GUI.ShowMessage("#KRAID_STAGE_2", true, "s020_magma.Kraid_Activation_Stage_02_MessageSkipped")
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
@@ -980,9 +981,9 @@ end
 
 
 function s020_magma.Kraid_Activation_Stage_02_MessageSkipped()
-    
-    
-    
+
+
+
   Game.GetPlayer().vPos = V3D(-16900, -6900, 0)
   Game.PushSetup("Kraid_Stage_02", true, true)
   local L0_2 = Game.GetActor("ev_kraid_platform")
@@ -1000,8 +1001,8 @@ end
 
 
 function s020_magma.Kraid_Activation_Stage_02_With_Cut_Scene()
-    
-    
+
+
   Game.PushSetup("Kraid_Stage_02", true, true)
   local oActor1 = Game.GetActor("ev_kraid_platform")
   if oActor1 ~= nil then
@@ -1020,8 +1021,8 @@ end
 
 
 function s020_magma.OnEnter_Kraid_Activation_Stage_03(_ARG_0_, _ARG_1_)
-    
-    
+
+
   GUI.ShowMessage("#KRAID_STAGE_3", true, "s020_magma.Kraid_Activation_Stage_03_MessageSkipped")
 end
 
@@ -1034,11 +1035,11 @@ end
 
 
 function s020_magma.Kraid_Activation_Stage_03_CutsceneStart()
-    
-    
-    
-    
-    
+
+
+
+
+
   local oActor = Game.GetActor("TG_KraidRoars_Ambient")
   if oActor ~= nil then
     oActor.bEnabled = false
@@ -1070,8 +1071,8 @@ end
 
 
 function s020_magma.OnShootActivationCompleted(_ARG_0_, _ARG_1_)
-    
-    
+
+
   if _ARG_0_ == "shootactivatormag01_000" and _ARG_1_ then
     Game.PushSetup("LavaDrained_Right", true, true)
   elseif _ARG_0_ == "shootactivatormag01" and _ARG_1_ then
@@ -1130,10 +1131,10 @@ function s020_magma.OnEnter_EnableEnemiesPistonLeft(_ARG_0_, _ARG_1_)
   local L4_2 = Game.GetActor("SG_Poisonfly_003A")
   local L5_2 = Game.GetActor("SG_Poisonfly_003B")
   local L6_2 = Game.GetActor("spawngroup_026")
-  
-  
-  
-  
+
+
+
+
   if L2_2 ~= nil then
     L2_2.SPAWNGROUP:EnableSpawnGroup()
   end
@@ -1160,7 +1161,7 @@ end
 function s020_magma.OnEnter_EnableEnemiesPistonRight(_ARG_0_, _ARG_1_)
   local oActor1 = Game.GetActor("spawngroup_007")
   local oActor2 = Game.GetActor("SG_Poisonfly_044")
-  
+
   if oActor1 ~= nil then
     oActor1.SPAWNGROUP:EnableSpawnGroup()
   end
@@ -1247,7 +1248,7 @@ end
 
 
 function s020_magma.OnEmmyGrabStart(_ARG_0_)
-    
+
   local L1_2 = Game.GetActor("TG_TutoOC_Exit")
   if L1_2 ~= nil and L1_2.bEnabled then
     local oActor2 = Game.GetActor("TG_TutoOC_Enter")
@@ -1264,7 +1265,7 @@ function s020_magma.OnEmmyGrabEnd(_ARG_0_)
 end
 
 function s020_magma.OnCutscene38End()
-    
+
   s020_magma.RelocateEmmy_AfterPresentation()
   local oActor = Game.GetActor("emmyvalve_reg_gen_001")
   if oActor ~= nil then

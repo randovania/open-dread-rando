@@ -58,6 +58,7 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.IncreaseAmmo(granted)
 
     RandomizerPowerup.CheckArtifacts(granted)
+    RandomizerPowerup.ApplyTunableChanges()
 
     Scenario.UpdateProgressiveItemModels()
     RL.UpdateRDVClient(false)
@@ -213,6 +214,23 @@ end
 
 function RandomizerPowerup.ShowArtifactMessage()
     GUI.ShowMessage("#RANDO_ARTIFACTS_ALL", true, "")
+end
+
+local tItemTunableHandlers = {
+}
+
+function RandomizerPowerup.ApplyTunableChanges()
+    Game.AddSF(0, "RandomizerPowerup._ApplyTunableChanges", "")
+end
+
+function RandomizerPowerup._ApplyTunableChanges()
+    for item, handler in pairs(tItemTunableHandlers) do
+        local totalQuantity = RandomizerPowerup.GetItemAmount(item)
+
+        Game.LogWarn(0, "Calling tunable handler for " .. item .. " = " .. totalQuantity)
+
+        handler(totalQuantity)
+    end
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)
