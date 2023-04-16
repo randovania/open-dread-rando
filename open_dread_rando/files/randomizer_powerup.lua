@@ -217,6 +217,9 @@ function RandomizerPowerup.ShowArtifactMessage()
 end
 
 local tItemTunableHandlers = {
+    ["ITEM_UPGRADE_FLASH_SHIFT_CHAIN"] = function(quantity)
+        Scenario.SetTunableValue("CTunableAbilityGhostAura", "iChainDashMax", 2 + quantity) -- 2 is vanilla (2 chains after first)
+    end,
 }
 
 function RandomizerPowerup.ApplyTunableChanges()

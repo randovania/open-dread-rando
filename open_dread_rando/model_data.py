@@ -337,6 +337,21 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         )
     ),
 
+    "item_flashshiftupgrade": ModelData(
+        bcmdl_path="actors/items/item_cube_broken/model/itemcube_broken.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/item_cube_broken/model/itemcube_broken.bcmdl",
+            "actors/items/item_cube/model/imats/itemcube_cube.bsmat",
+            "actors/items/item_cube/model/imats/itemcube_emisive.bsmat",
+        ),
+        transform=Transform(
+            scale=(0.35, 0.35, 0.35),
+            position=(0.0, 30.0, 0.0),
+        ),
+        grapple_fx=True,
+    ),
+
     "powerup_powerbomb": ModelData(
         bcmdl_path="actors/items/powerup_powerbomb/models/powerup_powerbomb.bcmdl",
         bmsas="actors/items/item_powerbombtank/charclasses/item_powerbombtank.bmsas",
