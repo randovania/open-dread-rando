@@ -10,6 +10,9 @@ def apply_cosmetic_patches(editor: PatcherEditor, cosmetic: dict):
 
 
 def edit_config(editor: PatcherEditor, config_patches: dict[str, dict[str, Any]]):
+    if not config_patches:
+        return
+
     config_file = editor.get_file('config.ini', Ini)
 
     for section, items in config_patches.items():
