@@ -228,6 +228,13 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         is_global=False,
         full_zoom_scale=False
     ),
+    "item_speedboostupgrade": MapIcon(
+        icon_id="ItemSpeedBoostUpgrade",
+        coords=(14, 5),
+        label="SPEED BOOSTER UPGRADE",
+        is_global=False,
+        full_zoom_scale=False
+    ),
     "itemsphere": MapIcon(
         icon_id="ItemNothing",
         coords=(14, 7),

@@ -694,7 +694,8 @@
                 "ITEM_RANDO_ARTIFACT_10",
                 "ITEM_RANDO_ARTIFACT_11",
                 "ITEM_RANDO_ARTIFACT_12",
-                "ITEM_UPGRADE_FLASH_SHIFT_CHAIN"
+                "ITEM_UPGRADE_FLASH_SHIFT_CHAIN",
+                "ITEM_UPGRADE_SPEED_BOOST_CHARGE"
             ]
         },
         "position": {

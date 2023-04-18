@@ -352,6 +352,26 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         grapple_fx=True,
     ),
 
+    "item_speedboostupgrade": ModelData(
+        bcmdl_path="actors/items/itemsphere/models/speed_booster.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/itemsphere/animations/relax.bcskla",
+            "actors/items/itemsphere/collisions/itemsphere.bmscd",
+            "actors/items/itemsphere/fx/impact.bcptl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
+            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
+            "actors/items/itemsphere/models/speed_booster.bcmdl",
+            "actors/items/itemsphere/models/imats/speedboost_mp_opaque_01.bsmat",
+        ),
+        transform=Transform(
+            scale=(0.5, 0.5, 0.5),
+            position=(0.0, 30.0, 0.0),
+        ),
+        grapple_fx=True,
+    ),
+
     "powerup_powerbomb": ModelData(
         bcmdl_path="actors/items/powerup_powerbomb/models/powerup_powerbomb.bcmdl",
         bmsas="actors/items/item_powerbombtank/charclasses/item_powerbombtank.bmsas",
