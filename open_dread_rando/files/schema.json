@@ -382,9 +382,10 @@
             "type": "object",
             "properties": {
                 "consistent_raven_beak_damage_table": {
-                    "type": "boolean",
+                    "type": "string",
+                    "enum": ["disabled", "nerf_all", "buff_final"],
                     "description": "Change Raven Beak's damage multiplier for all beams and missiles to be consistent.",
-                    "default": true
+                    "default": "nerf_all"
                 },
                 "remove_grapple_blocks_hanubia_shortcut": {
                     "type": "boolean",
