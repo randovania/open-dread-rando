@@ -218,10 +218,12 @@ end
 
 local tItemTunableHandlers = {
     ["ITEM_UPGRADE_FLASH_SHIFT_CHAIN"] = function(quantity)
-        Scenario.SetTunableValue("CTunableAbilityGhostAura", "iChainDashMax", 2 + quantity) -- 2 is vanilla (2 chains after first)
+        -- # of chains after first - vanilla is 2. We set it to the number of items, and the "default" config starts with 2 items.
+        Scenario.SetTunableValue("CTunableAbilityGhostAura", "iChainDashMax", quantity)
     end,
     ["ITEM_UPGRADE_SPEED_BOOST_CHARGE"] = function(quantity)
-        local chargeTime = math.max(0.25, 1.5 - quantity * 0.25) -- vanilla is 1.5 seconds; each upgrade reduces by 0.25 seconds
+        -- Amount of time in seconds for SB to charge - vanilla is 1.5 seconds. Each upgrade reduces by 0.25 seconds.
+        local chargeTime = math.max(0.25, 1.5 - quantity * 0.25)
         Scenario.SetTunableValue("CTunableAbilitySpeedBooster", "fTimeToActivate", chargeTime)
     end
 }
