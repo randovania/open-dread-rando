@@ -381,10 +381,11 @@
         "game_patches": {
             "type": "object",
             "properties": {
-                "consistent_raven_beak_damage_table": {
-                    "type": "boolean",
+                "raven_beak_damage_table_handling": {
+                    "type": "string",
+                    "enum": ["unmodified", "consistent_low", "consistent_high"],
                     "description": "Change Raven Beak's damage multiplier for all beams and missiles to be consistent.",
-                    "default": true
+                    "default": "consistent_low"
                 },
                 "remove_grapple_blocks_hanubia_shortcut": {
                     "type": "boolean",
