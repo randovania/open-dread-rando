@@ -41,16 +41,19 @@ def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
     ]
 
     if mode == "consistent_high":
-        # Buffs Wave Beam and Ice Missiles to have the same damage VALUES (not factors) as vanilla Plasma Beam and Ice Missiles, respectively
+        # Buffs Wave Beam and Ice Missiles to have the same damage VALUES (not factors) as vanilla Plasma Beam and
+        #   Ice Missiles, respectively.
         # Wave Beam typically deals 1.6x the damage as Plasma Beam, so its factor must be 1/1.6 (or 5/8, or 0.625)
-        # Ice Missiles typically deal 1.33x the damage as Super Missiles, so their factor must be 1/1.33 (or 3/4, or 0.75)
+        # Ice Missiles typically deal 1.33x the damage as Super Missiles,
+        #   so their factor must be 1/1.33 (or 3/4, or 0.75)
         for factor in factors:
             factor.fWaveBeamFactor = 0.625
             factor.fChargeWaveBeamFactor = 0.625
             factor.fMeleeChargeWaveBeamFactor = 0.625
             factor.fIceMissileFactor = 0.75
     else:
-        # Debuffs all weapons prior to Wave Beam and Ice Missiles using the same damage factor as Wave Beam and Ice Missiles have in vanilla
+        # Debuffs all weapons prior to Wave Beam and Ice Missiles using the same damage factor as Wave Beam and
+        # Ice Missiles have in vanilla
         for factor in factors:
             for beam in ["fPowerBeamFactor", "fWideBeamFactor", "fPlasmaBeamFactor"]:
                 factor[beam] = factor.fWaveBeamFactor
