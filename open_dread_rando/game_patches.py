@@ -18,10 +18,10 @@ _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
 
 
 def apply_game_patches(editor: PatcherEditor, configuration: dict):
-    raven_beak_damage_mode = configuration["consistent_raven_beak_damage_table"]
+    raven_beak_damage_mode = configuration["raven_beak_damage_table_handling"]
 
-    if raven_beak_damage_mode != "disabled":
-        _consistent_raven_beak_damage_table(editor, raven_beak_damage_mode)
+    if raven_beak_damage_mode != "unmodified":
+        _modify_raven_beak_damage_table(editor, raven_beak_damage_mode)
 
     _remove_grapple_blocks(editor, configuration)
 
@@ -29,7 +29,7 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
         _warp_to_start(editor)
 
 
-def _consistent_raven_beak_damage_table(editor: PatcherEditor, mode: str):
+def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
     rb_bmsad = editor.get_file("actors/characters/chozocommander/charclasses/chozocommander.bmsad", Bmsad)
 
     life_component = rb_bmsad.raw.property.components.LIFE
@@ -40,7 +40,7 @@ def _consistent_raven_beak_damage_table(editor: PatcherEditor, mode: str):
         ai_component.fields.fields.oDamageSourceFactorLongShootingGrab,
     ]
 
-    if mode == "buff_final":
+    if mode == "consistent_high":
         # Buffs Wave Beam and Ice Missiles to have the same damage VALUES (not factors) as vanilla Plasma Beam and Ice Missiles, respectively
         # Wave Beam typically deals 1.6x the damage as Plasma Beam, so its factor must be 1/1.6 (or 5/8, or 0.625)
         # Ice Missiles typically deal 1.33x the damage as Super Missiles, so their factor must be 1/1.33 (or 3/4, or 0.75)
