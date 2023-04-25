@@ -1,6 +1,8 @@
 Game.DoFile("system/scripts/cc_to_room_name.lc")
 
 RoomNameGui = RoomNameGui or {
+    ui = nil,
+    container = nil,
     cameraDict = RANDO_CC_DICTIONARY,
     fadeTime = Init.bRoomIdFadeTime,
     fadeOutSFID = nil,
@@ -28,6 +30,7 @@ function RoomNameGui.Init()
     if RoomNameGui.ui then
         RoomNameGui.ui:Destroy()
         RoomNameGui.ui = nil
+        RoomNameGui.container = nil
     end
 
     local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
@@ -62,16 +65,17 @@ function RoomNameGui.Init()
         Autosize = false,
     })
 
-    RoomNameGui.ui = container
+    RoomNameGui.ui = ui
+    RoomNameGui.container = container
     RoomNameGui.label = label
-    
+
     local current_cc = Game.GetCurrentSubAreaId()
-    local current_scenario = Game.GetScenarioID()
+
     RoomNameGui.Update(current_cc)
 end
 
 -- updates the room name gui label
--- optional time_to_fade arg will set visibility to false after the time in seconds. -1 means it does not fade. 
+-- optional time_to_fade arg will set visibility to false after the time in seconds. -1 means it does not fade.
 function RoomNameGui.Update(new_cc)
     local label = RoomNameGui.label
 
@@ -81,12 +85,12 @@ function RoomNameGui.Update(new_cc)
     end
 
     RoomNameGui.Fade("1.0")
-    
+
     if type(new_cc) ~= "string" then
         GUI.LogWarn(0, "collision camera is not string")
         return
     end
-    
+
     local room_name = RoomNameGui.GetRoomName(new_cc)
     if room_name == nil then
         Game.LogWarn(0, string.format("Couldn't find name for %s/%s", Game.GetScenarioID(), new_cc))
@@ -106,11 +110,11 @@ end
 -- fades out or in
 -- @param fade_dir the value assigned to FadeColorRGB
 function RoomNameGui.Fade(fade_val)
-    local ui = RoomNameGui.ui
-    if not ui then
+    local container = RoomNameGui.container
+    if not container then
         Game.LogWarn(0, "No ui for RoomNameGui")
         return
     end
 
-    ui:SetProperties({FadeColorR = "-1.0", FadeColorG = "-1.0", FadeColorB = "-1.0", FadeColorA = fade_val, FadeTime = "0.5"})
+    container:SetProperties({FadeColorR = "-1.0", FadeColorG = "-1.0", FadeColorB = "-1.0", FadeColorA = fade_val, FadeTime = "0.5"})
 end
