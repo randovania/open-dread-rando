@@ -58,6 +58,7 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     RandomizerPowerup.IncreaseAmmo(granted)
 
     RandomizerPowerup.CheckArtifacts(granted)
+    RandomizerPowerup.ApplyTunableChanges()
 
     Scenario.UpdateProgressiveItemModels()
     RL.UpdateRDVClient(false)
@@ -213,6 +214,32 @@ end
 
 function RandomizerPowerup.ShowArtifactMessage()
     GUI.ShowMessage("#RANDO_ARTIFACTS_ALL", true, "")
+end
+
+local tItemTunableHandlers = {
+    ["ITEM_UPGRADE_FLASH_SHIFT_CHAIN"] = function(quantity)
+        -- # of chains after first - vanilla is 2. We set it to the number of items, and the "default" config starts with 2 items.
+        Scenario.SetTunableValue("CTunableAbilityGhostAura", "iChainDashMax", quantity)
+    end,
+    ["ITEM_UPGRADE_SPEED_BOOST_CHARGE"] = function(quantity)
+        -- Amount of time in seconds for SB to charge - vanilla is 1.5 seconds. Each upgrade reduces by 0.25 seconds.
+        local chargeTime = math.max(0.25, 1.5 - quantity * 0.25)
+        Scenario.SetTunableValue("CTunableAbilitySpeedBooster", "fTimeToActivate", chargeTime)
+    end
+}
+
+function RandomizerPowerup.ApplyTunableChanges()
+    Game.AddSF(0, "RandomizerPowerup._ApplyTunableChanges", "")
+end
+
+function RandomizerPowerup._ApplyTunableChanges()
+    for item, handler in pairs(tItemTunableHandlers) do
+        local totalQuantity = RandomizerPowerup.GetItemAmount(item)
+
+        Game.LogWarn(0, "Calling tunable handler for " .. item .. " = " .. totalQuantity)
+
+        handler(totalQuantity)
+    end
 end
 
 -- Main PBs (always) + PB expansions (if required mains are disabled)

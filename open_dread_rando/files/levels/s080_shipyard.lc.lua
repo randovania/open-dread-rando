@@ -21,11 +21,12 @@ local SHIP_EMMY_METROIDNIZATION = false
 local SHIP_STRONG_REACTION = false
 local SHIP_CWXELITE_PRESENTATION = false
 function s080_shipyard.InitFromBlackboard()
-  
-  
-  
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_FLOOR_SLIDE", "f", 1)
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   Game.ForceEntityIconVisible("LM_Samus_Ship")
   SHIP_EMMY_METROIDNIZATION = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.SHIP_EMMY_METROIDNIZATION, false)
   SHIP_STRONG_REACTION = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.SHIP_STRONG_REACTION, false)
@@ -42,18 +43,18 @@ end
 
 
 function s080_shipyard.SetupDebugGameBlackboard()
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -175,9 +176,9 @@ end
 
 
 function s080_shipyard.OnEnter_trigger_PowerBombObtained(_ARG_0_, _ARG_1_)
-  
-  
-  
+
+
+
   _ARG_0_.bEnabled = false
   Game.AddSF(1, "s080_shipyard.DelayedPowerBombObtained", "")
   local oPlayer = Game.GetPlayer()
@@ -200,8 +201,8 @@ end
 
 
 function s080_shipyard.On0071Started()
-    
-    
+
+
   GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_SHIP")
 end
 
@@ -216,7 +217,7 @@ function s080_shipyard.OnChozoWarriorActivated()
 
   GUI.WriteEmmyDeathToBlackboard()
 
-  local oActor1 = Game.GetActor("SG_CWX") 
+  local oActor1 = Game.GetActor("SG_CWX")
   if oActor1 ~= nil then
     oActor1.SPAWNGROUP:EnableSpawnGroup()
   end
@@ -231,7 +232,7 @@ function s080_shipyard.OnChozoWarriorActivated()
     oActor3.bEnabled = true
   end
 
-  local oActor4 = Game.GetActor("emmyvalve_reg_gen_000") 
+  local oActor4 = Game.GetActor("emmyvalve_reg_gen_000")
   if oActor4 ~= nil then
     oActor4.EMMYVALVE:SetState(false, true)
   end
@@ -356,7 +357,7 @@ function s080_shipyard.EscapeSquence_Drop_01()
 end
 
 function s080_shipyard.EscapeSquence_Drop_02()
-  
+
   local oActor = Game.GetActor("escape_explosion_path_02")
   if oActor ~= nil then
     oActor:StartTimeline("explosion_03", true)
@@ -401,17 +402,17 @@ end
 
 function s080_shipyard.OnEnter_trigger_EndGame(_ARG_0_, _ARG_1_)
   _ARG_0_.bEnabled = false
-  
-  
-  
-  
+
+
+
+
   local oActor1 = Game.GetActor("ev_evacuation")
   if oActor1 ~= nil then
     oActor1.EVENTPROP:StopCountDown()
   end
-  
+
   GUI.HideEscapeCounter()
-  
+
   local oActor2 = Game.GetActor("cutsceneplayer_112")
   if oActor2 ~= nil then
     oActor2.CUTSCENE:LaunchCutsceneImmediate()
@@ -476,7 +477,7 @@ function s080_shipyard.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea,
 end
 
 function s080_shipyard.ClosePowerBombDoor()
-  
+
   local L0_2 = Game.GetActor("doorpowerclosed_001")
   if L0_2 ~= nil and L0_2.LIFE:CanBeClosedSafely() then
     Game.GetActor("doorpowerclosed_001").LIFE:CloseDoor(false, true, false)
@@ -503,14 +504,14 @@ s080_shipyard.fEmmyShipyardFadeTime = 0.5
 s080_shipyard.fEmmyShipyardInTime = 0.25
 
 function s080_shipyard.OnEmmyShipyardLaunchFade()
-  
-  
-  
+
+
+
   local oActor1 = Game.GetActor("PRP_CUDeactivated")
   if oActor1 ~= nil then
     oActor1.bEnabled = false
   end
-  
+
   local oActor2 = Game.GetActor("block_cut43")
   if oActor2 ~= nil then
     oActor2.TIMELINECOMPONENT:StartAction("powerbombexplosion", -1, false)
@@ -527,7 +528,7 @@ end
 
 
 function s080_shipyard.RemoveSamusHyperSuit()
-  
+
   Game.SetSendReports(false)
   Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_HYPER_SUIT", 0, true)
   Game.GetPlayer().INVENTORY:SetItemAmount("ITEM_WEAPON_HYPER_BEAM", 0, true)
@@ -538,24 +539,24 @@ end
 
 
 function s080_shipyard.OnBegin_Cutscene_43()
-  
+
   local L0_2 = Game.GetActor("cutsceneplayer_43")
   if L0_2 ~= nil then
     L0_2.CUTSCENE:TryLaunchCutscene()
   end
-  
+
   local L1_2 = Game.GetActor("centralunitmagmacontroller_000")
   if L1_2 ~= nil then
     L1_2.CENTRALUNIT:ForceEmmyDeadState()
   end
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.SHIP_EMMY_METROIDNIZATION, "b", true)
   SHIP_EMMY_METROIDNIZATION = true
-  
+
   local L2_2 = Game.GetActor("block_cut43")
   if L2_2 ~= nil then
     L2_2.LIFE:ForceDead(false, true)
   end
-  
+
   local L3_2 = Game.GetEntityFromSpawnPoint("SP_Emmy")
   if L3_2 ~= nil then
     L3_2.ANIMATION:SetAction("dead_shipyard", true)
@@ -589,8 +590,8 @@ end
 
 
 function s080_shipyard.AtriumBridgeEvent()
-    
-    
+
+
   Game.PlayCameraFXPreset("QUEEN_SHAKING_JUMP")
   Game.PlayPresetSound("events/chainreaction_bigexplosion")
 end
@@ -600,7 +601,7 @@ end
 
 
 function s080_shipyard.Activate_SG_PostWarrior()
-  
+
   print("ACTIVATED POST CHOZO WARRIOR EVENT SETUP")
   Game.PushSetup("PostChozoWarriorEvent", true, true)
 end

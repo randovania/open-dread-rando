@@ -221,6 +221,20 @@ ALL_ICONS: dict[str, Union[MapIcon, str]] = {
         is_global=False,
         full_zoom_scale=False
     ),
+    "item_flashshiftupgrade": MapIcon(
+        icon_id="ItemFlashShiftUpgrade",
+        coords=(15, 5),
+        label="FLASH SHIFT UPGRADE",
+        is_global=False,
+        full_zoom_scale=False
+    ),
+    "item_speedboostupgrade": MapIcon(
+        icon_id="ItemSpeedBoostUpgrade",
+        coords=(14, 5),
+        label="SPEED BOOSTER UPGRADE",
+        is_global=False,
+        full_zoom_scale=False
+    ),
     "itemsphere": MapIcon(
         icon_id="ItemNothing",
         coords=(14, 7),
@@ -329,21 +343,21 @@ class MapIconEditor:
         return icon.icon_id
 
     def mirror_bmmdef_icons(self):
-        # mirrors vanilla shields, grapple and wide boxes, and 2x1 grapples. 
-        for shield in ["BlockageMissile", "BlockageSuperMissile", "DoorWide", "BlockagePlasma", "BlockageWave", 
+        # mirrors vanilla shields, grapple and wide boxes, and 2x1 grapples.
+        for shield in ["BlockageMissile", "BlockageSuperMissile", "DoorWide", "BlockagePlasma", "BlockageWave",
                        "PropGrappleBox", "PropWideBeamBox", "PropGrappleBlock"]:
             left = self.mapdefs.raw.Root.mapIconDefs[f"{shield}L"]
             right = self.mapdefs.raw.Root.mapIconDefs[f"{shield}R"]
             for field in ["uSpriteRow", "uSpriteCol", "sDisabledIconId"]:
                 right[field] = left[field]
-            
+
             # flip the x-offset on the right one
             right["vAnchorOffset"][0] = -1 * left["vAnchorOffset"][0]
-    
+
     def mirror_bmmap_icons(self):
         # mirrors props and blockages of mirrored bmmdef icons in each scenario
         props_to_fix = ["PropGrappleBoxR", "PropWideBeamBoxR", "PropGrappleBlockR"]
-        blockages_to_fix = ["BlockageMissileR", "BlockageSuperMissileR", "DoorWideR", 
+        blockages_to_fix = ["BlockageMissileR", "BlockageSuperMissileR", "DoorWideR",
                             "BlockagePlasmaR", "BlockageWaveR"]
 
         for scenario in ALL_SCENARIOS:
@@ -353,9 +367,9 @@ class MapIconEditor:
 
             for sName in props:
                 actor = props[sName]
-                if actor["sIconId"] in props_to_fix: 
+                if actor["sIconId"] in props_to_fix:
                     actor["bFlipX"] = True
-            
+
             for sName in blockages:
                 actor = blockages[sName]
                 if actor["sIconId"] in blockages_to_fix:

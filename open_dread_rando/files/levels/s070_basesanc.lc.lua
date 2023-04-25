@@ -8,17 +8,17 @@ s070_basesanc.HasRandomizerChanges = true
 
 function s070_basesanc.SetupDebugGameBlackboard()
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -64,18 +64,19 @@ local SANC_POSTXRELEASE_APPLIED = false
 local CURRENT_CHOZOROBOT_SPAWNPOINT = "SP_Checkpoint_TwoChozoRobots"
 
 function s070_basesanc.InitFromBlackboard()
-    
-  
-  
-  
+
+
+
+
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   SANC_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.SANC_POSTXRELEASE_APPLIED, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
-  
+
   if QUARENTINE_OPENED == true then
     s070_basesanc.Activate_Setup_PostXRelease()
   end
-  
+
   local L0_2 =  Game.GetActor("emmy_sanc_deactivated")
   if L0_2 ~= nil then
     if Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.SANC_EMMY_DEACTIVATED_ENABLED, false) == true then
@@ -94,7 +95,7 @@ function s070_basesanc.Activate_Setup_PostXRelease()
   end
 end
 s070_basesanc.tGetOnDeathOverrides = {
-    ShowDeath = true, 
+    ShowDeath = true,
     GoToMainMenu = false
 }
 function s070_basesanc.GetOnDeathOverrides()
@@ -147,7 +148,7 @@ function s070_basesanc.OnEnter_ChangeCamera_024_A()
   Game.SetCollisionCameraLocked("collision_camera_024_A", true)
 end
 function s070_basesanc.OnEnter_ChangeCamera_024_A_Delayed()
-  
+
   Game.GetActor("TG_ChangeCamera_024_A").bEnabled = true
 end
 
@@ -158,7 +159,7 @@ function s070_basesanc.OnExit_ChangeCamera_024_A()
 end
 
 function s070_basesanc.OnEnter_ChangeCamera_024_B()
-  
+
   local oActor = Game.GetActor("TG_ChangeCamera_024_A")
   oActor.bEnabled = false
   Game.SetCollisionCameraLocked("collision_camera_024_B", true)
@@ -201,7 +202,7 @@ end
 
 function s070_basesanc.AddProfessorDialogueToMissionLog()
   local L0_2 = {}
-  
+
   for L4_2 = 1, 26, 1 do
     local L5_2 = string.format("%02d", L4_2)
     local L6_2 = "#CAPTION_PROFESSOREVENT_PAGE_" .. L5_2
@@ -267,10 +268,10 @@ function s070_basesanc.LaunchCutscene40_Part2b(_ARG_0_)
   end
 end
 
-function s070_basesanc.OnBefore_Cutscene_40_Part2bStarted()    
+function s070_basesanc.OnBefore_Cutscene_40_Part2bStarted()
   Game.SpawnEntity("SP_ChozoRobotSoldier")
   local oActor = Game.GetActor("CAM_ChozoRobotSoldier")
-  
+
   if oActor ~= nil then
     oActor.LOGICCAMERA:GetLogicCamera().fMinExtraZDist = 2630
   end
@@ -282,7 +283,7 @@ function s070_basesanc.AddEmmyProfessorToMissionLog()
 end
 
 function s070_basesanc.OnAfter_Cutscene_40_Part2b()
-  
+
   s070_basesanc.Professor_MET()
   s070_basesanc.m_bSkipAquaOpening = false
   Game.AddSF(0.5, "s070_basesanc.Delayed_RestoreRobotSoldierLogicCameraMinZ", "")
@@ -390,21 +391,21 @@ end
 
 function s070_basesanc.OnEmmySancDead()
   Game.PushSetup("PostEmmy", true, true)
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
 end
 
 function s070_basesanc.OnEmmyAbilityObtainedFadeOutCompleted()
   Game.GetActor("TG_EnablePostEmmyEnemies").bEnabled = true
-  
+
   local L0_2 = Game.GetActor("centralunitmagmacontroller")
   if L0_2 ~= nil then
     L0_2.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
@@ -443,16 +444,16 @@ end
 
 
 function s070_basesanc.PatrolRoutesGeneration()
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  local oEmmy = Game.GetActor("SP_Emmy") 
+
+
+
+
+
+
+
+
+
+  local oEmmy = Game.GetActor("SP_Emmy")
   if oEmmy ~= nil then
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_01")
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_02")
@@ -681,9 +682,9 @@ end
 
 
 function s070_basesanc.OnEnter_EmmyRelocated_Phase2()
-  
-  
-  
+
+
+
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) and CurrentScenario.oEmmyEntity ~= nil then
     local oActor = Game.GetActor("LM_EmmyLocation_Phase2")
     CurrentScenario.oEmmyEntity.bEnabled = false
@@ -701,17 +702,17 @@ end
 s070_basesanc.bFootStepPlatform000Opened = true
 s070_basesanc.bFootStepPlatform001Opened = true
 function s070_basesanc.OnShutterOpened(_ARG_0_)
-  
-  
+
+
   local L1_2 = s070_basesanc.bFootStepPlatform000Opened == false and s070_basesanc.bFootStepPlatform001Opened == false
-  
+
   if _ARG_0_.sName == "footstepplatform_000" then
     s070_basesanc.bFootStepPlatform000Opened = true
   elseif _ARG_0_.sName == "footstepplatform_001" then
     s070_basesanc.bFootStepPlatform001Opened = true
   end
 
-  
+
   local L2_2 = s070_basesanc.bFootStepPlatform000Opened == false and s070_basesanc.bFootStepPlatform001Opened == false
   if L1_2 == true and L2_2 == false and CurrentScenario.oEmmyEntity ~= nil and Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
       CurrentScenario.oEmmyEntity.AI:StopSancShutterPerceptionModifier()
@@ -874,7 +875,7 @@ function s070_basesanc.CRS_DetectingDirection_B()
 end
 
 function s070_basesanc.CRS_EvaluatingDirection(_ARG_0_)
-  
+
   print( "----- DETECTING DIRECTION -----")
   if _ARG_0_ ~= nil then
     local L1_2 = Game.GetPlayer()
