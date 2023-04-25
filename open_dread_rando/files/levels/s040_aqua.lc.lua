@@ -3,18 +3,18 @@ function s040_aqua.main()
 end
 
 function s040_aqua.SetupDebugGameBlackboard()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -59,12 +59,13 @@ local AQUA_POSTXRELEASE_APPLIED = false
 
 
 function s040_aqua.InitFromBlackboard()
-    
-    
-    
-    
-    
+
+
+
+
+
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   s040_aqua.CheckDoorProfessor()
   s040_aqua.CheckHydrogiga()
   AQUA_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.AQUA_POSTXRELEASE_APPLIED, false)
@@ -114,21 +115,21 @@ s040_aqua.tFXDoorProfToEnable = {
   "Pos_AQ_Chorrillo_ESP"
 }
 function s040_aqua.CheckDoorProfessor()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   local L0_2 = Blackboard.GetProp("GAME_PROGRESS", "PROFESSOR_MET")
   local L1_2 = Game.GetActor("ev_doorprof")
   local L2_2 = Game.GetActor("ev_doorprof_open")
@@ -259,8 +260,8 @@ end
 function s040_aqua.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
   if old_subarea == "collision_camera_010" and new_subarea == "collision_camera_014" then
     --s040_aqua.LaunchCutscene_32()
-  elseif old_subarea ~= "collision_camera_029" or new_subarea == "collision_camera_028" then     
-      
+  elseif old_subarea ~= "collision_camera_029" or new_subarea == "collision_camera_028" then
+
   end
 
   Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
@@ -328,10 +329,10 @@ s040_aqua.tTentaclesDead = {
   "ev_tentacledead_004"
 }
 function s040_aqua.Event_Hydrogiga_IsDead()
-    
-    
-    
-    
+
+
+
+
 
   local L0_2 = Game.GetActor("waterzone_026")
   L0_2.bEnabled = true
@@ -351,15 +352,15 @@ function s040_aqua.CheckHydrogiga()
 end
 
 function s040_aqua.OnHydrogigaDead(_ARG_0_, _ARG_1_)
-    
-    
+
+
 
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.HYDROGIGA_DEAD, "b", true)
   s040_aqua.CheckHydrogiga()
 end
 
 function s040_aqua.OnHydrogigaDead_CUSTOM()
-  
+
 end
 
 function s040_aqua.Event_Tentacles_Alive(_ARG_0_)
@@ -457,7 +458,7 @@ function s040_aqua.OnEnter_PostCRS_Enemies(_ARG_0_, _ARG_1_)
   local L2_2 = Game.GetActor("SG_Spittail_PostBoss")
   local L3_2 = Game.GetActor("SG_2RCW_000")
   if L3_2 ~= nil then
-    print(L3_2.SPAWNGROUP.iNumDeaths) 
+    print(L3_2.SPAWNGROUP.iNumDeaths)
     if L3_2.SPAWNGROUP.iNumDeaths > 1 then
       if L2_2 ~= nil then
         L2_2.bEnabled = true
@@ -689,65 +690,65 @@ s040_aqua.SpaceJumpMarkerInstanceActors = {
   "spacejump_marker_005"
 }
 function s040_aqua.OnEnter_TriggerOpt_001()
-    
-    
-    
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -761,65 +762,65 @@ function s040_aqua.OnExit_TriggerOpt_001()
 end
 
 function s040_aqua.OnEnter_TriggerOpt_002()
-    
-    
-    
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -834,64 +835,64 @@ end
 
 function s040_aqua.OnEnter_TriggerOpt_003()
 
-    
-  
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -905,65 +906,65 @@ function s040_aqua.OnExit_TriggerOpt_003()
 end
 
 function s040_aqua.OnEnter_TriggerOpt_004()
-    
-    
-    
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -976,65 +977,65 @@ function s040_aqua.OnExit_TriggerOpt_004()
 end
 
 function s040_aqua.OnEnter_TriggerOpt_005()
-    
-    
-    
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -1047,65 +1048,65 @@ function s040_aqua.OnExit_TriggerOpt_005()
 end
 
 function s040_aqua.OnEnter_TriggerOpt_006()
-    
-    
-    
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -1119,64 +1120,64 @@ end
 
 function s040_aqua.OnEnter_TriggerOpt_007()
 
-    
-    
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.bottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preBottomInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.OmnithonInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.trenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.preTrenchInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone2InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.zone1InstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.topInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = false
     end
   end
-  
+
   for _FORV_3_, _FORV_4_ in ipairs(s040_aqua.SpaceJumpMarkerInstanceActors) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then

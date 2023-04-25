@@ -6,17 +6,17 @@ s050_forest.HasRandomizerChanges = true
 
 function s050_forest.SetupDebugGameBlackboard()
 
-    
-    
-  
-    
- 
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -61,10 +61,11 @@ end
 local QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
 local FOREST_POSTXRELEASE_APPLIED = false
 function s050_forest.InitFromBlackboard()
-    
-    
+
+
 
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   FOREST_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.FOREST_POSTXRELEASE_APPLIED, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
   if QUARENTINE_OPENED == true then
@@ -80,7 +81,7 @@ function s050_forest.Activate_Setup_PostXRelease()
   end
 end
 s050_forest.tGetOnDeathOverrides = {
-    ShowDeath = true, 
+    ShowDeath = true,
     GoToMainMenu = false
 }
 function s050_forest.GetOnDeathOverrides()
@@ -106,8 +107,8 @@ end
 
 
 function s050_forest.OnEnter_trigger_LineBoomObtained(_ARG_0_, _ARG_1_)
-    
-    
+
+
 
   _ARG_0_.bEnabled = false
   Game.AddSF(1, "s050_forest.DelayedLineBoomObtined", "")
@@ -119,9 +120,9 @@ end
 
 
 function s050_forest.DelayedLineBoomObtined()
-    
-    
-    
+
+
+
   GUI.ShowMessage("#CUT_LINE_BOMB", true, "s050_forest.LineBoomObtainedMessageSkipped")
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
@@ -141,9 +142,9 @@ end
 
 
 function s050_forest.OnEnter_trigger_BossPresentation(_ARG_0_, _ARG_1_)
-    
-    
-    
+
+
+
   _ARG_0_.bEnabled = false
   Game.AddSF(1, "s050_forest.DelayedBossPresentation", "")
   local oPlayer = Game.GetPlayer()
@@ -154,8 +155,8 @@ end
 
 
 function s050_forest.DelayedBossPresentation()
-    
-    
+
+
 
   GUI.ShowMessage("#CUT_FOREST_BOSS_PRESENTATION", true, "s050_forest.BossPresentationMessageSkipped")
   local oPlayer = Game.GetPlayer()
@@ -166,7 +167,7 @@ end
 
 
 function s050_forest.BossPresentationMessageSkipped()
-    
+
 end
 
 
@@ -246,8 +247,8 @@ function s050_forest.OnEnter_PostSuperGoliathDefeated()
 end
 
 function s050_forest.OnBossDefeated(_ARG_0_)
-    
-    
+
+
   if _ARG_0_ ~= nil and _ARG_0_ == "SP_SuperGoliath_CoreX_core_x" then
     Game.PopSetup("SP_Goliath_B_goliath_Fake_Boss_Defeated", true, false)
   end
@@ -283,27 +284,27 @@ end
 
 
 
-function s050_forest.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)   
+function s050_forest.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
   Scenario.SubAreaChangeRequest(_ARG_0_, _ARG_1_, _ARG_2_, _ARG_3_)
 end
 
 
 function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
 
   if old_subarea == "collision_camera_039" and new_subarea == "collision_camera_032" then
     --s050_forest.LaunchCutscene_33()
   end
-  
+
   if old_subarea == "collision_camera_002" and old_actorgroup == "Default" then
     local L5_2 = Game.GetActor("SG_ChozoRobotSoldier")
     if L5_2 ~= nil then
@@ -313,7 +314,7 @@ function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, n
       end
     end
   end
-  
+
   if old_subarea == "collision_camera_023" and old_actorgroup == "ChozoWarriorX" then
     local L5_2 = Game.GetActor( "SG_ChozoWarriorX")
     if L5_2 ~= nil then
@@ -329,7 +330,7 @@ function s050_forest.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, n
 end
 
 function s050_forest.LaunchCutscene_33()
-  local oActor = Game.GetActor("cutsceneplayer_33") 
+  local oActor = Game.GetActor("cutsceneplayer_33")
   if oActor ~= nil then
     oActor.CUTSCENE:TryLaunchCutscene()
   end
@@ -374,20 +375,20 @@ end
 
 
 function s050_forest.OnEmmyForestDead()
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
   Game.PushSetup("PostEmmy", true, true)
 end
 
 function s050_forest.OnEmmyAbilityObtainedFadeOutCompleted()
-  
+
   Game.GetActor("TG_EnablePostEmmyEnemies").bEnabled = true
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
@@ -412,7 +413,7 @@ end
 
 
 function s050_forest.OnUnlockEmmyDoors()
-  
+
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:UnlockDoors()
@@ -427,12 +428,12 @@ end
 
 
 function s050_forest.PatrolRoutesGeneration()
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
   local oEmmy = Game.GetActor("SP_Emmy")
   if oEmmy ~= nil then
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_01")
@@ -461,18 +462,18 @@ end
 
 
 function s050_forest.PatrolRoutesFinalNodesAssignation()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_0", "WorldGraph_2" }, 0)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_11", "WorldGraph_6" }, 1)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_02", { "WorldGraph_10", "WorldGraph_12" }, 0)
@@ -529,10 +530,10 @@ end
 
 s050_forest.tEmmyDoor = nil
 function s050_forest.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
-    
-    
-    
-    
+
+
+
+
   if s050_forest.IsEmmiActive() and Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     if _ARG_1_ then
       if CurrentScenario.oEmmyEntity ~= nil then
@@ -557,17 +558,17 @@ function s050_forest.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
 end
 
 function s050_forest.HardEmmyRelocationDoor(_ARG_0_)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
   print("Door: Hard " .. _ARG_0_.sName)
   if _ARG_0_.sName == "dooremmy" then
     s050_forest.tEmmyDoor = {
@@ -620,17 +621,17 @@ function s050_forest.HardEmmyRelocationDoor(_ARG_0_)
 end
 
 function s050_forest.EmmyRelocationDoor(_ARG_0_)
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
   if _ARG_0_.sName == "dooremmy" then
     s050_forest.tEmmyDoor = {
       "LM_EmmyEntrancePoint_012",
@@ -699,9 +700,9 @@ function s050_forest.OnTeleport_Checkpoint_CU()
 end
 
 function s050_forest.Checkpoint_RelocatingEmmy_CU()
-    
-    
-    
+
+
+
   if CurrentScenario.oEmmyEntity ~= nil then
     local oActor = Game.GetActor("LM_EmmyEntrancePoint_017")
     if oActor ~= nil then
@@ -734,7 +735,7 @@ end
 
 
 function s050_forest.OnEnter_Enable_Trigger_AfterCWX()
-    
+
   Game.GetActor("TG_AfterChozoWarriorXEncounter").bEnabled = true
 end
 
@@ -841,7 +842,7 @@ function s050_forest.Enter_CWX_Arena()
 end
 
 function s050_forest.Exit_CWX_Arena()
-  
+
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
     oPlayer.INPUT:IgnoreInput(false, false, "Enter_CWX_Arena")

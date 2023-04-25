@@ -8,17 +8,17 @@ end
 
 
 function s030_baselab.SetupDebugGameBlackboard()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -67,9 +67,10 @@ end
 
 function s030_baselab.InitFromBlackboard()
 
- 
-    
+
+
  Game.ReinitPlayerFromBlackboard()
+ Scenario.InitFromBlackboard()
   LAB_EMMY_SPAWNED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.LAB_EMMY_SPAWNED, false)
   LAB_POSTXRELEASE_APPLIED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.LAB_POSTXRELEASE_APPLIED, false)
   QUARENTINE_OPENED = Blackboard.GetProp("GAME_PROGRESS", "QUARENTINE_OPENED")
@@ -121,7 +122,7 @@ end
 
 
 function s030_baselab.OnEnter_EmmyLAB_Deactivation()
-    
+
 
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) and CurrentScenario.oEmmyEntity ~= nil then
     CurrentScenario.oEmmyEntity.bEnabled = false
@@ -130,16 +131,16 @@ function s030_baselab.OnEnter_EmmyLAB_Deactivation()
 end
 
 function s030_baselab.OnEnter_EmmyLAB_Presentation()
-    
-    
-    
-  
-    
-  
-    
+
+
+
+
+
+
+
   print("ACTIVANDO EMMY")
   --GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_LAB")
-  local oActor = Game.GetActor("TG_EmmyLAB_Deactivation") 
+  local oActor = Game.GetActor("TG_EmmyLAB_Deactivation")
   if oActor ~= nil then
     oActor.bEnabled = false
   end
@@ -168,11 +169,11 @@ end
 
 
 function s030_baselab.DelayedEmmyLABSpawnSequence()
-    
-    
-    
-    
-    
+
+
+
+
+
   GUI.ShowMessage("#BASELAB_EMMY_PRESENTATION", true, "")
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
@@ -193,22 +194,22 @@ end
 
 
 function s030_baselab.OnEmmyBaseLabDead()
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
   Game.PushSetup("PostEmmy", true, true)
 end
 
 function s030_baselab.OnEmmyAbilityObtainedFadeOutCompleted()
-    
+
   Game.GetActor("TG_EnablePostEmmyEnemies").bEnabled = true
-  local oActor = Game.GetActor("centralunitmagmacontroller") 
+  local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:UnlockDoors()
@@ -217,7 +218,7 @@ end
 
 
 function s030_baselab.DelayedOnEmmyBaseLabDead()
-    
+
   GUI.ShowMessage("#PLACEHOLDER_EMMYBASELAB_KILLED", true, "")
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
@@ -232,7 +233,7 @@ end
 
 
 function s030_baselab.OnUnlockEmmyDoors()
-    
+
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:UnlockDoors()
@@ -244,7 +245,7 @@ end
 
 
 function s030_baselab.OnUnlockEmmyDoors()
-    
+
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:UnlockDoors()
@@ -255,7 +256,7 @@ end
 
 
 function s030_baselab.OnLockEmmyDoors()
-    
+
   local oActor = Game.GetActor("centralunitmagmacontroller")
   if oActor ~= nil then
     oActor.CENTRALUNIT:LockDoors()
@@ -273,12 +274,12 @@ end
 
 
 function s030_baselab.PatrolRoutesGeneration()
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
   local oActor = Game.GetActor("SP_Emmy")
   if oActor ~= nil then
     oActor.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_01")
@@ -315,24 +316,24 @@ end
 
 
 function s030_baselab.PatrolRoutesFinalNodesAssignation()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_21" }, 0)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_16", "WorldGraph_15" }, 1)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_02", { "WorldGraph_5", "WorldGraph_11" }, 0)
@@ -399,8 +400,8 @@ end
 
 
 function s030_baselab.OnEnter_EmmySpawnAfterAqua()
-    
-    
+
+
 
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) and CurrentScenario.oEmmyEntity ~= nil then
     L3_1 = true
@@ -421,7 +422,7 @@ end
 
 s030_baselab.tEmmyDoor = nil
 function s030_baselab.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
-    
+
 
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) and LAB_EMMY_SPAWNED then
     if _ARG_1_ then
@@ -448,27 +449,27 @@ function s030_baselab.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
 end
 
 function s030_baselab.HardEmmyRelocationDoor(_ARG_0_)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   print("Door: Hard " .. _ARG_0_.sName)
   if _ARG_0_.sName == "dooremmy_000" then
     s030_baselab.tEmmyDoor = {
@@ -526,27 +527,27 @@ function s030_baselab.HardEmmyRelocationDoor(_ARG_0_)
 end
 
 function s030_baselab.EmmyRelocationDoor(_ARG_0_)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   if _ARG_0_.sName == "dooremmy_000" then
     s030_baselab.tEmmyDoor = {
       "LM_EmmyEntrancePoint_000",
@@ -628,9 +629,9 @@ function s030_baselab.OnTeleport_Checkpoint_CU()
 end
 
 function s030_baselab.Checkpoint_RelocatingEmmy_CU()
-    
-  if CurrentScenario.oEmmyEntity ~= nil then 
-   local oActor = Game.GetActor("LM_EmmyEntrancePoint_027") 
+
+  if CurrentScenario.oEmmyEntity ~= nil then
+   local oActor = Game.GetActor("LM_EmmyEntrancePoint_027")
    if oActor ~= nil then
       CurrentScenario.oEmmyEntity.bEnabled = false
       CurrentScenario.oEmmyEntity.vPos = oActor.vPos
@@ -742,7 +743,7 @@ function s030_baselab.DetectingDirection()
       local L2_2 = V3D(-1, 0, 0)
       if L1_2 ~= nil then
         L2_2 = L1_2.vPos - L0_2.vPos
-      end      
+      end
       if L2_2.x > 0 then
         L0_2.ANIMATION:SetAction("spawn_baselab_part015_turn_right", true)
         L2_2 = V3D(1, 0, 0)

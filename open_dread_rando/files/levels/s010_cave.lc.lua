@@ -8,16 +8,16 @@ end
 
 function s010_cave.SetupDebugGameBlackboard()
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -82,23 +82,24 @@ function s010_cave.OnLoadScenarioFinished()
 end
 
 function s010_cave.InitFromBlackboard()
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
-    
+
+
+
+
+
+
+
+
+
+
+
   Game.ReinitPlayerFromBlackboard()
-  
+  Scenario.InitFromBlackboard()
+
   if CurrentScenario.oEmmyProtoEntity ~= nil then
     print("ProtoEmmyAntiguo presente")
   end
-  
+
   s010_cave.Event_WaterPoolInfiltration_Deactivate()
   CAVES_GAME_INTRO = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, false)
   CAVES_EMMY_SPAWNED = Scenario.ReadFromBlackboard(Scenario.LUAPropIDs.CAVES_EMMY_SPAWNED, false)
@@ -123,7 +124,7 @@ function s010_cave.InitFromBlackboard()
   if QUARENTINE_OPENED == true then
     s010_cave.Activate_Setup_PostXRelease()
   end
- 
+
   if Game.GetCooldownFlag() == true then
     if CAVES_COOLDOWN_APPLIED == false then
       s010_cave.Cooldown_Activation()
@@ -131,14 +132,14 @@ function s010_cave.InitFromBlackboard()
   elseif CAVES_COOLDOWN_APPLIED == true then
       s010_cave.Cooldown_Deactivation()
   end
-  
-  
-  local oCutsceneTheatre = Blackboard.GetProp("GAME_PROGRESS", "CUTSCENE_THEATRE_CUTSCENE")  
+
+
+  local oCutsceneTheatre = Blackboard.GetProp("GAME_PROGRESS", "CUTSCENE_THEATRE_CUTSCENE")
   if oCutsceneTheatre ~= nil then
     print(oCutsceneTheatre)
     Game.LaunchCutscene(oCutsceneTheatre)
   end
-  
+
   if not CAVES_GAME_INTRO then
     s010_cave.OnEnd_Cutscene_intro_end()
   end
@@ -165,13 +166,13 @@ end
 
 function s010_cave.OnBegin_Cutscene_intro_space()
 
-    
-    
+
+
   local oIntroSpace = Game.GetActor("cutsceneplayer_intro_space")
   if oIntroSpace ~= nil then
     local oIntroFlashbackInit = Game.GetActor("cutsceneplayer_intro_flashbackinit")
     if oIntroFlashbackInit ~= nil then
-      oIntroSpace.CUTSCENE:QueueCutscenePlayer(oIntroFlashbackInit) 
+      oIntroSpace.CUTSCENE:QueueCutscenePlayer(oIntroFlashbackInit)
       local oIntroLanding =  Game.GetActor("cutsceneplayer_intro_landing")
       if oIntroLanding ~= nil then
         oIntroFlashbackInit.CUTSCENE:QueueCutscenePlayer(oIntroLanding)
@@ -189,14 +190,14 @@ function s010_cave.OnBegin_Cutscene_intro_space()
         end
       end
     end
-    
+
     oIntroSpace.CUTSCENE:TryLaunchCutscene()
   end
 end
 
 function s010_cave.OnEnd_Cutscene_intro_end()
-    
-  
+
+
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_GAME_INTRO, "b", true)
   CAVES_GAME_INTRO = true
   Game.PushSetup("PostIntro", true, true)
@@ -209,29 +210,29 @@ end
 
 
 function s010_cave.OnEmmyCaveDead()
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
   Game.PushSetup("PostEmmy", true, true)
 end
 
 function s010_cave.OnEmmyAbilityObtainedFadeOutCompleted()
-    
+
   local L0_2 = Game.GetActor("ev_entercu_cv_001")
   if L0_2 ~= nil then
     L0_2.TUNNEL_TRAP:SetOpenState()
-  end  
+  end
   --Game.GetActor("Door062 (PW-PW, Special)").LIFE:LockDoor()
   local L1_2 = Game.GetActor( "SG_WarLotus_000")
   if L1_2 ~= nil then
     L1_2.SPAWNGROUP:EnableSpawnGroup()
-  end  
+  end
   local L2_2 = Game.GetActor("PRP_CV_CentralUnitCaves")
   if L2_2 ~= nil then
     L2_2.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
@@ -240,15 +241,15 @@ end
 
 
 function s010_cave.DelayedOnEmmyCaveDead()
-    
+
   local cu_door = Game.GetActor("Door017 (CU)_000")
   if cu_door ~= nil then
     cu_door.LIFE:UnLockDoor()
   end
-    
-    
-    
-    
+
+
+
+
 end
 
 function s010_cave.OnEmmyDeathMessageSkipped()
@@ -266,7 +267,7 @@ end
 
 
 function s010_cave.DelayedSPRTutoTriggerEnable()
-  local oActor = Game.GetActor("SPRCentralUnitTutoTrigger") 
+  local oActor = Game.GetActor("SPRCentralUnitTutoTrigger")
   if oActor ~= nil then
     oActor.bEnabled = true
   end
@@ -301,30 +302,30 @@ end
 
 
 function s010_cave.EmmyCaveSpawnSequence()
-    
+
   --local oActor1 = Game.GetActor("Door062 (PW-PW, Special)")
   --if oActor1 ~= nil then
   --  oActor1.LIFE:CloseDoor(true, true, true)
   --  oActor1.LIFE:LockDoor()
   --end
-  
+
   local oActor2 = Game.GetActor("PRP_CV_CentralUnitCaves")
   if oActor2 ~= nil then
     oActor2.CENTRALUNIT:Activate()
   else
     print("CENTRAL_UNIT: PRP_CV_CentralUnitCaves not found")
   end
-  
+
   local oActor3 = Game.GetActor("TG_EnableSpawnEmmy")
   if oActor3 ~= nil then
     oActor3.bEnabled = false
   end
-  
+
   --GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_EMMY_CAVE")
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     CurrentScenario.oEmmyEntity.bEnabled = true
   end
-  
+
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_EMMY_SPAWNED, "b", true)
   CAVES_EMMY_SPAWNED = true
 end
@@ -344,7 +345,7 @@ function s010_cave.EmmyProtoSpawnSequence()
   else
     print("CENTRAL_UNIT: PRP_CV_CentralUnitProto not found")
   end
-  
+
   GUI.AddEmmyMissionLogEntry("#MLOG_ENCOUNTER_PROTOEMMY_CAVE")
 end
 
@@ -357,12 +358,12 @@ end
 function s010_cave.EmmyProtoClimbSequenceMessageSkipped()
   local oActor1  =  Game.GetActor("LM_AfterEmmyProtoClimbSequence_Samus")
   local oPlayer = Game.GetPlayer()
-  
+
   if oPlayer ~= nil and oActor1 ~= nil then
     oPlayer.vPos = oActor1.vPos
     oPlayer.vAng = oActor1.vAng
   end
-  
+
   local oActor2 = Game.GetActor("LM_AfterEmmyProtoClimbSequence_Emmy")
   if CurrentScenario.oEmmyProtoEntity ~= nil and oActor2 ~= nil then
     CurrentScenario.oEmmyProtoEntity.bEnabled = false
@@ -376,7 +377,7 @@ end
 
 
 
-function s010_cave.OnProtoEmmyCantClimbCutsceneStart()   
+function s010_cave.OnProtoEmmyCantClimbCutsceneStart()
   local cur_morph_ball_amount = Game.GetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL")
   Game.SetItemAmount(Game.GetPlayerName(), "ITEM_MORPH_BALL", math.max(cur_morph_ball_amount, MORPH_BALL_AT_PROTO_EMMY))
   local oActor = Game.GetActor("LM_AfterEmmyProtoClimbSequence_Emmy")
@@ -411,9 +412,9 @@ end
 
 
 function s010_cave.OnAimCameraPossess()
-    
-    
-  
+
+
+
   local L0_2 = Game.GetActor("TG_PROTOEMMY_ACTIVATE_TIMER")
   if L0_2 ~= nil and L0_2.bEnabled == false then
     local L1_2 = Game.GetActor("TG_PROTOEMMY_ACTIVATE")
@@ -426,7 +427,7 @@ end
 
 
 function s010_cave.OnEnter_ActivateProtoEmmy()
-    
+
   if CurrentScenario.oEmmyProtoEntity ~= nil then
     CurrentScenario.oEmmyProtoEntity.bEnabled = true
     CurrentScenario.oEmmyProtoEntity.AI:StandStillFor(1)
@@ -444,21 +445,21 @@ end
 
 function s010_cave.OnEnter_ActivateProtoEmmyTimer()
   Game.AddSF(3, "s010_cave.OnAimCameraPossess", "")
-  
-  local oActor = Game.GetActor("TG_PROTOEMMY_ACTIVATE_TIMER") 
+
+  local oActor = Game.GetActor("TG_PROTOEMMY_ACTIVATE_TIMER")
   if oActor ~= nil then
     oActor.bEnabled = false
-  end  
+  end
 end
 
 
 
 
 function s010_cave.PatrolRoutesGeneration()
-  
-  
 
-  local oEmmy = Game.GetActor("SP_Emmy")  
+
+
+  local oEmmy = Game.GetActor("SP_Emmy")
   if oEmmy ~= nil then
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_01")
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_02")
@@ -477,7 +478,7 @@ function s010_cave.PatrolRoutesGeneration()
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLEMMY_15")
     oEmmy.SPAWNPOINT:AddPatrolShape("LS_PATROLTUTOFOCUS")
   end
-  
+
   AI.AddPatrol("LE_WorldGraph", "PATROLROUTE_01", "LS_PATROLEMMY_01")
   AI.AddPatrol("LE_WorldGraph", "PATROLROUTE_02", "LS_PATROLEMMY_02")
   AI.AddPatrol("LE_WorldGraph", "PATROLROUTE_03", "LS_PATROLEMMY_03")
@@ -494,34 +495,34 @@ function s010_cave.PatrolRoutesGeneration()
   AI.AddPatrol("LE_WorldGraph", "PATROLROUTE_14", "LS_PATROLEMMY_14")
   AI.AddPatrol("LE_WorldGraph", "PATROLROUTE_15", "LS_PATROLEMMY_15")
   AI.AddPatrol("LE_WorldGraph", "PATROLTUTOFOCUS", "LS_PATROLTUTOFOCUS")
-  
+
   print("s010_cave.PatrolRoutesGeneration(): Patrol designation OK")
 end
 
 function s010_cave.PatrolRoutesFinalNodesAssignation()
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_60"}, 0)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_01", { "WorldGraph_69", "WorldGraph_70", "WorldGraph_72" }, 1)
   AI.SetPatrolFinalNode("LE_WorldGraph", "PATROLROUTE_02", { "WorldGraph_73", "WorldGraph_70" }, 0)
@@ -582,8 +583,8 @@ end
 
 
 function s010_cave.ChangePatrolEmmy(_ARG_0_)
-    
-    
+
+
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     CurrentScenario.oEmmyEntity.AI.sCurrentPatrol = _ARG_0_
     print("EMMY: Assigned route " .. _ARG_0_)
@@ -608,11 +609,11 @@ s010_cave.tEmmyDoor = nil
 
 
 function s010_cave.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
-    
-    
-    
-    
-    
+
+
+
+
+
   if CAVES_EMMY_SPAWNED then
     if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
       if _ARG_1_ then
@@ -635,7 +636,7 @@ function s010_cave.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
             end
           end
         end
-      else 
+      else
         CurrentScenario.oEmmyEntity.bEnabled = false
       end
     end
@@ -643,14 +644,14 @@ function s010_cave.OnWalkThroughEmmyDoor(_ARG_0_, _ARG_1_, _ARG_2_)
 end
 
 function s010_cave.HardEmmyRelocationDoor(_ARG_0_)
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
   print("Door: Hard " .. _ARG_0_.sName)
-  
+
   if _ARG_0_.sName == "DoorEmmy03" then
     s010_cave.tEmmyDoor = {
         "LM_EmmyEntrancePoint_004"
@@ -673,7 +674,7 @@ function s010_cave.HardEmmyRelocationDoor(_ARG_0_)
     }
   elseif _ARG_0_.sName == "DoorEmmy06" or _ARG_0_.sName == "DoorEmmy07" then
     local bEnabled = Blackboard.GetProp("s010_cave", "TG_TutoFocus_Caves_001:TRIGGER:Enabled")
-    
+
     if bEnabled == false then
       s010_cave.tEmmyDoor = {
           "LM_EmmyEntrancePoint_000"
@@ -684,7 +685,7 @@ function s010_cave.HardEmmyRelocationDoor(_ARG_0_)
   else
     s010_cave.tEmmyDoor = nil
   end
-  
+
   if s010_cave.tEmmyDoor ~= nil then
     return s010_cave.tEmmyDoor[math.random(table.maxn(s010_cave.tEmmyDoor))]
   else
@@ -694,11 +695,11 @@ end
 
 function s010_cave.EmmyRelocationDoor(_ARG_0_)
 
-    
-    
-    
-    
-    
+
+
+
+
+
   if _ARG_0_.sName == "DoorEmmy03" then
     s010_cave.tEmmyDoor = {
       "LM_EmmyEntrancePoint_003",
@@ -726,7 +727,7 @@ function s010_cave.EmmyRelocationDoor(_ARG_0_)
       "LM_EmmyEntrancePoint_013"
     }
   elseif _ARG_0_.sName == "DoorEmmy06" or _ARG_0_.sName == "DoorEmmy07" then
-      
+
     local bEnabled = Blackboard.GetProp("s010_cave", "TG_TutoFocus_Caves_001:TRIGGER:Enabled")
     if bEnabled == false then
       s010_cave.tEmmyDoor = {
@@ -740,7 +741,7 @@ function s010_cave.EmmyRelocationDoor(_ARG_0_)
   else
     s010_cave.tEmmyDoor = nil
   end
-  
+
   if s010_cave.tEmmyDoor ~= nil then
     return s010_cave.tEmmyDoor[math.random(table.maxn(s010_cave.tEmmyDoor))]
   else
@@ -795,7 +796,7 @@ end
 
 
 function s010_cave.EmmyCaveTryToEndStagger()
-    
+
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
       local oActor1 =  Game.GetActor("LS_EmmyEndStagger_000")
       if oActor1 ~= nil and oActor1.LOGICSHAPE:IsActorInside(CurrentScenario.oEmmyEntity) then
@@ -821,9 +822,9 @@ s010_cave.tWaterPoolsToEnable = {
 
 function s010_cave.Event_WaterPoolInfiltration_Activate()
   print("Event_WaterPoolInfiltration started!")
-  
-  
-  
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s010_cave.tWaterPoolsToEnable) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -832,7 +833,7 @@ function s010_cave.Event_WaterPoolInfiltration_Activate()
       print("Entity " .. _FORV_4_ .. " not found")
     end
   end
-  
+
   local oActor = Game.GetActor("Watervalve_fillmap")
   if oActor ~= nil then
     Game.SetMinimapRegionVisited("Watervalve_fillmap")
@@ -841,9 +842,9 @@ end
 
 
 function s010_cave.Event_WaterPoolInfiltration_Deactivate()
-    
-    
-    
+
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s010_cave.tWaterPoolsToEnable) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
@@ -857,8 +858,8 @@ end
 
 
 
-function s010_cave.Event_EmmyPatrolFocusTutorial_DisableEmmy()  
-    
+function s010_cave.Event_EmmyPatrolFocusTutorial_DisableEmmy()
+
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     CurrentScenario.oEmmyEntity.bEnabled = false
   else
@@ -869,7 +870,7 @@ function s010_cave.Event_EmmyPatrolFocusTutorial_DisableEmmy()
 end
 
 function s010_cave.Event_EmmyWaterValveTutorial()
-    
+
   print("Event: Water valve tutorial")
   if Scenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     local oActor = Game.GetActor("LM_Emmy_WaterPlant")
@@ -882,12 +883,12 @@ function s010_cave.Event_EmmyWaterValveTutorial()
 end
 
 function s010_cave.Event_EmmyPatrolFocusTutorial()
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
     print("Event: Patrol Focus Tutorial")
@@ -988,7 +989,7 @@ end
 
 function s010_cave.OnEnter_ChangeCamera_048_C()
   local oActor = Game.GetActor("TG_ChangeCamera_048_B")
-  oActor.bEnabled = false  
+  oActor.bEnabled = false
   print("OnEnter_ChangeCamera_048_C")
   Game.SetCollisionCameraLocked("collision_camera_048_C", true)
 end
@@ -1144,7 +1145,7 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
           end
         end
     end
-    
+
     --local oActor = Game.GetActor("cutsceneplayer_37")
     --if oActor ~= nil then
     --  oActor.CUTSCENE:TryLaunchCutscene()
@@ -1156,7 +1157,7 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
         oActor.bEnabled = false
       end
     end
-    
+
     local oActor = Game.GetActor("cutsceneplayer_48")
     if oActor ~= nil then
       oActor.CUTSCENE:TryLaunchCutscene()
@@ -1167,7 +1168,7 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
       oActor.CUTSCENE:TryLaunchCutscene()
     end
   -- elseif old_subarea == "collision_camera_000" and new_subarea == "collision_camera_068" then
-    
+
   --     local oActor = Game.GetActor("cutsceneplayer_3")
   --   if oActor ~= nil then
   --     oActor.CUTSCENE:TryLaunchCutscene()
@@ -1184,13 +1185,13 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
       oActor.CUTSCENE:TryLaunchCutscene()
     end
   elseif old_subarea == "collision_camera_003" and new_subarea == "collision_camera_018" then
-    
+
   --  local oActor = Game.GetActor("cutsceneplayer_49-1")
   --  if oActor ~= nil then
   --    oActor.CUTSCENE:TryLaunchCutscene()
   --  end
   elseif old_subarea == "collision_camera_018" and new_subarea == "collision_camera_005" then
-    
+
   --  local oActor1 = Game.GetActor("cutsceneplayer_49-1")
   --  if oActor1 ~= nil then
   --    if oActor1.CUTSCENE:HasCutsceneBeenPlayed() == true then
@@ -1200,12 +1201,12 @@ function s010_cave.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new
   --      end
   --    end
   --  end
-    
+
     if not CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED then
       Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED, "b", true)
       CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED = true
     end
-  elseif new_subarea == "collision_camera_049" and 
+  elseif new_subarea == "collision_camera_049" and
       old_subarea ~= "collision_camera_090" and
       CurrentScenario.CheckEmmyAlive(CurrentScenario.oEmmyEntity) then
     -- lock CU door except when entering from the CU room if emmi is alive
@@ -1258,9 +1259,9 @@ function s010_cave.InitChainReaction()
 end
 
 function s010_cave.ChainReaction_Preparation()
-    
-    
-    
+
+
+
   Game.PlayCameraFXPreset("CHAINREACTION_MED_EXP")
   Game.PlayPresetSound("chainreaction_rumble_sound_02")
   Game.PlayVibration("props/chainreaction/chain_reaction_rumble_02.bnvib", false)
@@ -1269,15 +1270,15 @@ function s010_cave.ChainReaction_Preparation()
 end
 
 function s010_cave.ChainReaction_WaterPumpStep1()
-  
-  
+
+
   for _FORV_3_, _FORV_4_ in ipairs(s010_cave.tTriggersToEnable) do
     local oActor = Game.GetActor(_FORV_4_)
     if oActor ~= nil then
       oActor.bEnabled = true
     end
   end
-  
+
   local oActor = Game.GetActor("ev_chainreaction_cv_001")
   if oActor ~= nil then
     Game.PlayCameraFXPreset("CHAINREACTION_MED_EXP")
@@ -1289,21 +1290,21 @@ end
 
 
 function s010_cave.ChainReaction_Drop_CV_002()
-  local oActor1 = Game.GetActor("ev_chainreaction_cv_fx_006") 
+  local oActor1 = Game.GetActor("ev_chainreaction_cv_fx_006")
   if oActor1 ~= nil then
     oActor1:StartTimeline("q_001", true)
   end
-  
+
   local oActor2 = Game.GetActor("ev_chainreaction_cv_fx_007")
   if oActor2 ~= nil then
     oActor2:StartTimeline("q_delay01_001", true)
   end
-  
+
   local oActor3 = Game.GetActor("ev_chainreaction_cv_fx_011")
   if oActor3 ~= nil then
     oActor3:StartTimeline("q_delay01_002", true)
   end
-  
+
   local oActor4 = Game.GetActor("ev_chainreaction_cv_fx_008")
   if oActor4 ~= nil then
     oActor4:StartTimeline("q_002", true)
@@ -1319,37 +1320,37 @@ function s010_cave.ChainReaction_Drop_CV_003()
     Game.PlayVibration("props/chainreaction/chain_reaction_rumble_02.bnvib", false)
     oActor1.ACTIVATABLE:Activate()
   end
-  
+
   local oActor2 = Game.GetActor("ev_chainreaction_cv_fx_001")
   if oActor2 ~= nil then
     oActor2:StartTimeline("q_001", true)
   end
-  
+
   local oActor3 = Game.GetActor("ev_chainreaction_cv_fx_003")
   if oActor3 ~= nil then
     oActor3:StartTimeline("q_delay01_003", true)
   end
-  
+
   local oActor4 = Game.GetActor("ev_chainreaction_cv_fx_009")
   if oActor4 ~= nil then
     oActor4:StartTimeline("q_002", true)
   end
-  
+
   local oActor5 = Game.GetActor("ev_chainreaction_cv_fx_010")
   if oActor5 ~= nil then
     oActor5:StartTimeline("q_delay01_002", true)
   end
-  
+
   local oActor6 = Game.GetActor("ev_chainreaction_cv_fx_018")
   if oActor6 ~= nil then
     oActor6:StartTimeline("q_delay02_001", true)
   end
-  
+
   local oActor7 = Game.GetActor("ev_chainreaction_cv_fx_015")
   if oActor7 ~= nil then
    oActor7:StartTimeline("q_delay02_001", true)
   end
-  
+
   local oActor8 =  Game.GetActor("ev_chainreaction_cv_fx_016")
   if oActor8 ~= nil then
     oActor8:StartTimeline("q_delay01_002", true)
@@ -1407,22 +1408,22 @@ function s010_cave.ChainReaction_Drop_CV_005()
     Game.PlayVibration("props/chainreaction/chain_reaction_rumble_02.bnvib", false)
     oActor1.ACTIVATABLE:Activate()
   end
-  
+
   local oActor2 = Game.GetActor("ev_chainreaction_cv_fx_004")
   if oActor2 ~= nil then
     oActor2:StartTimeline("q_001", true)
   end
-  
+
   local oActor3 = Game.GetActor("ev_chainreaction_cv_fx_000")
   if oActor3 ~= nil then
     oActor3:StartTimeline("q_delay01_001", true)
   end
-  
+
   local oActor4 = Game.GetActor("ev_chainreaction_cv_fx_005")
   if oActor4 ~= nil then
     oActor4:StartTimeline("q_delay02_003", true)
   end
-  
+
   local oActor5 = Game.GetActor("ev_chainreaction_cv_fx_002")
   if oActor5 ~= nil then
     oActor5:StartTimeline("q_002", true)
@@ -1435,12 +1436,12 @@ function s010_cave.ChainReaction_Drop_CV_006()
   if oActor1 ~= nil then
     oActor1:StartTimeline("q_001", true)
   end
-  
+
   local oActor2 = Game.GetActor("ev_chainreaction_cv_fx_012")
   if oActor2 ~= nil then
     oActor2:StartTimeline("q_003", true)
   end
-  
+
   local oActor3 = Game.GetActor("ev_chainreaction_cv_fx_013")
   if oActor3 ~= nil then
     oActor3:StartTimeline("q_004", true)
@@ -1449,12 +1450,12 @@ end
 
 
 function s010_cave.ChainReaction_BigExplosion()
-  
+
   Game.StopCameraFXPreset("CHAINREACTION_SOFT")
   Game.PlayCameraFXPreset("QUEEN_SHAKING_JUMP")
   Game.PlayPresetSound("events/chainreaction_bigexplosion")
   Game.PlayVibration("props/chainreaction/chainreaction_bigexplosion.bnvib", false)
-  
+
   local oActor = Game.GetActor("env_heat_gen_001_CR_END")
   if oActor ~= nil then
     oActor.bEnabled = true
@@ -1465,27 +1466,27 @@ end
 function s010_cave.ChainReaction_ChangeFinalSetup()
   Game.PopSetup("ChainReaction", true, true)
   Game.PushSetup("Post_ChainReaction", true, true)
-  
+
   local oActor1 = Game.GetActor("ev_chainreaction_cv_004")
   if oActor1 ~= nil then
     oActor1.CHANGE_STAGE_NAVMESH_ITEM:RefreshNavMeshState()
   end
-  
+
   local oActor2 = Game.GetActor("ev_chainreaction_cv_004_a")
   if oActor2 ~= nil then
    oActor2.CHANGE_STAGE_NAVMESH_ITEM:RefreshNavMeshState()
   end
-  
+
   local oActor3 = Game.GetActor("ev_chainreaction_cv_009")
   if oActor3 ~= nil then
     oActor3.CHANGE_STAGE_NAVMESH_ITEM:RefreshNavMeshState()
   end
-  
+
   local oActor4 = Game.GetActor("ev_chainreaction_cv_010")
   if oActor4 ~= nil then
     oActor4.CHANGE_STAGE_NAVMESH_ITEM:RefreshNavMeshState()
   end
-  
+
   local oActor5 = Game.GetActor("db_reg_cv_022")
   if oActor5 ~= nil then
     oActor5.NAVMESHITEM:OverrideInitialStage("initial")
@@ -1512,14 +1513,14 @@ function s010_cave.OnEnter_ChainReaction_ChangeCamera(_ARG_0_, _ARG_1_)
   local L3_2 = string.gsub(_ARG_0_.sName, "TG_ChainReaction_Camera_", "env_heat_gen_001_CR_")
   local L4_2 =  Game.GetActor(L3_2)
   L12_1 = L3_2
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
   if L4_2 ~= nil then
     if L4_2.bEnabled == false then
       L4_2.bEnabled = true
@@ -1605,24 +1606,24 @@ end
 
 
 function s010_cave.OnEnter_StartCUProtoEmmy()
-    
-    
-    
+
+
+
   local oActor1 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_002")
   if oActor1 ~= nil then
     oActor1.bEnabled = false
   end
-  
-  local oActor2 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_001") 
+
+  local oActor2 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_001")
   if oActor2 ~= nil then
     oActor2.bEnabled = false
   end
-  
+
   local oActor3 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_003")
   if oActor3 ~= nil then
     oActor3.bEnabled = true
   end
-  
+
   local oActor4 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR")
   if oActor4 ~= nil then
     oActor4.bEnabled = false
@@ -1630,23 +1631,23 @@ function s010_cave.OnEnter_StartCUProtoEmmy()
 end
 
 function s010_cave.OnEnter_EndCUProtoEmmy()
-    
-    
+
+
   local oActor1 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_002")
   if oActor1  ~= nil then
     oActor1.bEnabled = true
   end
-  
+
   local oActor2 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_001")
   if oActor2 ~= nil then
     oActor2.bEnabled = true
   end
-  
+
   local oActor3 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR_003")
   if oActor3 ~= nil then
     oActor3.bEnabled = false
   end
-  
+
   local oActor4 = Game.GetActor("TG_PROTOEMMY_BEHAVIOR")
   if oActor4 ~= nil then
     oActor4.bEnabled = true
@@ -1668,11 +1669,11 @@ end
 
 
 function s010_cave.OnEnter_CoolDownEvent(_ARG_0_, _ARG_1_)
-  
-  
+
+
   _ARG_0_.bEnabled = false
   Game.AddSF(0.8, "s010_cave.Delayed_CoolDownEventCutscenePlaceholder", "")
-  
+
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
     oPlayer.INPUT:IgnoreInput(true, false, "CoolDownCutscene")
@@ -1680,11 +1681,11 @@ function s010_cave.OnEnter_CoolDownEvent(_ARG_0_, _ARG_1_)
 end
 
 function s010_cave.Delayed_CoolDownEventCutscenePlaceholder()
-  
-    
+
+
   GUI.ShowMessage("#CUT_COOLDOWN", true, "s010_cave.Skipped_CoolDownEventCutscenePlaceholder")
-  
-  local oPlayer = Game.GetPlayer() 
+
+  local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
     oPlayer.INPUT:IgnoreInput(false, false, "CoolDownCutscene")
   end
@@ -1734,7 +1735,7 @@ end
 
 
 function s010_cave.OnBefore_Cutscene_5_Begins()
-  local oActor = Game.GetActor("cutsceneplayer_5") 
+  local oActor = Game.GetActor("cutsceneplayer_5")
   if oActor ~= nil then
     oActor.CUTSCENE:SetTakePlayMode(4, "Loop")
   end
@@ -1769,12 +1770,12 @@ function s010_cave.OpenTrapDoorCutscene50()
 end
 
 function s010_cave.Check_WakeUpCU_Completed(_ARG_0_)
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
   if _ARG_0_.sName == "DoorEmmy11" and not CAVES_CENTRAL_UNIT_WAKE_UP_CUTSCENE_LAUNCHED then
     return false
   else
@@ -1885,7 +1886,7 @@ function s010_cave.OnCutscene0007Finished()
 end
 
 function s010_cave.OnScorpiusPresentationFinished()
-  local oActor = Game.GetActor("SP_Scorpius_scorpius") 
+  local oActor = Game.GetActor("SP_Scorpius_scorpius")
   if oActor ~= nil then
     oActor.AI:NotifyAfterPresentation()
   end
@@ -1904,11 +1905,11 @@ function s010_cave.OnEnter_FinishScorpiusEvent(_ARG_0_, _ARG_1_)
   local oActor1 = Game.GetActor("SG_Bigfist_000")
   if oActor1 ~= nil then
     oActor1.SPAWNGROUP:EnableSpawnGroup()
-  end  
+  end
   local oActor2 = Game.GetActor("SG_ScorpiusEventEnemies")
   if oActor2 ~= nil then
     oActor2.SPAWNGROUP:DisableSpawnGroup()
-  end  
+  end
   local oActor3 = Game.GetActor("TG_EnableEnemiesAfterScorpiusTail")
   if oActor3 ~= nil then
     oActor3.bEnabled = true
@@ -1943,10 +1944,10 @@ end
 
 function s010_cave.OnEnter_ActivatePostEmmyEnemies(_ARG_0_, _ARG_1_)
   local oActor1 = Game.GetActor("SG_PostEmmy_002")
-  local oActor2 = Game.GetActor("SG_PostEmmy_003") 
+  local oActor2 = Game.GetActor("SG_PostEmmy_003")
   if oActor1 ~= nil then
     oActor1.SPAWNGROUP:EnableSpawnGroup()
-  end  
+  end
   if oActor2 ~= nil then
     oActor2.SPAWNGROUP:EnableSpawnGroup()
   end
@@ -1965,7 +1966,7 @@ end
 
 function s010_cave.FakeAdamDialogueBegins()
   local oActor = Game.GetActor("PRP_CV_AccessPoint001_WeightPlate")
-  
+
   if oActor ~= nil then
     oActor.SMARTOBJECT:SetStateAfterCutScene()
   end
@@ -1996,8 +1997,8 @@ end
 
 function s010_cave.Enter_CWX_Arena()
   local oActor = Game.GetActor("LM_EnteringCWXArena")
-  local oPlayer = Game.GetPlayer() 
-  
+  local oPlayer = Game.GetPlayer()
+
   if oPlayer ~= nil and oActor ~= nil then
     oPlayer.INPUT:IgnoreInput(true, false, "Enter_CWX_Arena")
     oPlayer.ANIMATION:SetAction("fall", true)
@@ -2009,7 +2010,7 @@ end
 
 function s010_cave.Exit_CWX_Arena()
   local oPlayer = Game.GetPlayer()
-  
+
   if oPlayer ~= nil then
     oPlayer.INPUT:IgnoreInput(false, false, "Enter_CWX_Arena")
   end
@@ -2024,7 +2025,7 @@ function s010_cave.EnablePostScorpiusTrigger()
   local oActor1 = Game.GetActor("TG_AfterScorpiusBattle")
   if oActor1 ~= nil then
     oActor1.bEnabled = true
-  end  
+  end
   local oActor2 = Game.GetActor("TG_ActivateArenaSpawngroup")
   if oActor2 ~= nil then
     oActor2.bEnabled = true
@@ -2065,18 +2066,18 @@ end
 function s010_cave.ActivationMeleeTutoReminder_delayed()
   local oActor1 = Game.GetActor("MeleeTutoTriggerEnter")
   local oActor2 = Game.GetActor("MeleeTutoTriggerExit")
-  
-  
+
+
   if oActor1 ~= nil and oActor2 ~= nil then
     oActor1.bEnabled = true
     oActor2.bEnabled = true
   end
-  
+
   local oActor3 = Game.GetActor("MeleeTutoTriggerExit_002")
   if oActor3 ~= nil then
     oActor3.bEnabled = true
   end
-  
+
   local oActor4 = Game.GetActor("MeleeTutoTriggerExit_003")
   if oActor4 ~= nil then
     oActor4.bEnabled = true
@@ -2141,9 +2142,9 @@ end
 function s010_cave.OnTutoMapOptionsBegins(_ARG_0_)
   local oActor1 = Game.GetActor("MapOptionsTutoTriggerEnter")
   local oActor2 = Game.GetActor("MapOptionsTutoTriggerExit")
-  
-  
-  
+
+
+
   if oActor1 ~= nil and oActor2 ~= nil then
     if not CAVES_TUTO_MAP_DONE and _ARG_0_ then
       oActor1.bEnabled = true
@@ -2165,9 +2166,9 @@ end
 function s010_cave.OnTutoMapRoomBegins(_ARG_0_)
   local oActor1 = Game.GetActor("MapRoomTutoTriggerEnter")
   local oActor2 = Game.GetActor("MapRoomTutoTriggerExit")
-  
-  
-  
+
+
+
   if oActor1 ~= nil and oActor2 ~= nil then
     if not CAVES_TUTO_MAP_ROOM_DONE and _ARG_0_ then
       oActor1.bEnabled = true

@@ -8,23 +8,24 @@ s090_skybase.HasRandomizerChanges = true
 function s090_skybase.InitFromBlackboard()
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_FLOOR_SLIDE", "f", 1)
   Game.ReinitPlayerFromBlackboard()
+  Scenario.InitFromBlackboard()
   Game.PopSetup("ChangeCamera_002_Distance", true, true)
 end
 
 
 function s090_skybase.SetupDebugGameBlackboard()
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_CURRENT_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_MAX_SPECIAL_ENERGY", "f", 1000)
   Blackboard.SetProp("PLAYER_INVENTORY", "ITEM_SPECIAL_ENERGY", "f", 0)
@@ -78,16 +79,16 @@ end
 
 function s090_skybase.OnComanderElevatorFinished()
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
     Game.AddSF(0.5, "s090_skybase.CommanderCutscenePresentation", "")
 end
 
@@ -100,8 +101,8 @@ end
 
 
 function s090_skybase.Delayed_OnComanderElevatorFinished()
-    
-    
+
+
   GUI.ShowMessage("#COMMANDER_CUTSCENE_ACCESSPOINT_REVEAL", true, "s090_skybase.OnComanderElevatorFinished_MessageSkipped")
   local oPlayer = Game.GetPlayer()
   if oPlayer ~= nil then
@@ -219,20 +220,20 @@ function s090_skybase.cutsceneplayer_101_right()
   end
 end
 
-function s090_skybase.cutsceneplayer_108_end()    
-  local oPlayer = Game.GetPlayer()  
-  if oPlayer ~= nil then      
-    local L1_2 = oPlayer.INVENTORY    
+function s090_skybase.cutsceneplayer_108_end()
+  local oPlayer = Game.GetPlayer()
+  if oPlayer ~= nil then
+    local L1_2 = oPlayer.INVENTORY
     if L1_2 ~= nil then
       L1_2:SetItemAmount("ITEM_HYPER_SUIT", 1, true)
     end
-    
+
     local oModelUpdater = oPlayer.MODELUPDATER
     if oModelUpdater ~= nil then
       oModelUpdater.sModelAlias = "Hyper"
       oModelUpdater.ForceUpdate()
     end
-    
+
     Game.LoadScenario("c10_samus", "s080_shipyard", "SP_Checkpoint_CommanderX", "", 1)
     Game.PlayCutsceneOnScenarioLoaded("cutsceneplayer_108", true, true, true, false, false, "", "", 0, 0, 0)
   end
