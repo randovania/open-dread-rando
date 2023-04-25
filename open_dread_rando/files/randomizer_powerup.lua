@@ -257,6 +257,22 @@ function RandomizerPowerBomb.OnPickedUp(actor, progression)
     end
 end
 
+-- Flash Shift (always) + Flash Shift Upgrades (if required mains are disabled)
+RandomizerFlashShift = {}
+setmetatable(RandomizerFlashShift, {__index = RandomizerPowerup})
+function RandomizerFlashShift.OnPickedUp(actor, progression)
+    progression = progression or {{item_id = "ITEM_UPGRADE_FLASH_SHIFT_CHAIN", quantity = 0}}
+    if actor ~= nil then
+        -- actor pickups grant the quantity directly; bosses do not
+        progression[1].quantity = 0
+    end
+    local granted = RandomizerPowerup.OnPickedUp(actor, progression)
+    if granted ~= nil and granted.item_id == "ITEM_UPGRADE_FLASH_SHIFT_CHAIN" then
+        RandomizerPowerup.SetItemAmount("ITEM_GHOST_AURA", 1)
+    end
+    RandomizerPowerup.ApplyTunableChanges()
+end
+
 function RandomizerPowerup.ToggleInputsOnPickedUp(actor, progression, item, SFs)
     SFs = SFs or {}
     local has_item_already = RandomizerPowerup.HasItem(item)

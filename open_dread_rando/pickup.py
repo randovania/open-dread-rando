@@ -19,11 +19,16 @@ EXPANSION_ITEM_IDS = {
     "ITEM_WEAPON_MISSILE_MAX",
     "ITEM_WEAPON_POWER_BOMB_MAX",
     "ITEM_WEAPON_POWER_BOMB",
+    "ITEM_UPGRADE_FLASH_SHIFT_CHAIN",
 
     # For multiworld
     "ITEM_NONE",
 }
 
+MAIN_ITEM_AMMO_IDS = {
+    "ITEM_WEAPON_POWER_BOMB": "ITEM_WEAPON_POWER_BOMB_MAX",
+    "ITEM_GHOST_AURA": "ITEM_UPGRADE_FLASH_SHIFT_CHAIN",
+}
 
 @functools.cache
 def _read_template_powerup():
@@ -105,8 +110,8 @@ class ActorPickup(BasePickup):
 
         script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup)
 
-        if item_id == "ITEM_WEAPON_POWER_BOMB":
-            item_id = "ITEM_WEAPON_POWER_BOMB_MAX"
+        if item_id in MAIN_ITEM_AMMO_IDS:
+            item_id = MAIN_ITEM_AMMO_IDS[item_id]
 
         set_custom_params["Param1"]["value"] = item_id
         set_custom_params["Param2"]["value"] = quantity

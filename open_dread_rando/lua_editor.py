@@ -20,6 +20,7 @@ SPECIFIC_CLASSES = {
     "ITEM_SPEED_BOOSTER": "RandomizerSpeedBooster",
     "ITEM_MULTILOCKON": "RandomizerStormMissile",
     "ITEM_LIFE_SHARDS": "RandomizerEnergyPart",
+    "ITEM_GHOST_AURA": "RandomizerFlashShift",
 }
 
 
