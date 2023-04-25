@@ -49,18 +49,18 @@ def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
         # Ice Missiles typically deal 1.33x the damage as Super Missiles, so their relative factor must be 1/1.33
         #   that of Super Missiles (or 3/4, or 0.75)
 
-        # Base factors will yield the correct ratio such that wave and plasma deal identical damage
+        # Base factors will yield the correct ratio such that wave and plasma deal identical damage (Ice uses standard)
         base_factor.fWaveBeamFactor = 0.625
         base_factor.fChargeWaveBeamFactor = 0.625
         base_factor.fMeleeChargeWaveBeamFactor = 0.625
-        base_factor.fIceMissileFactor = 0.75
+        base_factor.fIceMissileFactor = 1.0
 
-        # All other factors will be reset to 1.0
+        # All melee-counter factors will be reset to 1.0, except Ice, which uses the factor explained above
         for factor in counter_factors:
             factor.fWaveBeamFactor = 1.0
             factor.fChargeWaveBeamFactor = 1.0
             factor.fMeleeChargeWaveBeamFactor = 1.0
-            factor.fIceMissileFactor = 1.0
+            factor.fIceMissileFactor = 0.75
     else:
         # Debuffs all weapons prior to Wave Beam and Ice Missiles using the same damage factor as Wave Beam and
         # Ice Missiles have in vanilla
