@@ -34,26 +34,42 @@ def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
 
     life_component = rb_bmsad.raw.property.components.LIFE
     ai_component = rb_bmsad.raw.property.components.AI
-    factors = [
-        life_component.fields.fields.oDamageSourceFactor,
-        ai_component.fields.fields.oDamageSourceFactorShortShootingGrab,
-        ai_component.fields.fields.oDamageSourceFactorLongShootingGrab,
-    ]
 
     if mode == "consistent_high":
+        base_factor = life_component.fields.fields.oDamageSourceFactor # Base damage during regular fight
+        counter_factors = [
+            ai_component.fields.fields.oDamageSourceFactorShortShootingGrab, # Most counter cutscenes
+            ai_component.fields.fields.oDamageSourceFactorLongShootingGrab, # Unknown alternate counter cutscene
+        ]
+
         # Buffs Wave Beam and Ice Missiles to have the same damage VALUES (not factors) as vanilla Plasma Beam and
         #   Ice Missiles, respectively.
-        # Wave Beam typically deals 1.6x the damage as Plasma Beam, so its factor must be 1/1.6 (or 5/8, or 0.625)
-        # Ice Missiles typically deal 1.33x the damage as Super Missiles,
-        #   so their factor must be 1/1.33 (or 3/4, or 0.75)
-        for factor in factors:
-            factor.fWaveBeamFactor = 0.625
-            factor.fChargeWaveBeamFactor = 0.625
-            factor.fMeleeChargeWaveBeamFactor = 0.625
+        # Wave Beam typically deals 1.6x the damage as Plasma Beam, so its relative factor must be 1/1.6 that of
+        #   Plasma Beam (or 5/8, or 0.625)
+        # Ice Missiles typically deal 1.33x the damage as Super Missiles, so their relative factor must be 1/1.33
+        #   that of Super Missiles (or 3/4, or 0.75)
+
+        # Base factors will yield the correct ratio such that wave and plasma deal identical damage (Ice uses standard)
+        base_factor.fWaveBeamFactor = 0.625
+        base_factor.fChargeWaveBeamFactor = 0.625
+        base_factor.fMeleeChargeWaveBeamFactor = 0.625
+        base_factor.fIceMissileFactor = 1.0
+
+        # All melee-counter factors will be reset to 1.0, except Ice, which uses the factor explained above
+        for factor in counter_factors:
+            factor.fWaveBeamFactor = 1.0
+            factor.fChargeWaveBeamFactor = 1.0
+            factor.fMeleeChargeWaveBeamFactor = 1.0
             factor.fIceMissileFactor = 0.75
     else:
         # Debuffs all weapons prior to Wave Beam and Ice Missiles using the same damage factor as Wave Beam and
         # Ice Missiles have in vanilla
+        factors = [
+            life_component.fields.fields.oDamageSourceFactor, # Base damage during regular fight
+            ai_component.fields.fields.oDamageSourceFactorShortShootingGrab, # Most counter cutscenes
+            ai_component.fields.fields.oDamageSourceFactorLongShootingGrab, # Unknown alternate counter cutscene
+        ]
+
         for factor in factors:
             for beam in ["fPowerBeamFactor", "fWideBeamFactor", "fPlasmaBeamFactor"]:
                 factor[beam] = factor.fWaveBeamFactor
