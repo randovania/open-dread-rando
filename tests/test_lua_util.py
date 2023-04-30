@@ -20,8 +20,8 @@ def test_template_replacement():
     generated_code = lua_util.replace_lua_template("randomizer_progressive_template.lua", {
         "name": "RandomizerTestPowerup",
         "parent": "RandomizerPowerup",
-        "progression": [
-            { "item_id": lua_util.wrap_string("ITEM_TEST_POWERUP"), "quantity": 1 },
+        "resources": [
+            [{ "item_id": lua_util.wrap_string("ITEM_TEST_POWERUP"), "quantity": 1 }],
         ],
     })
 

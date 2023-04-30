@@ -6,6 +6,6 @@ function T__name__T.main()
 end
 function T__name__T.OnPickedUp(actor)
     Game.LogWarn(0, 'picked up TEMPLATE("name")')
-    local progression = TEMPLATE("progression")
-    TEMPLATE("parent").OnPickedUp(actor, progression)
+    local resources = TEMPLATE("resources")
+    TEMPLATE("parent").OnPickedUp(actor, resources)
 end

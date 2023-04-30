@@ -36,20 +36,10 @@
                     "resources": {
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "item_id": {
-                                    "$ref": "#/$defs/item_id"
-                                },
-                                "quantity": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "item_id",
-                                "quantity"
-                            ],
-                            "additionalProperties": false
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/item"
+                            }
                         }
                     }
                 },
@@ -697,6 +687,22 @@
                 "ITEM_UPGRADE_FLASH_SHIFT_CHAIN",
                 "ITEM_UPGRADE_SPEED_BOOST_CHARGE"
             ]
+        },
+        "item": {
+            "type": "object",
+            "properties": {
+                "item_id": {
+                    "$ref": "#/$defs/item_id"
+                },
+                "quantity": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "item_id",
+                "quantity"
+            ],
+            "additionalProperties": false
         },
         "position": {
             "type": "object",

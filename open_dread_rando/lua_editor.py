@@ -45,15 +45,17 @@ class LuaEditor:
 
     def get_script_class(self, pickup: dict, boss: bool = False, actordef_name: str = "") -> str:
         pickup_resources = pickup["resources"]
-        parent = self.get_parent_for(pickup_resources[0]["item_id"])
-        if not boss and len(pickup_resources) == 1:
+        parent = self.get_parent_for(pickup_resources[0][0]["item_id"])
+
+        if not boss and len(pickup_resources) == 1 and len(pickup_resources[0]) == 1:
+            # Single-item pickup; don't include progressive template
             return parent
 
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
 
         hashable_progression = "_".join([
-            f'{res["item_id"]}_{res["quantity"]}'
+            f'{res[0]["item_id"]}_{res[0]["quantity"]}'
             for res in pickup_resources
         ]).replace("-", "MINUS")
 
@@ -63,15 +65,18 @@ class LuaEditor:
         class_name = f"RandomizerProgressive{hashable_progression}"
 
         resources = [
-            {
-                "item_id": lua_util.wrap_string(res["item_id"]),
-                "quantity": res["quantity"]
-            }
-            for res in pickup_resources
+            [
+                {
+                    "item_id": lua_util.wrap_string(res["item_id"]),
+                    "quantity": res["quantity"]
+                }
+                for res in resource_list
+            ]
+            for resource_list in pickup_resources
         ]
         replacement = {
             "name": class_name,
-            "progression": resources,
+            "resources": resources,
             "parent": parent,
         }
         self.add_progressive_class(replacement)
@@ -90,8 +95,8 @@ class LuaEditor:
                 "alias": lua_util.wrap_string(model_name),
             }
             for resource, model_name in itertools.chain(
-                zip(pickup["resources"], pickup["model"][1:]),
-                [(pickup["resources"][-1], pickup["model"][-1])],
+                zip([r[0] for r in pickup["resources"]], pickup["model"][1:]),
+                [(pickup["resources"][-1][0], pickup["model"][-1])],
             )
         ]
         progressive_models.reverse()

@@ -25,11 +25,6 @@ EXPANSION_ITEM_IDS = {
     "ITEM_NONE",
 }
 
-MAIN_ITEM_AMMO_IDS = {
-    "ITEM_WEAPON_POWER_BOMB": "ITEM_WEAPON_POWER_BOMB_MAX",
-    "ITEM_GHOST_AURA": "ITEM_UPGRADE_FLASH_SHIFT_CHAIN",
-}
-
 @functools.cache
 def _read_template_powerup():
     with Path(__file__).parent.joinpath("templates", "template_powerup_bmsad.json").open() as f:
@@ -61,8 +56,8 @@ class ActorPickup(BasePickup):
         script: dict = bmsad["property"]["components"]["SCRIPT"]
 
         set_custom_params: dict = pickable["functions"][0]["params"]
-        item_id: str = self.pickup["resources"][0]["item_id"]
-        quantity: float = self.pickup["resources"][0]["quantity"]
+        item_id: str = self.pickup["resources"][0][0]["item_id"]
+        quantity: float = self.pickup["resources"][0][0]["quantity"]
 
         if item_id == "ITEM_ENERGY_TANKS":
             quantity *= self.configuration["energy_per_tank"]
@@ -110,19 +105,12 @@ class ActorPickup(BasePickup):
 
         script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup)
 
-        if item_id in MAIN_ITEM_AMMO_IDS:
-            item_id = MAIN_ITEM_AMMO_IDS[item_id]
-
         set_custom_params["Param1"]["value"] = item_id
         set_custom_params["Param2"]["value"] = quantity
 
         return bmsad
 
-    def patch_progressive_pickup(self, bmsad: dict) -> dict:
-        item_ids = {resource["item_id"] for resource in self.pickup["resources"]}
-        if not EXPANSION_ITEM_IDS.isdisjoint(item_ids):
-            raise NotImplementedError("Progressive pickups cannot include expansions.")
-
+    def patch_multi_item_pickup(self, bmsad: dict) -> dict:
         pickable: dict = bmsad["property"]["components"]["PICKABLE"]
         script: dict = bmsad["property"]["components"]["SCRIPT"]
 
@@ -227,10 +215,10 @@ class ActorPickup(BasePickup):
         pickable["fields"]["fields"]["sOnPickTankUnknownCaption"] = self.pickup["caption"]
 
         # Update given item
-        if len(self.pickup["resources"]) == 1:
+        if len(self.pickup["resources"]) == 1 and len(self.pickup["resources"][0]) == 1:
             new_template = self.patch_single_item_pickup(new_template)
         else:
-            new_template = self.patch_progressive_pickup(new_template)
+            new_template = self.patch_multi_item_pickup(new_template)
 
         new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{self.pickup_id}.bmsad"
         editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
@@ -265,18 +253,13 @@ class ActorDefPickup(BasePickup):
         )
 
     def _patch_actordef_pickup(self, editor: PatcherEditor, item_id_field: str) -> tuple[str, Bmsad]:
-        resources = self.pickup["resources"]
-        item_id: str = resources[0]["item_id"]
-
-        # if len(resources) > 1 or resources[0]["quantity"] > 1 or item_id in EXPANSION_ITEM_IDS:
-        item_id = "ITEM_NONE"
         self._patch_actordef_pickup_script_help(editor)
 
         bmsad_path: str = self.pickup["pickup_actordef"]
         actordef = editor.get_file(bmsad_path, Bmsad)
 
         ai_component = actordef.raw["property"]["components"]["AI"]
-        ai_component["fields"]["fields"][item_id_field] = item_id
+        ai_component["fields"]["fields"][item_id_field] = "ITEM_NONE"
 
         patch_text(editor, self.pickup["pickup_string_key"], self.pickup["caption"])
 
@@ -308,7 +291,7 @@ class CoreXPickup(ActorDefPickup):
 class CorpiusPickup(ActorDefPickup):
     def patch(self, editor: PatcherEditor):
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnKilled")
-        if self.pickup["resources"][0]["item_id"] not in EXPANSION_ITEM_IDS:
+        if self.pickup["resources"][0][0]["item_id"] not in EXPANSION_ITEM_IDS:
             actordef.raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
 
         editor.replace_asset(bmsad_path, actordef)
