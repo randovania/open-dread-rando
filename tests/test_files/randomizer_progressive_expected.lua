@@ -8,8 +8,10 @@ function RandomizerTestPowerup.OnPickedUp(actor)
     Game.LogWarn(0, 'picked up RandomizerTestPowerup')
     local resources = {
 {
+{
 item_id = "ITEM_TEST_POWERUP",
 quantity = 1,
+},
 },
 }
     RandomizerPowerup.OnPickedUp(actor, resources)
