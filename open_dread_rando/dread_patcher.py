@@ -104,7 +104,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
 
 def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     py_dict: dict = configuration["cosmetic_patches"]["lua"]["camera_names_dict"]
-    
+
     file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}, True).encode("ascii")
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
@@ -113,7 +113,7 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
 
     for i, pickup in enumerate(pickups_config):
-        LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0]["item_id"])
+        LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0][0]["item_id"])
         try:
             pickup_object_for(lua_scripts, pickup, i, configuration).patch(editor)
         except NotImplementedError as e:

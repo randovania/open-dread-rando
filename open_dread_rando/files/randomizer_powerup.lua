@@ -43,7 +43,7 @@ function RandomizerPowerup.MarkLocationCollected(locationIdentifier)
     Blackboard.SetProp(playerSection, propName, "b", true)
 end
 
-function RandomizerPowerup.OnPickedUp(actor, progression)
+function RandomizerPowerup.OnPickedUp(actor, resources)
     RandomizerPowerup.Self = actor
     local name = "Boss"
     if actor ~= nil then
@@ -52,14 +52,18 @@ function RandomizerPowerup.OnPickedUp(actor, progression)
     end
 
     Game.LogWarn(0, "Collected pickup: " .. name)
-    local granted = RandomizerPowerup.ProgressivePickup(actor, progression)
+    local granted = RandomizerPowerup.HandlePickupResources(resources)
+
     -- RandomizerPowerup.ChangeSuit()
-    RandomizerPowerup.IncreaseEnergy(granted)
-    RandomizerPowerup.IncreaseAmmo(granted)
 
-    RandomizerPowerup.CheckArtifacts(granted)
+    for _, resource in ipairs(granted) do
+        RandomizerPowerup.IncreaseEnergy(resource)
+        RandomizerPowerup.IncreaseAmmo(resource)
+
+        RandomizerPowerup.CheckArtifacts(resource)
+    end
+
     RandomizerPowerup.ApplyTunableChanges()
-
     Scenario.UpdateProgressiveItemModels()
     RL.UpdateRDVClient(false)
     return granted
@@ -80,30 +84,48 @@ function RandomizerPowerup.RecoverInput()
     end
 end
 
-function RandomizerPowerup.ProgressivePickup(actor, progression)
+function RandomizerPowerup.HandlePickupResources(progression)
     progression = progression or {}
-    local loop = false
+
+    local alwaysGrant = false
 
     if #progression == 0 then
-        return nil
+        return {}
     elseif #progression == 1 then
-        loop = true
+        alwaysGrant = true
     end
 
-    local data = "Progression: "
-    for _, resource in ipairs(progression) do
-        data = data .. resource.item_id .. " (" .. resource.quantity .. ") / "
-    end
-    Game.LogWarn(0, data)
-
-    for _, resource in ipairs(progression) do
-        local current = RandomizerPowerup.GetItemAmount(resource.item_id)
-        if loop or current < resource.quantity then
-            Game.LogWarn(0, "Granting " .. resource.quantity .. " " .. resource.item_id)
-            RandomizerPowerup.IncreaseItemAmount(resource.item_id, resource.quantity)
-            return resource
+    Game.LogWarn(0, "Resources:")
+    for _, resource_list in ipairs(progression) do
+        local data = "  - "
+        for _, resource in ipairs(resource_list) do
+            data = data .. resource.item_id .. " (" .. resource.quantity .. ") / "
         end
+        Game.LogWarn(0, data)
     end
+
+    -- For each progression stage, if the player does not have the FIRST item in that stage, the whole stage is granted
+    for _, resource_list in ipairs(progression) do
+        -- Check if we need to grant anything from this progression stage
+
+        if #resource_list > 0 then
+            local current = RandomizerPowerup.GetItemAmount(resource_list[1].item_id)
+            local shouldGrant = alwaysGrant or current < resource_list[1].quantity
+
+            if shouldGrant then
+                for _, resource in ipairs(resource_list) do
+                    Game.LogWarn(0, "Granting " .. resource.quantity .. " " .. resource.item_id)
+                    RandomizerPowerup.IncreaseItemAmount(resource.item_id, resource.quantity)
+                end
+
+                return resource_list
+            end
+        end
+
+        -- Otherwise, loop to next progression stage (or fall out of loop)
+    end
+
+    return {} -- nothing granted after final stage of progression is reached
 end
 
 function RandomizerPowerup.ChangeSuit()
@@ -140,12 +162,12 @@ end
 MAX_ENERGY = 1499
 function RandomizerPowerup.IncreaseEnergy(resource)
     -- No resource, quit
-    if resource == nil then return end
+    if not resource then return end
+
     local item_id = resource.item_id
 
     -- Not etank or epart, quit
     if item_id ~= "ITEM_ENERGY_TANKS" and item_id ~= "ITEM_LIFE_SHARDS" then return end
-
 
     local energy = Init.fEnergyPerTank
 
@@ -178,7 +200,8 @@ function RandomizerPowerup.IncreaseEnergy(resource)
 end
 
 function RandomizerPowerup.IncreaseAmmo(resource)
-    if resource == nil then return end
+    if not resource then return end
+
     local current_id = nil
 
     if resource.item_id == "ITEM_WEAPON_POWER_BOMB_MAX" then
@@ -193,12 +216,12 @@ function RandomizerPowerup.IncreaseAmmo(resource)
 end
 
 function RandomizerPowerup.CheckArtifacts(resource)
-    if resource == nil then return end
+    if not resource then return end
     if Init.iNumRequiredArtifacts == 0 then return end
     if RandomizerPowerup.HasItem("ITEM_METROIDNIZATION") then return end
 
     if resource.item_id:find("ITEM_RANDO_ARTIFACT", 1, true) then
-        GUI.AddEmmyMissionLogEntry("#MLOG_"..resource.item_id)
+        GUI.AddEmmyMissionLogEntry("#MLOG_" .. resource.item_id)
     end
 
     -- check for all artifact items, which are numbered. if all are collected, grant metroidnization
@@ -242,19 +265,32 @@ function RandomizerPowerup._ApplyTunableChanges()
     end
 end
 
--- Main PBs (always) + PB expansions (if required mains are disabled)
+-- Main PBs
 RandomizerPowerBomb = {}
 setmetatable(RandomizerPowerBomb, {__index = RandomizerPowerup})
 function RandomizerPowerBomb.OnPickedUp(actor, progression)
-    progression = progression or {{item_id = "ITEM_WEAPON_POWER_BOMB_MAX", quantity = 0}}
-    if actor ~= nil then
-        -- actor pickups grant the quantity directly; bosses do not
-        progression[1].quantity = 0
+    progression = progression or {{{ item_id = "ITEM_WEAPON_POWER_BOMB_MAX", quantity = 0 }}}
+    RandomizerPowerup.OnPickedUp(actor, progression)
+end
+
+-- Flash Shift
+RandomizerFlashShift = {}
+setmetatable(RandomizerFlashShift, {__index = RandomizerPowerup})
+function RandomizerFlashShift.OnPickedUp(actor, progression)
+    progression = progression or {{{item_id = "ITEM_UPGRADE_FLASH_SHIFT_CHAIN", quantity = 0}}}
+
+    local hasFlashShift = RandomizerPowerup.HasItem("ITEM_GHOST_AURA")
+
+    for _, resource_list in ipairs(progression) do
+        for _, resource in ipairs(resource_list) do
+            if resource.item_id == "ITEM_UPGRADE_FLASH_SHIFT_CHAIN" and hasFlashShift then
+                -- Subsequent Flash Shift main items do not grant additional chains
+                resource.quantity = 0
+            end
+        end
     end
-    local granted = RandomizerPowerup.OnPickedUp(actor, progression)
-    if granted ~= nil and granted.item_id == "ITEM_WEAPON_POWER_BOMB_MAX" then
-        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_POWER_BOMB", 1)
-    end
+
+    RandomizerPowerup.OnPickedUp(actor, progression)
 end
 
 function RandomizerPowerup.ToggleInputsOnPickedUp(actor, progression, item, SFs)
@@ -303,7 +339,11 @@ end
 RandomizerEnergyPart = {}
 setmetatable(RandomizerEnergyPart, {__index = RandomizerPowerup})
 function RandomizerEnergyPart.OnPickedUp(actor, progression)
+    Game.LogWarn(0, "RandomizerEnergyPart " .. type(progression))
+    progression = progression or {{{ item_id = "ITEM_LIFE_SHARDS", quantity = 1 }}}
     if Init.bImmediateEnergyParts or not actor then
-        RandomizerPowerup.IncreaseEnergy({item_id = "ITEM_LIFE_SHARDS"})
+        for _, resource in ipairs(progression[1]) do
+            RandomizerPowerup.IncreaseEnergy(resource)
+        end
     end
 end
