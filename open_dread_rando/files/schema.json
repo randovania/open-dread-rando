@@ -39,8 +39,31 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/$defs/item"
-                            }
-                        }
+                            },
+                            "minItems": 1,
+                            "description": "An array of all resources that will be gained from a particular stage of progression."
+                        },
+                        "minItems": 1,
+                        "description": "An array of arrays representing progressive item stages and resource gains for each stage.",
+                        "examples": [
+                            [
+                                [
+                                    { "item_id": "ITEM_WEAPON_WIDE_BEAM", "quantity": 1 }
+                                ],
+                                [
+                                    { "item_id": "ITEM_WEAPON_PLASMA_BEAM", "quantity": 1 }
+                                ],
+                                [
+                                    { "item_id": "ITEM_WEAPON_WAVE_BEAM", "quantity": 1 }
+                                ]
+                            ],
+                            [
+                                [
+                                    { "item_id": "ITEM_WEAPON_POWER_BOMB", "quantity": 1 },
+                                    { "item_id": "ITEM_WEAPON_POWER_BOMB_MAX", "quantity": 2 }
+                                ]
+                            ]
+                        ]
                     }
                 },
                 "required": [
