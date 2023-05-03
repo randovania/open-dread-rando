@@ -239,9 +239,11 @@ class ActorPickup(BasePickup):
                 editor.ensure_present(level_pkg, selected_model_data.bmsas)
                 for dep in selected_model_data.dependencies:
                     editor.ensure_present(level_pkg, dep)
+                if selected_model_data.grapple_fx:
+                    # always include Grapple FX particle or the game could crash
+                    editor.ensure_present(level_pkg, "actors/items/powerup_grapplebeam/fx/auraitemparticle.bcptl")
 
-        for pkg in pkgs_for_level:
-            editor.ensure_present(pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
+            editor.ensure_present(level_pkg, "actors/items/randomizer_powerup/scripts/randomizer_powerup.lc")
 
 
 class ActorDefPickup(BasePickup):
