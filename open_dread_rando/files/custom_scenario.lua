@@ -238,9 +238,16 @@ function Scenario.OnLoadScenarioFinished()
     exclude_function_from_logging("HideAsyncPopup")
     exclude_function_from_logging("CheckDebugInputs")
 
-    if Scenario.RandoUI ~= nil then
+    -- delete all SF functions
+    if Scenario.hideSFID ~= nil then
+        Game.DelSFByID(Scenario.hideSFID)
+        -- hide old popup
         Scenario.HideAsyncPopup()
     end
+    if Scenario.showNextSFID ~= nil then
+        Game.DelSFByID(Scenario.showNextSFID)
+    end
+
     Scenario.InitGui()
     Scenario.ShowingPopup = false
     Scenario.ShowNextAsyncPopup()
@@ -382,6 +389,9 @@ end
 Scenario.NumUIs = 0
 function Scenario.InitGui()
     Game.LogWarn(0, "Creating GUI")
+    if Scenario.RandoUI ~= nil then
+        Scenario.RandoUI:Destroy()
+    end
     Scenario.NumUIs = Scenario.NumUIs +1
     local ui = GUILib("RandoUI"..Scenario.NumUIs)
     ui:AddContainer("Content")
@@ -420,7 +430,7 @@ end
 function Scenario.ShowNextAsyncPopup()
     push_debug_print_override()
     if Scenario.QueuedPopups:empty() then
-        Game.AddGUISF(0, "Scenario.ShowNextAsyncPopup", "")
+        Scenario.showNextSFID = Game.AddGUISF(0, "Scenario.ShowNextAsyncPopup", "")
         pop_debug_print_override()
         return
     end
@@ -436,7 +446,8 @@ function Scenario.ShowAsyncPopup(text, time)
     local popup = Scenario.RandoUI:Get("Content"):Get("Popup")
     popup:SetText(text)
     popup:SetProperties({Visible = true})
-    Game.AddGUISF(time, "Scenario.HideAsyncPopup", "")
+    Scenario.hideSFID = Game.AddGUISF(time, "Scenario.HideAsyncPopup", "")
+    Scenario.showNextSFID = nil
 end
 
 function Scenario.HideAsyncPopup()
@@ -446,7 +457,8 @@ function Scenario.HideAsyncPopup()
         Scenario.QueuedPopups:pop()
     end
     Scenario.RandoUI:Get("Content"):Get("Popup"):SetProperties({Visible = false})
-    Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+    Scenario.showNextSFID = Game.AddGUISF(0.5, "Scenario.ShowNextAsyncPopup", "")
+    Scenario.hideSFID = nil
     pop_debug_print_override()
 end
 
