@@ -353,7 +353,13 @@ end
 
 
 function Scenario.OnStartPointTeleport(startpoint)
-    Game.TeleportEntityToStartPoint(Game.GetPlayerName(), startpoint, fTeleportFadeInTime, true)
+    -- teleport with raw coordinates to avoid camera lock
+    local vector = Game.GetActorPosition(startpoint)
+    local x = vector.x
+    local y = vector.y
+    -- offset to not spawn oob within a platform
+    y = y + 100
+    Game.TeleportEntityToRawPos(Game.GetPlayerName(), 0.0, true, x, y, 0.0, 0.1)
     Game.FadeIn(0.1, fTeleportFadeInTime)
     Game.AddSF(0, "Scenario.OnTeleportFinished", "")
 end
