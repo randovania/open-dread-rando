@@ -415,12 +415,12 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         )
     ),
 
-    "shield_standard_bombs0": ModelData(
-        bcmdl_path="actors/props/shield_standard_bombs0/models/shield_standard_bombs0.bcmdl",
+    "shield_bombs_regular__": ModelData(
+        bcmdl_path="actors/props/shield_bombs_regular__/models/shield_bombs_regular__.bcmdl",
         bmsas="actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsas",
         dependencies=(
-            "actors/props/shield_standard_bombs0/models/shield_standard_bombs0.bcmdl",
-            "actors/props/shield_standard_bombs0/models/imats/shield_standard_bombs0_mp_opaque_01.bsmat"
+            "actors/props/shield_bombs_regular__/models/shield_bombs_regular__.bcmdl",
+            "actors/props/shield_bombs_regular__/models/imats/shield_bombs_regular___mp_opaque_01.bsmat"
         )
     ),
 

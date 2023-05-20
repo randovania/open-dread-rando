@@ -107,7 +107,7 @@ class ActorData(Enum):
     SHIELD_SUPER_MISSILE = (["doorshieldsupermissile"], MinimapIconData.SHIELD_SUPER_MISSILE)
     SHIELD_ICE_MISSILE = (["shield_icemissile"], MinimapIconData.SHIELD_ICE_MISSILE)
     SHIELD_STORM_MISSILE = (["shield_storm_mssl"], MinimapIconData.SHIELD_STORM_MISSILE)
-    SHIELD_BOMB = (["shield_standard_bombs0"], MinimapIconData.SHIELD_BOMB)
+    SHIELD_BOMB = (["shield_bombs_regular__"], MinimapIconData.SHIELD_BOMB)
     SHIELD_CROSS_BOMB = (["shield_cross_bomb"], MinimapIconData.SHIELD_CROSS_BOMB)
     SHIELD_POWER_BOMB = (["shield__power_bomb"], MinimapIconData.SHIELD_POWER_BOMB)
 

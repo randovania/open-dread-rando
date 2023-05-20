@@ -162,26 +162,6 @@
               }
             },
             {
-              "name": "AddDamageSource",
-              "unk": 1,
-              "params": {
-                "Param1": {
-                  "type": "s",
-                  "value": "SUPER_MISSILE"
-                }
-              }
-            },
-            {
-              "name": "AddDamageSource",
-              "unk": 1,
-              "params": {
-                "Param1": {
-                  "type": "s",
-                  "value": "ICE_MISSILE"
-                }
-              }
-            },
-            {
               "name": "SetValue",
               "unk": 1,
               "params": {

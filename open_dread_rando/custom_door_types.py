@@ -55,11 +55,11 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
     ),
 
     "bomb": ShieldData(
-        name="shield_standard_bombs0",
+        name="shield_bombs_regular__",
         type=DoorTemplates.TRIANGLES,
         weaknesses=["BOMB"],
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
-        actordef="actors/props/shield_standard_bombs0/charclasses/shield_standard_bombs0.bmsad"
+        actordef="actors/props/shield_bombs_regular__/charclasses/shield_bombs_regular__.bmsad"
     ),
 
     "cross_bombs": ShieldData(
