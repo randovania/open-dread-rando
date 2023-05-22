@@ -64,7 +64,7 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
 
     "cross_bombs": ShieldData(
         name="shield_cross_bomb_____",
-        type=DoorTemplates.HEXAGONS,
+        type=DoorTemplates.TRIANGLES,
         weaknesses=["LINE_BOMB"],
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
         actordef="actors/props/shield_cross_bomb_____/charclasses/shield_cross_bomb_____.bmsad"
@@ -106,6 +106,9 @@ class BaseShield:
         life_funcs.append(new_func)
     
     def change_collision(self, new_template: dict):
+        if self.data.collision is None:
+            return
+        
         coll_comp = new_template["property"]["components"]["COLLISION"]
         coll_comp["dependencies"]["file"] = self.data.collision
 
@@ -120,8 +123,7 @@ class BaseShield:
         for w in self.data.weaknesses:
             self.add_weakness(w, new_template)
 
-        if self.data.collision:
-            self.change_collision(new_template)
+        self.change_collision(new_template)
 
         editor.add_new_asset(self.data.actordef, Bmsad(new_template, editor.target_game), [])
 
