@@ -424,22 +424,22 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         )
     ),
 
-    "shield_cross_bomb": ModelData(
-        bcmdl_path="actors/props/shield_cross_bomb/models/shield_cross_bomb.bcmdl",
+    "shield_cross_bomb_____": ModelData(
+        bcmdl_path="actors/props/shield_cross_bomb_____/models/shield_cross_bomb_____.bcmdl",
         bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
         dependencies=(
-            "actors/props/shield_cross_bomb/models/shield_cross_bomb.bcmdl",
-            "actors/props/shield_cross_bomb/models/imats/shield_cross_bomb_mp_opaque_01.bsmat"
+            "actors/props/shield_cross_bomb_____/models/shield_cross_bomb_____.bcmdl",
+            "actors/props/shield_cross_bomb_____/models/imats/shield_cross_bomb______mp_opaque_01.bsmat"
         )
     ),
 
-    "shield_powerbomb": ModelData(
-        bcmdl_path="actors/props/shield__power_bomb/models/shield_powerbomb.bcmdl",
-        bmsas="actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsas",
+    "doorshieldpowerbomb___": ModelData(
+        bcmdl_path="actors/props/doorshieldpowerbomb___/models/doorshieldpowerbomb___.bcmdl",
+        bmsas="actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsas",
         dependencies=(
-            "actors/props/shield__power_bomb/models/shield_powerbomb.bcmdl",
-            "actors/props/shield__power_bomb/models/imats/shield__power_bomb_matfx.bsmat",
-            "actors/props/shield__power_bomb/models/imats/shield__power_bomb_mp_opaque_01.bsmat"
+            "actors/props/doorshieldpowerbomb___/models/shield_powerbomb.bcmdl",
+            "actors/props/doorshieldpowerbomb___/models/imats/doorshieldpowerbomb____matfx.bsmat",
+            "actors/props/doorshieldpowerbomb___/models/imats/doorshieldpowerbomb____mp_opaque_01.bsmat"
         )
     ),
 }

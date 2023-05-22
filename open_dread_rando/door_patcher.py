@@ -108,8 +108,8 @@ class ActorData(Enum):
     SHIELD_ICE_MISSILE = (["shield_icemissile"], MinimapIconData.SHIELD_ICE_MISSILE)
     SHIELD_STORM_MISSILE = (["shield_storm_mssl"], MinimapIconData.SHIELD_STORM_MISSILE)
     SHIELD_BOMB = (["shield_bombs_regular__"], MinimapIconData.SHIELD_BOMB)
-    SHIELD_CROSS_BOMB = (["shield_cross_bomb"], MinimapIconData.SHIELD_CROSS_BOMB)
-    SHIELD_POWER_BOMB = (["shield__power_bomb"], MinimapIconData.SHIELD_POWER_BOMB)
+    SHIELD_CROSS_BOMB = (["shield_cross_bomb_____"], MinimapIconData.SHIELD_CROSS_BOMB)
+    SHIELD_POWER_BOMB = (["doorshieldpowerbomb___"], MinimapIconData.SHIELD_POWER_BOMB)
 
     def __init__(self, actordef: list[str], minimap: MinimapIconData):
         # generate actordefs

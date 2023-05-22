@@ -63,19 +63,19 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
     ),
 
     "cross_bombs": ShieldData(
-        name="shield_cross_bomb",
+        name="shield_cross_bomb_____",
         type=DoorTemplates.HEXAGONS,
         weaknesses=["LINE_BOMB"],
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
-        actordef="actors/props/shield_cross_bomb/charclasses/shield_cross_bomb.bmsad"
+        actordef="actors/props/shield_cross_bomb_____/charclasses/shield_cross_bomb_____.bmsad"
     ),
 
     "power_bomb": ShieldData(
-        name="shield_powerbomb",
-        type=DoorTemplates.ENERGY,
+        name="doorshieldpowerbomb___",
+        type=DoorTemplates.TRIANGLES,
         weaknesses=["POWER_BOMB"],
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
-        actordef="actors/props/shield__power_bomb/charclasses/shield__power_bomb.bmsad"
+        actordef="actors/props/doorshieldpowerbomb___/charclasses/doorshieldpowerbomb___.bmsad"
     ),
 }
 
