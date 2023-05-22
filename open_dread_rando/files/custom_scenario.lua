@@ -303,7 +303,7 @@ function Scenario.CheckWarpToStart(actor)
 
     Input.LogInputs()
     if Input.CheckInputs("ZL", "ZR") then
-        Scenario.TeleportToStartPoint(Init.sStartingScenario, Init.sStartingActor)
+        Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
     end
 end
 
@@ -322,46 +322,6 @@ function Scenario.CheckDebugInputs()
 
     Game.AddSF(delay, "Scenario.CheckDebugInputs", "")
     pop_debug_print_override()
-end
-
-fTeleportStartDelay = 0.2
-fTeleportFadeOutTime = 0.5
-fTeleportBlackScreenTime = 0.5
-fTeleportFadeInTime = 0.5
-
-function Scenario.TeleportToStartPoint(scenario, startpoint)
-    if Scenario.CurrentScenarioID ~= scenario then
-        Game.LoadScenario("c10_samus", scenario, startpoint, "", 1)
-    else
-        Scenario.TeleportToLocalStartPoint(startpoint)
-    end
-end
-
-function Scenario.TeleportToLocalStartPoint(startpoint)
-    Scenario.DisableInput()
-    if startpoint == nil then
-        startpoint = Blackboard.GetProp(Game.GetPlayerBlackboardSectionName(), "StartPoint")
-    end
-    Game.AddSF(fTeleportStartDelay, "Scenario.OnTeleportFadeOut", "s", startpoint)
-end
-
-
-function Scenario.OnTeleportFadeOut(startpoint)
-    Game.FadeOut(fTeleportFadeOutTime)
-    Game.AddSF(fTeleportFadeOutTime + fTeleportBlackScreenTime, "Scenario.OnStartPointTeleport", "s", startpoint)
-end
-
-
-function Scenario.OnStartPointTeleport(startpoint)
-    Game.TeleportEntityToStartPoint(Game.GetPlayerName(), startpoint, fTeleportFadeInTime, true)
-    Game.FadeIn(0.1, fTeleportFadeInTime)
-    Game.AddSF(0, "Scenario.OnTeleportFinished", "")
-end
-
-
-function Scenario.OnTeleportFinished()
-    Scenario.EnableInput()
-    Game.ReinitPlayerFromBlackboard()
 end
 
 function Scenario.SetTunableValue(category, property, value)
