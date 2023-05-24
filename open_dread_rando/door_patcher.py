@@ -38,6 +38,10 @@ class MinimapIconData(Enum):
     SHIELD_MISSILE = ("BlockageMissile", (-300, -150, 0, 300))
     SHIELD_SUPER_MISSILE = ("BlockageSuperMissile", (-300, -150, 0, 300))
     SHIELD_ICE_MISSILE = ("BlockageIce", (-300, -150, 0, 300))
+    SHIELD_STORM_MISSILE = ("BlockageStorm", (-300, -150, 0, 300))
+    SHIELD_BOMB = ("BlockageBomb", (-300, -150, 0, 300))
+    SHIELD_CROSS_BOMB = ("BlockageCrossBomb", (-300, -150, 0, 300))
+    SHIELD_POWER_BOMB = ("BlockagePowerBomb", (-300, -150, 0, 300))
 
     def __init__(self, icon_id: str, offsets: tuple[float, float, float, float]):
         """
@@ -102,6 +106,10 @@ class ActorData(Enum):
     SHIELD_MISSILE = (["doorshieldmissile"], MinimapIconData.SHIELD_MISSILE)
     SHIELD_SUPER_MISSILE = (["doorshieldsupermissile"], MinimapIconData.SHIELD_SUPER_MISSILE)
     SHIELD_ICE_MISSILE = (["shield_icemissile"], MinimapIconData.SHIELD_ICE_MISSILE)
+    SHIELD_STORM_MISSILE = (["shield_storm_mssl"], MinimapIconData.SHIELD_STORM_MISSILE)
+    SHIELD_BOMB = (["shield_bombs_regular__"], MinimapIconData.SHIELD_BOMB)
+    SHIELD_CROSS_BOMB = (["shield_cross_bomb_____"], MinimapIconData.SHIELD_CROSS_BOMB)
+    SHIELD_POWER_BOMB = (["doorshieldpowerbomb___"], MinimapIconData.SHIELD_POWER_BOMB)
 
     def __init__(self, actordef: list[str], minimap: MinimapIconData):
         # generate actordefs
@@ -131,6 +139,14 @@ class DoorType(Enum):
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
     ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True, 
                    ["actors/props/doorshieldmissile"])
+    STORM_MISSILE = ("storm_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_STORM_MISSILE, True, True,
+                     ["actors/props/doorshieldmissile"])
+    BOMB = ("bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_BOMB, True, True,
+                    ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
+    CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True, 
+                  ["actors/props/doorshieldmissile"])
+    POWER_BOMB = ("power_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_POWER_BOMB, True, True,
+                  ["actors/props/door_shield_plasma"])
     GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True, 
                ["actors/props/door"])
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, 

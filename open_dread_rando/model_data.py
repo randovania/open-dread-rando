@@ -404,7 +404,44 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/props/shield___diffusion/models/imats/shield_diffusion_matfx.bsmat",
             "actors/props/shield___diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat"
         )
-    )
+    ),
+
+    "shield_storm_mssl": ModelData(
+        bcmdl_path="actors/props/shield_storm_mssl/models/shield_storm_mssl.bcmdl",
+        bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
+        dependencies=(
+            "actors/props/shield_storm_mssl/models/shield_storm_mssl.bcmdl",
+            "actors/props/shield_storm_mssl/models/imats/shield_storm_mssl_mp_opaque_01.bsmat"
+        )
+    ),
+
+    "shield_bombs_regular__": ModelData(
+        bcmdl_path="actors/props/shield_bombs_regular__/models/shield_bombs_regular__.bcmdl",
+        bmsas="actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsas",
+        dependencies=(
+            "actors/props/shield_bombs_regular__/models/shield_bombs_regular__.bcmdl",
+            "actors/props/shield_bombs_regular__/models/imats/shield_bombs_regular___mp_opaque_01.bsmat"
+        )
+    ),
+
+    "shield_cross_bomb_____": ModelData(
+        bcmdl_path="actors/props/shield_cross_bomb_____/models/shield_cross_bomb_____.bcmdl",
+        bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
+        dependencies=(
+            "actors/props/shield_cross_bomb_____/models/shield_cross_bomb_____.bcmdl",
+            "actors/props/shield_cross_bomb_____/models/imats/shield_cross_bomb______mp_opaque_01.bsmat"
+        )
+    ),
+
+    "doorshieldpowerbomb___": ModelData(
+        bcmdl_path="actors/props/doorshieldpowerbomb___/models/doorshieldpowerbomb___.bcmdl",
+        bmsas="actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsas",
+        dependencies=(
+            "actors/props/doorshieldpowerbomb___/models/shield_powerbomb.bcmdl",
+            "actors/props/doorshieldpowerbomb___/models/imats/doorshieldpowerbomb____matfx.bsmat",
+            "actors/props/doorshieldpowerbomb___/models/imats/doorshieldpowerbomb____mp_opaque_01.bsmat"
+        )
+    ),
 }
 
 
