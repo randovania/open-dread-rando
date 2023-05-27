@@ -137,6 +137,8 @@ class DoorType(Enum):
     WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
+    SUPER_CHARGE_MISSILE = ("super_charge_missile", ActorData.DOOR_CHARGE, True, 
+                            ActorData.SHIELD_SUPER_MISSILE, True, False)
     ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True, 
                    ["actors/props/doorshieldmissile"])
     STORM_MISSILE = ("storm_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_STORM_MISSILE, True, True,
