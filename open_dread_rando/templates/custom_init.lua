@@ -68,6 +68,7 @@ local buff = {}
 
 Init.sStartingScenario = TEMPLATE("starting_scenario")
 Init.sStartingActor = TEMPLATE("starting_actor")
+Init.sLayoutUUID = TEMPLATE("layout_uuid")
 
 function Game.StartPrologue(arg1, arg2, arg3, arg4, arg5)
     Game.LogWarn(0, string.format("Will start Game - %s / %s / %s / %s", tostring(arg1), tostring(arg2), tostring(arg3), tostring(arg4)))

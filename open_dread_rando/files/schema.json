@@ -10,6 +10,11 @@
             "type": "string",
             "description": "An unique identifier for this configuration. Only save files created with this identifier can be loaded."
         },
+        "layout_uuid": {
+            "description": "An UUID exposed via a global lua variable",
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
         },
