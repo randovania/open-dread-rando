@@ -2,7 +2,7 @@ import json
 import shutil
 import typing
 from pathlib import Path
-import uuid
+
 
 from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
