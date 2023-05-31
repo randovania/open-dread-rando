@@ -43,6 +43,8 @@ def lua_convert(data, wrap_strings: bool = False) -> str:
         ) + "\n}"
     if isinstance(data, bool):
         return "true" if data else "false"
+    if data is None:
+        return "nil"
     if wrap_strings and isinstance(data, str):
         return wrap_string(data)
     return str(data)

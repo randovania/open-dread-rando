@@ -70,7 +70,7 @@ jobs:
           path: dist/
             
       - name: Install Python packages
-        run: python -m pip install --upgrade pip pytest pytest-cov
+        run: python -m pip install --upgrade pip pytest pytest-cov lupa
 
       - name: install built wheel
         run: python -m pip install dist/*.whl
