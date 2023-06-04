@@ -305,12 +305,12 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
     ),
 
     "item_missiletank": ModelData(
-        bcmdl_path="actors/items/item_missiletank/models/item_missiletank.bcmdl",
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__OR.bcmdl",
         bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
         dependencies=(
-            "actors/items/item_missiletank/models/item_missiletank.bcmdl",
+            "actors/items/item_missiletank/models/item_missile__OR.bcmdl",
             "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
-            "actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__OR_mp_fxhologram_01.bsmat",
         ),
     ),
 
