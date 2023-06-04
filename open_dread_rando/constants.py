@@ -17,3 +17,13 @@ ALL_SCENARIOS = [
 class FadeTimes(Enum):
     NO_FADE = -1
     ROOM_FADE = 3
+
+# models for pride missiles
+PRIDE_MISSILES = [
+    "item_missiletank",
+    "item_missiletank_orange",
+    "item_missiletank_yellow",
+    "item_missiletank_green",
+    "item_missiletank_blue",
+    "item_missiletank_purple"
+]
