@@ -359,11 +359,17 @@
                         }
                     },
                     "additionalProperties": false
+                },
+                "pride_missiles": {
+                    "type": "boolean",
+                    "description": "If True, patcher randomizes small missile expansions to red, orange, yellow, green, blue or purple",
+                    "default": false
                 }
             },
             "required": [
                 "config",
-                "lua"
+                "lua",
+                "pride_missiles"
             ]
         },
         "enable_remote_lua": {
