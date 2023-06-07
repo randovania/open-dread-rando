@@ -413,6 +413,16 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/item_missiletank/models/imats/item_missile__WH_mp_fxhologram_01.bsmat",
         ),
     ),
+    
+    "item_missiletank_gray": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__GY.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__GY.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__GY_mp_fxhologram_01.bsmat",
+        ),
+    ),
 
     "item_missiletankplus": ModelData(
         bcmdl_path="actors/items/item_missiletankplus/models/item_missiletankplus.bcmdl",
