@@ -3,6 +3,7 @@ import shutil
 import typing
 from pathlib import Path
 
+
 from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
@@ -33,7 +34,7 @@ def _read_schema():
         return json.load(f)
 
 
-def create_custom_init(editor: PatcherEditor, configuration: dict):
+def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     cosmetic_options: dict = configuration["cosmetic_patches"]["lua"]["custom_init"]
     inventory: dict[str, int] = configuration["starting_items"]
     starting_location: dict = configuration["starting_location"]
@@ -78,6 +79,10 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
             box_text = "|".join(box)
             patch_text(editor, f"RANDO_STARTING_TEXT_{textboxes}", box_text)
 
+    layout_uuid = None
+    if "layout_uuid" in configuration:
+        layout_uuid = lua_util.wrap_string(configuration["layout_uuid"])
+
     replacement = {
         "enable_remote_lua": enable_remote_lua,
         "new_game_inventory": final_inventory,
@@ -97,6 +102,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict):
         "room_id_fade_time": FadeTimes.NO_FADE.value if (
             cosmetic_options["enable_room_name_display"] != "WITH_FADE"
             ) else FadeTimes.ROOM_FADE.value,
+        "layout_uuid": layout_uuid,
     }
 
     replacement.update(configuration.get("game_patches", {}))
