@@ -15,6 +15,7 @@ from open_dread_rando.environmental_damage import apply_constant_damage
 from open_dread_rando.exefs import include_depackager, patch_exefs
 from open_dread_rando.logger import LOG
 from open_dread_rando.lua_editor import LuaEditor
+from open_dread_rando.missile_color_patcher import generate_missile_colors
 from open_dread_rando.objective import apply_objective_patches
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -203,6 +204,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     # Pickups
+    generate_missile_colors(editor)
     patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
 
     # Hints

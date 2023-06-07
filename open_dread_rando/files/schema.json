@@ -13,6 +13,10 @@
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
         },
+        "rng_seed": {
+            "type": "integer",
+            "description": "A random number generation seed to run patcher-side randomization through."
+        },
         "pickups": {
             "type": "array",
             "minItems": 146,

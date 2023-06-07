@@ -3,14 +3,12 @@ import functools
 import json
 from enum import Enum
 from pathlib import Path
-from random import randint
 from typing import Type
 
 from construct import Container
 from mercury_engine_data_structures.formats import Bmsad, Bmmap
 
 from open_dread_rando import model_data
-from open_dread_rando.constants import PRIDE_MISSILES
 from open_dread_rando.lua_editor import LuaEditor
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.text_patches import patch_text
@@ -128,10 +126,6 @@ class ActorPickup(BasePickup):
     def patch_model(self, editor: PatcherEditor, model_names: list[str], actor: Container,
                     new_template: dict):
         if len(model_names) == 1:
-            # if it's a missile tank and pride missiles are enabled, 
-            # randomize the model color.
-            if model_names[0] == "item_missiletank" and self.configuration["cosmetic_patches"]["pride_missiles"]:
-                model_names[0] = PRIDE_MISSILES[randint(0,5)]
 
             selected_model_data = model_data.get_data(model_names[0])
 
