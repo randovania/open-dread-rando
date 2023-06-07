@@ -1,5 +1,4 @@
 from enum import Enum
-from random import Random
 # constant data, including "magic numbers" and common data that many modules use
 
 # list of all scenarios

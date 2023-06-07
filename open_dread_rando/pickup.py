@@ -126,7 +126,6 @@ class ActorPickup(BasePickup):
     def patch_model(self, editor: PatcherEditor, model_names: list[str], actor: Container,
                     new_template: dict):
         if len(model_names) == 1:
-
             selected_model_data = model_data.get_data(model_names[0])
 
             # Update used model

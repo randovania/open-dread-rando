@@ -18,10 +18,6 @@
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
         },
-        "rng_seed": {
-            "type": "integer",
-            "description": "A random number generation seed to run patcher-side randomization through."
-        },
         "pickups": {
             "type": "array",
             "minItems": 146,
@@ -368,17 +364,11 @@
                         }
                     },
                     "additionalProperties": false
-                },
-                "pride_missiles": {
-                    "type": "boolean",
-                    "description": "If True, patcher randomizes small missile expansions to red, orange, yellow, green, blue or purple",
-                    "default": false
                 }
             },
             "required": [
                 "config",
-                "lua",
-                "pride_missiles"
+                "lua"
             ]
         },
         "enable_remote_lua": {
