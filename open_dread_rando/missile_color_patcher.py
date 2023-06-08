@@ -1,6 +1,5 @@
 import dataclasses
 from copy import deepcopy
-from enum import Enum
 
 from open_dread_rando.patcher_editor import PatcherEditor
 
