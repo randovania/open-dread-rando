@@ -314,6 +314,116 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "item_missiletank_orange": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__OR.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__OR.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__OR_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_yellow": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__YL.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__YL.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__YL_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_green": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__GN.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__GN.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__GN_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_blue": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__BL.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__BL.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__BL_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_cyan": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__CY.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__CY.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__CY_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_purple": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__PR.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__PR.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__PR_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_pink": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__PK.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__PK.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__PK_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_magenta": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__MG.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__MG.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__MG_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
+    "item_missiletank_black": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__BK.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__BK.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__BK_mp_fxhologram_01.bsmat",
+        ),
+    ),
+    
+    "item_missiletank_white": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__WH.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__WH.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__WH_mp_fxhologram_01.bsmat",
+        ),
+    ),
+    
+    "item_missiletank_gray": ModelData(
+        bcmdl_path="actors/items/item_missiletank/models/item_missile__GY.bcmdl",
+        bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
+        dependencies=(
+            "actors/items/item_missiletank/models/item_missile__GY.bcmdl",
+            "actors/items/item_missiletank/models/imats/item_missiletank_mat01.bsmat",
+            "actors/items/item_missiletank/models/imats/item_missile__GY_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
     "item_missiletankplus": ModelData(
         bcmdl_path="actors/items/item_missiletankplus/models/item_missiletankplus.bcmdl",
         bmsas="actors/items/item_missiletankplus/charclasses/item_missiletankplus.bmsas",
