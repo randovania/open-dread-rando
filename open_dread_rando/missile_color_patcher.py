@@ -1,3 +1,4 @@
+import dataclasses
 from copy import deepcopy
 from enum import Enum
 
@@ -6,32 +7,66 @@ from open_dread_rando.patcher_editor import PatcherEditor
 from mercury_engine_data_structures.formats.bsmat import Bsmat
 
 # model names for pride missiles
-class MissileVariant(Enum):
-    ORANGE = ("item_missile__OR", [75.0, 10.0, 0.0, 1.0])
-    YELLOW = ("item_missile__YL", [30.0, 30.0, 0.0, 1.0])
-    GREEN = ("item_missile__GR", [0.0, 30.0, 0.0, 1.0])
-    BLUE = ("item_missile__BL", [0.05, 0.5, 75.0, 1.0])
-    CYAN = ("item_missile__CY", [0.05, 10.0, 10.0, 1.0])
-    PURPLE = ("item_missile__PR", [15.0, 0.5, 70.0, 1.0])
-    PINK = ("item_missile__PK", [70.0, 0.5, 7.0, 1.0])
-    MAGENTA = ("item_missile__MG", [70.0, 0.5, 70.0, 1.0])
-    WHITE = ("item_missile__WH", [30.0, 30.0, 30.0, 1.0])
-    BLACK = ("item_missile__BK", [0.0, 0.0, 0.0, 1.0])
-    GRAY = ("item_missile__GY", [0.5, 0.5, 0.5, 1.0])
+@dataclasses.dataclass()
+class MissileVariant:
+    mat_name: str
+    shader_path: str
+    rgba: tuple[float, float, float, float]
 
-
-    def __init__(self, path: str, color: list[float]):
-        self.mat_name = f"{path}_mp_fxhologram_01"
+    def __init__(self, name: str, color: tuple[float, float, float, float]):
+        self.mat_name = f"{name}_mp_fxhologram_01"
         self.shader_path = f"actors/items/item_missiletank/models/imats/{self.mat_name}.bsmat"
 
-        if len(color) != 4:
-            raise ValueError(f"Missile Variant {self.name} has {len(color)} values for RGBA, 4 is expected.")
         self.rgba = color
+    
+ALL_VARIANTS: dict[str, MissileVariant] = {
+    
+    "ORANGE": MissileVariant(
+        name="item_missile__OR", 
+        color=[75.0, 10.0, 0.0, 1.0]
+    ),
+    "YELLOW": MissileVariant(
+        name="item_missile__YL", 
+        color=[30.0, 30.0, 0.0, 1.0]
+    ),
+    "GREEN": MissileVariant(
+        name="item_missile__GR", 
+        color=[0.0, 30.0, 0.0, 1.0]
+    ),
+    "BLUE": MissileVariant(
+        name="item_missile__BL", 
+        color=[0.05, 0.5, 75.0, 1.0]
+    ),
+    "CYAN": MissileVariant(
+        name="item_missile__CY", 
+        color=[0.05, 10.0, 10.0, 1.0]
+    ),
+    "PURPLE": MissileVariant(
+        name="item_missile__PR", 
+        color=[15.0, 0.5, 70.0, 1.0]
+    ),
+    "PINK": MissileVariant(
+        name="item_missile__PK", 
+        color=[70.0, 0.5, 7.0, 1.0]
+    ),
+    "MAGENTA": MissileVariant(
+        name="item_missile__MG",
+        color=[70.0, 0.5, 70.0, 1.0]
+    ),
+    "WHITE": MissileVariant(
+        name="item_missile__WH",
+        color=[30.0, 30.0, 30.0, 1.0]
+    ),
+    "BLACK": MissileVariant(
+        name="item_missile__BK",
+        color=[0.0, 0.0, 0.0, 1.0]
+    ),
+}
 
 def generate_missile_colors(editor: PatcherEditor):
     mat = editor.get_file("actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat", Bsmat)
 
-    for variant in MissileVariant:
+    for _, variant in ALL_VARIANTS.items():
         # copy missile material
         new_mat = deepcopy(mat)
         
