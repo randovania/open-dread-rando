@@ -29,11 +29,11 @@ class MissileVariant(Enum):
         self.rgba = color
 
 def generate_missile_colors(editor: PatcherEditor):
-    missile_mat = editor.get_file("actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat", Bsmat)
+    mat = editor.get_file("actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat", Bsmat)
 
     for variant in MissileVariant:
         # copy missile material
-        new_mat = deepcopy(missile_mat)
+        new_mat = deepcopy(mat)
         
         # replace texture name and vTex0EmissiveColor
         new_mat.raw.name = variant.mat_name
