@@ -59,7 +59,7 @@ function RoomNameGui.Init()
     local label = container:AddLabel("RoomNameGui_Text", "Room: Unknown", {
         X = "0.0075",
         Y = "0.01",
-        SizeX = "0.2",
+        SizeX = "0.3",
         SizeY = "0.04",
         Font = "digital_small",
         Autosize = false,
