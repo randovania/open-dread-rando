@@ -43,6 +43,14 @@ function RandomizerPowerup.MarkLocationCollected(locationIdentifier)
     Blackboard.SetProp(playerSection, propName, "b", true)
 end
 
+function RandomizerPowerup.IncrementInventoryIndex()
+    local playerSection = Game.GetPlayerBlackboardSectionName()
+    local propName = "InventoryIndex"
+    local currentIndex = Blackboard.GetProp(playerSection, propName) or 0
+    currentIndex = currentIndex + 1
+    Blackboard.SetProp(playerSection, propName, "f", currentIndex)
+end
+
 function RandomizerPowerup.OnPickedUp(actor, resources)
     RandomizerPowerup.Self = actor
     local name = "Boss"
@@ -65,6 +73,7 @@ function RandomizerPowerup.OnPickedUp(actor, resources)
 
     RandomizerPowerup.ApplyTunableChanges()
     Scenario.UpdateProgressiveItemModels()
+    RandomizerPowerup.IncrementInventoryIndex()
     RL.UpdateRDVClient(false)
     return granted
 end
