@@ -14,7 +14,7 @@ from open_dread_rando.patcher_editor import PatcherEditor
 def _template_read_shield(file: str):
     with Path(__file__).parent.joinpath("templates", f"{file}.json").open() as f:
         return json.load(f)
-    
+
 class DoorTemplates(Enum):
     HEXAGONS = "template_doorshield_hexs_bmsad"
     TRIANGLES = "template_doorshield_tris_bmsad"
@@ -83,12 +83,12 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
 class BaseShield:
     def __init__(self, shield: ShieldData):
         self.data = shield
-    
+
     def patch_model_data(self, new_template: dict):
         new_template["property"]["model_name"] = self.data.model.bcmdl_path
         model_updater = new_template["property"]["components"]["MODELUPDATER"]
         model_updater["functions"][0]["params"]["Param1"]["value"] = self.data.model.bcmdl_path
-    
+
     def add_weakness(self, weakness: str, new_template: dict):
         life_funcs: list = new_template["property"]["components"]["LIFE"]["functions"]
 
@@ -104,17 +104,17 @@ class BaseShield:
         }
 
         life_funcs.append(new_func)
-    
+
     def change_collision(self, new_template: dict):
         if self.data.collision is None:
             return
-        
+
         coll_comp = new_template["property"]["components"]["COLLISION"]
         coll_comp["dependencies"]["file"] = self.data.collision
 
     def patch(self, editor: PatcherEditor):
         template_bmsad = _template_read_shield(self.data.type.value)
-        
+
         new_template = copy.deepcopy(template_bmsad)
         new_template["name"] = self.data.name
 

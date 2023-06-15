@@ -72,7 +72,7 @@ class MinimapIconData(Enum):
         cont = Container()
         cont["vPos"] = ListContainer([pos[0], pos[1]])
 
-        # get delta, which depends on shield dir. 
+        # get delta, which depends on shield dir.
         # shield L needs no adjustments so delta is zero.
         # shield R needs to be moved oBoxMin[0] + oBoxMax[0] to the right.
         delta = 0 if dir == "L" else -(self.oBox_min[0] + self.oBox_max[0])
@@ -129,33 +129,33 @@ class DoorType(Enum):
     FRAME = ("frame", ActorData.DOOR_FRAME)
     POWER = ("power_beam", ActorData.DOOR_POWER)
     CHARGE = ("charge_beam", ActorData.DOOR_CHARGE)
-    DIFFUSION = ("diffusion_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_DIFFUSION_BEAM, True, True, 
+    DIFFUSION = ("diffusion_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_DIFFUSION_BEAM, True, True,
                  ["actors/props/door_shield_plasma"])
-    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True, 
+    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True,
                  ["actors/props/doorshieldmissile"])
     PLASMA_BEAM = ("plasma_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_PLASMA_BEAM)
     WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
     MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
     SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
-    SUPER_CHARGE_MISSILE = ("super_charge_missile", ActorData.DOOR_CHARGE, True, 
+    SUPER_CHARGE_MISSILE = ("super_charge_missile", ActorData.DOOR_CHARGE, True,
                             ActorData.SHIELD_SUPER_MISSILE, True, False)
-    ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True, 
+    ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True,
                    ["actors/props/doorshieldmissile"])
     STORM_MISSILE = ("storm_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_STORM_MISSILE, True, True,
                      ["actors/props/doorshieldmissile"])
     BOMB = ("bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_BOMB, True, True,
                     ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
-    CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True, 
+    CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True,
                   ["actors/props/doorshieldmissile"])
     POWER_BOMB = ("power_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_POWER_BOMB, True, True,
                   ["actors/props/door_shield_plasma"])
-    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True, 
+    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True,
                ["actors/props/door"])
-    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False, 
+    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False,
                 ["actors/props/door"])
 
     def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
-                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True, 
+                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True,
                  additional_asset_folders: list[str] = None):
         self.type = rdv_door_type
         self.need_shield = need_shield
@@ -242,8 +242,8 @@ class DoorPatcher:
 
     def patch_door(self, door_ref: dict, door_type: str):
         """
-        Patches a door given a reference. 
-        
+        Patches a door given a reference.
+
         @param door: A dictionary representing a requested door patch.
         """
 
@@ -282,8 +282,8 @@ class DoorPatcher:
     # removes any shields if the door has them
     def remove_shields(self, door: Container, scenario: str):
         """
-        Removes a door's shields. Assumes that the door has shields. 
-        
+        Removes a door's shields. Assumes that the door has shields.
+
         param door: a door actor
         param scenario: the scenario string
         """
@@ -316,7 +316,7 @@ class DoorPatcher:
             shield_r = self.create_shield(scenario, door, door_type.shield, "R")
             life_comp["wpLeftDoorShieldEntity"] = self.editor.build_link(shield_l.sName)
             life_comp["wpRightDoorShieldEntity"] = self.editor.build_link(shield_r.sName)
-        
+
         # ensure assets are present
         for folder in door_type.required_asset_folders:
             for asset in self.editor.get_asset_names_in_folder(folder):
@@ -362,14 +362,14 @@ class DoorPatcher:
     def rename_all_shields(self):
         for scenario in ALL_SCENARIOS:
             brfld = self.editor.get_scenario(scenario)
-            
-            # we have to cache doors that have shields here and rename them outside the loop, 
-            # as otherwise it will rename actors in the actor list and confuse the program. 
+
+            # we have to cache doors that have shields here and rename them outside the loop,
+            # as otherwise it will rename actors in the actor list and confuse the program.
             shielded_doors = []
             for layer_name, actor_name, actor in list(brfld.all_actors()):
 
-                # this is the door added to the Artaria CU. 
-                # For some reason is_door crashes on this so we add a check here. 
+                # this is the door added to the Artaria CU.
+                # For some reason is_door crashes on this so we add a check here.
                 if actor_name == "DreadRando_CUDoor":
                     continue
 
@@ -395,7 +395,7 @@ class DoorPatcher:
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
             old_sName = shieldActor.sName
 
-            # skip hdoors (doors where the environment covers one side of the door) 
+            # skip hdoors (doors where the environment covers one side of the door)
             # as they have terrain attached to the ShieldEntity links
             if "db_hdoor" in old_sName:
                 continue
@@ -418,7 +418,7 @@ class DoorPatcher:
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
             mapBlockages[new_id] = copy.deepcopy(mapBlockages[old_sName])
 
-            # flip the icon on rightfacing shields in order to optimize the icons file, 
+            # flip the icon on rightfacing shields in order to optimize the icons file,
             # allowing room for new assets in custom_door_types.py
             if link_name.startswith("wpRight"):
                 mapBlockages[new_id]["bFlipX"] = True
@@ -433,7 +433,7 @@ class DoorPatcher:
         shieldId = int(sName.split("_")[1]) if "RandoShield" in sName else None
         if shieldId is not None:
             insort(self.available_shield_ids[scenario], shieldId)
-    
+
     def patch_doorpresence_collision(self):
         # extends the door collider in doorpresence actor to 300x300 to maintain the size of normal doors
         # this looks a bit bad, but it'll do until we figure out how to edit navmeshes

@@ -107,8 +107,8 @@ def _add_debug_input(patch: ips.Patch, version: str):
 def _patch_door_lock_buffer(patch: ips.Patch, version: str):
     """ Update capacities in unknown allocator to avoid doorlock crash
     changes size of buffer inside data field initializer (I think)
-    size of linked-list buffer increased from 500 to 1000. 
-    if 0x33250c in 1.0.0 is crashing, it's likely that this is still too small. 
+    size of linked-list buffer increased from 500 to 1000.
+    if 0x33250c in 1.0.0 is crashing, it's likely that this is still too small.
     original instruction: MOV w2,#0x1f4
     patched instruction: MOV w2,#0x3e8
     """
