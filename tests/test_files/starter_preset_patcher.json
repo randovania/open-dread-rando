@@ -159,7 +159,7 @@
                 "actor": "Item_MissileTank002"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__OR"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -182,7 +182,7 @@
                 "actor": "item_missiletank_000"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__YL"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -380,7 +380,7 @@
                 "actor": "item_energytank_000"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__GN"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -403,7 +403,7 @@
                 "actor": "item_missiletankplus_000"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__BL"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -486,7 +486,7 @@
                 "actor": "item_energyfragment_000"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__CY"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -539,7 +539,7 @@
                 "actor": "item_missiletank_003"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__PR"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -708,7 +708,7 @@
                 "actor": "Item_MissileTank014"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__PK"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -759,7 +759,7 @@
                 "actor": "Item_MissileTank015"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__MG"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -782,7 +782,7 @@
                 "actor": "Item_MissileTank016"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__WH"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -805,7 +805,7 @@
                 "actor": "item_missiletankplus_001"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__BK"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -858,7 +858,7 @@
                 "actor": "item_missiletank_006"
             },
             "model": [
-                "item_missiletank"
+                "item_missile__GR"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"

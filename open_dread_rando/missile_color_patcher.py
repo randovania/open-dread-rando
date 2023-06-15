@@ -29,7 +29,7 @@ ALL_VARIANTS: dict[str, MissileVariant] = {
         color=[30.0, 30.0, 0.0, 1.0]
     ),
     "GREEN": MissileVariant(
-        name="item_missile__GR", 
+        name="item_missile__GN", 
         color=[0.0, 30.0, 0.0, 1.0]
     ),
     "BLUE": MissileVariant(
@@ -59,6 +59,10 @@ ALL_VARIANTS: dict[str, MissileVariant] = {
     "BLACK": MissileVariant(
         name="item_missile__BK",
         color=[0.0, 0.0, 0.0, 1.0]
+    ),
+    "GRAY": MissileVariant(
+        name="item_missile__GY",
+        color=[0.2, 0.2, 0.2, 1.0]
     ),
 }
 
