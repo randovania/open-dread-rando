@@ -5,8 +5,9 @@ from pathlib import Path
 
 from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
+from mercury_engine_data_structures.formats import ALL_FORMATS, BaseResource, Bmmap, Brfld, Brsa
 from mercury_engine_data_structures.game_check import Game
+
 from open_dread_rando.map_icons import MapIconEditor
 
 T = typing.TypeVar("T")

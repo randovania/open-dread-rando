@@ -10,6 +10,7 @@ from mercury_engine_data_structures.formats import Bmsad
 from open_dread_rando import model_data
 from open_dread_rando.patcher_editor import PatcherEditor
 
+
 @functools.cache
 def _template_read_shield(file: str):
     with Path(__file__).parent.joinpath("templates", f"{file}.json").open() as f:

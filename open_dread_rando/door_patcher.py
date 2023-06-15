@@ -5,11 +5,10 @@ from pathlib import Path
 from typing import Sequence
 
 from construct import Container, ListContainer
+from mercury_engine_data_structures.formats import Bmscc
 
 from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor
-
-from mercury_engine_data_structures.formats import Bmscc
 
 # copied from existing entity, so we don't have to make a whole shield
 _EXAMPLE_SHIELD = {"scenario": "s010_cave", "layer": "default", "actor": "Door003_missileShield"}
@@ -144,7 +143,7 @@ class DoorType(Enum):
     STORM_MISSILE = ("storm_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_STORM_MISSILE, True, True,
                      ["actors/props/doorshieldmissile"])
     BOMB = ("bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_BOMB, True, True,
-                    ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
+            ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
     CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True,
                   ["actors/props/doorshieldmissile"])
     POWER_BOMB = ("power_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_POWER_BOMB, True, True,
@@ -259,8 +258,9 @@ class DoorPatcher:
         door_in_scenario_type = self.door_actor_to_type(door_actor, scenario)
         if door_in_scenario_type.can_be_removed is False:
             raise ValueError(
-                f"Base game door {door_in_scenario_type.type} cannot be patched!" + \
-                    f"Requested door: {door_ref['actor']} in {scenario}")
+                f"Base game door {door_in_scenario_type.type} cannot be patched! "
+                f"Requested door: {door_ref['actor']} in {scenario}"
+            )
 
         self.door_to_basic(door_actor, door_in_scenario_type, scenario)
         self.power_to_door_type(door_actor, door_type, scenario)
@@ -440,4 +440,4 @@ class DoorPatcher:
         # (or whatever is storing the intended hitboxes for doors)
         doorpresence = self.editor.get_file("actors/props/doorpresence/collisions/doorpresence.bmscd", Bmscc)
         door_collider = doorpresence.raw.layers[0].entries[0]
-        door_collider.data.max = ListContainer([300.0,320.0])
+        door_collider.data.max = ListContainer([300.0, 320.0])
