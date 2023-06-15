@@ -141,4 +141,4 @@ jobs:
       run: python -m pip install ruff==0.0.252
 
     - name: Run ruff
-      run: ruff check .
+      run: ruff check --format=github .
