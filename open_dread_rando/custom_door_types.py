@@ -45,12 +45,12 @@ class ShieldData:
 
 ALL_SHIELD_DATA: dict[str, ShieldData] = {
     "ice_missile": ShieldData(
-        name="shield_icemissile",
-        type=DoorTemplates.HEXAGONS,
+        name="doorshieldicemissile",
+        type=DoorTemplates.TRIANGLES,
         weaknesses=["ICE_MISSILE"],
-        actordef="actors/props/shield_icemissile/charclasses/shield_icemissile.bmsad",
+        actordef="actors/props/doorshieldicemissile/charclasses/doorshieldicemissile.bmsad",
         default_mdl=ModelData(
-            base_model=MISSILE_MDL,
+            base_model=SUPER_MDL,
             new_path="actors/props/doorshieldicemissile/models/doorshieldicemissile.bcmdl",
             materials={
                 "mp_opaque_01": "actors/props/doorshieldicemissile/models/imats/doorshieldicemissile_mp_opaque_01.bsmat"
@@ -186,7 +186,7 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 },
                 sampler_params={
                     "texBaseColor": { "filepath": ("actors/props/doorshieldstormmissile/models" 
-                                                   "/textures/doorshieldstormmissile_alt_bc.bctex")},
+                                                   "/textures/doorshieldstormmissile_alt2_bc.bctex")},
                     "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
                     "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
@@ -359,6 +359,7 @@ class BaseShield:
         if version == "DEFAULT":
             for mat_dat in self.data.default_mats:
                 create_custom_material(editor, mat_dat)
+                
         else:
             for mat_dat in self.data.alternate_mats:
                 create_custom_material(editor, mat_dat)
@@ -387,6 +388,7 @@ class BaseShield:
         coll_comp["dependencies"]["file"] = self.data.collision
 
     def patch(self, editor: PatcherEditor, version: str = "DEFAULT"):
+        print(f"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% {version} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         template_bmsad = _template_read_shield(self.data.type.value)
         
         new_template = copy.deepcopy(template_bmsad)
@@ -403,5 +405,5 @@ class BaseShield:
         editor.add_new_asset(self.data.actordef, Bmsad(new_template, editor.target_game), [])
 
 def create_all_shield_assets(editor: PatcherEditor, shield_model_config: dict[str, str]):
-    for shield_name, shield_type in shield_model_config:
+    for shield_name, shield_type in shield_model_config.items():
         BaseShield(ALL_SHIELD_DATA.get(shield_name)).patch(editor, shield_type)

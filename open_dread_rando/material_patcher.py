@@ -17,13 +17,9 @@ class MaterialData:
 def create_custom_material(editor: PatcherEditor, material_data: MaterialData) -> Bsmat:
     orig_mat = editor.get_parsed_asset(material_data.base_mat, type_hint=Bsmat)
 
+    mat = copy.deepcopy(orig_mat)
     # deepcopy and add asset if this is a new material
-    if material_data.new_path is not None:
-        mat = copy.deepcopy(orig_mat)
-        editor.add_new_asset(material_data.new_mat_name, mat, [])
-    else:
-        mat = orig_mat
-
+    
     # update name
     if material_data.new_mat_name:
         mat.raw.name = material_data.new_mat_name
@@ -37,7 +33,10 @@ def create_custom_material(editor: PatcherEditor, material_data: MaterialData) -
     if material_data.sampler_params:
         for sam_name, sam_dict in material_data.sampler_params.items():
             sampler = mat.get_sampler(sam_name)
-            for sam_key, sam_value in sam_dict:
+            for sam_key, sam_value in sam_dict.items():
                 sampler[sam_key] = sam_value
 
+    if material_data.new_path:
+        editor.add_new_asset(material_data.new_path, mat, [])
+        
     return mat
