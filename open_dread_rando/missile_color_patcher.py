@@ -2,6 +2,8 @@ import dataclasses
 from copy import deepcopy
 
 from open_dread_rando.patcher_editor import PatcherEditor
+from open_dread_rando.material_patcher import MaterialData, create_custom_material
+from open_dread_rando.model_patcher import ModelData, create_custom_model
 
 from mercury_engine_data_structures.formats.bsmat import Bsmat
 
@@ -9,11 +11,13 @@ from mercury_engine_data_structures.formats.bsmat import Bsmat
 @dataclasses.dataclass()
 class MissileVariant:
     mat_name: str
+    model_path: str
     shader_path: str
     rgba: tuple[float, float, float, float]
 
     def __init__(self, name: str, color: tuple[float, float, float, float]):
         self.mat_name = f"{name}_mp_fxhologram_01"
+        self.model_path = f"actors/items/item_missiletank/models/{name}.bcmdl"
         self.shader_path = f"actors/items/item_missiletank/models/imats/{self.mat_name}.bsmat"
 
         self.rgba = color
@@ -67,15 +71,21 @@ ALL_VARIANTS: dict[str, MissileVariant] = {
 }
 
 def generate_missile_colors(editor: PatcherEditor):
-    mat = editor.get_file("actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat", Bsmat)
-
     for _, variant in ALL_VARIANTS.items():
-        # copy missile material
-        new_mat = deepcopy(mat)
-        
-        # replace texture name and vTex0EmissiveColor
-        new_mat.raw.name = variant.mat_name
-        tex0_emissive = new_mat.raw.shader_stages[0].uniform_params[5]
-        tex0_emissive.value = variant.rgba
+        mat_dat = MaterialData(
+            base_mat="actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat",
+            new_mat_name=variant.mat_name,
+            new_path=variant.shader_path,
+            uniform_params={
+                "vTex0EmissiveColor": variant.rgba
+            }
+        )
 
-        editor.add_new_asset(variant.shader_path, new_mat, [])
+        model_dat = ModelData(
+            base_model="actors/items/item_missiletank/models/item_missiletank.bcmdl",
+            new_path=variant.model_path,
+            materials={"mp_fxhologram_01": variant.shader_path}
+        )
+
+        create_custom_material(editor, mat_dat)
+        create_custom_model(editor, model_dat)
