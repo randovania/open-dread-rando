@@ -135,7 +135,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vAlbedoEmissiveColorMultiplier": [1.0, 0.05, 0.05, 1.0]
                 },
                 sampler_params={
-                    # TODO diffusion bc
+                    "texBaseColor": { "filepath": ("actors/props/shield_diffusion/models/"
+                                                   "textures/shield_diffusion_alt.bctex")},
                     "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
                     "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
