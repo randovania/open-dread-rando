@@ -131,12 +131,12 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="shield_diffusion_mp_opaque_01",
                 new_path="actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat",
                 uniform_params={
-                    "fAlbedoEmissiveFactor": [2.0],
+                    #"fAlbedoEmissiveFactor": [2.0],
                     "vAlbedoEmissiveColorMultiplier": [1.0, 0.05, 0.05, 1.0]
                 },
                 sampler_params={
                     "texBaseColor": { "filepath": ("actors/props/shield_diffusion/models/"
-                                                   "textures/shield_diffusion_alt.bctex")},
+                                                   "textures/shield_diffusion_alt_bc.bctex")},
                     "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
                     "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
@@ -170,8 +170,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 sampler_params={
                     "texBaseColor": { "filepath": ("actors/props/doorshieldstormmissile/models" 
                                                    "/textures/doorshieldstormmissile_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    # "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
+                    # "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
             )
         ],
@@ -181,15 +181,16 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldstormmissile_mp_opaque_01",
                 new_path="actors/props/doorshieldstormmissile/models/imats/doorshieldstormmissile_mp_opaque_01.bsmat",
                 uniform_params={
-                    "fAlbedoEmissiveFactor": [2.0],
-                    "vAlbedoEmissiveColorMultiplier": [1.0, 1.0, 1.0, 1.0],
-                    "vConstant0": [7.0, 0.15, 0.0, 1.0]
+                    "fAlbedoEmissiveFactor": [7.0],
+                    "fSpecularPower": [25.0],
+                    "vAlbedoEmissiveColorMultiplier": [7.0, 0.15, 0.0, 1.0],
+                    "vConstant0": [1.0, 1.0, 1.0, 1.0]
                 },
                 sampler_params={
                     "texBaseColor": { "filepath": ("actors/props/doorshieldstormmissile/models" 
-                                                   "/textures/doorshieldstormmissile_alt2_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                                                   "/textures/doorshieldstormmissile_alt_bc.bctex")},
+                    # "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
+                    # "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
             )
         ]
