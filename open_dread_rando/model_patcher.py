@@ -7,9 +7,9 @@ from open_dread_rando.patcher_editor import PatcherEditor
 
 @dataclasses.dataclass(frozen=True)
 class ModelData:
-    base_model: str
-    new_path: str = None
-    materials: dict[str, str] = None
+    base_model: str # the model this is based on
+    new_path: str = None # the new path of the model
+    materials: dict[str, str] = None # dictionary connecting model names (i.e. "mp_opaque_01") to material files
 
 
 def create_custom_model(editor: PatcherEditor, model_data: ModelData) -> Bcmdl:

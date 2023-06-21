@@ -34,13 +34,13 @@ class DoorTemplates(Enum):
 @dataclasses.dataclass(frozen=True)
 class ShieldData:
     name: str
-    type: DoorTemplates
+    type: DoorTemplates # TODO make these modify the in-game bmsad's so we don't need templates
     weaknesses: list[str]
     actordef: str
-    default_mdl: ModelData
-    default_mats: list[MaterialData]
-    alternate_mats: list[MaterialData]
-    alternate_mdl: ModelData = None
+    default_mdl: ModelData # the default new model
+    default_mats: list[MaterialData] # a list of materials needed for the default model
+    alternate_mats: list[MaterialData] # a list of materials needed for the alternate model
+    alternate_mdl: ModelData = None # if none, ALTERNATE shields use default model and only change materials
     collision: str = None
 
 ALL_SHIELD_DATA: dict[str, ShieldData] = {
@@ -390,7 +390,6 @@ class BaseShield:
         coll_comp["dependencies"]["file"] = self.data.collision
 
     def patch(self, editor: PatcherEditor, version: str = "DEFAULT"):
-        print(f"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% {version} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
         template_bmsad = _template_read_shield(self.data.type.value)
         
         new_template = copy.deepcopy(template_bmsad)
