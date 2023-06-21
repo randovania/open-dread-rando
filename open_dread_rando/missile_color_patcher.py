@@ -1,11 +1,8 @@
 import dataclasses
-from copy import deepcopy
 
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.material_patcher import MaterialData, create_custom_material
 from open_dread_rando.model_patcher import ModelData, create_custom_model
-
-from mercury_engine_data_structures.formats.bsmat import Bsmat
 
 # model names for pride missiles
 @dataclasses.dataclass()
