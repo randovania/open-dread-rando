@@ -1,5 +1,6 @@
 import copy
 import dataclasses
+import typing
 
 from mercury_engine_data_structures.formats.bsmat import Bsmat
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -11,7 +12,7 @@ class MaterialData:
     new_mat_name: str = None # the name of the new material
     new_path: str = None # the new path for the material, none if its only modifiying an existing mat
     uniform_params: dict[str, list] = None # a dictionary of uniform params stored in shader_stages[0]
-    sampler_params: dict[str, dict[str, str | list | int]] = None 
+    sampler_params: dict[str, dict[str, typing.Union[str, int, float, list]]] = None 
     # a dictionary of sampler params stored in shader_stages[0]
     # key is the name of the sampler param
     # value is a dict of key/value pairs for keys of the sampler (i.e. { "filepath": "path/to/texture.bsmat" })
