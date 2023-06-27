@@ -5,8 +5,9 @@ from pathlib import Path
 
 from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
-from mercury_engine_data_structures.formats import BaseResource, Brfld, Brsa, ALL_FORMATS, Bmmap
+from mercury_engine_data_structures.formats import ALL_FORMATS, BaseResource, Bmmap, Brfld, Brsa
 from mercury_engine_data_structures.game_check import Game
+
 from open_dread_rando.map_icons import MapIconEditor
 
 T = typing.TypeVar("T")
@@ -92,8 +93,8 @@ class PatcherEditor(FileTreeEditor):
 
     def copy_actor_groups(self, scenario_name: str, base_actor_name: str, new_actor_name: str):
         """
-        Copies a base actor's groups to a new actor's groups. Both actors must be in the same scenario. 
-        
+        Copies a base actor's groups to a new actor's groups. Both actors must be in the same scenario.
+
         param baseRef: the actor that you are copying groups from
         param newRef: the actor that will have the same actor groups as baseRef
         """
@@ -127,7 +128,7 @@ class PatcherEditor(FileTreeEditor):
     def find_type_of_actor(self, scenarioStr: str, actordef: str, layer: str = "default"):
         """
         Returns a list of actors with given actordef in the scenario
-        
+
         param scenario: the scenario string
         param layer: an optional layer to filter, standard layer is default
         param actordef: the actor definition (bmsad) to filter for
@@ -145,7 +146,7 @@ class PatcherEditor(FileTreeEditor):
     def reference_for_link(self, link: str, scenario: str) -> dict:
         """
         Changes a link string (wp data type) into a reference dict
-        
+
         param link: a reference string consisting of 7 components separated by colons
         param scenario: the scenario this actor is in
         returns: a reference dict

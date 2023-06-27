@@ -2,6 +2,7 @@ import copy
 from typing import Optional
 
 import construct
+from mercury_engine_data_structures.formats import Brfld
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando import door_patcher
@@ -19,61 +20,65 @@ def flip_icon_id(icon_id: str) -> str:
     raise ValueError(f"Unable to flip icon {icon_id}")
 
 
-def apply_one_sided_door_fixes(editor: PatcherEditor):
+def _apply_one_sided_door_fix(scenario: Brfld, map_blockages: construct.Container,
+                              layer_name: str, actor_name: str, actor: construct.Container):
+    # Continue if this isn't a door
+    if not door_patcher.is_door(actor):
+        return
 
+    if actor.oActorDefLink != "actordef:actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad":
+        return
+
+    life_comp = actor.pComponents.LIFE
+    left = scenario.follow_link(life_comp.wpLeftDoorShieldEntity)
+    right = scenario.follow_link(life_comp.wpRightDoorShieldEntity)
+
+    if left is None and right is None:
+        return
+
+    elif left is None:
+        other = right
+        direction = "wpLeftDoorShieldEntity"
+
+    elif right is None:
+        other = left
+        direction = "wpRightDoorShieldEntity"
+    else:
+        return
+
+    if "db_hdoor" in other.oActorDefLink:
+        return
+
+    LOG.debug("%s/%s: copy %s into %s", layer_name, actor_name, other.sName, direction)
+    mirrored = copy.deepcopy(other)
+    mirrored.sName += "_mirrored"
+    mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]
+    scenario.actors_for_layer(layer_name)[mirrored.sName] = mirrored
+
+    mirrored_map = copy.deepcopy(map_blockages[other.sName])
+    mirrored_map["sIconId"] = flip_icon_id(mirrored_map["sIconId"])
+    delta = 450 if mirrored_map["sIconId"].endswith("R") else -450
+    mirrored_map["oBox"]["Min"][0] += delta
+    mirrored_map["oBox"]["Max"][0] += delta
+    map_blockages[mirrored.sName] = mirrored_map
+
+    # Add a reference to the other shield to the main actor
+    life_comp[direction] = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
+
+    for group_name in scenario.all_actor_groups():
+        if any(scenario.is_actor_in_group(group_name, x, layer_name) for x in [actor_name, other.sName]):
+            for name in [actor_name, mirrored.sName, other.sName]:
+                scenario.add_actor_to_group(group_name, name, layer_name)
+
+
+def apply_one_sided_door_fixes(editor: PatcherEditor):
     for scenario_name in ALL_SCENARIOS:
         scenario = editor.get_scenario(scenario_name)
         bmmap = editor.get_scenario_map(scenario_name)
         map_blockages = bmmap.raw.Root.mapBlockages
 
         for layer_name, actor_name, actor in list(scenario.all_actors()):
-            # Continue if this isn't a door
-            if not door_patcher.is_door(actor):
-                continue
-
-            if actor.oActorDefLink != "actordef:actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad":
-                continue
-
-            life_comp = actor.pComponents.LIFE
-            left = scenario.follow_link(life_comp.wpLeftDoorShieldEntity)
-            right = scenario.follow_link(life_comp.wpRightDoorShieldEntity)
-
-            if left is None and right is None:
-                continue
-
-            elif left is None:
-                other = right
-                direction = "wpLeftDoorShieldEntity"
-
-            elif right is None:
-                other = left
-                direction = "wpRightDoorShieldEntity"
-            else:
-                continue
-
-            if "db_hdoor" in other.oActorDefLink:
-                continue
-
-            LOG.debug("%s/%s/%s: copy %s into %s", scenario_name, layer_name, actor_name, other.sName, direction)
-            mirrored = copy.deepcopy(other)
-            mirrored.sName += "_mirrored"
-            mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]
-            scenario.actors_for_layer(layer_name)[mirrored.sName] = mirrored
-
-            mirrored_map = copy.deepcopy(map_blockages[other.sName])
-            mirrored_map["sIconId"] = flip_icon_id(mirrored_map["sIconId"])
-            delta = 450 if mirrored_map["sIconId"].endswith("R") else -450
-            mirrored_map["oBox"]["Min"][0] += delta
-            mirrored_map["oBox"]["Max"][0] += delta
-            map_blockages[mirrored.sName] = mirrored_map
-
-            # Add a reference to the other shield to the main actor
-            life_comp[direction] = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
-
-            for group_name in scenario.all_actor_groups():
-                if any(scenario.is_actor_in_group(group_name, x, layer_name) for x in [actor_name, other.sName]):
-                    for name in [actor_name, mirrored.sName, other.sName]:
-                        scenario.add_actor_to_group(group_name, name, layer_name)
+            _apply_one_sided_door_fix(scenario, map_blockages, layer_name, actor_name, actor)
 
 
 PROBLEM_LAYERS = {
@@ -147,6 +152,7 @@ def apply_corpius_fixes(editor: PatcherEditor):
         "layer": "Cutscenes",
         "actor": "cutsceneplayer_57"
     }, "CurrentScenario.OnCorpiusDeath_CUSTOM", 0)
+
 
 def apply_kraid_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
@@ -352,9 +358,11 @@ def disable_hanubia_cutscene(editor: PatcherEditor):
     })
     cutscene_player.bEnabled = False
 
+
 def fix_map_icons(map_editor: MapIconEditor):
     map_editor.mirror_bmmdef_icons()
     map_editor.mirror_bmmap_icons()
+
 
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)

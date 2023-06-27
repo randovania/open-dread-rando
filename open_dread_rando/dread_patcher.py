@@ -3,13 +3,12 @@ import shutil
 import typing
 from pathlib import Path
 
-
 from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
-from open_dread_rando import elevator, lua_util, game_patches
-from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
+from open_dread_rando import elevator, game_patches, lua_util
 from open_dread_rando.constants import FadeTimes
+from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
 from open_dread_rando.custom_door_types import create_all_shield_assets
 from open_dread_rando.door_patcher import DoorPatcher
 from open_dread_rando.environmental_damage import apply_constant_damage
