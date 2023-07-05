@@ -1,9 +1,10 @@
 from enum import Enum
+
 # constant data, including "magic numbers" and common data that many modules use
 
 # list of all scenarios
 ALL_SCENARIOS = [
-    "s010_cave", "s020_magma", 
+    "s010_cave", "s020_magma",
     "s030_baselab",
     "s040_aqua",
     "s050_forest",

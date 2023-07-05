@@ -8,7 +8,7 @@ def is_tilegroup(actor):
 def patch_tilegroup(editor: PatcherEditor, group: dict):
     """
     Patches a tilegroup from its original tile type into a new tile type
-    
+
     :param editor: the PatcherEditor
     :param group: a dictionary containing the actor reference stored in 'actor' key and a tile type
     stored in 'tiletype' key

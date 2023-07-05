@@ -25,7 +25,7 @@ SMOOTH_ATTRIBUTES = "actors/props/doorshieldmissile/models/textures/shield_no_at
 def _template_read_shield(file: str):
     with Path(__file__).parent.joinpath("templates", f"{file}.json").open() as f:
         return json.load(f)
-    
+
 class DoorTemplates(Enum):
     HEXAGONS = "template_doorshield_hexs_bmsad"
     TRIANGLES = "template_doorshield_tris_bmsad"
@@ -344,7 +344,7 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
 class BaseShield:
     def __init__(self, shield: ShieldData):
         self.data = shield
-    
+
     def patch_model_data(self, new_template: dict, editor: PatcherEditor, version: str):
         # select the default or alternate model
         if version == "DEFAULT" or self.data.alternate_mdl is None:
@@ -365,7 +365,6 @@ class BaseShield:
         else:
             for mat_dat in self.data.alternate_mats:
                 create_custom_material(editor, mat_dat)
-    
     def add_weakness(self, weakness: str, new_template: dict):
         life_funcs: list = new_template["property"]["components"]["LIFE"]["functions"]
 
@@ -381,17 +380,17 @@ class BaseShield:
         }
 
         life_funcs.append(new_func)
-    
+
     def change_collision(self, new_template: dict):
         if self.data.collision is None:
             return
-        
+
         coll_comp = new_template["property"]["components"]["COLLISION"]
         coll_comp["dependencies"]["file"] = self.data.collision
 
     def patch(self, editor: PatcherEditor, version: str = "DEFAULT"):
         template_bmsad = _template_read_shield(self.data.type.value)
-        
+
         new_template = copy.deepcopy(template_bmsad)
         new_template["name"] = self.data.name
 

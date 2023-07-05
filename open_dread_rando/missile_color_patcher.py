@@ -1,5 +1,7 @@
 import dataclasses
 
+from mercury_engine_data_structures.formats.bsmat import Bsmat
+
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.material_patcher import MaterialData, create_custom_material
 from open_dread_rando.model_patcher import ModelData, create_custom_model
@@ -18,35 +20,35 @@ class MissileVariant:
         self.shader_path = f"actors/items/item_missiletank/models/imats/{self.mat_name}.bsmat"
 
         self.rgba = color
-    
+
 ALL_VARIANTS: dict[str, MissileVariant] = {
-    
+
     "ORANGE": MissileVariant(
-        name="item_missile__OR", 
+        name="item_missile__OR",
         color=[75.0, 10.0, 0.0, 1.0]
     ),
     "YELLOW": MissileVariant(
-        name="item_missile__YL", 
+        name="item_missile__YL",
         color=[30.0, 30.0, 0.0, 1.0]
     ),
     "GREEN": MissileVariant(
-        name="item_missile__GN", 
+        name="item_missile__GN",
         color=[0.0, 30.0, 0.0, 1.0]
     ),
     "BLUE": MissileVariant(
-        name="item_missile__BL", 
+        name="item_missile__BL",
         color=[0.05, 0.5, 75.0, 1.0]
     ),
     "CYAN": MissileVariant(
-        name="item_missile__CY", 
+        name="item_missile__CY",
         color=[0.05, 10.0, 10.0, 1.0]
     ),
     "PURPLE": MissileVariant(
-        name="item_missile__PR", 
+        name="item_missile__PR",
         color=[15.0, 0.5, 70.0, 1.0]
     ),
     "PINK": MissileVariant(
-        name="item_missile__PK", 
+        name="item_missile__PK",
         color=[70.0, 0.5, 7.0, 1.0]
     ),
     "MAGENTA": MissileVariant(

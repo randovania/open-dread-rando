@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Type
 
 from construct import Container
-from mercury_engine_data_structures.formats import Bmsad, Bmmap
+from mercury_engine_data_structures.formats import Bmmap, Bmsad
 
 from open_dread_rando import model_data
 from open_dread_rando.lua_editor import LuaEditor

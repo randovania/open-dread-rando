@@ -403,7 +403,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/item_missiletank/models/imats/item_missile__BK_mp_fxhologram_01.bsmat",
         ),
     ),
-    
+
     "item_missiletank_white": ModelData(
         bcmdl_path="actors/items/item_missiletank/models/item_missile__WH.bcmdl",
         bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
@@ -413,7 +413,7 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/item_missiletank/models/imats/item_missile__WH_mp_fxhologram_01.bsmat",
         ),
     ),
-    
+
     "item_missiletank_gray": ModelData(
         bcmdl_path="actors/items/item_missiletank/models/item_missile__GY.bcmdl",
         bmsas="actors/items/item_missiletank/charclasses/item_missiletank.bmsas",
