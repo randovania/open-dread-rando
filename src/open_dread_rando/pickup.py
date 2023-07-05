@@ -3,7 +3,6 @@ import functools
 import json
 from enum import Enum
 from pathlib import Path
-from typing import Type
 
 from construct import Container
 from mercury_engine_data_structures.formats import Bmmap, Bmsad
@@ -309,7 +308,7 @@ class CutscenePickup(BasePickup):
         )
 
 
-_PICKUP_TYPE_TO_CLASS: dict[PickupType, Type[BasePickup]] = {
+_PICKUP_TYPE_TO_CLASS: dict[PickupType, type[BasePickup]] = {
     PickupType.ACTOR: ActorPickup,
     PickupType.EMMI: EmmiPickup,
     PickupType.COREX: CoreXPickup,

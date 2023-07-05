@@ -33,12 +33,12 @@ def replace_lua_template(file: str, replacement: dict[str, Any], wrap_strings: b
 def lua_convert(data, wrap_strings: bool = False) -> str:
     if isinstance(data, list):
         return "{\n" + "\n".join(
-            "{},".format(lua_convert(item, wrap_strings))
+            f"{lua_convert(item, wrap_strings)},"
             for item in data
         ) + "\n}"
     if isinstance(data, dict):
         return "{\n" + "\n".join(
-            "{} = {},".format(key, lua_convert(value, wrap_strings))
+            f"{key} = {lua_convert(value, wrap_strings)},"
             for key, value in data.items()
         ) + "\n}"
     if isinstance(data, bool):

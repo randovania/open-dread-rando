@@ -17,7 +17,7 @@ def path_for_level(level_name: str) -> str:
     return f"maps/levels/c10_samus/{level_name}/{level_name}"
 
 
-def extension_for_type(type_hint: typing.Type[T]) -> str:
+def extension_for_type(type_hint: type[T]) -> str:
     return next(ext for ext, t in ALL_FORMATS.items() if t == type_hint).lower()
 
 
@@ -30,12 +30,12 @@ class PatcherEditor(FileTreeEditor):
         self.memory_files = {}
         self.map_icon_editor = MapIconEditor(self)
 
-    def get_file(self, path: str, type_hint: typing.Type[T] = BaseResource) -> T:
+    def get_file(self, path: str, type_hint: type[T] = BaseResource) -> T:
         if path not in self.memory_files:
             self.memory_files[path] = self.get_parsed_asset(path, type_hint=type_hint)
         return self.memory_files[path]
 
-    def get_scenario_file(self, name: str, type_hint: typing.Type[T]) -> T:
+    def get_scenario_file(self, name: str, type_hint: type[T]) -> T:
         path = f"{path_for_level(name)}.{extension_for_type(type_hint)}"
         return self.get_file(path, type_hint)
 

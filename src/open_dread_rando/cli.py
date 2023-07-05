@@ -65,4 +65,4 @@ def main():
         configuration,
     )
     end = time.time()
-    print("Patcher took {:.03f} seconds".format(end - start))
+    print(f"Patcher took {end - start:.03f} seconds")
