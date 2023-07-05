@@ -1,6 +1,46 @@
 [build-system]
-requires = ["setuptools>=44.0.0", "setuptools_scm[toml]>=3.4.3"]
+requires = [
+    "setuptools>=61.2",
+    "setuptools_scm[toml]>=3.4.3"
+]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "open-dread-rando"
+description = "An open source randomizer patcher for Metroid Dread."
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.9",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "mercury-engine-data-structures>=0.21.0",
+    "jsonschema>=4.0.0",
+    "ips.py>=0.1.2",
+    "keystone-engine>=0.9.2",
+]
+dynamic = ["version"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/randovania/open-dread-rando"
+
+[project.optional-dependencies]
+test = [
+    "lupa",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+]
+
+# Entry Points for PyInstaller
+[project.entry-points.pyinstaller40]
+hook-dirs = "open_dread_rando.__pyinstaller:get_hook_dirs"
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
