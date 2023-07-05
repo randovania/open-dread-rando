@@ -138,7 +138,7 @@ jobs:
         python-version: "3.9"
 
     - name: Install Python packages
-      run: python -m pip install ruff==0.0.252
+      run: python -m pip install ruff==0.0.272
 
     - name: Run ruff
       run: ruff check --format=github .

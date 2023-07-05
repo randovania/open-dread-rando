@@ -132,4 +132,4 @@ dmypy.json
 .idea/
 
 # Project
-open_dread_rando/version.py
+src/open_dread_rando/version.py
