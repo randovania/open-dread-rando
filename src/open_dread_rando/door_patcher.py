@@ -1,8 +1,8 @@
 import copy
 from bisect import insort
+from collections.abc import Sequence
 from enum import Enum
 from pathlib import Path
-from typing import Sequence
 
 from construct import Container, ListContainer
 from mercury_engine_data_structures.formats import Bmscc

@@ -28,11 +28,8 @@ jobs:
       - name: Install Python packages
         run: python -m pip install --upgrade pip setuptools build
 
-      - name: build wheel
-        run: python -m build --wheel
-
-      - name: build sdist
-        run: python -m build --sdist
+      - name: build
+        run: PYTHONWARNINGS=error python -m build
       
       - name: Store the packages
         uses: actions/upload-artifact@v3
@@ -122,23 +119,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.pypi_password }}
-
-  ruff:
-    runs-on: 'ubuntu-latest'
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.9"
-
-    - name: Install Python packages
-      run: python -m pip install ruff==0.0.252
-
-    - name: Run ruff
-      run: ruff check --format=github .
