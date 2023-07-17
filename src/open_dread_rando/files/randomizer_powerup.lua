@@ -181,12 +181,17 @@ function RandomizerPowerup.IncreaseEnergy(resource)
     local energy = Init.fEnergyPerTank
 
     if item_id == "ITEM_LIFE_SHARDS" then
+        local shards_amount = RandomizerPowerup.GetItemAmount(item_id)
         if Init.bImmediateEnergyParts then
             energy = Init.fEnergyPerPart
-        elseif (RandomizerPowerup.GetItemAmount(item_id) % 4) ~= 0 then
-            -- only change energy every 4 parts if not immediate!
+        elseif (shards_amount % 4) ~= 0 then
+            -- only change energy every 4 parts if not immediate but change internal amount
+            Game.GetPlayer().LIFE.fLifeShards = shards_amount
             return
         end
+        -- remove all life shards as energy will be increased by following code
+        RandomizerPowerup.SetItemAmount("ITEM_LIFE_SHARDS", 0)
+        Game.GetPlayer().LIFE.fLifeShards = 0
     end
 
     Game.LogWarn(0, "Increasing player energy.")
@@ -349,10 +354,11 @@ RandomizerEnergyPart = {}
 setmetatable(RandomizerEnergyPart, {__index = RandomizerPowerup})
 function RandomizerEnergyPart.OnPickedUp(actor, progression)
     Game.LogWarn(0, "RandomizerEnergyPart " .. type(progression))
-    progression = progression or {{{ item_id = "ITEM_LIFE_SHARDS", quantity = 1 }}}
-    if Init.bImmediateEnergyParts or not actor then
-        for _, resource in ipairs(progression[1]) do
-            RandomizerPowerup.IncreaseEnergy(resource)
-        end
+    if not Init.bImmediateEnergyParts and actor then
+        name = actor.sName
+        RandomizerPowerup.MarkLocationCollected(string.format("%s_%s", Scenario.CurrentScenarioID, name))
+    else
+        progression = progression or {{{ item_id = "ITEM_LIFE_SHARDS", quantity = 1 }}}
+        RandomizerPowerup.OnPickedUp(actor, progression)
     end
 end
