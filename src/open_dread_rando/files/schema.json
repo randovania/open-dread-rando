@@ -364,11 +364,48 @@
                         }
                     },
                     "additionalProperties": false
+                },
+                "shield_versions": {
+                    "type": "object",
+                    "description": "Contains a list of all shields and whether they are default or alternate cosmetic",
+                    "properties": {
+                        "ice_missile": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
+                        },
+                        "diffusion_beam": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
+                        },
+                        "storm_missile": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
+                        },
+                        "bomb": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
+                        },
+                        "cross_bomb": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
+                        },
+                        "power_bomb": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
+                        }
+                    }
                 }
             },
             "required": [
                 "config",
-                "lua"
+                "lua",
+                "shield_versions"
             ]
         },
         "enable_remote_lua": {

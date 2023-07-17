@@ -101,14 +101,14 @@ class ActorData(Enum):
     SHIELD_WIDE_BEAM = (["doorwidebeam"], MinimapIconData.SHIELD_WIDE_BEAM)
     SHIELD_PLASMA_BEAM = (["door_shield_plasma"], MinimapIconData.SHIELD_PLASMA_BEAM)
     SHIELD_WAVE_BEAM = (["doorwavebeam"], MinimapIconData.SHIELD_WAVE_BEAM)
-    SHIELD_DIFFUSION_BEAM = (["shield___diffusion"], MinimapIconData.SHIELD_DIFFUSION)
+    SHIELD_DIFFUSION_BEAM = (["shield_diffusion"], MinimapIconData.SHIELD_DIFFUSION)
     SHIELD_MISSILE = (["doorshieldmissile"], MinimapIconData.SHIELD_MISSILE)
     SHIELD_SUPER_MISSILE = (["doorshieldsupermissile"], MinimapIconData.SHIELD_SUPER_MISSILE)
-    SHIELD_ICE_MISSILE = (["shield_icemissile"], MinimapIconData.SHIELD_ICE_MISSILE)
-    SHIELD_STORM_MISSILE = (["shield_storm_mssl"], MinimapIconData.SHIELD_STORM_MISSILE)
-    SHIELD_BOMB = (["shield_bombs_regular__"], MinimapIconData.SHIELD_BOMB)
-    SHIELD_CROSS_BOMB = (["shield_cross_bomb_____"], MinimapIconData.SHIELD_CROSS_BOMB)
-    SHIELD_POWER_BOMB = (["doorshieldpowerbomb___"], MinimapIconData.SHIELD_POWER_BOMB)
+    SHIELD_ICE_MISSILE = (["doorshieldicemissile"], MinimapIconData.SHIELD_ICE_MISSILE)
+    SHIELD_STORM_MISSILE = (["doorshieldstormmissile"], MinimapIconData.SHIELD_STORM_MISSILE)
+    SHIELD_BOMB = (["doorshieldbomb"], MinimapIconData.SHIELD_BOMB)
+    SHIELD_CROSS_BOMB = (["doorshieldcrossbomb"], MinimapIconData.SHIELD_CROSS_BOMB)
+    SHIELD_POWER_BOMB = (["doorshieldpowerbomb"], MinimapIconData.SHIELD_POWER_BOMB)
 
     def __init__(self, actordef: list[str], minimap: MinimapIconData):
         # generate actordefs
