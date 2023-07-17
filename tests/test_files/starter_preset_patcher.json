@@ -4550,6 +4550,14 @@
                     "collision_camera_004": "Raven Beak Arena"
                 }
             }
+        },
+        "shield_versions": {
+            "ice_missile": "ALTERNATE",
+            "diffusion_beam": "ALTERNATE",
+            "storm_missile": "ALTERNATE",
+            "bomb": "ALTERNATE",
+            "cross_bomb": "ALTERNATE",
+            "power_bomb": "DEFAULT"
         }
     },
     "energy_per_tank": 100,

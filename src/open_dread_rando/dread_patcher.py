@@ -126,9 +126,9 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
             LOG.warning(e)
 
 
-def patch_doors(editor: PatcherEditor, doors_config: list[dict]):
+def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_config: dict[str, str]):
     editor.map_icon_editor.add_all_new_door_icons()
-    create_all_shield_assets(editor)
+    create_all_shield_assets(editor, shield_model_config)
 
     door_patcher = DoorPatcher(editor)
     for door in doors_config:
@@ -217,7 +217,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         patch_hints(editor, configuration["hints"])
 
     # Doors
-    patch_doors(editor, configuration["door_patches"])
+    patch_doors(editor, configuration["door_patches"], configuration["cosmetic_patches"]["shield_versions"])
 
     # custom spawn points
     patch_spawn_points(editor, configuration["new_spawn_points"])

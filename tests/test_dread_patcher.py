@@ -26,6 +26,14 @@ def test_cosmetic_options(lua_runtime):
                 },
                 "camera_names_dict": {
                 }
+            },
+            "shield_versions": {
+                "ice_missile": "ALTERNATE",
+                "diffusion_beam": "ALTERNATE",
+                "storm_missile": "ALTERNATE",
+                "bomb": "ALTERNATE",
+                "cross_bomb": "ALTERNATE",
+                "power_bomb": "DEFAULT"
             }
         },
         "energy_per_tank": 75,
