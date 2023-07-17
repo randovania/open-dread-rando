@@ -1,6 +1,6 @@
 import shutil
 from pathlib import Path
-from typing import NamedTuple, Tuple
+from typing import NamedTuple
 
 import ips
 import keystone
@@ -48,7 +48,7 @@ class AsmPatch:
         encoding, count = self.assembler.asm(self._asm(version), self.versions[version].offset, True)
         return encoding
 
-    def patch(self, version: str) -> Tuple[int, bytes]:
+    def patch(self, version: str) -> tuple[int, bytes]:
         if version not in self.versions:
             raise RuntimeError(f"Unsupported version: {version}")
         return self.versions[version].offset, self._data(version)

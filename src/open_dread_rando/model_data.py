@@ -1,12 +1,12 @@
 import dataclasses
-from typing import Optional, Tuple
+from typing import Optional
 
 
 @dataclasses.dataclass(frozen=True)
 class Transform:
-    position: Tuple[float, float, float] = (0.0, 0.0, 0.0)
-    angle: Tuple[float, float, float] = (0.0, 0.0, 0.0)
-    scale: Tuple[float, float, float] = (1.0, 1.0, 1.0)
+    position: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    angle: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    scale: tuple[float, float, float] = (1.0, 1.0, 1.0)
 
 
 @dataclasses.dataclass(frozen=True)

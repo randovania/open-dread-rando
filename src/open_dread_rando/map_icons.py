@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import TYPE_CHECKING, Tuple, Union
+from typing import TYPE_CHECKING
 
 from mercury_engine_data_structures.formats import Bmmdef
 
@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 @dataclasses.dataclass(frozen=True)
 class MapIcon:
     icon_id: str
-    coords: Tuple[int, int]
+    coords: tuple[int, int]
     label: str
     disabled_id: str = 'ItemAdquired'
-    offset: Tuple[int, int] = (0, 0)
+    offset: tuple[int, int] = (0, 0)
     auto_scale: bool = True
     is_global: bool = True
     full_zoom_scale: bool = True
@@ -41,7 +41,7 @@ class MapIcon:
         )
 
 
-ALL_ICONS: dict[str, Union[MapIcon, str]] = {
+ALL_ICONS: dict[str, MapIcon | str] = {
     "powerup_speedbooster": MapIcon(
         icon_id="ItemSpeedBooster",
         coords=(3, 7),
