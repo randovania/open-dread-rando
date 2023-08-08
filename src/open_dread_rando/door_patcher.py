@@ -145,9 +145,9 @@ class DoorType(Enum):
     BOMB = ("bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_BOMB, True, True,
             ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
     CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True,
-                  ["actors/props/doorshieldmissile"])
+                  ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
     POWER_BOMB = ("power_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_POWER_BOMB, True, True,
-                  ["actors/props/door_shield_plasma"])
+                  ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
     GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True,
                ["actors/props/door"])
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False,
