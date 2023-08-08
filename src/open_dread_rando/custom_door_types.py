@@ -46,7 +46,7 @@ class ShieldData:
 ALL_SHIELD_DATA: dict[str, ShieldData] = {
     "ice_missile": ShieldData(
         name="doorshieldicemissile",
-        type=DoorTemplates.TRIANGLES,
+        type=DoorTemplates.HEXAGONS,
         weaknesses=["ICE_MISSILE"],
         actordef="actors/props/doorshieldicemissile/charclasses/doorshieldicemissile.bmsad",
         default_mdl=ModelData(
