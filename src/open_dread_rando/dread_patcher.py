@@ -21,6 +21,7 @@ from open_dread_rando.output_config import output_format_for_category, output_pa
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickups.lua_editor import LuaEditor
 from open_dread_rando.pickups.pickup import pickup_object_for
+from open_dread_rando.pickups.split_pickups import patch_split_pickups
 from open_dread_rando.specific_patches import game_patches
 from open_dread_rando.specific_patches.environmental_damage import apply_constant_damage
 from open_dread_rando.specific_patches.objective import apply_objective_patches
@@ -120,6 +121,8 @@ def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
+    patch_split_pickups(editor)
+
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
 
