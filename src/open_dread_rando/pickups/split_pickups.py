@@ -2,7 +2,7 @@ import copy
 import dataclasses
 import itertools
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 from construct import Container
 from mercury_engine_data_structures.formats.bmsad import Bmsad
@@ -175,8 +175,25 @@ class SetGunChargeParams(CCFunc):
 @dataclasses.dataclass
 class PrimaryGunFuncs:
     add_primary_gun: AddPrimaryGun
-    set_billboard_group_params: SetBillBoardGroupParams | None
-    set_gun_charge_params: SetGunChargeParams | None
+    set_billboard_group_params: Optional[SetBillBoardGroupParams]
+    set_gun_charge_params: Optional[SetGunChargeParams]
+
+    @classmethod
+    def from_raw(cls,
+                 add_primary_gun: dict,
+                 set_billboard_group_params: Optional[dict] = None,
+                 set_gun_charge_params: Optional[dict] = None
+    ):
+        add_primary_gun = AddPrimaryGun(add_primary_gun)
+        if set_billboard_group_params is not None:
+            set_billboard_group_params = SetBillBoardGroupParams(set_billboard_group_params)
+        if set_gun_charge_params is not None:
+            set_gun_charge_params = SetGunChargeParams(set_gun_charge_params)
+        return cls(
+            add_primary_gun,
+            set_billboard_group_params,
+            set_gun_charge_params
+        )
 
     @property
     def as_list(self) -> list[dict]:
@@ -208,6 +225,23 @@ class AddSecondaryGun(CCFunc):
     pass
 
 
+def select_gun(param1: str, param2: bool) -> dict:
+    return {
+        "name": "SelectGun",
+        "unk": 1,
+        "params": {
+            "Param1": {
+                "type": "s",
+                "value": param1,
+            },
+            "Param2": {
+                "type": "b",
+                "value": param2,
+            },
+        },
+    }
+
+
 SAMUS_BMSAD_PATH = "actors/characters/samus/charclasses/samus.bmsad"
 
 def patch_split_pickups(editor: PatcherEditor):
@@ -216,34 +250,8 @@ def patch_split_pickups(editor: PatcherEditor):
     primaries = _patch_split_beams(editor)
     secondaries = _patch_split_missiles(editor)
     selections = [
-        {
-            "name": "SelectGun",
-            "unk": 1,
-            "params": {
-                "Param1": {
-                    "type": "s",
-                    "value": "PowerBeam",
-                },
-                "Param2": {
-                    "type": "b",
-                    "value": "True"
-                }
-            }
-        },
-        {
-            "name": "SelectGun",
-            "unk": 1,
-            "params": {
-                "Param1": {
-                    "type": "s",
-                    "value": "Missile",
-                },
-                "Param2": {
-                    "type": "b",
-                    "value": "False"
-                }
-            }
-        }
+        select_gun("PowerBeam", True),
+        select_gun("Missile", False),
     ]
 
     samus.raw.property.components["GUN"].functions = primaries + secondaries + selections
@@ -253,40 +261,35 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
     gun_funcs = samus.raw.property.components["GUN"].functions
 
-    power = PrimaryGunFuncs(
+    power = PrimaryGunFuncs.from_raw(
         gun_funcs[0],
         gun_funcs[1],
         gun_funcs[2],
     )
-    wide = PrimaryGunFuncs(
+    wide = PrimaryGunFuncs.from_raw(
         gun_funcs[3],
         gun_funcs[4],
         gun_funcs[5],
     )
-    plasma = PrimaryGunFuncs(
+    plasma = PrimaryGunFuncs.from_raw(
         gun_funcs[6],
         gun_funcs[7],
         gun_funcs[8],
     )
-    wave = PrimaryGunFuncs(
+    wave = PrimaryGunFuncs.from_raw(
         gun_funcs[9],
         gun_funcs[10],
         gun_funcs[11],
     )
-    hyper = PrimaryGunFuncs(
+    hyper = PrimaryGunFuncs.from_raw(
         gun_funcs[12],
         gun_funcs[13],
-        None,
     )
-    grapple = PrimaryGunFuncs(
+    grapple = PrimaryGunFuncs.from_raw(
         gun_funcs[14],
-        None,
-        None,
     )
-    spbgun = PrimaryGunFuncs(
+    spbgun = PrimaryGunFuncs.from_raw(
         gun_funcs[15],
-        None,
-        None,
     )
 
     power.add_primary_gun.params = dataclasses.replace(

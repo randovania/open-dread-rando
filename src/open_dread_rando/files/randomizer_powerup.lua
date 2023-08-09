@@ -302,6 +302,9 @@ function RandomizerPowerup._UpdateBeams()
         plasma_damage = plasma_damage / 3
         wave_damage = wave_damage / 3
     end
+    if not plasma then
+        wave_damage = wave_damage / 2
+    end
     Scenario.SetTunableValue("CTunableWideBeam", "fPerpendicularBeamOffsetSize", offset)
     Scenario.SetTunableValue("CTunablePlasmaBeam", "fDamageAmount", plasma_damage)
     Scenario.SetTunableValue("CTunableWaveBeam", "fDamageAmount", wave_damage)
