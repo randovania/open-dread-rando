@@ -339,6 +339,7 @@ end
 
 function Scenario.InitFromBlackboard()
     RandomizerPowerup.ApplyTunableChanges()
+    RandomizerPowerup.UpdateWeapons()
 end
 
 function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)

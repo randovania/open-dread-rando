@@ -72,6 +72,7 @@ function RandomizerPowerup.OnPickedUp(actor, resources)
     end
 
     RandomizerPowerup.ApplyTunableChanges()
+    RandomizerPowerup.UpdateWeapons()
     Scenario.UpdateProgressiveItemModels()
     RandomizerPowerup.IncrementInventoryIndex()
     RL.UpdateRDVClient(false)
@@ -276,6 +277,80 @@ function RandomizerPowerup._ApplyTunableChanges()
         Game.LogWarn(0, "Calling tunable handler for " .. item .. " = " .. totalQuantity)
 
         handler(totalQuantity)
+    end
+end
+
+function RandomizerPowerup.UpdateWeapons()
+    Game.AddSF(0, RandomizerPowerup._UpdateBeams, "")
+    Game.AddSF(0, RandomizerPowerup._UpdateMissiles, "")
+end
+
+function RandomizerPowerup._UpdateBeams()
+    local power = RandomizerPowerup.HasItem("ITEM_WEAPON_POWER_BEAM")
+    local wide = RandomizerPowerup.HasItem("ITEM_WEAPON_WIDE_BEAM")
+    local plasma = RandomizerPowerup.HasItem("ITEM_WEAPON_PLASMA_BEAM")
+    local wave = RandomizerPowerup.HasItem("ITEM_WEAPON_WAVE_BEAM")
+
+    -- no beams!
+    if not power then return end
+
+    local offset = 60
+    local plasma_damage = 50
+    local wave_damage = 80
+    if not wide then
+        offset = 0
+        plasma_damage = plasma_damage / 3
+        wave_damage = wave_damage / 3
+    end
+    Scenario.SetTunableValue("CTunableWideBeam", "fPerpendicularBeamOffsetSize", offset)
+    Scenario.SetTunableValue("CTunablePlasmaBeam", "fDamageAmount", plasma_damage)
+    Scenario.SetTunableValue("CTunableWaveBeam", "fDamageAmount", wave_damage)
+
+    if wide then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_SOLO_WIDE_BEAM", 1)
+    end
+    if plasma then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_SOLO_PLASMA_BEAM", 1)
+    end
+    if wave then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_SOLO_WAVE_BEAM", 1)
+    end
+    if wide and plasma then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_WIDE_PLASMA_BEAM", 1)
+    end
+    if wide and wave then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_WIDE_WAVE_BEAM", 1)
+    end
+    if plasma and wave then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_PLASMA_WAVE_BEAM", 1)
+    end
+    if wide and plasma and wave then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM", 1)
+    end
+end
+
+function RandomizerPowerup._UpdateMissiles()
+    local missile = RandomizerPowerup.HasItem("ITEM_WEAPON_MISSILE_LAUNCHER")
+    local super = RandomizerPowerup.HasItem("ITEM_WEAPON_SUPER_MISSILE")
+    local ice = RandomizerPowerup.HasItem("ITEM_WEAPON_ICE_MISSILE")
+
+    -- don't give any missiles without launcher
+    if not missile then return end
+
+    local ice_damage = 400
+    if not super then
+        ice_damage = ice_damage / 3
+    end
+    Scenario.SetTunableValue("CTunableIceMissile", "fDamageAmount", ice_damage)
+
+    if super then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_SOLO_SUPER_MISSILE", 1)
+    end
+    if ice then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_SOLO_ICE_MISSILE", 1)
+    end
+    if super and ice then
+        RandomizerPowerup.SetItemAmount("ITEM_WEAPON_SUPER_ICE_MISSILE", 1)
     end
 end
 

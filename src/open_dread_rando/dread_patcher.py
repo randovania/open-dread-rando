@@ -65,6 +65,9 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
         "ITEM_METROID_TOTAL_COUNT": 40,
         "ITEM_WEAPON_MISSILE_MAX": 0,
         "ITEM_WEAPON_POWER_BOMB_MAX": 0,
+        # TODO: expose shuffling these
+        "ITEM_WEAPON_POWER_BEAM": 1,
+        "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
     }
     final_inventory.update(inventory)
 
