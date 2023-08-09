@@ -3,12 +3,12 @@ import dataclasses
 import functools
 import json
 from enum import Enum
-from pathlib import Path
 
 from mercury_engine_data_structures.formats import Bmsad
 
-from open_dread_rando.material_patcher import MaterialData, create_custom_material
-from open_dread_rando.model_patcher import ModelData, create_custom_model
+from open_dread_rando.files import templates_path
+from open_dread_rando.misc_patches.material_patcher import MaterialData, create_custom_material
+from open_dread_rando.misc_patches.model_patcher import ModelData, create_custom_model
 from open_dread_rando.patcher_editor import PatcherEditor
 
 MISSILE_MDL = "actors/props/doorshieldmissile/models/doorshieldmissile.bcmdl"
@@ -23,7 +23,7 @@ SMOOTH_ATTRIBUTES = "actors/props/doorshieldmissile/models/textures/shield_no_at
 
 @functools.cache
 def _template_read_shield(file: str):
-    with Path(__file__).parent.joinpath("templates", f"{file}.json").open() as f:
+    with templates_path().joinpath(f"{file}.json").open() as f:
         return json.load(f)
 
 class DoorTemplates(Enum):

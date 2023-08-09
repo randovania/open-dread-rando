@@ -362,3 +362,4 @@ function RandomizerEnergyPart.OnPickedUp(actor, progression)
         RandomizerPowerup.OnPickedUp(actor, progression)
     end
 end
+

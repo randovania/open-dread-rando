@@ -1,17 +1,17 @@
 import itertools
-from pathlib import Path
 
-from open_dread_rando import lua_util
 from open_dread_rando.constants import ALL_SCENARIOS
+from open_dread_rando.files import files_path
+from open_dread_rando.misc_patches import lua_util
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
 
 
 def _read_powerup_lua() -> bytes:
-    return Path(__file__).parent.joinpath("files", "randomizer_powerup.lua").read_bytes()
+    return files_path().joinpath("randomizer_powerup.lua").read_bytes()
 
 
 def _read_level_lua(level_id: str) -> str:
-    return Path(__file__).parent.joinpath("files", "levels", f"{level_id}.lc.lua").read_text()
+    return files_path().joinpath("levels", f"{level_id}.lc.lua").read_text()
 
 
 SPECIFIC_CLASSES = {
