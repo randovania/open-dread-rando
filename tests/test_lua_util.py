@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from open_dread_rando import lua_util
+from open_dread_rando.misc_patches import lua_util
 
 
 def test_create_script_copy_exists():

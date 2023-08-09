@@ -2,8 +2,8 @@ import copy
 
 from mercury_engine_data_structures.formats.dread_types import CTriggerComponent_EEvent
 
+from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_text
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.text_patches import apply_text_patches, patch_text
 
 
 # when playing with artifacts, ensure that sufficient artifact items are shuffled

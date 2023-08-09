@@ -1,7 +1,7 @@
 import dataclasses
 
-from open_dread_rando.material_patcher import MaterialData, create_custom_material
-from open_dread_rando.model_patcher import ModelData, create_custom_model
+from open_dread_rando.misc_patches.material_patcher import MaterialData, create_custom_material
+from open_dread_rando.misc_patches.model_patcher import ModelData, create_custom_model
 from open_dread_rando.patcher_editor import PatcherEditor
 
 

@@ -1,7 +1,7 @@
 from mercury_engine_data_structures.formats import Bmsad
 
+from open_dread_rando.misc_patches.text_patches import patch_text
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.text_patches import patch_text
 
 _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
     {

@@ -2,15 +2,15 @@ import copy
 import functools
 import json
 from enum import Enum
-from pathlib import Path
 
 from construct import Container
 from mercury_engine_data_structures.formats import Bmmap, Bmsad
 
-from open_dread_rando import model_data
-from open_dread_rando.lua_editor import LuaEditor
+from open_dread_rando.files import templates_path
+from open_dread_rando.misc_patches.text_patches import patch_text
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.text_patches import patch_text
+from open_dread_rando.pickups import model_data
+from open_dread_rando.pickups.lua_editor import LuaEditor
 
 EXPANSION_ITEM_IDS = {
     "ITEM_ENERGY_TANKS",
@@ -26,7 +26,7 @@ EXPANSION_ITEM_IDS = {
 
 @functools.cache
 def _read_template_powerup():
-    with Path(__file__).parent.joinpath("templates", "template_powerup_bmsad.json").open() as f:
+    with templates_path().joinpath("template_powerup_bmsad.json").open() as f:
         return json.load(f)
 
 
