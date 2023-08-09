@@ -23,7 +23,7 @@ SMOOTH_ATTRIBUTES = "actors/props/doorshieldmissile/models/textures/shield_no_at
 
 @functools.cache
 def _template_read_shield(file: str):
-     with templates_path().joinpath(f"{file}.json").open() as f:
+    with templates_path().joinpath(f"{file}.json").open() as f:
         return json.load(f)
 
 class DoorTemplates(Enum):
