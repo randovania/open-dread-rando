@@ -374,7 +374,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
         priority=7,
     )
 
-    return itertools.chain(gun.as_list for gun in [
+    return list(itertools.chain.from_iterable(gun.as_list for gun in [
         power,
         solo_wide,
         solo_plasma,
@@ -386,7 +386,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
         hyper,
         grapple,
         spbgun,
-    ])
+    ]))
 
 
 def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
