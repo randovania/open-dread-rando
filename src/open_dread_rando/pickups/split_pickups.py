@@ -327,6 +327,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
         priority=3,
         on_fire="OnPowerBeamFire",
         charge_sfx="weapons/chargedloop_beam.wav",
+        color=Color3f(2.0, 0.0, 70.0),
     )
     solo_wave.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     solo_wave.set_billboard_group_params.charge = power.set_billboard_group_params.charge
@@ -346,6 +347,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
         wide_wave.add_primary_gun.params,
         inventory_item="ITEM_WEAPON_WIDE_WAVE_BEAM",
         priority=5,
+        color=Color3f(2.0, 0.0, 70.0),
     )
 
     plasma_wave = copy.deepcopy(wave)

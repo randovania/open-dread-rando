@@ -281,8 +281,8 @@ function RandomizerPowerup._ApplyTunableChanges()
 end
 
 function RandomizerPowerup.UpdateWeapons()
-    Game.AddSF(0.01, RandomizerPowerup._UpdateBeams, "")
-    Game.AddSF(0.01, RandomizerPowerup._UpdateMissiles, "")
+    RandomizerPowerup._UpdateBeams()
+    RandomizerPowerup._UpdateMissiles()
 end
 
 function RandomizerPowerup._UpdateBeams()
