@@ -281,8 +281,8 @@ function RandomizerPowerup._ApplyTunableChanges()
 end
 
 function RandomizerPowerup.UpdateWeapons()
-    Game.AddSF(0, RandomizerPowerup._UpdateBeams, "")
-    Game.AddSF(0, RandomizerPowerup._UpdateMissiles, "")
+    Game.AddSF(0.01, RandomizerPowerup._UpdateBeams, "")
+    Game.AddSF(0.01, RandomizerPowerup._UpdateMissiles, "")
 end
 
 function RandomizerPowerup._UpdateBeams()
@@ -305,7 +305,7 @@ function RandomizerPowerup._UpdateBeams()
     if not plasma then
         wave_damage = wave_damage / 2
     end
-    Scenario.SetTunableValue("CTunableWideBeam", "fPerpendicularBeamOffsetSize", offset)
+    Scenario.SetTunableValue("CTunableWideBeam", "fPerpendicularOffsetSize", offset)
     Scenario.SetTunableValue("CTunablePlasmaBeam", "fDamageAmount", plasma_damage)
     Scenario.SetTunableValue("CTunableWaveBeam", "fDamageAmount", wave_damage)
 

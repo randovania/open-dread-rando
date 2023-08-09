@@ -394,4 +394,4 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
     gun = samus.raw.property.components["GUN"]
 
     # TODO
-    return gun.functions[16:20]
+    return gun.functions[16:-2]
