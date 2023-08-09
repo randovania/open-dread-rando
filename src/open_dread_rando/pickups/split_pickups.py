@@ -2,7 +2,7 @@ import copy
 import dataclasses
 import itertools
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Generic, Optional, TypeVar
 
 from construct import Container
 from mercury_engine_data_structures.formats.bmsad import Bmsad
@@ -42,63 +42,52 @@ class CCFunc:
         self._param(i).value = value
 
 
-@dataclasses.dataclass(frozen=True)
-class PrimaryGunParams:
-    name: str
-    class_name: str
-    subactor_name: str
-    autofire_delay: float
-    inventory_item: str
-    burst_fx: str
-    chargeburst_fx: str
-    charge_fx: str
-    on_fire: str
-    charge_sfx: str
-    input_type: BeamInput
-    priority: int
-    color: Color3f
+T = TypeVar('T')
+class Param(Generic[T]):
+    def __init__(self, index: int) -> None:
+        self.index = index
+
+    def __get__(self, inst: CCFunc, objtype=None) -> T:
+        return inst.get_param(self.index)
+
+    def __set__(self, inst: CCFunc, value: T):
+        inst.set_param(self.index, value)
 
 
 class AddPrimaryGun(CCFunc):
+    name = Param[str](1)
+    class_name = Param[str](2)
+    subactor_name = Param[str](3)
+    autofire_delay = Param[float](4)
+    inventory_item = Param[str](5)
+    burst_fx = Param[str](6)
+    chargeburst_fx = Param[str](7)
+    charge_fx = Param[str](8)
+    on_fire = Param[str](9)
+    charge_sfx = Param[str](10)
+    priority = Param[int](12)
+
     @property
-    def params(self) -> PrimaryGunParams:
-        return PrimaryGunParams(
-            name=self.get_param(1),
-            class_name=self.get_param(2),
-            subactor_name=self.get_param(3),
-            autofire_delay=self.get_param(4),
-            inventory_item=self.get_param(5),
-            burst_fx=self.get_param(6),
-            chargeburst_fx=self.get_param(7),
-            charge_fx=self.get_param(8),
-            on_fire=self.get_param(9),
-            charge_sfx=self.get_param(10),
-            input_type=BeamInput(self.get_param(11)),
-            priority=self.get_param(12),
-            color=Color3f(
-                r=self.get_param(13),
-                g=self.get_param(14),
-                b=self.get_param(15),
-            ),
+    def input_type(self) -> BeamInput:
+        return BeamInput(self.get_param(11))
+
+    @input_type.setter
+    def input_type(self, value: BeamInput):
+        self.set_param(11, value.value)
+
+    @property
+    def color(self) -> Color3f:
+        return Color3f(
+            self.get_param(13),
+            self.get_param(14),
+            self.get_param(15),
         )
 
-    @params.setter
-    def params(self, value: PrimaryGunParams):
-        self.set_param(1, value.name)
-        self.set_param(2, value.class_name)
-        self.set_param(3, value.subactor_name)
-        self.set_param(4, value.autofire_delay)
-        self.set_param(5, value.inventory_item)
-        self.set_param(6, value.burst_fx)
-        self.set_param(7, value.chargeburst_fx)
-        self.set_param(8, value.charge_fx)
-        self.set_param(9, value.on_fire)
-        self.set_param(10, value.charge_sfx)
-        self.set_param(11, value.input_type.value)
-        self.set_param(12, value.priority)
-        self.set_param(13, value.color.r)
-        self.set_param(14, value.color.g)
-        self.set_param(15, value.color.b)
+    @color.setter
+    def color(self, value: Color3f):
+        self.set_param(13, value.r)
+        self.set_param(14, value.g)
+        self.set_param(15, value.b)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -111,13 +100,7 @@ class BillBoardGroupParams:
 
 
 class SetBillBoardGroupParams(CCFunc):
-    @property
-    def name(self) -> str:
-        return self.get_param(1)
-
-    @name.setter
-    def name(self, value: str):
-        self.set_param(1, value)
+    name = Param[str](1)
 
     def _get_group(self, i: int) -> BillBoardGroupParams:
         i *= 5
@@ -163,13 +146,7 @@ class SetBillBoardGroupParams(CCFunc):
 
 
 class SetGunChargeParams(CCFunc):
-    @property
-    def name(self) -> str:
-        return self.get_param(1)
-
-    @name.setter
-    def name(self, value: str):
-        self.set_param(1, value)
+    name = Param[str](1)
 
 
 @dataclasses.dataclass
@@ -210,10 +187,7 @@ class PrimaryGunFuncs:
 
     @name.setter
     def name(self, value: str):
-        self.add_primary_gun.params = dataclasses.replace(
-            self.add_primary_gun.params,
-            name=value,
-        )
+        self.add_primary_gun.name = value
         if self.set_billboard_group_params is not None:
             self.set_billboard_group_params.name = value
         if self.set_gun_charge_params is not None:
@@ -248,6 +222,7 @@ def patch_split_pickups(editor: PatcherEditor):
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
 
     primaries = _patch_split_beams(editor)
+    print(primaries)
     secondaries = _patch_split_missiles(editor)
     selections = [
         select_gun("PowerBeam", True),
@@ -292,89 +267,64 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
         gun_funcs[15],
     )
 
-    power.add_primary_gun.params = dataclasses.replace(
-        power.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_POWER_BEAM",
-        priority=0,
-    )
+    power.add_primary_gun.inventory_item = "ITEM_WEAPON_POWER_BEAM"
+    power.add_primary_gun.priority = 0
 
     solo_wide = copy.deepcopy(wide)
     solo_wide.name = "SoloWideBeam"
-    solo_wide.add_primary_gun.params = dataclasses.replace(
-        solo_wide.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_SOLO_WIDE_BEAM",
-        priority=1,
-    )
+    solo_wide.add_primary_gun.inventory_item = "ITEM_WEAPON_SOLO_WIDE_BEAM"
+    solo_wide.add_primary_gun.priority = 1
 
     solo_plasma = copy.deepcopy(plasma)
     solo_plasma.name = "SoloPlasmaBeam"
-    solo_plasma.add_primary_gun.params = dataclasses.replace(
-        solo_plasma.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_SOLO_PLASMA_BEAM",
-        priority=2,
-        on_fire="OnPowerBeamFire",
-        charge_sfx="weapons/chargedloop_beam.wav",
-    )
+
+    solo_plasma.add_primary_gun.inventory_item = "ITEM_WEAPON_SOLO_PLASMA_BEAM"
+    solo_plasma.add_primary_gun.priority = 2
+    solo_plasma.add_primary_gun.on_fire = "OnPowerBeamFire"
+    solo_plasma.add_primary_gun.charge_sfx = "weapons/chargedloop_beam.wav"
+
     solo_plasma.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     solo_plasma.set_billboard_group_params.charge = power.set_billboard_group_params.charge
     solo_plasma.set_billboard_group_params.boost = power.set_billboard_group_params.boost
 
     solo_wave = copy.deepcopy(wave)
     solo_wave.name = "SoloWaveBeam"
-    solo_wave.add_primary_gun.params = dataclasses.replace(
-        solo_wave.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_SOLO_WAVE_BEAM",
-        priority=3,
-        on_fire="OnPowerBeamFire",
-        charge_sfx="weapons/chargedloop_beam.wav",
-        color=Color3f(2.0, 0.0, 70.0),
-    )
+    solo_wave.add_primary_gun.inventory_item = "ITEM_WEAPON_SOLO_WAVE_BEAM"
+    solo_wave.add_primary_gun.priority = 3
+    solo_wave.add_primary_gun.on_fire = "OnPowerBeamFire"
+    solo_wave.add_primary_gun.charge_sfx = "weapons/chargedloop_beam.wav"
+    solo_wave.add_primary_gun.color = Color3f(2.0, 0.0, 70.0)
     solo_wave.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     solo_wave.set_billboard_group_params.charge = power.set_billboard_group_params.charge
     solo_wave.set_billboard_group_params.boost = power.set_billboard_group_params.boost
 
     wide_plasma = copy.deepcopy(plasma)
     wide_plasma.name = "WidePlasmaBeam"
-    wide_plasma.add_primary_gun.params = dataclasses.replace(
-        wide_plasma.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_WIDE_PLASMA_BEAM",
-        priority=4,
-    )
+    wide_plasma.add_primary_gun.inventory_item = "ITEM_WEAPON_WIDE_PLASMA_BEAM"
+    wide_plasma.add_primary_gun.priority = 4
 
     wide_wave = copy.deepcopy(wave)
     wide_wave.name = "WideWaveBeam"
-    wide_wave.add_primary_gun.params = dataclasses.replace(
-        wide_wave.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_WIDE_WAVE_BEAM",
-        priority=5,
-        color=Color3f(2.0, 0.0, 70.0),
-    )
+    wide_wave.add_primary_gun.inventory_item = "ITEM_WEAPON_WIDE_WAVE_BEAM"
+    wide_wave.add_primary_gun.priority = 5
+    wide_wave.add_primary_gun.color = Color3f(2.0, 0.0, 70.0)
 
     plasma_wave = copy.deepcopy(wave)
     plasma_wave.name = "PlasmaWaveBeam"
-    plasma_wave.add_primary_gun.params = dataclasses.replace(
-        plasma_wave.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_PLASMA_WAVE_BEAM",
-        priority=6,
-        on_fire="OnPowerBeamFire",
-        charge_sfx="weapons/chargedloop_beam.wav",
-    )
+    plasma_wave.add_primary_gun.inventory_item = "ITEM_WEAPON_PLASMA_WAVE_BEAM"
+    plasma_wave.add_primary_gun.priority = 6
+    plasma_wave.add_primary_gun.on_fire = "OnPowerBeamFire"
+    plasma_wave.add_primary_gun.charge_sfx = "weapons/chargedloop_beam.wav"
     plasma_wave.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     plasma_wave.set_billboard_group_params.charge = power.set_billboard_group_params.charge
     plasma_wave.set_billboard_group_params.boost = power.set_billboard_group_params.boost
 
     full = copy.deepcopy(wave)
     full.name = "AllBeams"
-    full.add_primary_gun.params = dataclasses.replace(
-        full.add_primary_gun.params,
-        inventory_item="ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM",
-        priority=7,
-    )
+    full.add_primary_gun.inventory_item = "ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM"
+    full.add_primary_gun.priority = 7
 
-    hyper.add_primary_gun.params = dataclasses.replace(
-        hyper.add_primary_gun.params,
-        priority=7,
-    )
+    hyper.add_primary_gun.priority = 8
 
     return list(itertools.chain.from_iterable(gun.as_list for gun in [
         power,
