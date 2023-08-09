@@ -286,6 +286,8 @@ function RandomizerPowerup.UpdateWeapons()
 end
 
 function RandomizerPowerup._UpdateBeams()
+    Game.AddSF(0, RandomizerPowerup._UpdateBeams, "")
+
     local power = RandomizerPowerup.HasItem("ITEM_WEAPON_POWER_BEAM")
     local wide = RandomizerPowerup.HasItem("ITEM_WEAPON_WIDE_BEAM")
     local plasma = RandomizerPowerup.HasItem("ITEM_WEAPON_PLASMA_BEAM")
@@ -333,6 +335,8 @@ function RandomizerPowerup._UpdateBeams()
 end
 
 function RandomizerPowerup._UpdateMissiles()
+    Game.AddSF(0, RandomizerPowerup._UpdateMissiles, "")
+
     local missile = RandomizerPowerup.HasItem("ITEM_WEAPON_MISSILE_LAUNCHER")
     local super = RandomizerPowerup.HasItem("ITEM_WEAPON_SUPER_MISSILE")
     local ice = RandomizerPowerup.HasItem("ITEM_WEAPON_ICE_MISSILE")
