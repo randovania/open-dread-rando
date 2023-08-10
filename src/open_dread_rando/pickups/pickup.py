@@ -116,6 +116,7 @@ class ActorPickup(BasePickup):
         item_id = "ITEM_NONE"
         first_progression = self.pickup["resources"][0][0]["item_id"]
         if first_progression in {"ITEM_WEAPON_WIDE_BEAM", "ITEM_WEAPON_SUPER_MISSILE"}:
+            # the gun doesn't appear to be selected properly on pickup unless we do this
             item_id = first_progression
 
         set_custom_params: dict = pickable["functions"][0]["params"]
