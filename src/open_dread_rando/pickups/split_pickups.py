@@ -194,9 +194,27 @@ class PrimaryGunFuncs:
             self.set_gun_charge_params.name = value
 
 
-
 class AddSecondaryGun(CCFunc):
-    pass
+    name = Param[str](1)
+    class_name = Param[str](2)
+    subactor_name = Param[str](3)
+    fire_delay = Param[float](4)
+
+    main_inventory_item = Param[str](5)
+    ammo_inventory_item = Param[str](6)
+    capacity_inventory_item = Param[str](11)
+
+    burst_fx = Param[str](7)
+    on_fire = Param[str](8)
+    priority = Param[str](10)
+
+    @property
+    def input_type(self) -> MissileInput:
+        return MissileInput(self.get_param(9))
+
+    @input_type.setter
+    def input_type(self, value: MissileInput):
+        self.set_param(9, value.value)
 
 
 def select_gun(param1: str, param2: bool) -> dict:
@@ -218,11 +236,54 @@ def select_gun(param1: str, param2: bool) -> dict:
 
 SAMUS_BMSAD_PATH = "actors/characters/samus/charclasses/samus.bmsad"
 
+# ruff: noqa: C901
+def update_starting_inventory_split_pickups(inventory: dict) -> dict:
+    inventory = copy.copy(inventory)
+
+    power = "ITEM_WEAPON_POWER_BEAM" in inventory
+    wide = "ITEM_WEAPON_WIDE_BEAM" in inventory
+    plasma = "ITEM_WEAPON_PLASMA_BEAM" in inventory
+    wave = "ITEM_WEAPON_WAVE_BEAM" in inventory
+
+    if power:
+        if wide:
+            inventory["ITEM_WEAPON_SOLO_WIDE_BEAM"] = 1
+        if plasma:
+            inventory["ITEM_WEAPON_SOLO_PLASMA_BEAM"] = 1
+        if wave:
+            inventory["ITEM_WEAPON_SOLO_WAVE_BEAM"] = 1
+        if wide and plasma:
+            inventory["ITEM_WEAPON_WIDE_PLASMA_BEAM"] = 1
+        if wide and wave:
+            inventory["ITEM_WEAPON_WIDE_WAVE_BEAM"] = 1
+        if plasma and wave:
+            inventory["ITEM_WEAPON_PLASMA_WAVE_BEAM"] = 1
+        if wide and plasma and wave:
+            inventory["ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM"] = 1
+
+    missile = "ITEM_WEAPON_MISSILE_LAUNCHER" in inventory
+    supers = "ITEM_WEAPON_SUPER_MISSILE" in inventory
+    ice = "ITEM_WEAPON_ICE_MISSILE" in inventory
+    storm = "ITEM_MULTILOCKON" in inventory
+
+    if missile:
+        if supers:
+            inventory["ITEM_WEAPON_SOLO_SUPER_MISSILE"] = 1
+        if ice:
+            inventory["ITEM_WEAPON_SOLO_ICE_MISSILE"] = 1
+        if supers and ice:
+            inventory["ITEM_WEAPON_SUPER_ICE_MISSILE"] = 1
+        if storm:
+            inventory["ITEM_WEAPON_STORM_MISSILE"] = 1
+
+    return inventory
+
+
+
 def patch_split_pickups(editor: PatcherEditor):
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
 
     primaries = _patch_split_beams(editor)
-    print(primaries)
     secondaries = _patch_split_missiles(editor)
     selections = [
         select_gun("PowerBeam", True),
@@ -345,5 +406,54 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
     gun = samus.raw.property.components["GUN"]
 
-    # TODO
-    return gun.functions[16:-2]
+    ice_bmsad = editor.get_file("actors/weapons/icemissile/charclasses/icemissile.bmsad", Bmsad)
+    solo_ice_bmsad = copy.deepcopy(ice_bmsad)
+    solo_ice_bmsad.raw.name = "soloicemissile"
+    movement = solo_ice_bmsad.raw.property.components["MOVEMENT"].fields.fields
+    movement.fInitialSpeed = 1250
+    movement.fTimeInInitialSpeed = 0.2
+    movement.fTimeToReachSpeed = 0.6
+    editor.add_new_asset(
+        "actors/weapons/soloicemissile/charclasses/soloicemissile.bmsad",
+        solo_ice_bmsad,
+        editor.find_pkgs("actors/weapons/icemissile/charclasses/icemissile.bmsad"),
+    )
+
+    samus.raw.property.sub_actors.append("soloicemissile")
+
+    missile = AddSecondaryGun(gun.functions[16])
+    supers = AddSecondaryGun(gun.functions[17])
+    ice = AddSecondaryGun(gun.functions[18])
+    lockon = AddSecondaryGun(gun.functions[19])
+    omega = AddSecondaryGun(gun.functions[20])
+
+    missile.main_inventory_item = "ITEM_WEAPON_MISSILE_LAUNCHER"
+    missile.priority = 0
+
+    solo_super = copy.deepcopy(supers)
+    solo_super.name = "SoloSuperMissile"
+    solo_super.main_inventory_item = "ITEM_WEAPON_SOLO_SUPER_MISSILE"
+    solo_super.priority = 1
+
+    solo_ice = copy.deepcopy(ice)
+    solo_ice.name = "SoloIceMissile"
+    solo_ice.main_inventory_item = "ITEM_WEAPON_SOLO_ICE_MISSILE"
+    solo_ice.subactor_name = "soloicemissile"
+    solo_ice.fire_delay = 0.27
+    solo_ice.priority = 2
+
+    super_ice = copy.deepcopy(ice)
+    super_ice.name = "SuperIceMissile"
+    super_ice.main_inventory_item = "ITEM_WEAPON_SUPER_ICE_MISSILE"
+    super_ice.priority = 3
+
+    lockon.main_inventory_item = "ITEM_WEAPON_STORM_MISSILE"
+
+    return [gun.raw for gun in [
+        missile,
+        solo_super,
+        solo_ice,
+        super_ice,
+        lockon,
+        omega,
+    ]]

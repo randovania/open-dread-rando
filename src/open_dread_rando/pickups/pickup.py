@@ -113,8 +113,13 @@ class ActorPickup(BasePickup):
         pickable: dict = bmsad["property"]["components"]["PICKABLE"]
         script: dict = bmsad["property"]["components"]["SCRIPT"]
 
+        item_id = "ITEM_NONE"
+        first_progression = self.pickup["resources"][0][0]["item_id"]
+        if first_progression in {"ITEM_WEAPON_WIDE_BEAM", "ITEM_WEAPON_SUPER_MISSILE"}:
+            item_id = first_progression
+
         set_custom_params: dict = pickable["functions"][0]["params"]
-        set_custom_params["Param1"]["value"] = "ITEM_NONE"
+        set_custom_params["Param1"]["value"] = item_id
 
         script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup,
                                                                                                actordef_name=bmsad[
