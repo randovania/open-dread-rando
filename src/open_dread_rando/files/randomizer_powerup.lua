@@ -74,6 +74,7 @@ function RandomizerPowerup.OnPickedUp(actor, resources)
     RandomizerPowerup.ApplyTunableChanges()
     RandomizerPowerup.UpdateWeapons()
     Scenario.UpdateProgressiveItemModels()
+    Scenario.UpdateBlastShields()
     RandomizerPowerup.IncrementInventoryIndex()
     RL.UpdateRDVClient(false)
     return granted

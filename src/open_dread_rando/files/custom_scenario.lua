@@ -230,6 +230,32 @@ function Scenario.UpdateProgressiveItemModels()
     Game.AddSF(0.1, "Scenario._UpdateProgressiveItemModels", "")
 end
 
+Scenario._BlastShieldTypes = {
+    doorshieldsupermissile = {
+        item = "ITEM_WEAPON_SUPER_MISSILE",
+        damage = {"SUPER_MISSILE", "ICE_MISSILE"},
+    },
+    door_shield_plasma = {
+        item = "ITEM_WEAPON_PLASMA_BEAM",
+        damage = {"PLASMA_BEAM"}
+    }
+}
+function Scenario._UpdateBlastShields()
+    for name, actordef in pairs(Game.GetEntities()) do
+        shield_type = Scenario._BlastShieldTypes[actordef]
+        if shield_type ~= nil and RandomizerPowerup.HasItem(shield_type.item) then
+            local shield = Game.GetActor(name)
+            for _, damage in ipairs(shield_type.damage) do
+                shield.LIFE:AddDamageSource(damage)
+            end
+        end
+    end
+end
+
+function Scenario.UpdateBlastShields()
+    Game.AddSF(0.1, "Scenario._UpdateBlastShields", "")
+end
+
 local original_onload = Scenario.OnLoadScenarioFinished
 function Scenario.OnLoadScenarioFinished()
     original_onload()
@@ -257,6 +283,7 @@ function Scenario.OnLoadScenarioFinished()
     if Scenario.VisitAllTeleportScenarios() then return end
 
     Scenario.UpdateProgressiveItemModels()
+    Scenario.UpdateBlastShields()
 
     Blackboard.SetProp("GAME_PROGRESS", "RandoMapSeen" .. CurrentScenarioID, "b", true)
 
@@ -344,6 +371,7 @@ end
 
 function Scenario.OnSubAreaChange(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
     Scenario.UpdateProgressiveItemModels()
+    Scenario.UpdateBlastShields()
     Scenario.UpdateRoomName(new_subarea)
 end
 

@@ -292,6 +292,8 @@ def patch_split_pickups(editor: PatcherEditor):
 
     samus.raw.property.components["GUN"].functions = primaries + secondaries + selections
 
+    _patch_blast_shields(editor)
+
 
 def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
@@ -457,3 +459,14 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
         lockon,
         omega,
     ]]
+
+
+def _patch_blast_shields(editor: PatcherEditor):
+    supers = editor.get_file("actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsad", Bmsad)
+    super_life = supers.raw.property.components["LIFE"]
+    super_life.functions.pop(1) # AddDamageSource("SUPER_MISSILE")
+    super_life.functions.pop(1) # AddDamageSource("ICE_MISSILE")
+
+    plasma = editor.get_file("actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsad", Bmsad)
+    plasma_life = plasma.raw.property.components["LIFE"]
+    plasma_life.functions.pop(1) # AddDamageSource("PLASMA_BEAM")
