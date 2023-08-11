@@ -21,6 +21,13 @@ SPECIFIC_CLASSES = {
     "ITEM_MULTILOCKON": "RandomizerStormMissile",
     "ITEM_LIFE_SHARDS": "RandomizerEnergyPart",
     "ITEM_GHOST_AURA": "RandomizerFlashShift",
+    "ITEM_WEAPON_POWER_BEAM": "RandomizerPowerBeam",
+    "ITEM_WEAPON_WIDE_BEAM": "RandomizerWideBeam",
+    "ITEM_WEAPON_PLASMA_BEAM": "RandomizerPlasmaBeam",
+    "ITEM_WEAPON_WAVE_BEAM": "RandomizerWaveBeam",
+    "ITEM_WEAPON_MISSILE_LAUNCHER": "RandomizerMissileLauncher",
+    "ITEM_WEAPON_SUPER_MISSILE": "RandomizerSuperMissile",
+    "ITEM_WEAPON_ICE_MISSILE": "RandomizerIceMissile",
 }
 
 
