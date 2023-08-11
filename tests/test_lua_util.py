@@ -1,4 +1,3 @@
-from pathlib import Path
 from unittest.mock import MagicMock
 
 from open_dread_rando.misc_patches import lua_util
@@ -16,7 +15,7 @@ def test_create_script_copy_exists():
     editor.add_new_asset.assert_not_called()
 
 
-def test_template_replacement():
+def test_template_replacement(test_files_dir):
     generated_code = lua_util.replace_lua_template("randomizer_progressive_template.lua", {
         "name": "RandomizerTestPowerup",
         "parent": "RandomizerPowerup",
@@ -25,9 +24,6 @@ def test_template_replacement():
         ],
     })
 
-    test_files: Path = Path(__file__).parent.joinpath("test_files")
+    expected_code = test_files_dir.joinpath("randomizer_progressive_expected.lua").read_text()
 
-    with test_files.joinpath("randomizer_progressive_expected.lua").open() as f:
-        expected_code = f.read()
-
-        assert generated_code == expected_code
+    assert generated_code == expected_code
