@@ -5,6 +5,8 @@ from typing import NamedTuple
 import ips
 import keystone
 
+from open_dread_rando.files import files_path
+
 VERSIONS = {
     "1.0.0": "49161D9CCBC15DF944D0B6278A3C446C006B0BE8",
     "2.1.0": "646761F643AFEBB379EDD5E6A5151AF2CEF93DC1",
@@ -83,7 +85,7 @@ def _add_version_sentinel(patch: ips.Patch, version: str):
 
 
 debug_input = AsmPatch(
-    Path(__file__).parent.joinpath("files/exefs_patches/debug_input.s").read_text(),
+    files_path().joinpath("exefs_patches", "debug_input.s").read_text(),
     {
         "1.0.0": AsmVersion(0x010525f0, {
             "getNpadState1": "0x011f3630",
@@ -135,5 +137,5 @@ def patch_exefs(exefs_patches: Path, configuration: dict):
 def include_depackager(exefs_path: Path):
     exefs_path.mkdir(parents=True, exist_ok=True)
 
-    dread_depackager = Path(__file__).parent.joinpath("files", "dread_depackager")
+    dread_depackager = files_path().joinpath("dread_depackager")
     shutil.copytree(dread_depackager, exefs_path, dirs_exist_ok=True)

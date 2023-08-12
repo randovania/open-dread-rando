@@ -6,30 +6,33 @@ from pathlib import Path
 from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
-from open_dread_rando import elevator, game_patches, lua_util
 from open_dread_rando.constants import FadeTimes
 from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
-from open_dread_rando.custom_door_types import create_all_shield_assets
-from open_dread_rando.door_patcher import DoorPatcher
-from open_dread_rando.environmental_damage import apply_constant_damage
-from open_dread_rando.exefs import include_depackager, patch_exefs
+from open_dread_rando.cosmetic_patches.missile_color_patcher import generate_missile_colors
+from open_dread_rando.door_locks.custom_door_types import create_all_shield_assets
+from open_dread_rando.door_locks.door_patcher import DoorPatcher
+from open_dread_rando.files import files_path
 from open_dread_rando.logger import LOG
-from open_dread_rando.lua_editor import LuaEditor
-from open_dread_rando.missile_color_patcher import generate_missile_colors
-from open_dread_rando.objective import apply_objective_patches
+from open_dread_rando.misc_patches import elevator, lua_util
+from open_dread_rando.misc_patches.exefs import include_depackager, patch_exefs
+from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
+from open_dread_rando.misc_patches.tilegroup_patcher import patch_tilegroup
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
-from open_dread_rando.pickup import pickup_object_for
-from open_dread_rando.static_fixes import apply_static_fixes
-from open_dread_rando.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
-from open_dread_rando.tilegroup_patcher import patch_tilegroup
+from open_dread_rando.pickups.lua_editor import LuaEditor
+from open_dread_rando.pickups.pickup import pickup_object_for
+from open_dread_rando.pickups.split_pickups import patch_split_pickups, update_starting_inventory_split_pickups
+from open_dread_rando.specific_patches import game_patches
+from open_dread_rando.specific_patches.environmental_damage import apply_constant_damage
+from open_dread_rando.specific_patches.objective import apply_objective_patches
+from open_dread_rando.specific_patches.static_fixes import apply_static_fixes
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
 
 T = typing.TypeVar("T")
 
 
 def _read_schema():
-    with Path(__file__).parent.joinpath("files", "schema.json").open() as f:
+    with files_path().joinpath("schema.json").open() as f:
         return json.load(f)
 
 
@@ -53,6 +56,13 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     if "ITEM_LIFE_SHARDS" in inventory and configuration["immediate_energy_parts"]:
         shards = inventory.pop("ITEM_LIFE_SHARDS")
         max_life += shards * energy_per_part
+
+    inventory.update({
+        # TODO: expose shuffling these
+        "ITEM_WEAPON_POWER_BEAM": 1,
+        "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
+    })
+    inventory = update_starting_inventory_split_pickups(inventory)
 
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
@@ -115,6 +125,8 @@ def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
+    patch_split_pickups(editor)
+
     # add to the TOC
     editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
 
@@ -153,14 +165,14 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
 
 
 def add_custom_files(editor: PatcherEditor):
-    custom_romfs = Path(__file__).parent.joinpath("files", "romfs")
+    custom_romfs = files_path().joinpath("romfs")
     for child in custom_romfs.rglob("*"):
         if not child.is_file():
             continue
         relative = child.relative_to(custom_romfs).as_posix()
         editor.add_new_asset(str(relative), child.read_bytes(), [])
 
-    lua_libraries = Path(__file__).parent.joinpath("files", "lua_libraries")
+    lua_libraries = files_path().joinpath("lua_libraries")
     for child in lua_libraries.rglob("*"):
         if not child.is_file():
             continue

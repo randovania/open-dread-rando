@@ -1,7 +1,7 @@
 from math import ceil
 
-from open_dread_rando.environmental_damage_sources import ALL_DAMAGE_ROOM_ACTORS
 from open_dread_rando.patcher_editor import PatcherEditor
+from open_dread_rando.specific_patches.environmental_damage_sources import ALL_DAMAGE_ROOM_ACTORS
 
 
 def get_damage_and_tick(value: float) -> tuple[float, float]:

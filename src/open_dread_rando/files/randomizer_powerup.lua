@@ -72,7 +72,9 @@ function RandomizerPowerup.OnPickedUp(actor, resources)
     end
 
     RandomizerPowerup.ApplyTunableChanges()
+    RandomizerPowerup.UpdateWeapons()
     Scenario.UpdateProgressiveItemModels()
+    Scenario.UpdateBlastShields()
     RandomizerPowerup.IncrementInventoryIndex()
     RL.UpdateRDVClient(false)
     return granted
@@ -279,6 +281,101 @@ function RandomizerPowerup._ApplyTunableChanges()
     end
 end
 
+function RandomizerPowerup.UpdateWeapons()
+    RandomizerPowerup.UpdateBeams()
+    RandomizerPowerup.UpdateMissiles()
+end
+
+function RandomizerPowerup.BeamsState()
+    return {
+        power = RandomizerPowerup.HasItem("ITEM_WEAPON_POWER_BEAM"),
+        wide = RandomizerPowerup.HasItem("ITEM_WEAPON_WIDE_BEAM"),
+        plasma = RandomizerPowerup.HasItem("ITEM_WEAPON_PLASMA_BEAM"),
+        wave = RandomizerPowerup.HasItem("ITEM_WEAPON_WAVE_BEAM"),
+    }
+end
+
+function RandomizerPowerup.MissileState()
+    return {
+        missile = RandomizerPowerup.HasItem("ITEM_WEAPON_MISSILE_LAUNCHER"),
+        super = RandomizerPowerup.HasItem("ITEM_WEAPON_SUPER_MISSILE"),
+        ice = RandomizerPowerup.HasItem("ITEM_WEAPON_ICE_MISSILE"),
+    }
+end
+
+function RandomizerPowerup.UpdateBeams()
+    RandomizerPowerup._UpdateBeams(RandomizerPowerup.BeamsState())
+end
+
+function RandomizerPowerup.UpdateMissiles()
+    RandomizerPowerup._UpdateMissiles(RandomizerPowerup.MissileState())
+end
+
+function RandomizerPowerup._UpdateBeams(beams)
+    if not beams.power then return nil end
+
+    local offset = 60
+    local plasma_damage = 50
+    local wave_damage = 80
+    if not beams.wide then
+        offset = 0
+        plasma_damage = plasma_damage / 3
+        wave_damage = wave_damage / 3
+    end
+    if not beams.plasma then
+        wave_damage = wave_damage / 2
+    end
+    Scenario.SetTunableValue("CTunableWideBeam", "fPerpendicularOffsetSize", offset)
+    Scenario.SetTunableValue("CTunablePlasmaBeam", "fDamageAmount", plasma_damage)
+    Scenario.SetTunableValue("CTunableWaveBeam", "fDamageAmount", wave_damage)
+
+    if beams.wide and beams.plasma and beams.wave then
+        return "ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM"
+    end
+    if beams.plasma and beams.wave then
+        return "ITEM_WEAPON_PLASMA_WAVE_BEAM"
+    end
+    if beams.wide and beams.wave then
+        return "ITEM_WEAPON_WIDE_WAVE_BEAM"
+    end
+    if beams.wide and beams.plasma then
+        return "ITEM_WEAPON_WIDE_PLASMA_BEAM"
+    end
+    if beams.wave then
+        return "ITEM_WEAPON_SOLO_WAVE_BEAM"
+    end
+    if beams.plasma then
+        return "ITEM_WEAPON_SOLO_PLASMA_BEAM"
+    end
+    if beams.wide then
+        return "ITEM_WEAPON_SOLO_WIDE_BEAM"
+    end
+    return "ITEM_WEAPON_POWER_BEAM"
+end
+
+function RandomizerPowerup._UpdateMissiles(missiles)
+    -- don't give any missiles without launcher
+    if not missiles.missile then return nil end
+
+    local ice_damage = 400
+    if not missiles.super then
+        ice_damage = ice_damage / 3
+    end
+    Scenario.SetTunableValue("CTunableIceMissile", "fDamageAmount", ice_damage)
+
+    if missiles.super and missiles.ice then
+        return "ITEM_WEAPON_SUPER_ICE_MISSILE"
+    end
+    if missiles.ice then
+        return "ITEM_WEAPON_SOLO_ICE_MISSILE"
+    end
+    if missiles.super then
+        return "ITEM_WEAPON_SOLO_SUPER_MISSILE"
+    end
+
+    return "ITEM_WEAPON_MISSILE_LAUNCHER"
+end
+
 -- Main PBs
 RandomizerPowerBomb = {}
 setmetatable(RandomizerPowerBomb, {__index = RandomizerPowerup})
@@ -345,6 +442,11 @@ end
 RandomizerStormMissile = {}
 setmetatable(RandomizerStormMissile, {__index = RandomizerPowerup})
 function RandomizerStormMissile.OnPickedUp(actor, progression)
+    progression = progression or {{{item_id = "ITEM_MULTILOCKON", quantity = 1}}}
+    if RandomizerPowerup.HasItem("ITEM_WEAPON_MISSILE_LAUNCHER") then
+        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_STORM_MISSILE", quantity = 1})
+    end
+
     RandomizerPowerup.ToggleInputsOnPickedUp(
         actor, progression, "ITEM_MULTILOCKON"
     )
@@ -361,4 +463,104 @@ function RandomizerEnergyPart.OnPickedUp(actor, progression)
         progression = progression or {{{ item_id = "ITEM_LIFE_SHARDS", quantity = 1 }}}
         RandomizerPowerup.OnPickedUp(actor, progression)
     end
+end
+
+local function pick_up_beam(beam, actor, progression)
+    progression = progression or {{{item_id = "ITEM_WEAPON_" .. beam:upper() .. "_BEAM", quantity = 1}}}
+    local beams = RandomizerPowerup.BeamsState()
+    if #progression == 1 then
+        beams[beam] = true
+        local to_grant = RandomizerPowerup._UpdateBeams(beams)
+        if to_grant ~= nil then
+            table.insert(progression[1], 1, {item_id = to_grant, quantity = 1})
+        end
+    else
+        -- progressive beams
+        progression = {
+            {
+                {item_id = "ITEM_WEAPON_SOLO_WIDE_BEAM", quantity = 1},
+                {item_id = "ITEM_WEAPON_WIDE_BEAM", quantity = 1,}
+            },
+            {
+                {item_id = "ITEM_WEAPON_WIDE_PLASMA_BEAM", quantity = 1},
+                {item_id = "ITEM_WEAPON_PLASMA_BEAM", quantity = 1},
+            },
+            {
+                {item_id = "ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM", quantity = 1},
+                {item_id = "ITEM_WEAPON_WAVE_BEAM", quantity = 1},
+            }
+        }
+        Game.AddSF(0.1, "RandomizerPowerup.UpdateBeams", "")
+    end
+
+    return RandomizerPowerup.OnPickedUp(actor, progression)
+end
+
+RandomizerPowerBeam = {}
+setmetatable(RandomizerPowerBeam, {__index = RandomizerPowerup})
+function RandomizerPowerBeam.OnPickedUp(actor, progression)
+    return pick_up_beam("power", actor, progression)
+end
+
+RandomizerWideBeam = {}
+setmetatable(RandomizerWideBeam, {__index = RandomizerPowerup})
+function RandomizerWideBeam.OnPickedUp(actor, progression)
+    return pick_up_beam("wide", actor, progression)
+end
+
+RandomizerPlasmaBeam = {}
+setmetatable(RandomizerPlasmaBeam, {__index = RandomizerPowerup})
+function RandomizerPlasmaBeam.OnPickedUp(actor, progression)
+    return pick_up_beam("plasma", actor, progression)
+end
+
+RandomizerWaveBeam = {}
+setmetatable(RandomizerWaveBeam, {__index = RandomizerPowerup})
+function RandomizerWaveBeam.OnPickedUp(actor, progression)
+    return pick_up_beam("wave", actor, progression)
+end
+
+local function pick_up_missile(id, item, actor, progression)
+    progression = progression or {{{item_id = item, quantity = 1}}}
+    local missiles = RandomizerPowerup.MissileState()
+    if #progression == 1 then
+        missiles[id] = true
+        local to_grant = RandomizerPowerup._UpdateMissiles(missiles)
+        if to_grant ~= nil then
+            table.insert(progression[1], 1, {item_id = to_grant, quantity = 1})
+        end
+    else
+        -- progressive missiles
+        progression = {
+            {
+                {item_id = "ITEM_WEAPON_SOLO_SUPER_MISSILE", quantity = 1},
+                {item_id = "ITEM_WEAPON_SUPER_MISSILE", quantity = 1,}
+            },
+            {
+                {item_id = "ITEM_WEAPON_SUPER_ICE_MISSILE", quantity = 1},
+                {item_id = "ITEM_WEAPON_ICE_MISSILE", quantity = 1},
+            },
+        }
+        Game.AddSF(0.1, "RandomizerPowerup.UpdateMissiles", "")
+    end
+
+    return RandomizerPowerup.OnPickedUp(actor, progression)
+end
+
+RandomizerMissileLauncher = {}
+setmetatable(RandomizerMissileLauncher, {__index = RandomizerPowerup})
+function RandomizerMissileLauncher.OnPickedUp(actor, progression)
+    return pick_up_missile("missile", "ITEM_WEAPON_MISSILE_LAUNCHER", actor, progression)
+end
+
+RandomizerSuperMissile = {}
+setmetatable(RandomizerSuperMissile, {__index = RandomizerPowerup})
+function RandomizerSuperMissile.OnPickedUp(actor, progression)
+    return pick_up_missile("super", "ITEM_WEAPON_SUPER_MISSILE", actor, progression)
+end
+
+RandomizerIceMissile = {}
+setmetatable(RandomizerIceMissile, {__index = RandomizerPowerup})
+function RandomizerIceMissile.OnPickedUp(actor, progression)
+    return pick_up_missile("ice", "ITEM_WEAPON_ICE_MISSILE", actor, progression)
 end
