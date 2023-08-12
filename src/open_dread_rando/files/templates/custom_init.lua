@@ -10,7 +10,8 @@ RemoteLua = RemoteLua or {
     SendInventory = function(message) end,
     SendIndices = function(message) end,
     SendReceivedPickups = function(message) end,
-    SendNewGameState = function(message) end
+    SendNewGameState = function(message) end,
+    Connected = function() return true end
 }
 -- stub for UpdateRDVClient, which will be redefined by bootstrap code of randovania
 function RemoteLua.UpdateRDVClient(new_scenario)

@@ -15,6 +15,7 @@ from open_dread_rando.files import files_path
 from open_dread_rando.logger import LOG
 from open_dread_rando.misc_patches import elevator, lua_util
 from open_dread_rando.misc_patches.exefs import include_depackager, patch_exefs
+from open_dread_rando.misc_patches.sprite_patches import patch_sprites
 from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
 from open_dread_rando.misc_patches.tilegroup_patcher import patch_tilegroup
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
@@ -254,6 +255,9 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     # Specific game patches
     game_patches.apply_game_patches(editor, configuration.get("game_patches", {}))
+
+    # remote connector disconnect symbol
+    patch_sprites(editor)
 
     out_romfs, out_exefs, exefs_patches = output_paths_for_compatibility(
         output_path,
