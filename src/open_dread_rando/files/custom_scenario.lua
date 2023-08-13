@@ -5,6 +5,7 @@ Game.DoFile("system/scripts/data_structures.lua")
 Game.DoFile("system/scripts/guilib.lua")
 Game.DoFile("system/scripts/death_counter.lua")
 Game.DoFile("system/scripts/room_names.lua")
+Game.DoFile("system/scripts/disconnect_gui.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -21,6 +22,8 @@ Scenario.tRandoHintPropIDs = {
 }
 
 Scenario.RandoTrueXRelease = Blackboard.RegisterLUAProp("X_RELEASE_TRUE", "bool")
+
+Scenario.INVALID_UUID = "00000000-0000-1111-0000-000000000000"
 
 function Scenario.CheckRandoHint(ap_id, hint_id)
     local access_point = Game.GetActor(ap_id)
@@ -273,6 +276,13 @@ function Scenario.OnLoadScenarioFinished()
     if Scenario.showNextSFID ~= nil then
         Game.DelSFByID(Scenario.showNextSFID)
     end
+    -- INVALID_UUID = no multiworld => no need to schedule the check
+    if Init.sLayoutUUID ~= Scenario.INVALID_UUID then
+        if Scenario.checkConnectionSFID ~= nil then
+            Game.DelSFByID(Scenario.checkConnectionSFID)
+        end
+        Scenario.checkConnectionSFID = Game.AddGUISF(2, "Scenario.CheckConnectionState", "")
+    end
 
     Scenario.InitGui()
     Scenario.ShowingPopup = false
@@ -341,6 +351,11 @@ function Scenario.CheckWarpToStart(actor)
     end
 end
 
+function Scenario.CheckConnectionState()
+    DisconnectGui.Update(not RL.Connected())
+    Scenario.checkConnectionSFID = Game.AddGUISF(2, "Scenario.CheckConnectionState", "")
+end
+
 function Scenario.CheckDebugInputs()
     push_debug_print_override()
     local delay = 0
@@ -406,6 +421,10 @@ function Scenario.InitGui()
 
     if Init.bEnableRoomIds then
         RoomNameGui.Init()
+    end
+
+    if Init.sLayoutUUID ~= Scenario.INVALID_UUID then
+        DisconnectGui.Init()
     end
 end
 

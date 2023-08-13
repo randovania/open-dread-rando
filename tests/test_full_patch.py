@@ -10,5 +10,5 @@ def test_export(dread_path, tmp_path, test_files_dir):
         output_path=output_path,
         configuration=configuration,
     )
-    assert len(list(output_path.rglob("*.lc"))) == 32
+    assert len(list(output_path.rglob("*.lc"))) == 33
 
