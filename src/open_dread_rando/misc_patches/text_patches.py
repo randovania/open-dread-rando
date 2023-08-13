@@ -90,7 +90,8 @@ _PROJECT_MEMBERS = {
     ],
     "Additional Art": [
         "BigSharksZ",
-        "SkyTheLucario"
+        "SkyTheLucario",
+        "tezar tantular"
     ],
     "     ": [
         "With contributions from many others.",
