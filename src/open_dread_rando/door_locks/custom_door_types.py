@@ -199,7 +199,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
     "bomb": ShieldData(
         name="doorshieldbomb",
         type=DoorTemplates.TRIANGLES,
-        weaknesses=["BOMB"],
+        weaknesses=[], # "BOMB" weakness is added in runtime lua.
+                       # see open_dread_rando/files/custom_scenario.lua : Scenario._BlastShieldTypes
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
         actordef="actors/props/doorshieldbomb/charclasses/doorshieldbomb.bmsad",
         default_mdl=ModelData(

@@ -241,6 +241,10 @@ Scenario._BlastShieldTypes = {
     door_shield_plasma = {
         item = "ITEM_WEAPON_PLASMA_BEAM",
         damage = {"PLASMA_BEAM"}
+    },
+    doorshieldbomb = {
+        item = "ITEM_WEAPON_BOMB",
+        damage = {"BOMB"}
     }
 }
 function Scenario._UpdateBlastShields()
