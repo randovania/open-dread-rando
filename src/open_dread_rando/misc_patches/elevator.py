@@ -13,3 +13,7 @@ def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
             raise ValueError(f'Actor {elevator["teleporter"]} is not a teleporter')
         usable.sScenarioName = elevator["destination"]["scenario"]
         usable.sTargetSpawnPoint = elevator["destination"]["actor"]
+
+        map = editor.get_scenario_map(elevator["teleporter"]["scenario"])
+        sign = map.get_category("mapTransportSigns")[ elevator["teleporter"]["actor"] ]
+        sign["sDestAreaId"] = elevator["destination"]["scenario"]
