@@ -59,7 +59,7 @@ def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[Transpo
         usable = actor.pComponents.USABLE
     except AttributeError:
         raise ValueError(f'Actor {elevator["teleporter"]} is not a teleporter')
-    
+
     if usable["@type"] in ["CElevatorUsableComponent", "CTrainUsableComponent", "CTrainUsableComponentCutScene",
                            "CTrainWithPortalUsableComponent", "CCapsuleUsableComponent"]:
         return TransporterType.ELEVATOR, usable
