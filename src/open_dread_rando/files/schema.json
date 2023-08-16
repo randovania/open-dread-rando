@@ -227,11 +227,20 @@
                     },
                     "destination": {
                         "$ref": "#/$defs/actor_reference"
+                    },
+                    "connection_name": {
+                        "type": "string",
+                        "description": "The destination transport's name, used to name elevators",
+                        "examples": [
+                            "Artaria - Thermal Device",
+                            "Ghavoran - Flipper"
+                        ]
                     }
                 },
                 "required": [
                     "teleporter",
-                    "destination"
+                    "destination",
+                    "connection_name"
                 ]
             }
         },
