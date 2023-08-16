@@ -1,25 +1,28 @@
 import dataclasses
+from enum import Enum
 
 from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickups.map_icons import MapIcon
 
 
+class TransporterType(Enum):
+    ELEVATOR = "ELEVATOR"
+    TELEPORTER = "TELEPORTER"
+
 @dataclasses.dataclass
 class TransporterIcon:
     default_icon_id: str
     coords: tuple[int, int]
-    disabled_id: str
     prefix: str
-    offset: tuple[int, int] = (0, 0)
+    disabled_id: str = ''
 
     def map_icon(self, icon_id: str, label: str) -> MapIcon:
         return MapIcon(
             icon_id=icon_id,
             coords=self.coords,
             label=self.prefix + label.upper(),
-            disabled_id=self.disabled_id,
-            offset=self.offset
+            disabled_id=self.disabled_id
         )
 
     @classmethod
@@ -40,23 +43,33 @@ TRANSPORT_TYPES = {
     "Train": TransporterIcon(
         default_icon_id="UsableTrain",
         coords=(1,4),
-        prefix="SHUTTLE TO ",
-        disabled_id=''
+        prefix="SHUTTLE TO "
     ),
     "Transport": TransporterIcon(
         default_icon_id="UsableTransport",
         coords=(8,2),
-        prefix = "TRANSPORT CAPSULE TO ",
-        disabled_id=''
+        prefix = "TRANSPORT CAPSULE TO "
     )
 }
-def _patch_actor(editor: PatcherEditor, elevator: dict):
+
+def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[TransporterType, dict]:
     level = editor.get_scenario(elevator["teleporter"]["scenario"])
     actor = level.actors_for_layer(elevator["teleporter"]["layer"])[elevator["teleporter"]["actor"]]
     try:
         usable = actor.pComponents.USABLE
     except AttributeError:
         raise ValueError(f'Actor {elevator["teleporter"]} is not a teleporter')
+    
+    if usable["@type"] in ["CElevatorUsableComponent", "CTrainUsableComponent", "CTrainUsableComponentCutScene",
+                           "CTrainWithPortalUsableComponent", "CCapsuleUsableComponent"]:
+        return TransporterType.ELEVATOR, usable
+    elif usable["@type"] == "CTeleporterUsableComponent":
+        return TransporterType.TELEPORTER, usable
+    else:
+        raise ValueError(f"Elevator {elevator['teleporter']['scenario']}/{elevator['teleporter']['actor']} "
+                         "is not an elevator, shuttle, capsule or teleporter!")
+
+def _patch_actor(usable: dict, elevator: dict):
     usable.sScenarioName = elevator["destination"]["scenario"]
     usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
@@ -85,6 +98,12 @@ def _patch_map_icon(editor: PatcherEditor, elevator: dict):
 def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
     for elevator in elevators_config:
         LOG.debug("Writing elevator from: %s", str(elevator["teleporter"]))
-        _patch_actor(editor, elevator)
-        _patch_minimap_arrows(editor, elevator)
-        _patch_map_icon(editor, elevator)
+        transporter_type, usable = _get_type_and_usable(editor, elevator)
+
+        if transporter_type == TransporterType.ELEVATOR:
+            _patch_actor(usable, elevator)
+            _patch_minimap_arrows(editor, elevator)
+            _patch_map_icon(editor, elevator)
+        else:
+            # TODO implement teleporter rando
+            pass
