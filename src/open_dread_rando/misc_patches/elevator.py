@@ -88,7 +88,7 @@ def _patch_map_icon(editor: PatcherEditor, elevator: dict):
     ti = TransporterIcon.get_icon(usable)
     if ti is None:
         raise ValueError(f'Usable icon_id {usable["sIconId"]} invalid!')
-    
+
     # add BMMDEF
     editor.map_icon_editor.add_icon(ti.map_icon(icon_id, elevator["connection_name"]))
 
