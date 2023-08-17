@@ -8,7 +8,7 @@ from open_dread_rando.pickups.map_icons import MapIcon
 
 class TransporterType(Enum):
     TRANSPORT = "TRANSPORT"
-    TELEPORTER = "TELEPORTER"
+    TELEPORTAL = "TELEPORTAL"
 
 @dataclasses.dataclass
 class TransporterIcon:
@@ -62,9 +62,9 @@ def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[Transpo
 
     if usable["@type"] in ["CElevatorUsableComponent", "CTrainUsableComponent", "CTrainUsableComponentCutScene",
                            "CTrainWithPortalUsableComponent", "CCapsuleUsableComponent"]:
-        return TransporterType.ELEVATOR, usable
+        return TransporterType.TRANSPORT, usable
     elif usable["@type"] == "CTeleporterUsableComponent":
-        return TransporterType.TELEPORTER, usable
+        return TransporterType.TELEPORTAL, usable
     else:
         raise ValueError(f"Elevator {elevator['teleporter']['scenario']}/{elevator['teleporter']['actor']} "
                          "is not an elevator, shuttle, capsule or teleporter!\n"
