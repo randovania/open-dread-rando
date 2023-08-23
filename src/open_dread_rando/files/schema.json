@@ -475,6 +475,11 @@
                     "type": "boolean",
                     "description": "Enable warping to the starting location from Save Stations.",
                     "default": true
+                },
+                "nerf_power_bombs": {
+                    "type": "boolean",
+                    "description": "Changes weaknesses for certain enemies and props to make Power Bombs less overpowered.",
+                    "default": false
                 }
             },
             "additionalProperties": false
