@@ -28,6 +28,9 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
     if configuration["warp_to_start"]:
         _warp_to_start(editor)
 
+    if configuration["nerf_power_bombs"]:
+        _remove_pb_weaknesses(editor)
+
 
 def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
     rb_bmsad = editor.get_file("actors/characters/chozocommander/charclasses/chozocommander.bmsad", Bmsad)
@@ -95,6 +98,22 @@ def _remove_grapple_blocks(editor: PatcherEditor, configuration: dict):
             },
             "mapProps"
         )
+
+
+def _remove_pb_weaknesses(editor: PatcherEditor):
+    # enky
+    warlotus = editor.get_file("actors/characters/warlotus/charclasses/warlotus.bmsad", Bmsad)
+    warlotus.raw.property.components.LIFE.fields.fields.bShouldDieWithPowerBomb = False
+    warlotus.raw.property.components.LIFE.fields.fields.oDamageSourceFactor.fPowerBombFactor = 0.0
+
+    # charge door
+    for door in ["doorchargecharge", "doorchargeclosed", "doorclosedcharge"]:
+        charge_door = editor.get_file(f"actors/props/{door}/charclasses/{door}.bmsad", Bmsad)
+        func = charge_door.raw.property.components.LIFE.functions[0]
+        if func.params.Param1.value:
+            func.params.Param1.value = "CHARGE_BEAM"
+        if func.params.Param2.value:
+            func.params.Param2.value = "CHARGE_BEAM"
 
 
 def _warp_to_start(editor: PatcherEditor):
