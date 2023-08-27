@@ -169,3 +169,11 @@ class PatcherEditor(FileTreeEditor):
 
     def get_asset_names_in_folder(self, folder: str) -> typing.Iterator[str]:
         yield from (name for name in self._name_for_asset_id.values() if name.startswith(folder))
+
+    def check_file_exists(self, file_name: str, description: str = "Asset") -> None:
+        actual_path = file_name
+        if file_name.endswith(".bctex") and not file_name.startswith("textures/"):
+            actual_path = "textures/" + file_name
+
+        if not self.does_asset_exists(actual_path):
+            raise ValueError(f"{description} {actual_path} does not exist.")

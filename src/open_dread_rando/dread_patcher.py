@@ -1,4 +1,5 @@
 import json
+import logging
 import shutil
 import typing
 from pathlib import Path
@@ -171,6 +172,7 @@ def add_custom_files(editor: PatcherEditor):
         if not child.is_file():
             continue
         relative = child.relative_to(custom_romfs).as_posix()
+        logging.info("Adding custom asset %s", relative)
         editor.add_new_asset(str(relative), child.read_bytes(), [])
 
     lua_libraries = files_path().joinpath("lua_libraries")
@@ -196,10 +198,12 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     editor = PatcherEditor(input_path)
     lua_scripts = LuaEditor()
 
-    apply_static_fixes(editor)
-
     # Copy custom files
     add_custom_files(editor)
+    generate_missile_colors(editor)
+
+    # Apply fixes
+    apply_static_fixes(editor)
 
     # Update init.lc
     lua_util.create_script_copy(editor, "system/scripts/init")
@@ -222,7 +226,6 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     # Pickups
-    generate_missile_colors(editor)
     patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
 
     # Hints

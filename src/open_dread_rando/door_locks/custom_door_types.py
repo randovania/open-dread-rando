@@ -18,30 +18,34 @@ MISSILE_MAT = "actors/props/doorshieldmissile/models/imats/doorshieldmissile_mp_
 SUPER_MAT = "actors/props/doorshieldsupermissile/models/imats/doorshieldsupermissile_mp_opaque_01.bsmat"
 ENERGY_MP_MAT = "actors/props/door_shield_plasma/models/imats/doorshieldplasma_mp_opaque_01.bsmat"
 ENERGY_FX_MAT = "actors/props/door_shield_plasma/models/imats/doorshieldplasma_matfx.bsmat"
-SMOOTH_NORMALS = "actors/props/doorshieldmissile/models/textures/shield_no_normals.bctex"
-SMOOTH_ATTRIBUTES = "actors/props/doorshieldmissile/models/textures/shield_no_attribs.bctex"
+SMOOTH_NORMALS = "actors/props/doorshieldmissile/models/textures/shield_no_normals_nm.bctex"
+SMOOTH_ATTRIBUTES = "actors/props/doorshieldmissile/models/textures/shield_no_attribs_at.bctex"
+
 
 @functools.cache
 def _template_read_shield(file: str):
     with templates_path().joinpath(f"{file}.json").open() as f:
         return json.load(f)
 
+
 class DoorTemplates(Enum):
     HEXAGONS = "template_doorshield_hexs_bmsad"
     TRIANGLES = "template_doorshield_tris_bmsad"
     ENERGY = "template_doorshield_energy_bmsad"
 
+
 @dataclasses.dataclass(frozen=True)
 class ShieldData:
     name: str
-    type: DoorTemplates # TODO make these modify the in-game bmsad's so we don't need templates
+    type: DoorTemplates  # TODO make these modify the in-game bmsad's so we don't need templates
     weaknesses: list[str]
     actordef: str
-    default_mdl: ModelData # the default new model
-    default_mats: list[MaterialData] # a list of materials needed for the default model
-    alternate_mats: list[MaterialData] # a list of materials needed for the alternate model
-    alternate_mdl: ModelData = None # if none, ALTERNATE shields use default model and only change materials
+    default_mdl: ModelData  # the default new model
+    default_mats: list[MaterialData]  # a list of materials needed for the default model
+    alternate_mats: list[MaterialData]  # a list of materials needed for the alternate model
+    alternate_mdl: ModelData = None  # if none, ALTERNATE shields use default model and only change materials
     collision: str = None
+
 
 ALL_SHIELD_DATA: dict[str, ShieldData] = {
     "ice_missile": ShieldData(
@@ -75,17 +79,17 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vConstant0": [0.0, 0.94, 0.95, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldicemissile/models"
-                                                   "/textures/doorshieldicemissile_alt_bc.bctex") },
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldicemissile/models"
+                                                  "/textures/doorshieldicemissile_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ]
     ),
 
     "diffusion_beam": ShieldData(
-        name="shield_diffusion", # NOTE required to be <= len("doorshieldplasma") until bcmdl can alter pointers
+        name="shield_diffusion",  # NOTE required to be <= len("doorshieldplasma") until bcmdl can alter pointers
         type=DoorTemplates.ENERGY,
         weaknesses=["DIFFUSION_BEAM"],
         actordef="actors/props/shield_diffusion/charclasses/shield_diffusion.bmsad",
@@ -131,14 +135,14 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="shield_diffusion_mp_opaque_01",
                 new_path="actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat",
                 uniform_params={
-                    #"fAlbedoEmissiveFactor": [2.0],
+                    # "fAlbedoEmissiveFactor": [2.0],
                     "vAlbedoEmissiveColorMultiplier": [1.0, 0.05, 0.05, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/shield_diffusion/models/"
-                                                   "textures/shield_diffusion_alt_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/shield_diffusion/models/"
+                                                  "textures/shield_diffusion_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ]
@@ -168,8 +172,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vConstant0": [7.0, 0.15, 0.0, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldstormmissile/models"
-                                                   "/textures/doorshieldstormmissile_bc.bctex")},
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldstormmissile/models"
+                                                  "/textures/doorshieldstormmissile_bc.bctex")},
                     # "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
                     # "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
@@ -187,10 +191,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vConstant0": [1.0, 1.0, 1.0, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldstormmissile/models"
-                                                   "/textures/doorshieldstormmissile_alt_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldstormmissile/models"
+                                                  "/textures/doorshieldstormmissile_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ]
@@ -199,8 +203,11 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
     "bomb": ShieldData(
         name="doorshieldbomb",
         type=DoorTemplates.TRIANGLES,
-        weaknesses=[], # "BOMB" weakness is added in runtime lua.
-                       # see open_dread_rando/files/custom_scenario.lua : Scenario._BlastShieldTypes
+
+        # "BOMB" weakness is added in runtime lua.
+        # see open_dread_rando/files/custom_scenario.lua : Scenario._BlastShieldTypes
+        weaknesses=[],
+
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
         actordef="actors/props/doorshieldbomb/charclasses/doorshieldbomb.bmsad",
         default_mdl=ModelData(
@@ -219,10 +226,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldbomb/models"
-                                                   "/textures/doorshieldbomb_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldbomb/models"
+                                                  "/textures/doorshieldbomb_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ],
@@ -235,10 +242,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldbomb/models"
-                                                   "/textures/doorshieldbomb_alt_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldbomb/models"
+                                                  "/textures/doorshieldbomb_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ]
@@ -267,10 +274,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldpowerbomb/models"
-                                                   "/textures/doorshieldpowerbomb_rdv_bc.bctex") },
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldpowerbomb/models"
+                                                  "/textures/doorshieldpowerbomb_rdv_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ],
@@ -284,10 +291,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 },
                 sampler_params={
                     # TODO cross bomb basecolor
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldcrossbomb/models"
-                                                   "/textures/doorshieldcrossbomb_alt_bc.bctex") },
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldcrossbomb/models"
+                                                  "/textures/doorshieldcrossbomb_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ]
@@ -316,10 +323,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vAlbedoEmissiveColorMultiplier": [1.0, 0.15, 0.0, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldpowerbomb/models"
-                                                   "/textures/doorshieldpowerbomb_rdv_bc.bctex") },
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldpowerbomb/models"
+                                                  "/textures/doorshieldpowerbomb_rdv_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ],
@@ -332,15 +339,16 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "vAlbedoEmissiveColorMultiplier": [1.0, 0.15, 0.0, 1.0]
                 },
                 sampler_params={
-                    "texBaseColor": { "filepath": ("actors/props/doorshieldpowerbomb/models"
-                                                   "/textures/doorshieldpowerbomb_alt_bc.bctex") },
-                    "texAttributes": { "filepath": SMOOTH_NORMALS },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldpowerbomb/models"
+                                                  "/textures/doorshieldpowerbomb_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_NORMALS},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
                 }
             )
         ],
     ),
 }
+
 
 class BaseShield:
     def __init__(self, shield: ShieldData):
@@ -366,16 +374,17 @@ class BaseShield:
         else:
             for mat_dat in self.data.alternate_mats:
                 create_custom_material(editor, mat_dat)
+
     def add_weakness(self, weakness: str, new_template: dict):
         life_funcs: list = new_template["property"]["components"]["LIFE"]["functions"]
 
         new_func = {
-            "name" : "AddDamageSource",
-            "unk" : 1,
-            "params" : {
-                "Param1" : {
-                    "type" : "s",
-                    "value" : weakness
+            "name": "AddDamageSource",
+            "unk": 1,
+            "params": {
+                "Param1": {
+                    "type": "s",
+                    "value": weakness
                 }
             }
         }
@@ -395,8 +404,8 @@ class BaseShield:
         new_template = copy.deepcopy(template_bmsad)
         new_template["name"] = self.data.name
 
-        self.patch_model_data(new_template, editor, version)
         self.patch_material_data(editor, version)
+        self.patch_model_data(new_template, editor, version)
 
         for w in self.data.weaknesses:
             self.add_weakness(w, new_template)
@@ -405,6 +414,7 @@ class BaseShield:
 
         editor.add_new_asset(self.data.actordef, Bmsad(new_template, editor.target_game), [])
 
+
 def create_all_shield_assets(editor: PatcherEditor, shield_model_config: dict[str, str]):
     for shield_name, shield_type in shield_model_config.items():
-        BaseShield(ALL_SHIELD_DATA.get(shield_name)).patch(editor, shield_type)
+        BaseShield(ALL_SHIELD_DATA[shield_name]).patch(editor, shield_type)

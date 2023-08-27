@@ -22,6 +22,7 @@ class MapIcon:
     auto_scale: bool = True
     is_global: bool = True
     full_zoom_scale: bool = True
+    string_key: str = dataclasses.field(init=False)
 
     def __post_init__(self):
         object.__setattr__(self, "string_key", f"MAP_ICON_{self.icon_id}")
