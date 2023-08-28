@@ -35,8 +35,6 @@ function s080_shipyard.InitFromBlackboard()
   if oProp ~= nil and oProp > 0 then
     s080_shipyard.Activate_Setup_WaveBeamAcquired()
   end
-
-  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 4) -- EMMI-07PB
 end
 
 function s080_shipyard.Activate_Setup_WaveBeamAcquired()
@@ -286,7 +284,7 @@ function s080_shipyard.OnEmmyShipyardAbilityObtained()
 
   Game.AddSF(0.8, "s080_shipyard.OpenEmmyValves", "")
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 

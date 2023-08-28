@@ -143,8 +143,6 @@ function s010_cave.InitFromBlackboard()
   if not CAVES_GAME_INTRO then
     s010_cave.OnEnd_Cutscene_intro_end()
   end
-
-  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 35) -- EMMI-02SM and Corpius
 end
 
 
@@ -240,7 +238,7 @@ function s010_cave.OnEmmyAbilityObtainedFadeOutCompleted()
     L2_2.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
   end
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 
@@ -2300,5 +2298,5 @@ function s010_cave.cutsceneplayer_57_delayed()
 end
 
 function s010_cave.OnCorpiusDeath_CUSTOM()
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end

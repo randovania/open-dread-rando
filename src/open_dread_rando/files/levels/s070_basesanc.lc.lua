@@ -85,8 +85,6 @@ function s070_basesanc.InitFromBlackboard()
       L0_2.bEnabled = false
     end
   end
-
-  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 17) -- EMMI-06WB and Escue
 end
 
 function s070_basesanc.Activate_Setup_PostXRelease()
@@ -414,7 +412,7 @@ function s070_basesanc.OnEmmyAbilityObtainedFadeOutCompleted()
     L0_2.CENTRALUNIT:UnlockDoors()
   end
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 

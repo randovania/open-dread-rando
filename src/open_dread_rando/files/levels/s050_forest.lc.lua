@@ -71,8 +71,6 @@ function s050_forest.InitFromBlackboard()
   if QUARENTINE_OPENED == true then
     s050_forest.Activate_Setup_PostXRelease()
   end
-
-  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 20) -- EMMI-05IM and Golzuna
 end
 
 function s050_forest.Activate_Setup_PostXRelease()

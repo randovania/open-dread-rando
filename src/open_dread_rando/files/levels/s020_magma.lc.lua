@@ -98,8 +98,6 @@ function s020_magma.InitFromBlackboard()
       oActor2.MODELUPDATER:SetMeshVisible("Slime_MESH", false)
     end
   end
-
-  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 25) -- EMMI-03MB, Kraid and Experiment
 end
 
 
@@ -172,7 +170,7 @@ function s020_magma.OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:UnlockDoors()
   end
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 
@@ -881,7 +879,7 @@ function s020_magma.OnCutscene81Ended()
 end
 
 function s020_magma.OnExperimentDeath_CUSTOM()
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 function s020_magma.OnCutscene81Skipped()
@@ -1060,7 +1058,7 @@ end
 
 function s020_magma.OnKraidDeath_CUSTOM()
   Game.AddGUISF(0, "s020_magma.Kraid_Activation_Stage_03_CutsceneEnd", "")
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 function s020_magma.IsKraidCombatBegin(old_subarea, old_actorgroup, new_subarea, new_actorgroup, disable_fade)
