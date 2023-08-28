@@ -237,6 +237,8 @@ function s010_cave.OnEmmyAbilityObtainedFadeOutCompleted()
   if L2_2 ~= nil then
     L2_2.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
   end
+
+  Scenario.IncrementCompletion()
 end
 
 
@@ -2296,4 +2298,5 @@ function s010_cave.cutsceneplayer_57_delayed()
 end
 
 function s010_cave.OnCorpiusDeath_CUSTOM()
+  Scenario.IncrementCompletion()
 end

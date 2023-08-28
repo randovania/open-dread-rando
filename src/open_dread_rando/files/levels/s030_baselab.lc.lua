@@ -214,6 +214,8 @@ function s030_baselab.OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:UnlockDoors()
   end
+
+  Scenario.IncrementCompletion()
 end
 
 

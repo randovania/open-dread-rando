@@ -17,4 +17,6 @@ function CoreX_SuperQuetzoa.OnBigXAbsorbed(_ARG_0_)
     door.LIFE:UnLockDoor()
   end
   Game.SaveGame("checkpoint", "SuperQuetzoa_Dead", "SP_Checkpoint_MultiLockOn", true)
+
+  Scenario.IncrementCompletion()
 end

@@ -411,6 +411,8 @@ function s070_basesanc.OnEmmyAbilityObtainedFadeOutCompleted()
     L0_2.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
     L0_2.CENTRALUNIT:UnlockDoors()
   end
+
+  Scenario.IncrementCompletion()
 end
 
 

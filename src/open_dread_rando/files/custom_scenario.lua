@@ -21,6 +21,18 @@ Scenario.tRandoHintPropIDs = {
     SHIP_1 = Blackboard.RegisterLUAProp("HINT_SHIP_1", "bool")
 }
 
+Scenario.tNumTanksMaxByScenario = {
+    s010_cave = 35,
+    s020_magma = 25,
+    s030_baselab = 23,
+    s040_aqua = 20,
+    s050_forest = 20,
+    s060_quarantine = 5,
+    s070_basesanc = 17,
+    s080_shipyard = 4,
+    s090_skybase = 0
+}
+
 Scenario.RandoTrueXRelease = Blackboard.RegisterLUAProp("X_RELEASE_TRUE", "bool")
 
 Scenario.INVALID_UUID = "00000000-0000-1111-0000-000000000000"
@@ -116,6 +128,8 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     if Init.bEnableDeathCounter then
         DeathCounter.OnScenarioInitialized()
     end
+
+    Game.AddSF(1.0, "Scenario.UpdateNumTanksMax", "i", Scenario.tNumTanksMaxByScenario[CurrentScenarioID])
 end
 
 local fatal_messages_seen = 0
@@ -476,4 +490,24 @@ end
 
 function Scenario.UpdateRoomName(new_subarea)
     RoomNameGui.Update(new_subarea)
+end
+
+function Scenario.UpdateNumTanksMax(num_locs)
+    -- sets Scenario blackboard NumTanksPickedUpMax to num_locs
+    Game.LogWarn(0, "Setting " .. CurrentScenarioID .. ".NumTanksPickedUpMax = " .. num_locs)
+    Scenario.WriteToBlackboard("NumTanksPickedUpMax", "i", num_locs)
+end
+
+function Scenario.IncrementCompletion()
+    -- increment global NumTanksPickedUp
+    local global_itemcount = Scenario.GetBlackboardProp("GAME", "NumTanksPickedUp", 0)
+    global_itemcount = global_itemcount + 1
+    Scenario.SetBlackboardProp("GAME", "NumTanksPickedUp", "i", global_itemcount)
+
+    -- update global completion number (the "percent" which is stored as an int for reasons unknown)
+    Scenario.SetBlackboardProp("GAME", "Completion", "i", math.floor(global_itemcount / 149 * 100))
+
+    -- increment local NumTanksPickedUp
+    local area_itemcount = Scenario.ReadFromBlackboard("NumTanksPickedUp", 0)
+    Scenario.WriteToBlackboard("NumTanksPickedUp", "i", area_itemcount + 1)
 end

@@ -283,6 +283,8 @@ end
 function s080_shipyard.OnEmmyShipyardAbilityObtained()
 
   Game.AddSF(0.8, "s080_shipyard.OpenEmmyValves", "")
+
+  Scenario.IncrementCompletion()
 end
 
 
