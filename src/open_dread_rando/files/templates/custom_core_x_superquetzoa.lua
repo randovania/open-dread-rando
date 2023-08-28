@@ -18,5 +18,5 @@ function CoreX_SuperQuetzoa.OnBigXAbsorbed(_ARG_0_)
   end
   Game.SaveGame("checkpoint", "SuperQuetzoa_Dead", "SP_Checkpoint_MultiLockOn", true)
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end

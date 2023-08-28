@@ -17,5 +17,5 @@ function CoreX_SuperGoliath.OnBigXAbsorbed(A0_2)
   end
   Game.SaveGame("checkpoint", "SuperGoliath_Dead", "SP_Checkpoint_LineBomb", true)
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
