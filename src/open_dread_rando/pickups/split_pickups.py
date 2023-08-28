@@ -1,13 +1,18 @@
+from __future__ import annotations
+
 import copy
 import dataclasses
 import itertools
 import typing
 from enum import Enum
-from typing import Generic, Optional, Self, TypeVar
+from typing import Generic, TypeVar
 
 from mercury_engine_data_structures.formats.bmsad import ActorDefFunc, ArgAnyType, Bmsad
 
 from open_dread_rando.patcher_editor import PatcherEditor
+
+if typing.TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 @dataclasses.dataclass
@@ -151,14 +156,14 @@ class SetGunChargeParams(CCFunc):
 @dataclasses.dataclass
 class PrimaryGunFuncs:
     add_primary_gun: AddPrimaryGun
-    set_billboard_group_params: Optional[SetBillBoardGroupParams]
-    set_gun_charge_params: Optional[SetGunChargeParams]
+    set_billboard_group_params: SetBillBoardGroupParams | None
+    set_gun_charge_params: SetGunChargeParams | None
 
     @classmethod
     def from_raw(cls,
                  add_primary_gun: ActorDefFunc,
-                 set_billboard_group_params: Optional[ActorDefFunc] = None,
-                 set_gun_charge_params: Optional[ActorDefFunc] = None
+                 set_billboard_group_params: ActorDefFunc | None = None,
+                 set_gun_charge_params: ActorDefFunc | None = None
                  ) -> Self:
 
         gun = AddPrimaryGun(add_primary_gun)

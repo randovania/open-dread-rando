@@ -14,7 +14,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3.9",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "mercury-engine-data-structures>=0.23.3.dev44",
     "jsonschema>=4.0.0",
