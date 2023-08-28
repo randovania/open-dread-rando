@@ -477,3 +477,26 @@ end
 function Scenario.UpdateRoomName(new_subarea)
     RoomNameGui.Update(new_subarea)
 end
+
+function Scenario.Rando_SetAreaLocations(num_locs)
+    -- sets Scenario blackboard NumTanksPickedUpMax to num_locs
+    Game.LogWarn(0, "Setting " .. CurrentScenarioID .. ".NumTanksPickedUpMax = " .. num_locs)
+    Scenario.WriteToBlackboard("NumTanksPickedUpMax", "i", num_locs)
+end
+
+function Scenario.Rando_IncrementCompletion()
+    -- increment global NumTanksPickedUp
+    local global_itemcount = Scenario.GetBlackboardProp("GAME", "NumTanksPickedUp")
+    if global_itemcount == nil then -- if its the first pickup its uninitialized
+        global_itemcount = 0
+    end
+    global_itemcount = global_itemcount + 1
+    Scenario.SetBlackboardProp("GAME", "NumTanksPickedUp", "i", global_itemcount)
+
+    -- update global completion number (the "percent" which is stored as an int for reasons unknown)
+    Scenario.SetBlackboardProp("GAME", "Completion", "i", math.floor(global_itemcount * 100 / 149))
+
+    -- increment local NumTanksPickedUp
+    local area_itemcount = Scenario.ReadFromBlackboard("NumTanksPickedUp", 0)
+    Scenario.WriteToBlackboard("NumTanksPickedUp", "i", area_itemcount + 1)
+end

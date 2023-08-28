@@ -81,6 +81,8 @@ function s030_baselab.InitFromBlackboard()
   if QUARENTINE_OPENED == true then
     s030_baselab.Activate_Setup_PostXRelease()
   end
+
+  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 23) -- incl. EMMI-04SB
 end
 
 function s030_baselab.Activate_Setup_PostXRelease()
@@ -214,6 +216,8 @@ function s030_baselab.OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:UnlockDoors()
   end
+
+  Scenario.Rando_IncrementCompletion()
 end
 
 

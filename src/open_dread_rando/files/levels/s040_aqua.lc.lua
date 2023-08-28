@@ -74,6 +74,8 @@ function s040_aqua.InitFromBlackboard()
     s040_aqua.Activate_Setup_PostXRelease()
   end
   s040_aqua.DisableAllWaterPools()
+
+  Game.AddSF(1.0, "Scenario.Rando_SetAreaLocations", "i", 20) -- Drogyga
 end
 
 function s040_aqua.Activate_Setup_PostXRelease()
@@ -357,6 +359,7 @@ function s040_aqua.OnHydrogigaDead(_ARG_0_, _ARG_1_)
 
   Scenario.WriteToBlackboard(Scenario.LUAPropIDs.HYDROGIGA_DEAD, "b", true)
   s040_aqua.CheckHydrogiga()
+  Scenario.Rando_IncrementCompletion()
 end
 
 function s040_aqua.OnHydrogigaDead_CUSTOM()

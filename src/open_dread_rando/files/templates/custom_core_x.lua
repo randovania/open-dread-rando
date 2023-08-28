@@ -15,5 +15,7 @@ function CoreX_SuperGoliath.OnBigXAbsorbed(A0_2)
   if actor ~= nil then
     actor.LIFE:UnLockDoor()
   end
-  Game.SaveGame("checkpoint", "SuperGoliath_Dead", "SP_Checkpoint_LineBomb", true) 
+  Game.SaveGame("checkpoint", "SuperGoliath_Dead", "SP_Checkpoint_LineBomb", true)
+
+  Scenario.Rando_IncrementCompletion()
 end
