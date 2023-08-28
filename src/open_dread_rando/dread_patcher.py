@@ -120,11 +120,13 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
 
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
+
 def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     py_dict: dict = configuration["cosmetic_patches"]["lua"]["camera_names_dict"]
 
     file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}, True).encode("ascii")
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
+
 
 def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
     patch_split_pickups(editor)
