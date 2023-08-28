@@ -396,7 +396,7 @@ function s050_forest.OnEmmyAbilityObtainedFadeOutCompleted()
     oActor.CENTRALUNIT:UnlockDoors()
   end
 
-  Scenario.Rando_IncrementCompletion()
+  Scenario.IncrementCompletion()
 end
 
 
