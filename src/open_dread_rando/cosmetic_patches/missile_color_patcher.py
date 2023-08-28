@@ -20,53 +20,54 @@ class MissileVariant:
 
         self.rgba = color
 
-ALL_VARIANTS: dict[str, MissileVariant] = {
 
+ALL_VARIANTS: dict[str, MissileVariant] = {
     "ORANGE": MissileVariant(
         name="item_missile__OR",
-        color=[75.0, 10.0, 0.0, 1.0]
+        color=(75.0, 10.0, 0.0, 1.0),
     ),
     "YELLOW": MissileVariant(
         name="item_missile__YL",
-        color=[30.0, 30.0, 0.0, 1.0]
+        color=(30.0, 30.0, 0.0, 1.0),
     ),
     "GREEN": MissileVariant(
         name="item_missile__GN",
-        color=[0.0, 30.0, 0.0, 1.0]
+        color=(0.0, 30.0, 0.0, 1.0),
     ),
     "BLUE": MissileVariant(
         name="item_missile__BL",
-        color=[0.05, 0.5, 75.0, 1.0]
+        color=(0.05, 0.5, 75.0, 1.0),
     ),
     "CYAN": MissileVariant(
         name="item_missile__CY",
-        color=[0.05, 10.0, 10.0, 1.0]
+        color=(0.05, 10.0, 10.0, 1.0),
     ),
     "PURPLE": MissileVariant(
         name="item_missile__PR",
-        color=[15.0, 0.5, 70.0, 1.0]
+        color=(15.0, 0.5, 70.0, 1.0),
     ),
     "PINK": MissileVariant(
         name="item_missile__PK",
-        color=[70.0, 0.5, 7.0, 1.0]
+        color=(70.0, 0.5, 7.0, 1.0),
     ),
     "MAGENTA": MissileVariant(
         name="item_missile__MG",
-        color=[70.0, 0.5, 70.0, 1.0]
+        color=(70.0, 0.5, 70.0, 1.0),
     ),
     "WHITE": MissileVariant(
         name="item_missile__WH",
-        color=[30.0, 30.0, 30.0, 1.0]
+        color=(30.0, 30.0, 30.0, 1.0),
     ),
     "BLACK": MissileVariant(
         name="item_missile__BK",
-        color=[0.0, 0.0, 0.0, 1.0]
+        color=(0.0, 0.0, 0.0, 1.0),
     ),
     "GRAY": MissileVariant(
         name="item_missile__GY",
-        color=[0.2, 0.2, 0.2, 1.0]
+        color=(0.2, 0.2, 0.2, 1.0),
     ),
 }
+
 
 def generate_missile_colors(editor: PatcherEditor):
     for _, variant in ALL_VARIANTS.items():
