@@ -500,15 +500,12 @@ end
 
 function Scenario.IncrementCompletion()
     -- increment global NumTanksPickedUp
-    local global_itemcount = Scenario.GetBlackboardProp("GAME", "NumTanksPickedUp")
-    if global_itemcount == nil then -- if its the first pickup its uninitialized
-        global_itemcount = 0
-    end
+    local global_itemcount = Scenario.GetBlackboardProp("GAME", "NumTanksPickedUp", 0)
     global_itemcount = global_itemcount + 1
     Scenario.SetBlackboardProp("GAME", "NumTanksPickedUp", "i", global_itemcount)
 
     -- update global completion number (the "percent" which is stored as an int for reasons unknown)
-    Scenario.SetBlackboardProp("GAME", "Completion", "i", math.floor(global_itemcount * 100 / 149))
+    Scenario.SetBlackboardProp("GAME", "Completion", "i", math.floor(global_itemcount / 149 * 100))
 
     -- increment local NumTanksPickedUp
     local area_itemcount = Scenario.ReadFromBlackboard("NumTanksPickedUp", 0)
