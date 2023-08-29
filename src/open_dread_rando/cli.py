@@ -14,8 +14,9 @@ def create_parser():
                         help="Path to where the extracted Metroid Dread romfs to randomize can be found.")
     parser.add_argument("--output-path", required=True, type=Path,
                         help="Path to where the modified files will be written to.")
-    parser.add_argument("--input-json", type=Path,
-                        help="Path to the configuration json. If missing, it's read from standard input")
+    parser.add_argument("--input-json", required=True, type=Path,
+                        help="Path to the configuration json.")
+    parser.add_argument("-q", "--quiet", action="store_true", help="Disables all info and debug logs.")
     return parser
 
 
@@ -47,13 +48,14 @@ def setup_logging():
             'handlers': list(handlers.keys()),
         },
     })
-    logging.info("Hello world.")
 
 
 def main():
     setup_logging()
     parser = create_parser()
     args = parser.parse_args()
+    if args.quiet:
+        logging.getLogger().setLevel(logging.WARNING)
 
     with args.input_json.open() as f:
         configuration = json.load(f)
