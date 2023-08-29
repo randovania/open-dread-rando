@@ -408,8 +408,8 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
     gun = samus.raw.property.components["GUN"]
 
-    ice_bmsad = editor.get_file("actors/weapons/icemissile/charclasses/icemissile.bmsad", Bmsad)
-    solo_ice_bmsad = copy.deepcopy(ice_bmsad)
+    solo_ice_bmsad = editor.get_parsed_asset("actors/weapons/icemissile/charclasses/icemissile.bmsad",
+                                             type_hint=Bmsad)
     solo_ice_bmsad.raw.name = "soloicemissile"
     movement = solo_ice_bmsad.raw.property.components["MOVEMENT"].fields.fields
     movement.fInitialSpeed = 1250
