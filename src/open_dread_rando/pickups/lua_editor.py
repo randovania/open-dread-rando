@@ -117,7 +117,7 @@ class LuaEditor:
         self._powerup_script += models.encode("utf-8")
 
     def patch_actordef_pickup_script(self, editor: PatcherEditor, pickup: dict, pickup_lua_callback: dict,
-                                     extra_code: str = ""):
+                                     extra_code: str = "") -> None:
         scenario = pickup_lua_callback["scenario"]
         scenario_path = path_for_level(scenario)
         lua_util.create_script_copy(editor, scenario_path)
@@ -137,11 +137,11 @@ class LuaEditor:
         }
         script["script"] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
 
-    def patch_corex_pickup_script(self, editor: PatcherEditor, pickup: dict, pickup_lua_callback: dict):
+    def patch_corex_pickup_script(self, editor: PatcherEditor, pickup: dict, pickup_lua_callback: dict) -> None:
         bossid = pickup_lua_callback["function"]
         self._corex_replacement[bossid] = self.get_script_class(pickup, True)
 
-    def save_modifications(self, editor: PatcherEditor):
+    def save_modifications(self, editor: PatcherEditor) -> None:
         editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", self._powerup_script)
         for scenario, script in self._custom_level_scripts.items():
             editor.replace_asset(path_for_level(scenario) + ".lc", script["script"].encode("utf-8"))

@@ -1,13 +1,18 @@
+from __future__ import annotations
+
 import copy
 import dataclasses
 import itertools
+import typing
 from enum import Enum
-from typing import Any, Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
-from construct import Container
-from mercury_engine_data_structures.formats.bmsad import Bmsad
+from mercury_engine_data_structures.formats.bmsad import ActorDefFunc, ArgAnyType, Bmsad
 
 from open_dread_rando.patcher_editor import PatcherEditor
+
+if typing.TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 @dataclasses.dataclass
@@ -28,29 +33,28 @@ class MissileInput(Enum):
     L = 1
 
 
+T = TypeVar('T', bound=ArgAnyType)
+
+
 class CCFunc:
-    def __init__(self, raw: dict) -> None:
+    def __init__(self, raw: ActorDefFunc) -> None:
         self.raw = raw
 
-    def _param(self, i: int) -> Container:
-        return self.raw["params"][f"Param{i}"]
+    def get_param(self, i: int) -> ArgAnyType:
+        return self.raw.get_param(i)
 
-    def get_param(self, i: int) -> Any:
-        return self._param(i).value
-
-    def set_param(self, i: int, value: Any):
-        self._param(i).value = value
+    def set_param(self, i: int, value: ArgAnyType) -> None:
+        self.raw.set_param(i, value)
 
 
-T = TypeVar('T')
 class Param(Generic[T]):
     def __init__(self, index: int) -> None:
         self.index = index
 
-    def __get__(self, inst: CCFunc, objtype=None) -> T:
-        return inst.get_param(self.index)
+    def __get__(self, inst: CCFunc, objtype: type | None = None) -> T:
+        return typing.cast(T, inst.get_param(self.index))
 
-    def __set__(self, inst: CCFunc, value: T):
+    def __set__(self, inst: CCFunc, value: T) -> None:
         inst.set_param(self.index, value)
 
 
@@ -72,19 +76,19 @@ class AddPrimaryGun(CCFunc):
         return BeamInput(self.get_param(11))
 
     @input_type.setter
-    def input_type(self, value: BeamInput):
+    def input_type(self, value: BeamInput) -> None:
         self.set_param(11, value.value)
 
     @property
     def color(self) -> Color3f:
         return Color3f(
-            self.get_param(13),
-            self.get_param(14),
-            self.get_param(15),
+            typing.cast(float, self.get_param(13)),
+            typing.cast(float, self.get_param(14)),
+            typing.cast(float, self.get_param(15)),
         )
 
     @color.setter
-    def color(self, value: Color3f):
+    def color(self, value: Color3f) -> None:
         self.set_param(13, value.r)
         self.set_param(14, value.g)
         self.set_param(15, value.b)
@@ -105,14 +109,14 @@ class SetBillBoardGroupParams(CCFunc):
     def _get_group(self, i: int) -> BillBoardGroupParams:
         i *= 5
         return BillBoardGroupParams(
-            self.get_param(2 + i),
-            self.get_param(3 + i),
-            self.get_param(4 + i),
-            self.get_param(5 + i),
-            self.get_param(6 + i),
+            typing.cast(str, self.get_param(2 + i)),
+            typing.cast(int, self.get_param(3 + i)),
+            typing.cast(int, self.get_param(4 + i)),
+            typing.cast(int, self.get_param(5 + i)),
+            typing.cast(float, self.get_param(6 + i)),
         )
 
-    def _set_group(self, i: int, value: BillBoardGroupParams):
+    def _set_group(self, i: int, value: BillBoardGroupParams) -> None:
         i *= 5
         self.set_param(2 + i, value.texture)
         self.set_param(3 + i, value.unk1)
@@ -125,7 +129,7 @@ class SetBillBoardGroupParams(CCFunc):
         return self._get_group(0)
 
     @beam.setter
-    def beam(self, value: BillBoardGroupParams):
+    def beam(self, value: BillBoardGroupParams) -> None:
         self._set_group(0, value)
 
     @property
@@ -133,7 +137,7 @@ class SetBillBoardGroupParams(CCFunc):
         return self._get_group(1)
 
     @charge.setter
-    def charge(self, value: BillBoardGroupParams):
+    def charge(self, value: BillBoardGroupParams) -> None:
         self._set_group(1, value)
 
     @property
@@ -141,7 +145,7 @@ class SetBillBoardGroupParams(CCFunc):
         return self._get_group(2)
 
     @boost.setter
-    def boost(self, value: BillBoardGroupParams):
+    def boost(self, value: BillBoardGroupParams) -> None:
         self._set_group(2, value)
 
 
@@ -152,29 +156,37 @@ class SetGunChargeParams(CCFunc):
 @dataclasses.dataclass
 class PrimaryGunFuncs:
     add_primary_gun: AddPrimaryGun
-    set_billboard_group_params: Optional[SetBillBoardGroupParams]
-    set_gun_charge_params: Optional[SetGunChargeParams]
+    set_billboard_group_params: SetBillBoardGroupParams | None
+    set_gun_charge_params: SetGunChargeParams | None
 
     @classmethod
     def from_raw(cls,
-                 add_primary_gun: dict,
-                 set_billboard_group_params: Optional[dict] = None,
-                 set_gun_charge_params: Optional[dict] = None
-    ):
-        add_primary_gun = AddPrimaryGun(add_primary_gun)
+                 add_primary_gun: ActorDefFunc,
+                 set_billboard_group_params: ActorDefFunc | None = None,
+                 set_gun_charge_params: ActorDefFunc | None = None
+                 ) -> Self:
+
+        gun = AddPrimaryGun(add_primary_gun)
+
         if set_billboard_group_params is not None:
-            set_billboard_group_params = SetBillBoardGroupParams(set_billboard_group_params)
+            set_billboard_group = SetBillBoardGroupParams(set_billboard_group_params)
+        else:
+            set_billboard_group = None
+
         if set_gun_charge_params is not None:
-            set_gun_charge_params = SetGunChargeParams(set_gun_charge_params)
+            set_gun_charge = SetGunChargeParams(set_gun_charge_params)
+        else:
+            set_gun_charge = None
+
         return cls(
-            add_primary_gun,
-            set_billboard_group_params,
-            set_gun_charge_params
+            gun,
+            set_billboard_group,
+            set_gun_charge,
         )
 
     @property
-    def as_list(self) -> list[dict]:
-        ret = [self.add_primary_gun.raw]
+    def as_list(self) -> list[ActorDefFunc]:
+        ret: list[ActorDefFunc] = [self.add_primary_gun.raw]
         if self.set_billboard_group_params is not None:
             ret.append(self.set_billboard_group_params.raw)
         if self.set_gun_charge_params is not None:
@@ -183,10 +195,10 @@ class PrimaryGunFuncs:
 
     @property
     def name(self) -> str:
-        return self.add_primary_gun.params.name
+        return self.add_primary_gun.name
 
     @name.setter
-    def name(self, value: str):
+    def name(self, value: str) -> None:
         self.add_primary_gun.name = value
         if self.set_billboard_group_params is not None:
             self.set_billboard_group_params.name = value
@@ -206,37 +218,30 @@ class AddSecondaryGun(CCFunc):
 
     burst_fx = Param[str](7)
     on_fire = Param[str](8)
-    priority = Param[str](10)
+    priority = Param[int](10)
 
     @property
     def input_type(self) -> MissileInput:
         return MissileInput(self.get_param(9))
 
     @input_type.setter
-    def input_type(self, value: MissileInput):
+    def input_type(self, value: MissileInput) -> None:
         self.set_param(9, value.value)
 
 
-def select_gun(param1: str, param2: bool) -> dict:
-    return {
-        "name": "SelectGun",
-        "unk": 1,
-        "params": {
-            "Param1": {
-                "type": "s",
-                "value": param1,
-            },
-            "Param2": {
-                "type": "b",
-                "value": param2,
-            },
-        },
-    }
+def select_gun(param1: str, param2: bool) -> ActorDefFunc:
+    result = ActorDefFunc.new("SelectGun")
+    result.set_param(1, param1)
+    result.set_param(2, param2)
+    return result
 
 
 SAMUS_BMSAD_PATH = "actors/characters/samus/charclasses/samus.bmsad"
 
+
 # ruff: noqa: C901
+
+
 def update_starting_inventory_split_pickups(inventory: dict) -> dict:
     inventory = copy.copy(inventory)
 
@@ -279,8 +284,7 @@ def update_starting_inventory_split_pickups(inventory: dict) -> dict:
     return inventory
 
 
-
-def patch_split_pickups(editor: PatcherEditor):
+def patch_split_pickups(editor: PatcherEditor) -> None:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
 
     primaries = _patch_split_beams(editor)
@@ -290,14 +294,15 @@ def patch_split_pickups(editor: PatcherEditor):
         select_gun("Missile", False),
     ]
 
-    samus.raw.property.components["GUN"].functions = primaries + secondaries + selections
+    new_funcs: list[ActorDefFunc] = primaries + secondaries + selections
+    samus.components["GUN"].functions = new_funcs
 
     _patch_blast_shields(editor)
 
 
-def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
+def _patch_split_beams(editor: PatcherEditor) -> list[ActorDefFunc]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
-    gun_funcs = samus.raw.property.components["GUN"].functions
+    gun_funcs = samus.components["GUN"].functions
 
     power = PrimaryGunFuncs.from_raw(
         gun_funcs[0],
@@ -332,6 +337,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
 
     power.add_primary_gun.inventory_item = "ITEM_WEAPON_POWER_BEAM"
     power.add_primary_gun.priority = 0
+    assert power.set_billboard_group_params is not None
 
     solo_wide = copy.deepcopy(wide)
     solo_wide.name = "SoloWideBeam"
@@ -346,6 +352,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
     solo_plasma.add_primary_gun.on_fire = "OnPowerBeamFire"
     solo_plasma.add_primary_gun.charge_sfx = "weapons/chargedloop_beam.wav"
 
+    assert solo_plasma.set_billboard_group_params is not None
     solo_plasma.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     solo_plasma.set_billboard_group_params.charge = power.set_billboard_group_params.charge
     solo_plasma.set_billboard_group_params.boost = power.set_billboard_group_params.boost
@@ -357,6 +364,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
     solo_wave.add_primary_gun.on_fire = "OnPowerBeamFire"
     solo_wave.add_primary_gun.charge_sfx = "weapons/chargedloop_beam.wav"
     solo_wave.add_primary_gun.color = Color3f(0.8, 0.0, 70.0)
+    assert solo_wave.set_billboard_group_params is not None
     solo_wave.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     solo_wave.set_billboard_group_params.charge = power.set_billboard_group_params.charge
     solo_wave.set_billboard_group_params.boost = power.set_billboard_group_params.boost
@@ -378,6 +386,7 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
     plasma_wave.add_primary_gun.priority = 6
     plasma_wave.add_primary_gun.on_fire = "OnPowerBeamFire"
     plasma_wave.add_primary_gun.charge_sfx = "weapons/chargedloop_beam.wav"
+    assert plasma_wave.set_billboard_group_params is not None
     plasma_wave.set_billboard_group_params.beam = power.set_billboard_group_params.beam
     plasma_wave.set_billboard_group_params.charge = power.set_billboard_group_params.charge
     plasma_wave.set_billboard_group_params.boost = power.set_billboard_group_params.boost
@@ -404,15 +413,15 @@ def _patch_split_beams(editor: PatcherEditor) -> list[dict]:
     ]))
 
 
-def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
+def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
-    gun = samus.raw.property.components["GUN"]
+    gun = samus.components["GUN"]
 
     solo_ice_bmsad = editor.get_parsed_asset("actors/weapons/icemissile/charclasses/icemissile.bmsad",
                                              type_hint=Bmsad)
-    solo_ice_bmsad.raw.name = "soloicemissile"
-    movement = solo_ice_bmsad.raw.property.components["MOVEMENT"].fields.fields
-    movement.fInitialSpeed = 1250
+    solo_ice_bmsad.name = "soloicemissile"
+    movement = solo_ice_bmsad.components["MOVEMENT"].fields
+    movement.fInitialSpeed = 1250.0
     movement.fTimeInInitialSpeed = 0.2
     movement.fTimeToReachSpeed = 0.6
     editor.add_new_asset(
@@ -421,7 +430,7 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
         editor.find_pkgs("actors/weapons/icemissile/charclasses/icemissile.bmsad"),
     )
 
-    samus.raw.property.sub_actors.append("soloicemissile")
+    samus.sub_actors.append("soloicemissile")
 
     missile = AddSecondaryGun(gun.functions[16])
     supers = AddSecondaryGun(gun.functions[17])
@@ -461,12 +470,16 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[dict]:
     ]]
 
 
-def _patch_blast_shields(editor: PatcherEditor):
+def _patch_blast_shields(editor: PatcherEditor) -> None:
     supers = editor.get_file("actors/props/doorshieldsupermissile/charclasses/doorshieldsupermissile.bmsad", Bmsad)
-    super_life = supers.raw.property.components["LIFE"]
-    super_life.functions.pop(1) # AddDamageSource("SUPER_MISSILE")
-    super_life.functions.pop(1) # AddDamageSource("ICE_MISSILE")
+    super_life = supers.components["LIFE"]
+    funcs = list(super_life.functions)
+    funcs.pop(1)  # AddDamageSource("SUPER_MISSILE")
+    funcs.pop(1)  # AddDamageSource("ICE_MISSILE")
+    super_life.functions = funcs
 
     plasma = editor.get_file("actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsad", Bmsad)
-    plasma_life = plasma.raw.property.components["LIFE"]
-    plasma_life.functions.pop(1) # AddDamageSource("PLASMA_BEAM")
+    plasma_life = plasma.components["LIFE"]
+    funcs = list(plasma_life.functions)
+    funcs.pop(1)  # AddDamageSource("PLASMA_BEAM")
+    plasma_life.functions = funcs

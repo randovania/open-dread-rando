@@ -1,10 +1,9 @@
-import copy
 import dataclasses
 import functools
-import json
 from enum import Enum
 
 from mercury_engine_data_structures.formats import Bmsad
+from mercury_engine_data_structures.formats.bmsad import ActorDefFunc
 
 from open_dread_rando.files import templates_path
 from open_dread_rando.misc_patches.material_patcher import MaterialData, create_custom_material
@@ -23,15 +22,14 @@ SMOOTH_ATTRIBUTES = "actors/props/doorshieldmissile/models/textures/shield_no_at
 
 
 @functools.cache
-def _template_read_shield(file: str):
-    with templates_path().joinpath(f"{file}.json").open() as f:
-        return json.load(f)
+def _template_read_shield(file: str) -> bytes:
+    return templates_path().joinpath(file).read_bytes()
 
 
 class DoorTemplates(Enum):
-    HEXAGONS = "template_doorshield_hexs_bmsad"
-    TRIANGLES = "template_doorshield_tris_bmsad"
-    ENERGY = "template_doorshield_energy_bmsad"
+    HEXAGONS = "template_doorshield_hexs.bmsad"
+    TRIANGLES = "template_doorshield_tris.bmsad"
+    ENERGY = "template_doorshield_energy.bmsad"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -43,8 +41,8 @@ class ShieldData:
     default_mdl: ModelData  # the default new model
     default_mats: list[MaterialData]  # a list of materials needed for the default model
     alternate_mats: list[MaterialData]  # a list of materials needed for the alternate model
-    alternate_mdl: ModelData = None  # if none, ALTERNATE shields use default model and only change materials
-    collision: str = None
+    alternate_mdl: ModelData | None = None  # if none, ALTERNATE shields use default model and only change materials
+    collision: str | None = None
 
 
 ALL_SHIELD_DATA: dict[str, ShieldData] = {
@@ -354,7 +352,7 @@ class BaseShield:
     def __init__(self, shield: ShieldData):
         self.data = shield
 
-    def patch_model_data(self, new_template: dict, editor: PatcherEditor, version: str):
+    def patch_model_data(self, new_template: Bmsad, editor: PatcherEditor, version: str) -> None:
         # select the default or alternate model
         if version == "DEFAULT" or self.data.alternate_mdl is None:
             model = self.data.default_mdl
@@ -362,11 +360,12 @@ class BaseShield:
             model = self.data.alternate_mdl
 
         create_custom_model(editor, model)
-        new_template["property"]["model_name"] = model.new_path
-        model_updater = new_template["property"]["components"]["MODELUPDATER"]
-        model_updater["functions"][0]["params"]["Param1"]["value"] = model.new_path
+        assert model.new_path is not None
+        new_template.model_name = model.new_path
+        model_updater = new_template.components["MODELUPDATER"]
+        model_updater.functions[0].set_param(1, model.new_path)
 
-    def patch_material_data(self, editor: PatcherEditor, version: str):
+    def patch_material_data(self, editor: PatcherEditor, version: str) -> None:
         if version == "DEFAULT":
             for mat_dat in self.data.default_mats:
                 create_custom_material(editor, mat_dat)
@@ -375,34 +374,29 @@ class BaseShield:
             for mat_dat in self.data.alternate_mats:
                 create_custom_material(editor, mat_dat)
 
-    def add_weakness(self, weakness: str, new_template: dict):
-        life_funcs: list = new_template["property"]["components"]["LIFE"]["functions"]
+    def add_weakness(self, weakness: str, new_template: Bmsad) -> None:
+        life = new_template.components["LIFE"]
 
-        new_func = {
-            "name": "AddDamageSource",
-            "unk": 1,
-            "params": {
-                "Param1": {
-                    "type": "s",
-                    "value": weakness
-                }
-            }
-        }
+        new_func = ActorDefFunc.new("AddDamageSource")
+        new_func.set_param(1, weakness)
 
+        life_funcs = list(life.functions)
         life_funcs.append(new_func)
+        life.functions = life_funcs
 
-    def change_collision(self, new_template: dict):
+    def change_collision(self, new_template: Bmsad) -> None:
         if self.data.collision is None:
             return
 
-        coll_comp = new_template["property"]["components"]["COLLISION"]
-        coll_comp["dependencies"]["file"] = self.data.collision
+        coll_comp = new_template.components["COLLISION"]
+        assert isinstance(coll_comp.dependencies, dict)
+        coll_comp.dependencies["file"] = self.data.collision
 
-    def patch(self, editor: PatcherEditor, version: str = "DEFAULT"):
+    def patch(self, editor: PatcherEditor, version: str = "DEFAULT") -> None:
         template_bmsad = _template_read_shield(self.data.type.value)
 
-        new_template = copy.deepcopy(template_bmsad)
-        new_template["name"] = self.data.name
+        new_template = Bmsad.parse(template_bmsad, editor.target_game)
+        new_template.name = self.data.name
 
         self.patch_material_data(editor, version)
         self.patch_model_data(new_template, editor, version)
@@ -412,9 +406,9 @@ class BaseShield:
 
         self.change_collision(new_template)
 
-        editor.add_new_asset(self.data.actordef, Bmsad(new_template, editor.target_game), [])
+        editor.add_new_asset(self.data.actordef, new_template, [])
 
 
-def create_all_shield_assets(editor: PatcherEditor, shield_model_config: dict[str, str]):
+def create_all_shield_assets(editor: PatcherEditor, shield_model_config: dict[str, str]) -> None:
     for shield_name, shield_type in shield_model_config.items():
         BaseShield(ALL_SHIELD_DATA[shield_name]).patch(editor, shield_type)

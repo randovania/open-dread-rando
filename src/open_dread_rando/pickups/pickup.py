@@ -1,6 +1,4 @@
-import copy
 import functools
-import json
 from enum import Enum
 
 from construct import Container
@@ -24,10 +22,10 @@ EXPANSION_ITEM_IDS = {
     "ITEM_NONE",
 }
 
+
 @functools.cache
-def _read_template_powerup():
-    with templates_path().joinpath("template_powerup_bmsad.json").open() as f:
-        return json.load(f)
+def _read_template_powerup() -> bytes:
+    return templates_path().joinpath("template_powerup.bmsad").read_bytes()
 
 
 class PickupType(Enum):
@@ -45,24 +43,24 @@ class BasePickup:
         self.pickup_id = pickup_id
         self.configuration = configuration
 
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         raise NotImplementedError()
 
 
 class ActorPickup(BasePickup):
-    def patch_single_item_pickup(self, bmsad: dict) -> dict:
-        pickable: dict = bmsad["property"]["components"]["PICKABLE"]
-        script: dict = bmsad["property"]["components"]["SCRIPT"]
+    def patch_single_item_pickup(self, bmsad: Bmsad) -> Bmsad:
+        pickable = bmsad.components["PICKABLE"]
+        script = bmsad.components["SCRIPT"]
 
-        set_custom_params: dict = pickable["functions"][0]["params"]
+        set_custom = pickable.functions[0]
         item_id: str = self.pickup["resources"][0][0]["item_id"]
         quantity: float = self.pickup["resources"][0][0]["quantity"]
 
         if item_id == "ITEM_ENERGY_TANKS":
             quantity *= self.configuration["energy_per_tank"]
-            set_custom_params["Param4"]["value"] = "Full"
-            set_custom_params["Param5"]["value"] = "fCurrentLife"
-            set_custom_params["Param6"]["value"] = "LIFE"
+            set_custom.set_param(4, "Full")
+            set_custom.set_param(5, "fCurrentLife")
+            set_custom.set_param(6, "LIFE")
 
             item_id = "fMaxLife"
 
@@ -71,119 +69,108 @@ class ActorPickup(BasePickup):
 
         elif item_id == "ITEM_LIFE_SHARDS" and not self.configuration["immediate_energy_parts"]:
             item_id = "fLifeShards"
-            set_custom_params["Param4"]["value"] = "Custom"
-            set_custom_params["Param5"]["value"] = ""
-            set_custom_params["Param6"]["value"] = "LIFE"
-            set_custom_params["Param7"]["value"] = "#GUI_ITEM_ACQUIRED_ENERGY_SHARD"
+            set_custom.set_param(4, "Custom")
+            set_custom.set_param(5, "")
+            set_custom.set_param(6, "LIFE")
+            set_custom.set_param(7, "#GUI_ITEM_ACQUIRED_ENERGY_SHARD")
 
-            fields = pickable["fields"]["fields"]
+            fields = pickable.fields
             caption = self.pickup["caption"]
             if caption == "Energy Part acquired.\nCollect 4 to increase energy capacity.":
                 # If text is vanilla, then support showing how many parts we had.
-                fields["sOnPickEnergyFragment1Caption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_1"
-                fields["sOnPickEnergyFragment2Caption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_2"
-                fields["sOnPickEnergyFragment3Caption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_3"
-                fields["sOnPickEnergyFragmentCompleteCaption"] = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_COMPLETE"
+                fields.sOnPickEnergyFragment1Caption = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_1"
+                fields.sOnPickEnergyFragment2Caption = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_2"
+                fields.sOnPickEnergyFragment3Caption = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_3"
+                fields.sOnPickEnergyFragmentCompleteCaption = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_COMPLETE"
             else:
                 for field_name in ["sOnPickEnergyFragment1Caption", "sOnPickEnergyFragment2Caption",
                                    "sOnPickEnergyFragment3Caption", "sOnPickEnergyFragmentCompleteCaption"]:
-                    fields[field_name] = caption
+                    setattr(fields, field_name, caption)
 
         elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX", "ITEM_WEAPON_POWER_BOMB"}:
             current = item_id.replace("_MAX", "_CURRENT")
             if item_id == current:
                 current += "_CURRENT"
 
-            set_custom_params["Param4"]["value"] = "Custom"
-            set_custom_params["Param5"]["value"] = current
-            set_custom_params["Param8"]["value"] = "guicallbacks.OnSecondaryGunsFire"
-            set_custom_params["Param13"] = {
-                "type": "f",
-                "value": quantity,
-            }
+            set_custom.set_param(4, "Custom")
+            set_custom.set_param(5, current)
+            set_custom.set_param(8, "guicallbacks.OnSecondaryGunsFire")
+            set_custom.set_param(13, quantity)
 
-        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup)
+        script.functions[0].set_param(2, self.lua_editor.get_script_class(self.pickup))
 
-        set_custom_params["Param1"]["value"] = item_id
-        set_custom_params["Param2"]["value"] = quantity
+        set_custom.set_param(1, item_id)
+        set_custom.set_param(2, quantity)
 
         return bmsad
 
-    def patch_multi_item_pickup(self, bmsad: dict) -> dict:
-        pickable: dict = bmsad["property"]["components"]["PICKABLE"]
-        script: dict = bmsad["property"]["components"]["SCRIPT"]
+    def patch_multi_item_pickup(self, bmsad: Bmsad) -> Bmsad:
+        pickable = bmsad.components["PICKABLE"]
+        script = bmsad.components["SCRIPT"]
 
-        item_id = "ITEM_NONE"
-        first_progression = self.pickup["resources"][0][0]["item_id"]
+        item_id: str = "ITEM_NONE"
+        first_progression: str = self.pickup["resources"][0][0]["item_id"]
         if first_progression in {"ITEM_WEAPON_WIDE_BEAM", "ITEM_WEAPON_SUPER_MISSILE"}:
             # the gun doesn't appear to be selected properly on pickup unless we do this
             item_id = first_progression
 
-        set_custom_params: dict = pickable["functions"][0]["params"]
-        set_custom_params["Param1"]["value"] = item_id
+        set_custom_params = pickable.functions[0]
+        set_custom_params.set_param(1, item_id)
 
-        script["functions"][0]["params"]["Param2"]["value"] = self.lua_editor.get_script_class(self.pickup,
-                                                                                               actordef_name=bmsad[
-                                                                                                   "name"])
+        script.functions[0].set_param(2, self.lua_editor.get_script_class(
+            self.pickup, actordef_name=bmsad.name
+        ))
 
         return bmsad
 
     def patch_model(self, editor: PatcherEditor, model_names: list[str], actor: Container,
-                    new_template: dict):
+                    new_template: Bmsad) -> None:
         if len(model_names) == 1:
             selected_model_data = model_data.get_data(model_names[0])
 
             # Update used model
-            new_template["property"]["model_name"] = selected_model_data.bcmdl_path
-            model_updater = new_template["property"]["components"]["MODELUPDATER"]
-            model_updater["functions"][0]["params"]["Param1"]["value"] = selected_model_data.bcmdl_path
+            new_template.model_name = selected_model_data.bcmdl_path
+            model_updater = new_template.components["MODELUPDATER"]
+            model_updater.functions[0].set_param(1, selected_model_data.bcmdl_path)
 
             # Apply grapple particles
             if selected_model_data.grapple_fx:
                 grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad",
                                           Bmsad)
-                grapple_components = grapple.raw["property"]["components"]
-                components = new_template["property"]["components"]
+                grapple_components = grapple.components
+                components = new_template.components
                 components["MATERIALFX"] = grapple_components["MATERIALFX"]
                 components["FX"] = grapple_components["FX"]
 
             if selected_model_data.transform is not None:
-                model_updater["fields"] = {
-                    "empty_string": "",
-                    "root": "Root",
-                    "fields": {
-                        "vInitScale": list(selected_model_data.transform.scale),
-                        "vInitPosWorldOffset": list(selected_model_data.transform.position),
-                        "vInitAngWorldOffset": list(selected_model_data.transform.angle),
-                    }
-                }
+                model_updater.fields.vInitScale = list(selected_model_data.transform.scale)
+                model_updater.fields.vInitPosWorldOffset = list(selected_model_data.transform.position)
+                model_updater.fields.vInitAngWorldOffset = list(selected_model_data.transform.angle)
 
             # Animation/BMSAS
-            new_template["property"]["binaries"][0] = selected_model_data.bmsas
+            action_set_refs = list(new_template.action_set_refs)
+            action_set_refs[0] = selected_model_data.bmsas
+            new_template.action_set_refs = action_set_refs
         else:
             default_model_data = model_data.get_data(model_names[0])
-            model_updater = new_template["property"]["components"]["MODELUPDATER"]
+            model_updater = new_template.components["MODELUPDATER"]
 
-            new_template["property"]["model_name"] = default_model_data.bcmdl_path
-            model_updater["type"] = "CMultiModelUpdaterComponent"
-            model_updater["fields"] = {
-                "empty_string": "",
-                "root": "Root",
-                "fields": {
-                    "dctModels": {
-                        name: model_data.get_data(name).bcmdl_path
-                        for name in model_names
-                    }
-                }
+            new_template.model_name = default_model_data.bcmdl_path
+            model_updater.type = "CMultiModelUpdaterComponent"
+            model_updater.fields.dctModels = {
+                name: model_data.get_data(name).bcmdl_path
+                for name in model_names
             }
-            model_updater["functions"] = []
+            model_updater.functions = []
 
-            new_template["property"]["binaries"][:0] = [model_data.get_data(name).bmsas for name in model_names]
+            action_set_refs = list(new_template.action_set_refs)
+            action_set_refs[:0] = [model_data.get_data(name).bmsas for name in model_names]
+            new_template.action_set_refs = action_set_refs
 
             actor.pComponents.MODELUPDATER["@type"] = "CMultiModelUpdaterComponent"
             actor.pComponents.MODELUPDATER.sModelAlias = model_names[0]
 
-    def patch_minimap_icon(self, editor: PatcherEditor, actor: Container):
+    def patch_minimap_icon(self, editor: PatcherEditor, actor: Container) -> None:
         if "map_icon" in self.pickup and "original_actor" in self.pickup["map_icon"]:
             map_actor = self.pickup["map_icon"]["original_actor"]
         else:
@@ -197,15 +184,15 @@ class ActorPickup(BasePickup):
             icon.sIconId = editor.map_icon_editor.get_data(self.pickup)
             map_def.items[actor.sName] = icon
 
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         template_bmsad = _read_template_powerup()
 
         pickup_actor = self.pickup["pickup_actor"]
         pkgs_for_level = editor.get_level_pkgs(pickup_actor["scenario"])
         actor = editor.resolve_actor_reference(pickup_actor)
 
-        new_template = copy.deepcopy(template_bmsad)
-        new_template["name"] = f"randomizer_powerup_{self.pickup_id}"
+        new_template = Bmsad.parse(template_bmsad, target_game=editor.target_game)
+        new_template.name = f"randomizer_powerup_{self.pickup_id}"
 
         # Update model
         model_names: list[str] = self.pickup["model"]
@@ -215,9 +202,9 @@ class ActorPickup(BasePickup):
         self.patch_minimap_icon(editor, actor)
 
         # Update caption
-        pickable = new_template["property"]["components"]["PICKABLE"]
-        pickable["fields"]["fields"]["sOnPickCaption"] = self.pickup["caption"]
-        pickable["fields"]["fields"]["sOnPickTankUnknownCaption"] = self.pickup["caption"]
+        pickable = new_template.components["PICKABLE"]
+        pickable.fields.sOnPickCaption = self.pickup["caption"]
+        pickable.fields.sOnPickTankUnknownCaption = self.pickup["caption"]
 
         # Update given item
         if len(self.pickup["resources"]) == 1 and len(self.pickup["resources"][0]) == 1:
@@ -226,7 +213,7 @@ class ActorPickup(BasePickup):
             new_template = self.patch_multi_item_pickup(new_template)
 
         new_path = f"actors/items/randomizer_powerup/charclasses/randomizer_powerup_{self.pickup_id}.bmsad"
-        editor.add_new_asset(new_path, Bmsad(new_template, editor.target_game), in_pkgs=pkgs_for_level)
+        editor.add_new_asset(new_path, new_template, in_pkgs=pkgs_for_level)
         actor.oActorDefLink = f"actordef:{new_path}"
 
         # Powerup is in plain sight (except for the part we're using the sphere model)
@@ -252,7 +239,7 @@ class ActorPickup(BasePickup):
 
 
 class ActorDefPickup(BasePickup):
-    def _patch_actordef_pickup_script_help(self, editor: PatcherEditor):
+    def _patch_actordef_pickup_script_help(self, editor: PatcherEditor) -> None:
         return self.lua_editor.patch_actordef_pickup_script(
             editor,
             self.pickup,
@@ -265,29 +252,29 @@ class ActorDefPickup(BasePickup):
         bmsad_path: str = self.pickup["pickup_actordef"]
         actordef = editor.get_file(bmsad_path, Bmsad)
 
-        ai_component = actordef.raw["property"]["components"]["AI"]
-        ai_component["fields"]["fields"][item_id_field] = "ITEM_NONE"
+        ai_component = actordef.components["AI"]
+        setattr(ai_component.fields, item_id_field, "ITEM_NONE")
 
         patch_text(editor, self.pickup["pickup_string_key"], self.pickup["caption"])
 
         return bmsad_path, actordef
 
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         raise NotImplementedError()
 
 
 class EmmiPickup(ActorDefPickup):
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnKilled")
         editor.replace_asset(bmsad_path, actordef)
 
 
 class CoreXPickup(ActorDefPickup):
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnBigXAbsorbed")
         editor.replace_asset(bmsad_path, actordef)
 
-    def _patch_actordef_pickup_script_help(self, editor: PatcherEditor):
+    def _patch_actordef_pickup_script_help(self, editor: PatcherEditor) -> None:
         return self.lua_editor.patch_corex_pickup_script(
             editor,
             self.pickup,
@@ -296,16 +283,16 @@ class CoreXPickup(ActorDefPickup):
 
 
 class CorpiusPickup(ActorDefPickup):
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         bmsad_path, actordef = self._patch_actordef_pickup(editor, "sInventoryItemOnKilled")
         if self.pickup["resources"][0][0]["item_id"] not in EXPANSION_ITEM_IDS:
-            actordef.raw["property"]["components"]["AI"]["fields"]["fields"]["bGiveInventoryItemOnDead"] = True
+            actordef.components["AI"].fields.bGiveInventoryItemOnDead = True
 
         editor.replace_asset(bmsad_path, actordef)
 
 
 class CutscenePickup(BasePickup):
-    def patch(self, editor: PatcherEditor):
+    def patch(self, editor: PatcherEditor) -> None:
         self.lua_editor.patch_actordef_pickup_script(
             editor,
             self.pickup,

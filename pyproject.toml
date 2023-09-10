@@ -14,9 +14,9 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3.9",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
-    "mercury-engine-data-structures>=0.21.0",
+    "mercury-engine-data-structures>=0.24",
     "jsonschema>=4.0.0",
     "ips.py>=0.1.2",
     "keystone-engine>=0.9.2",
@@ -53,3 +53,12 @@ src = ["src"]
 
 # Version to target for generated code.
 target-version = "py39"
+
+[tool.mypy]
+files = [
+    "src/open_dread_rando/pickups/split_pickups.py",
+    "src/open_dread_rando/pickups/pickup.py",
+    "src/open_dread_rando/door_locks/custom_door_types.py",
+]
+follow_imports = "silent"
+disallow_untyped_defs = true
