@@ -1,7 +1,11 @@
 [build-system]
 requires = [
     "setuptools>=61.2",
-    "setuptools_scm[toml]>=3.4.3"
+    "setuptools_scm[toml]>=3.4.3",
+
+    # Creating the exefs patches
+    "keystone-engine>=0.9.2",
+    "ips.py>=0.1.2",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -18,8 +22,6 @@ requires-python = ">=3.10"
 dependencies = [
     "mercury-engine-data-structures>=0.24",
     "jsonschema>=4.0.0",
-    "ips.py>=0.1.2",
-    "keystone-engine>=0.9.2",
 ]
 dynamic = ["version"]
 
