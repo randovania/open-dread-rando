@@ -30,7 +30,9 @@ jobs:
         run: python -m pip install --upgrade pip setuptools build
 
       - name: build
-        run: PYTHONWARNINGS=error python -m build
+        # Not adding PYTHONWARNINGS=error as it can trigger errors in pip itself
+        # See https://github.com/pypa/pip/issues/12243
+        run: python -m build
       
       - name: Store the packages
         uses: actions/upload-artifact@v3
