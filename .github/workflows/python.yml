@@ -84,6 +84,42 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  wheel_export:
+    runs-on: self-hosted
+    needs:
+      - build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          clean: true
+
+      - name: Clean source
+        run: rm -rf src
+
+      - name: Download all the dists
+        uses: actions/download-artifact@v3
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Create venv
+        run: python -m venv venv
+
+      - name: Install Python packages
+        run: venv/bin/python -m pip install --upgrade pip
+
+      - name: install built wheel
+        run: venv/bin/python -m pip install "$(ls dist/*.whl)[test]"
+        shell: bash
+
+      - name: test just exporting
+        run:
+          venv/bin/python -m pytest tests/test_full_patch.py
+
+
   full_test:
     runs-on: self-hosted
     needs:
