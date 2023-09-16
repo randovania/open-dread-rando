@@ -100,7 +100,7 @@ class ActorPickup(BasePickup):
         script.functions[0].set_param(2, self.lua_editor.get_script_class(self.pickup))
 
         set_custom.set_param(1, item_id)
-        set_custom.set_param(2, quantity)
+        set_custom.set_param(2, float(quantity))
 
         return bmsad
 
@@ -141,6 +141,7 @@ class ActorPickup(BasePickup):
                 components = new_template.components
                 components["MATERIALFX"] = grapple_components["MATERIALFX"]
                 components["FX"] = grapple_components["FX"]
+                new_template.components = components
 
             if selected_model_data.transform is not None:
                 model_updater.fields.vInitScale = list(selected_model_data.transform.scale)
