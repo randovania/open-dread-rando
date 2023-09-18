@@ -642,6 +642,7 @@
     "$defs": {
         "scenario_lua_callback": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "scenario": {
                     "$ref": "#/$defs/scenario_name"
@@ -650,13 +651,14 @@
                     "type": "string"
                 },
                 "args": {
-                    "type": "number",
+                    "type": "integer",
                     "default": 0
                 }
             }
         },
         "actor_reference_with_layer": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "scenario": {
                     "$ref": "#/$defs/scenario_name"
@@ -676,6 +678,7 @@
         },
         "actor_reference": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "scenario": {
                     "$ref": "#/$defs/scenario_name"
@@ -800,6 +803,7 @@
                     "type": "number"
                 }
             },
+            "additionalProperties": false,
             "required": [
                 "x",
                 "y",
