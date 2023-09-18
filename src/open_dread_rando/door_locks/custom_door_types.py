@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import dataclasses
 import functools
+import typing
 from enum import Enum
 
 from mercury_engine_data_structures.formats import Bmsad
@@ -8,7 +11,10 @@ from mercury_engine_data_structures.formats.bmsad import ActorDefFunc
 from open_dread_rando.files import templates_path
 from open_dread_rando.misc_patches.material_patcher import MaterialData, create_custom_material
 from open_dread_rando.misc_patches.model_patcher import ModelData, create_custom_model
-from open_dread_rando.patcher_editor import PatcherEditor
+
+if typing.TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationCosmeticPatchesShieldVersions
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 MISSILE_MDL = "actors/props/doorshieldmissile/models/doorshieldmissile.bcmdl"
 SUPER_MDL = "actors/props/doorshieldsupermissile/models/doorshieldsupermissile.bcmdl"
@@ -409,6 +415,10 @@ class BaseShield:
         editor.add_new_asset(self.data.actordef, new_template, [])
 
 
-def create_all_shield_assets(editor: PatcherEditor, shield_model_config: dict[str, str]) -> None:
-    for shield_name, shield_type in shield_model_config.items():
+def create_all_shield_assets(editor: PatcherEditor, shield_model_config: ConfigurationCosmeticPatchesShieldVersions
+                             ) -> None:
+
+    # mypy doesn't like iterating over typed dict
+    model_config = typing.cast(dict[str, str], shield_model_config)
+    for shield_name, shield_type in model_config.items():
         BaseShield(ALL_SHIELD_DATA[shield_name]).patch(editor, shield_type)

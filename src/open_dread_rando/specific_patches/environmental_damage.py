@@ -1,7 +1,13 @@
-from math import ceil
+from __future__ import annotations
 
-from open_dread_rando.patcher_editor import PatcherEditor
+from math import ceil
+from typing import TYPE_CHECKING
+
 from open_dread_rando.specific_patches.environmental_damage_sources import ALL_DAMAGE_ROOM_ACTORS
+
+if TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationConstantEnvironmentDamage
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 
 def get_damage_and_tick(value: float) -> tuple[float, float]:
@@ -23,26 +29,30 @@ def get_damage_and_tick(value: float) -> tuple[float, float]:
     return damage, tick
 
 
-def apply_constant_damage(editor: PatcherEditor, configuration: dict):
+def apply_constant_damage(editor: PatcherEditor, configuration: ConfigurationConstantEnvironmentDamage) -> None:
     for reference in ALL_DAMAGE_ROOM_ACTORS:
         actor = editor.resolve_actor_reference(reference)
 
-        if actor.oActorDefLink == "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
-            config_name = 'oFreezeConfig'
-            config_field = "cold"
-        elif actor.oActorDefLink == "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
-            config_name = 'oHeatConfig'
-            config_field = "heat"
-        elif actor.oActorDefLink == "actordef:actors/props/lavazone/charclasses/lavazone.bmsad":
-            config_name = 'oConfig'
-            config_field = "lava"
-        else:
-            raise ValueError(f"{reference} does not have a valid actorDef for environmental damage")
+        match actor.oActorDefLink:
+            case "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
+                config_name = 'oFreezeConfig'
+                config_value = configuration["cold"]
 
-        if configuration[config_field] is None:
+            case "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
+                config_name = 'oHeatConfig'
+                config_value = configuration["heat"]
+
+            case "actordef:actors/props/lavazone/charclasses/lavazone.bmsad":
+                config_name = 'oConfig'
+                config_value = configuration["lava"]
+
+            case _:
+                raise ValueError(f"{reference} does not have a valid actorDef for environmental damage")
+
+        if config_value is None:
             continue
 
-        damage, tick = get_damage_and_tick(configuration[config_field])
+        damage, tick = get_damage_and_tick(config_value)
 
         damage_config = actor.pComponents.ACTIVATABLE[config_name]
         damage_config.fDamagePerTime = damage

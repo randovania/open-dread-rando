@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import itertools
+from typing import TYPE_CHECKING
 
 from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.files import files_path
 from open_dread_rando.misc_patches import lua_util
 from open_dread_rando.patcher_editor import PatcherEditor, path_for_level
+
+if TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationPickupsItem, DefScenarioLuaCallback
 
 
 def _read_powerup_lua() -> bytes:
@@ -50,7 +56,7 @@ class LuaEditor:
     def get_parent_for(self, item_id) -> str:
         return SPECIFIC_CLASSES.get(item_id, "RandomizerPowerup")
 
-    def get_script_class(self, pickup: dict, boss: bool = False, actordef_name: str = "") -> str:
+    def get_script_class(self, pickup: ConfigurationPickupsItem, boss: bool = False, actordef_name: str = "") -> str:
         pickup_resources = pickup["resources"]
         parent = self.get_parent_for(pickup_resources[0][0]["item_id"])
 
@@ -116,8 +122,12 @@ class LuaEditor:
         models = lua_util.replace_lua_template("progressive_model_template.lua", replacement)
         self._powerup_script += models.encode("utf-8")
 
-    def patch_actordef_pickup_script(self, editor: PatcherEditor, pickup: dict, pickup_lua_callback: dict,
-                                     extra_code: str = "") -> None:
+    def patch_actordef_pickup_script(
+            self, editor: PatcherEditor,
+            pickup: ConfigurationPickupsItem,
+            pickup_lua_callback: DefScenarioLuaCallback,
+            extra_code: str = ""
+    ) -> None:
         scenario = pickup_lua_callback["scenario"]
         scenario_path = path_for_level(scenario)
         lua_util.create_script_copy(editor, scenario_path)
@@ -137,9 +147,10 @@ class LuaEditor:
         }
         script["script"] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
 
-    def patch_corex_pickup_script(self, editor: PatcherEditor, pickup: dict, pickup_lua_callback: dict) -> None:
-        bossid = pickup_lua_callback["function"]
-        self._corex_replacement[bossid] = self.get_script_class(pickup, True)
+    def patch_corex_pickup_script(self, editor: PatcherEditor, pickup: ConfigurationPickupsItem,
+                                  pickup_lua_callback: DefScenarioLuaCallback) -> None:
+        boss_id = pickup_lua_callback["function"]
+        self._corex_replacement[boss_id] = self.get_script_class(pickup, True)
 
     def save_modifications(self, editor: PatcherEditor) -> None:
         editor.replace_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", self._powerup_script)

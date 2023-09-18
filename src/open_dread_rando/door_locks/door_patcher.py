@@ -1,14 +1,21 @@
+from __future__ import annotations
+
 import copy
 from bisect import insort
-from collections.abc import Sequence
 from enum import Enum
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from construct import Container, ListContainer
 from mercury_engine_data_structures.formats import Bmscc
 
 from open_dread_rando.constants import ALL_SCENARIOS
-from open_dread_rando.patcher_editor import PatcherEditor
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from open_dread_rando.configuration import DefActorReferenceWithLayer
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 # copied from existing entity, so we don't have to make a whole shield
 _EXAMPLE_SHIELD = {"scenario": "s010_cave", "layer": "default", "actor": "Door003_missileShield"}
@@ -239,11 +246,12 @@ class DoorPatcher:
         else:
             raise ValueError(f"Door {door.sName} in scenario {scenario} is not a patchable door!")
 
-    def patch_door(self, door_ref: dict, door_type: str):
+    def patch_door(self, door_ref: DefActorReferenceWithLayer, door_type: str) -> None:
         """
         Patches a door given a reference.
 
-        @param door: A dictionary representing a requested door patch.
+        @param door_ref: A dictionary representing a requested door patch.
+        @param door_type:
         """
 
         scenario = door_ref["scenario"]
@@ -265,7 +273,7 @@ class DoorPatcher:
         self.door_to_basic(door_actor, door_in_scenario_type, scenario)
         self.power_to_door_type(door_actor, door_type, scenario)
 
-    def door_to_basic(self, door: Container, door_type: DoorType, scenario: str):
+    def door_to_basic(self, door: Container, door_type: DoorType, scenario: str) -> None:
         """
         Reverts a door to a basic (power) door based on its door_type
         """

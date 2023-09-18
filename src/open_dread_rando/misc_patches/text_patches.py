@@ -5,6 +5,7 @@ import typing
 from mercury_engine_data_structures.formats import Txt
 
 if typing.TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationHintsItem, ConfigurationSpoilerLog, ConfigurationTextPatches
     from open_dread_rando.patcher_editor import PatcherEditor
 
 # may want to edit all the localization files?
@@ -36,12 +37,12 @@ def get_text(editor: PatcherEditor, key: str, text_file: str = "us_english.txt")
     return text.strings[key]
 
 
-def apply_text_patches(editor: PatcherEditor, patches: dict[str, str]):
-    for k, v in patches.items():
+def apply_text_patches(editor: PatcherEditor, patches: ConfigurationTextPatches) -> None:
+    for k, v in typing.cast(dict[str, str], patches).items():
         patch_text(editor, k, v)
 
 
-def patch_hints(editor: PatcherEditor, hints: list[dict]):
+def patch_hints(editor: PatcherEditor, hints: list[ConfigurationHintsItem]) -> None:
     # patch mission log titles
     for lvl in {"AQUA", "CAVE", "MAGMA", "FOREST", "LAB", "SANC", "SHIP"}:
         mlog_key = f"MLOG_ADAM_{lvl}"
@@ -99,7 +100,7 @@ _PROJECT_MEMBERS = {
 }
 
 
-def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
+def patch_credits(editor: PatcherEditor, spoiler_log: ConfigurationSpoilerLog) -> None:
     text = editor.get_file("system/localization/credits.txt", Txt)
     ordered_credits = list(text.strings.items())
 
@@ -115,7 +116,7 @@ def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
     if spoiler_log:
         rando_credits.append(("     ", "_SUBTITLE"))
         rando_credits.append(("Major Item Locations", "_TITLE"))
-        for item, loc in spoiler_log.items():
+        for item, loc in typing.cast(dict[str, str], spoiler_log).items():
             rando_credits.append((item, "_SUBTITLE"))
             rando_credits.append((loc, ""))
 

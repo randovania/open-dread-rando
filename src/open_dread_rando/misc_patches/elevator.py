@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import dataclasses
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from open_dread_rando.logger import LOG
-from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickups.map_icons import MapIcon
+
+if TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationElevatorsItem
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 
 class TransporterType(Enum):
@@ -52,7 +58,8 @@ TRANSPORT_TYPES = {
     )
 }
 
-def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[TransporterType, dict]:
+
+def _get_type_and_usable(editor: PatcherEditor, elevator: ConfigurationElevatorsItem) -> tuple[TransporterType, dict]:
     level = editor.get_scenario(elevator["teleporter"]["scenario"])
     actor = level.actors_for_layer(elevator["teleporter"]["layer"])[elevator["teleporter"]["actor"]]
     try:
@@ -70,19 +77,22 @@ def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[Transpo
                          "is not an elevator, shuttle, capsule or teleporter!\n"
                          f"USABLE type: {usable['@type']}")
 
-def _patch_actor(usable: dict, elevator: dict):
+
+def _patch_actor(usable: dict, elevator: ConfigurationElevatorsItem) -> None:
     usable.sScenarioName = elevator["destination"]["scenario"]
     usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
-def _patch_minimap_arrows(editor: PatcherEditor, elevator: dict):
-    map = editor.get_scenario_map(elevator["teleporter"]["scenario"])
-    sign = map.get_category("mapTransportSigns")[ elevator["teleporter"]["actor"] ]
+
+def _patch_minimap_arrows(editor: PatcherEditor, elevator: ConfigurationElevatorsItem) -> None:
+    scenario_map = editor.get_scenario_map(elevator["teleporter"]["scenario"])
+    sign = scenario_map.get_category("mapTransportSigns")[ elevator["teleporter"]["actor"] ]
     sign["sDestAreaId"] = elevator["destination"]["scenario"]
 
-def _patch_map_icon(editor: PatcherEditor, elevator: dict):
+
+def _patch_map_icon(editor: PatcherEditor, elevator: ConfigurationElevatorsItem) -> None:
     # get transporter type from mapUsables entry
-    conn_name: str = elevator["connection_name"]
-    icon_id = f'RDV_TRANSPORT_{conn_name.replace(" ", "")}' # ex: "RDV_TRANSPORT_Artaria-ThermalDevice"
+    conn_name = elevator["connection_name"]
+    icon_id = f'RDV_TRANSPORT_{conn_name.replace(" ", "")}'  # ex: "RDV_TRANSPORT_Artaria-ThermalDevice"
 
     bmmap = editor.get_scenario_map(elevator["teleporter"]["scenario"])
     usable = bmmap.get_category("mapUsables")[ elevator["teleporter"]["actor"] ]
@@ -96,7 +106,8 @@ def _patch_map_icon(editor: PatcherEditor, elevator: dict):
     # update usable
     usable["sIconId"] = icon_id
 
-def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
+
+def patch_elevators(editor: PatcherEditor, elevators_config: list[ConfigurationElevatorsItem]) -> None:
     for elevator in elevators_config:
         LOG.debug("Writing elevator from: %s", str(elevator["teleporter"]))
         transporter_type, usable = _get_type_and_usable(editor, elevator)

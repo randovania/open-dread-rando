@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import json
 import logging
 import shutil
 import typing
 from pathlib import Path
 
-from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando.constants import FadeTimes
@@ -30,17 +31,27 @@ from open_dread_rando.specific_patches.objective import apply_objective_patches
 from open_dread_rando.specific_patches.static_fixes import apply_static_fixes
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
 
+if typing.TYPE_CHECKING:
+    from open_dread_rando.configuration import (
+        Configuration,
+        ConfigurationCosmeticPatchesShieldVersions,
+        ConfigurationDoorPatchesItem,
+        ConfigurationNewSpawnPointsItem,
+        ConfigurationPickupsItem,
+        ConfigurationStartingItems,
+    )
+
 T = typing.TypeVar("T")
 
 
-def _read_schema():
+def _read_schema() -> dict:
     with files_path().joinpath("schema.json").open() as f:
         return json.load(f)
 
 
-def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
+def create_custom_init(editor: PatcherEditor, configuration: Configuration) -> str:
     cosmetic_options: dict = configuration["cosmetic_patches"]["lua"]["custom_init"]
-    inventory: dict[str, int] = configuration["starting_items"]
+    inventory: ConfigurationStartingItems = configuration["starting_items"]
     starting_location: dict = configuration["starting_location"]
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
@@ -59,13 +70,6 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
         shards = inventory.pop("ITEM_LIFE_SHARDS")
         max_life += shards * energy_per_part
 
-    inventory.update({
-        # TODO: expose shuffling these
-        "ITEM_WEAPON_POWER_BEAM": 1,
-        "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
-    })
-    inventory = update_starting_inventory_split_pickups(inventory)
-
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
     final_inventory = {
         "ITEM_MAX_LIFE": max_life,
@@ -75,8 +79,13 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
         "ITEM_METROID_TOTAL_COUNT": 40,
         "ITEM_WEAPON_MISSILE_MAX": 0,
         "ITEM_WEAPON_POWER_BOMB_MAX": 0,
+
+        # TODO: expose shuffling these
+        "ITEM_WEAPON_POWER_BEAM": 1,
+        "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
     }
     final_inventory.update(inventory)
+    final_inventory.update(update_starting_inventory_split_pickups(inventory))
 
     def chunks(array, n):
         for i in range(0, len(array), n):
@@ -104,15 +113,13 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
         "energy_per_part": energy_per_part,
         "immediate_energy_parts": configuration["immediate_energy_parts"],
         "default_x_released": configuration.get("game_patches", {}).get("default_x_released", False),
-        "linear_damage_runs": configuration.get("linear_damage_runs"),
-        "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
         "enable_room_ids": False if cosmetic_options["enable_room_name_display"] == "NEVER" else True,
         "room_id_fade_time": FadeTimes.NO_FADE.value if (
-            cosmetic_options["enable_room_name_display"] != "WITH_FADE"
-            ) else FadeTimes.ROOM_FADE.value,
+                cosmetic_options["enable_room_name_display"] != "WITH_FADE"
+        ) else FadeTimes.ROOM_FADE.value,
         "layout_uuid": layout_uuid,
     }
 
@@ -121,14 +128,15 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
-def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
-    py_dict: dict = configuration["cosmetic_patches"]["lua"]["camera_names_dict"]
+def create_collision_camera_table(editor: PatcherEditor, configuration: Configuration) -> None:
+    py_dict = configuration["cosmetic_patches"]["lua"]["camera_names_dict"]
 
-    file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}, True).encode("ascii")
+    file = lua_util.replace_lua_template("cc_to_room_name.lua", {"room_dict": py_dict}, True).encode("ascii")
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 
-def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
+def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[ConfigurationPickupsItem],
+                  configuration: Configuration) -> None:
     patch_split_pickups(editor)
 
     # add to the TOC
@@ -142,7 +150,11 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
             LOG.warning(e)
 
 
-def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_config: dict[str, str]):
+def patch_doors(
+        editor: PatcherEditor,
+        doors_config: list[ConfigurationDoorPatchesItem],
+        shield_model_config: ConfigurationCosmeticPatchesShieldVersions,
+) -> None:
     editor.map_icon_editor.add_all_new_door_icons()
     create_all_shield_assets(editor, shield_model_config)
 
@@ -151,7 +163,7 @@ def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_co
         door_patcher.patch_door(door["actor"], door["door_type"])
 
 
-def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
+def patch_spawn_points(editor: PatcherEditor, spawn_config: list[ConfigurationNewSpawnPointsItem]) -> None:
     # create custom spawn point
     _EXAMPLE_SP = {"scenario": "s010_cave", "layer": "default", "actor": "StartPoint0"}
     base_actor = editor.resolve_actor_reference(_EXAMPLE_SP)
@@ -159,8 +171,7 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
         scenario_name = new_spawn["new_actor"]["scenario"]
         new_actor_name = new_spawn["new_actor"]["actor"]
         collision_camera_name = new_spawn["collision_camera_name"]
-        new_spawn_pos = ListContainer(
-            (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
+        new_spawn_pos = (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"])
 
         scenario = editor.get_scenario(scenario_name)
 
@@ -168,7 +179,7 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
         scenario.add_actor_to_entity_groups(collision_camera_name, new_actor_name)
 
 
-def add_custom_files(editor: PatcherEditor):
+def add_custom_files(editor: PatcherEditor) -> None:
     custom_romfs = files_path().joinpath("romfs")
     for child in custom_romfs.rglob("*"):
         if not child.is_file():
@@ -188,11 +199,11 @@ def add_custom_files(editor: PatcherEditor):
         editor.add_new_asset(full_path.as_posix(), child.read_bytes(), ["packs/system/system.pkg"])
 
 
-def validate(configuration: dict):
+def validate(configuration: dict) -> None:
     DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
 
 
-def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
+def patch_extracted(input_path: Path, output_path: Path, configuration: Configuration) -> None:
     LOG.info("Will patch files from %s", input_path)
 
     validate(configuration)
@@ -249,7 +260,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     patch_credits(editor, configuration["spoiler_log"])
 
     # Objective
-    apply_objective_patches(editor, configuration)
+    apply_objective_patches(editor, configuration["objective"])
 
     # Cosmetic patches
     if "cosmetic_patches" in configuration:
@@ -275,7 +286,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     # Exefs
     LOG.info("Creating exefs patches")
-    patch_exefs(exefs_patches, configuration)
+    patch_exefs(exefs_patches)
 
     if output_format == OutputFormat.ROMFS:
         include_depackager(out_exefs)

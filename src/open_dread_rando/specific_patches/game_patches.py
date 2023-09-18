@@ -1,7 +1,14 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from mercury_engine_data_structures.formats import Bmsad
 
 from open_dread_rando.misc_patches.text_patches import patch_text
-from open_dread_rando.patcher_editor import PatcherEditor
+
+if TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationGamePatches
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
     {
@@ -17,7 +24,7 @@ _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
 ]
 
 
-def apply_game_patches(editor: PatcherEditor, configuration: dict):
+def apply_game_patches(editor: PatcherEditor, configuration: ConfigurationGamePatches) -> None:
     raven_beak_damage_mode = configuration["raven_beak_damage_table_handling"]
 
     if raven_beak_damage_mode != "unmodified":
@@ -84,7 +91,7 @@ def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
                 factor[missile] = factor.fIceMissileFactor
 
 
-def _remove_grapple_blocks(editor: PatcherEditor, configuration: dict):
+def _remove_grapple_blocks(editor: PatcherEditor, configuration: ConfigurationGamePatches) -> None:
     if configuration["remove_grapple_blocks_hanubia_shortcut"]:
         for reference in _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS:
             editor.remove_entity(reference, "mapProps")

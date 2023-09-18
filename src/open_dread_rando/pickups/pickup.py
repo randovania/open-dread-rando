@@ -1,14 +1,21 @@
+from __future__ import annotations
+
 import functools
 from enum import Enum
+from typing import TYPE_CHECKING
 
-from construct import Container
 from mercury_engine_data_structures.formats import Bmmap, Bmsad
 
 from open_dread_rando.files import templates_path
 from open_dread_rando.misc_patches.text_patches import patch_text
-from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickups import model_data
-from open_dread_rando.pickups.lua_editor import LuaEditor
+
+if TYPE_CHECKING:
+    from construct import Container
+
+    from open_dread_rando.configuration import Configuration, ConfigurationPickupsItem
+    from open_dread_rando.patcher_editor import PatcherEditor
+    from open_dread_rando.pickups.lua_editor import LuaEditor
 
 EXPANSION_ITEM_IDS = {
     "ITEM_ENERGY_TANKS",
@@ -37,7 +44,8 @@ class PickupType(Enum):
 
 
 class BasePickup:
-    def __init__(self, lua_editor: LuaEditor, pickup: dict, pickup_id: int, configuration: dict):
+    def __init__(self, lua_editor: LuaEditor, pickup: ConfigurationPickupsItem, pickup_id: int,
+                 configuration: Configuration):
         self.lua_editor = lua_editor
         self.pickup = pickup
         self.pickup_id = pickup_id
@@ -53,8 +61,8 @@ class ActorPickup(BasePickup):
         script = bmsad.components["SCRIPT"]
 
         set_custom = pickable.functions[0]
-        item_id: str = self.pickup["resources"][0][0]["item_id"]
-        quantity: float = self.pickup["resources"][0][0]["quantity"]
+        item_id = self.pickup["resources"][0][0]["item_id"]
+        quantity = self.pickup["resources"][0][0]["quantity"]
 
         if item_id == "ITEM_ENERGY_TANKS":
             quantity *= self.configuration["energy_per_tank"]
@@ -311,6 +319,7 @@ _PICKUP_TYPE_TO_CLASS: dict[PickupType, type[BasePickup]] = {
 }
 
 
-def pickup_object_for(lua_scripts: LuaEditor, pickup: dict, pickup_id: int, configuration: dict) -> "BasePickup":
+def pickup_object_for(lua_scripts: LuaEditor, pickup: ConfigurationPickupsItem, pickup_id: int,
+                      configuration: Configuration) -> BasePickup:
     pickup_type = PickupType(pickup["pickup_type"])
     return _PICKUP_TYPE_TO_CLASS[pickup_type](lua_scripts, pickup, pickup_id, configuration)

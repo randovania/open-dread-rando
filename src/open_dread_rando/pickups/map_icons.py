@@ -9,6 +9,7 @@ from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.misc_patches.text_patches import patch_text
 
 if TYPE_CHECKING:
+    from open_dread_rando.configuration import ConfigurationPickupsItem
     from open_dread_rando.patcher_editor import PatcherEditor
 
 
@@ -386,15 +387,15 @@ class MapIconEditor:
         if icon.icon_id not in self.mapdefs.icons:
             icon.add_to_defs(self.mapdefs, self.editor)
 
-    def get_data(self, pickup: dict) -> str:
+    def get_data(self, pickup: ConfigurationPickupsItem) -> str:
         if "map_icon" not in pickup:
             return self._get_icon(pickup["model"])
 
-        map_icon: dict = pickup["map_icon"]
+        map_icon = pickup["map_icon"]
         if "icon_id" in map_icon:
             return self._get_icon(map_icon["icon_id"])
 
-        custom_icon: dict = map_icon["custom_icon"]
+        custom_icon = map_icon["custom_icon"]
 
         if "base_icon" in custom_icon:
             icon = ALL_ICONS.get(custom_icon["base_icon"], ALL_ICONS["unknown"])
