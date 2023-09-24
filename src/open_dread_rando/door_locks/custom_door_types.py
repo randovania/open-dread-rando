@@ -172,8 +172,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 sampler_params={
                     "texBaseColor": {"filepath": ("actors/props/doorshieldstormmissile/models"
                                                   "/textures/doorshieldstormmissile_bc.bctex")},
-                    # "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    # "texNormals": { "filepath": SMOOTH_NORMALS }
+                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
+                    "texNormals": { "filepath": SMOOTH_NORMALS }
                 }
             )
         ],
