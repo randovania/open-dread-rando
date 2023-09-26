@@ -345,6 +345,53 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             )
         ],
     ),
+
+    "locked": ShieldData(
+        name="doorshieldlocked",
+        type=DoorTemplates.TRIANGLES,
+        weaknesses=[],
+        actordef="actors/props/doorshieldlocked/charclasses/doorshieldlocked.bmsad",
+        default_mdl=ModelData(
+            base_model=SUPER_MDL,
+            new_path="actors/props/doorshieldlocked/models/doorshieldlocked.bcmdl",
+            materials={
+                "mp_opaque_01": ("actors/props/doorshieldlocked/models"
+                                 "/imats/doorshieldlocked_mp_opaque_01.bsmat")
+            }
+        ),
+        default_mats=[
+            MaterialData(
+                base_mat=SUPER_MAT,
+                new_mat_name="doorshieldlocked_mp_opaque_01",
+                new_path="actors/props/doorshieldlocked/models/imats/doorshieldlocked_mp_opaque_01.bsmat",
+                uniform_params={
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.0, 0.0, 1.0]
+                },
+                sampler_params={
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldlocked/models"
+                                                  "/textures/doorshieldlocked_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
+                }
+            )
+        ],
+        alternate_mats=[
+            MaterialData(
+                base_mat=SUPER_MAT,
+                new_mat_name="doorshieldlocked_mp_opaque_01",
+                new_path="actors/props/doorshieldlocked/models/imats/doorshieldlocked_mp_opaque_01.bsmat",
+                uniform_params={
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.0, 0.0, 1.0]
+                },
+                sampler_params={
+                    "texBaseColor": {"filepath": ("actors/props/doorshieldlocked/models"
+                                                  "/textures/doorshieldlocked_alt_bc.bctex")},
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS}
+                }
+            )
+        ]
+    )
 }
 
 

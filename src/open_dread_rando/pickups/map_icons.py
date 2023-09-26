@@ -361,6 +361,22 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         offset=(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
+    "BlockageLockedL": MapIcon(
+        icon_id="BlockageLockedL",
+        coords=(5,1),
+        disabled_id="BlockageDisabledL",
+        label="ACCESS LOCKED",
+        offset=(-0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
+    "BlockageLockedR": MapIcon(
+        icon_id="BlockageLockedR",
+        coords=(5,1),
+        disabled_id="BlockageDisabledR",
+        label="ACCESS LOCKED",
+        offset=(0.800000011920929, -0.4000000059604645),
+        auto_scale=False
+    ),
 }
 ALL_ICONS.update({f"DNA_{i + 1}": MapIcon(
     icon_id=f"ItemDNA{i + 1}",
@@ -460,5 +476,6 @@ class MapIconEditor:
     def add_all_new_door_icons(self):
         for icon in ["BlockageIceL", "BlockageIceR", "BlockageDiffusionL", "BlockageDiffusionR",
                      "BlockageStormL", "BlockageStormR", "BlockageBombL", "BlockageBombR",
-                     "BlockageCrossBombL", "BlockageCrossBombR", "BlockagePowerBombL", "BlockagePowerBombR"]:
+                     "BlockageCrossBombL", "BlockageCrossBombR", "BlockagePowerBombL", "BlockagePowerBombR",
+                     "BlockageLockedL", "BlockageLockedR"]:
             self.add_icon(ALL_ICONS[icon])
