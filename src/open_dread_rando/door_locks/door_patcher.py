@@ -154,7 +154,7 @@ class DoorType(Enum):
                ["actors/props/door"])
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False,
                 ["actors/props/door"])
-    LOCKED = ("locked", ActorData.DOOR_POWER, True, ActorData.SHIELD_LOCKED, True, True, 
+    LOCKED = ("locked", ActorData.DOOR_POWER, True, ActorData.SHIELD_LOCKED, True, True,
               ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
 
     def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
