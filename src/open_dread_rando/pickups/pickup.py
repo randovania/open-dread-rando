@@ -95,7 +95,7 @@ class ActorPickup(BasePickup):
             set_custom.set_param(4, "Custom")
             set_custom.set_param(5, current)
             set_custom.set_param(8, "guicallbacks.OnSecondaryGunsFire")
-            set_custom.set_param(13, quantity)
+            set_custom.set_param(13, float(quantity))
 
         script.functions[0].set_param(2, self.lua_editor.get_script_class(self.pickup))
 
