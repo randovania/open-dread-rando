@@ -6,7 +6,7 @@ Currently supports patching item pickups, starting items, and elevator/shuttle/t
 `pip install open-dread-rando`
 
 ## Usage
-You will need to provide JSON data matching the [JSON schema](https://github.com/randovania/open-dread-rando/blob/main/open_dread_rando/files/schema.json) in order to successfully patch the game. 
+You will need to provide JSON data matching the [JSON schema](https://github.com/randovania/open-dread-rando/blob/main/src/open_dread_rando/files/schema.json) in order to successfully patch the game. 
 
 The patcher expects a path to an extracted romfs directory of Metroid Dread 1.0.0 or 2.1.0 as well as the desired output directory.
 Output files are in a format compatible with either Atmosphere or Ryujinx, depending on the settings provided.
