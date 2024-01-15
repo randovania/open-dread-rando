@@ -84,7 +84,7 @@ function Init.SaveGameAtStartingLocation()
     Game.SaveGame("savedata", "IntroEnd", Init.sStartingActor, true)
 end
 
-Init.sThisRandoIdentifier = TEMPLATE("configuration_identifier")
+Init.sThisRandoIdentifier = TEMPLATE("configuration_identifier") .. Init.sLayoutUUID
 
 local original_Init_CreateNewGameData = Init.CreateNewGameData
 function Init.CreateNewGameData(difficulty)
