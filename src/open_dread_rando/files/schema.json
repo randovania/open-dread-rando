@@ -407,6 +407,11 @@
                             "type": "string",
                             "enum": ["DEFAULT", "ALTERNATE"],
                             "default": "DEFAULT"
+                        },
+                        "closed": {
+                            "type": "string",
+                            "enum": ["DEFAULT", "ALTERNATE"],
+                            "default": "DEFAULT"
                         }
                     }
                 }
@@ -536,7 +541,8 @@
                             "sensor_door",
                             "bomb",
                             "cross_bomb",
-                            "power_bomb"
+                            "power_bomb",
+                            "closed"
                         ]
                     }
                 },
