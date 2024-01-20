@@ -361,19 +361,19 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         offset=(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
-    "BlockageLockedL": MapIcon(
-        icon_id="BlockageLockedL",
+    "BlockageClosedL": MapIcon(
+        icon_id="BlockageClosedL",
         coords=(5,1),
         disabled_id="BlockageDisabledL",
-        label="ACCESS LOCKED",
+        label="ACCESS CLOSED",
         offset=(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
-    "BlockageLockedR": MapIcon(
-        icon_id="BlockageLockedR",
+    "BlockageClosedR": MapIcon(
+        icon_id="BlockageClosedR",
         coords=(5,1),
         disabled_id="BlockageDisabledR",
-        label="ACCESS LOCKED",
+        label="ACCESS CLOSED",
         offset=(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
@@ -477,5 +477,5 @@ class MapIconEditor:
         for icon in ["BlockageIceL", "BlockageIceR", "BlockageDiffusionL", "BlockageDiffusionR",
                      "BlockageStormL", "BlockageStormR", "BlockageBombL", "BlockageBombR",
                      "BlockageCrossBombL", "BlockageCrossBombR", "BlockagePowerBombL", "BlockagePowerBombR",
-                     "BlockageLockedL", "BlockageLockedR"]:
+                     "BlockageClosedL", "BlockageClosedR"]:
             self.add_icon(ALL_ICONS[icon])

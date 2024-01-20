@@ -41,7 +41,7 @@ class MinimapIconData(Enum):
     SHIELD_BOMB = ("BlockageBomb", (-300, -150, 0, 300))
     SHIELD_CROSS_BOMB = ("BlockageCrossBomb", (-300, -150, 0, 300))
     SHIELD_POWER_BOMB = ("BlockagePowerBomb", (-300, -150, 0, 300))
-    SHIELD_LOCKED = ("BlockageLocked", (-300, -150, 0, 300))
+    SHIELD_CLOSED = ("BlockageClosed", (-300, -150, 0, 300))
 
     def __init__(self, icon_id: str, offsets: tuple[float, float, float, float]):
         """
@@ -110,7 +110,7 @@ class ActorData(Enum):
     SHIELD_BOMB = (["doorshieldbomb"], MinimapIconData.SHIELD_BOMB)
     SHIELD_CROSS_BOMB = (["doorshieldcrossbomb"], MinimapIconData.SHIELD_CROSS_BOMB)
     SHIELD_POWER_BOMB = (["doorshieldpowerbomb"], MinimapIconData.SHIELD_POWER_BOMB)
-    SHIELD_LOCKED = (["doorshieldlocked"], MinimapIconData.SHIELD_LOCKED)
+    SHIELD_CLOSED = (["doorshieldclosed"], MinimapIconData.SHIELD_CLOSED)
 
     def __init__(self, actordef: list[str], minimap: MinimapIconData):
         # generate actordefs
@@ -154,7 +154,7 @@ class DoorType(Enum):
                ["actors/props/door"])
     PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False,
                 ["actors/props/door"])
-    LOCKED = ("locked", ActorData.DOOR_POWER, True, ActorData.SHIELD_LOCKED, True, True,
+    CLOSED = ("closed", ActorData.DOOR_POWER, True, ActorData.SHIELD_CLOSED, True, True,
               ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
 
     def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,

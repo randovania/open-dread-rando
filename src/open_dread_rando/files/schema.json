@@ -408,7 +408,7 @@
                             "enum": ["DEFAULT", "ALTERNATE"],
                             "default": "DEFAULT"
                         },
-                        "locked": {
+                        "closed": {
                             "type": "string",
                             "enum": ["DEFAULT", "ALTERNATE"],
                             "default": "DEFAULT"
@@ -542,7 +542,7 @@
                             "bomb",
                             "cross_bomb",
                             "power_bomb",
-                            "locked"
+                            "closed"
                         ]
                     }
                 },
