@@ -1,5 +1,5 @@
 # Open Dread Rando
-Open Source randomizer patcher for Metroid Dread. Intended for use in [Randovania](https://github.com/randovania).
+Open Source randomizer patcher for Metroid Dread. Intended for use in [Randovania](https://randovania.github.io/).
 Currently supports patching item pickups, starting items, and elevator/shuttle/teleportal destinations.
 
 ## Installation
