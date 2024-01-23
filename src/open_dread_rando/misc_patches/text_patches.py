@@ -7,21 +7,21 @@ from mercury_engine_data_structures.formats import Txt
 if typing.TYPE_CHECKING:
     from open_dread_rando.patcher_editor import PatcherEditor
 
-# may want to edit all the localization files?
+# We want to edit all the localization files, not just english
 ALL_TEXT_FILES = {
-    # "eu_dutch.txt",
-    # "eu_french.txt",
-    # "eu_german.txt",
-    # "eu_italian.txt",
-    # "eu_spanish.txt",
-    # "japanese.txt",
-    # "korean.txt",
-    # "russian.txt",
-    # "simplified_chinese.txt",
-    # "traditional_chinese.txt",
+    "eu_dutch.txt",
+    "eu_french.txt",
+    "eu_german.txt",
+    "eu_italian.txt",
+    "eu_spanish.txt",
+    "japanese.txt",
+    "korean.txt",
+    "russian.txt",
+    "simplified_chinese.txt",
+    "traditional_chinese.txt",
     "us_english.txt",
-    # "us_french.txt",
-    # "us_spanish.txt"
+    "us_french.txt",
+    "us_spanish.txt"
 }
 
 
