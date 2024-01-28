@@ -252,6 +252,10 @@ Scenario._BlastShieldTypes = {
         item = "ITEM_WEAPON_SUPER_MISSILE",
         damage = {"SUPER_MISSILE", "ICE_MISSILE"},
     },
+    doorwidebeam = {
+        item = "ITEM_WEAPON_WIDE_BEAM",
+        damage = {"POWER_BEAM", "WIDE_BEAM"}
+    },
     door_shield_plasma = {
         item = "ITEM_WEAPON_PLASMA_BEAM",
         damage = {"PLASMA_BEAM"}

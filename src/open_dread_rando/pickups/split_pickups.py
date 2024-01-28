@@ -478,6 +478,13 @@ def _patch_blast_shields(editor: PatcherEditor) -> None:
     funcs.pop(1)  # AddDamageSource("ICE_MISSILE")
     super_life.functions = funcs
 
+    wide = editor.get_file("actors/props/doorwidebeam/charclasses/doorwidebeam.bmsad", Bmsad)
+    wide_life = wide.components["LIFE"]
+    funcs = list(wide_life.functions)
+    funcs.pop(0)  # AddDamageSource("POWER_BEAM")
+    funcs.pop(0)  # AddDamageSource("WIDE_BEAM")
+    wide_life.functions = funcs
+
     plasma = editor.get_file("actors/props/door_shield_plasma/charclasses/door_shield_plasma.bmsad", Bmsad)
     plasma_life = plasma.components["LIFE"]
     funcs = list(plasma_life.functions)
