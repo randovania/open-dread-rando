@@ -424,6 +424,17 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "item_supermissiletank": ModelData(
+        bcmdl_path="actors/items/item_supermissiletank/models/item_supermissiletank.bcmdl",
+        bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
+        dependencies=(
+            "actors/items/item_supermissiletank/models/item_supermissiletank.bcmdl",
+            "actors/items/item_supermissiletank/models/imats/item_supermissiletank_hologram.bsmat",
+            "actors/items/item_supermissiletank/models/imats/item_supermissiletank_mp_opaque_01.bsmat",
+            "actors/items/item_supermissiletank/models/imats/item_supermissiletank_mp_fxhologram_01.bsmat"
+        )
+    ),
+
     "item_missiletankplus": ModelData(
         bcmdl_path="actors/items/item_missiletankplus/models/item_missiletankplus.bcmdl",
         bmsas="actors/items/item_missiletankplus/charclasses/item_missiletankplus.bmsas",
