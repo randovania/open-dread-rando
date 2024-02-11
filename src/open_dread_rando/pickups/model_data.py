@@ -115,6 +115,16 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         grapple_fx=True,
     ),
 
+    "powerup_missile": ModelData(
+        bcmdl_path="actors/items/powerup_supermissile/models/powerup_missile.bcmdl",
+        bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
+        dependencies=(
+            "actors/items/powerup_supermissile/models/powerup_missile.bcmdl",
+            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
+            "actors/items/powerup_supermissile/models/imats/powerup_missile_mp_opaque_01.bsmat",
+        ),
+    ),
+
     "powerup_supermissile": ModelData(
         bcmdl_path="actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
         bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
@@ -126,12 +136,12 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
     ),
 
     "powerup_icemissile": ModelData(
-        bcmdl_path="actors/items/powerup_supermissile/models/powerup_ice__missile.bcmdl",
+        bcmdl_path="actors/items/powerup_supermissile/models/powerup_icemissile.bcmdl",
         bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
         dependencies=(
-            "actors/items/powerup_supermissile/models/powerup_ice__missile.bcmdl",
+            "actors/items/powerup_supermissile/models/powerup_icemissile.bcmdl",
             "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
-            "actors/items/powerup_supermissile/models/imats/powerup_ice__missile_mp_opaque_01.bsmat",
+            "actors/items/powerup_supermissile/models/imats/powerup_icemissile_mp_opaque_01.bsmat",
         ),
     ),
 
