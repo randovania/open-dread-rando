@@ -31,7 +31,6 @@ class StaticModelChanger:
             create_custom_material(editor, mat)
             mats[name] = mat.new_path
 
-        print(self.base_model_path)
         create_custom_model(editor, ModelData(
             base_model=self.base_model_path,
             new_path=self.new_model_path,
