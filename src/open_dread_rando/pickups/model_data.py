@@ -444,6 +444,16 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "super_missile_expansion": ModelData(
+        bcmdl_path="actors/items/item_missiletankplus/models/super_missile_tank.bcmdl",
+        bmsas="actors/items/item_missiletankplus/charclasses/item_missiletankplus.bmsas",
+        dependencies=(
+            "actors/items/item_missiletankplus/models/super_missile_tank.bcmdl",
+            "actors/items/item_missiletankplus/models/imats/super_missile_tank_mat01.bsmat",
+            "actors/items/item_missiletankplus/models/imats/super_missile_tank_mp_fxhologram_01.bsmat",
+        ),
+    ),
+
     "item_powerbombtank": ModelData(
         bcmdl_path="actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
         bmsas="actors/items/item_powerbombtank/charclasses/item_powerbombtank.bmsas",

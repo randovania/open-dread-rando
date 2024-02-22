@@ -16,6 +16,7 @@ from open_dread_rando.files import files_path
 from open_dread_rando.logger import LOG
 from open_dread_rando.misc_patches import elevator, lua_util
 from open_dread_rando.misc_patches.exefs import include_depackager, patch_exefs
+from open_dread_rando.misc_patches.model_patcher import generate_custom_models
 from open_dread_rando.misc_patches.sprite_patches import patch_sprites
 from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
 from open_dread_rando.misc_patches.tilegroup_patcher import patch_tilegroup
@@ -203,6 +204,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     # Copy custom files
     add_custom_files(editor)
     generate_missile_colors(editor)
+    generate_custom_models(editor)
 
     # Apply fixes
     apply_static_fixes(editor)
