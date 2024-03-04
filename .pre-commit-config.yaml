@@ -8,3 +8,10 @@ repos:
     hooks:
       - id: ruff
         args: [ --fix, --exit-non-zero-on-fix  ]
+
+-   repo: https://github.com/henriquegemignani/jsonschema-to-typeddict
+    rev: v1.0.1
+    hooks:
+    -   id: jsonschema-to-typeddict
+        files: src/open_dread_rando/files/schema.json
+        args: [ --output-path, src/open_dread_rando/configuration.pyi, --root-name, Configuration ]

@@ -9,10 +9,11 @@ from typing import Generic, TypeVar
 
 from mercury_engine_data_structures.formats.bmsad import ActorDefFunc, ArgAnyType, Bmsad
 
-from open_dread_rando.patcher_editor import PatcherEditor
-
 if typing.TYPE_CHECKING:
     from typing_extensions import Self
+
+    from open_dread_rando.configuration import ConfigurationStartingItems
+    from open_dread_rando.patcher_editor import PatcherEditor
 
 
 @dataclasses.dataclass
@@ -242,8 +243,8 @@ SAMUS_BMSAD_PATH = "actors/characters/samus/charclasses/samus.bmsad"
 # ruff: noqa: C901
 
 
-def update_starting_inventory_split_pickups(inventory: dict) -> dict:
-    inventory = copy.copy(inventory)
+def update_starting_inventory_split_pickups(inventory: ConfigurationStartingItems) -> dict[str, int]:
+    result: dict[str, int] = {}
 
     power = "ITEM_WEAPON_POWER_BEAM" in inventory
     wide = "ITEM_WEAPON_WIDE_BEAM" in inventory
@@ -252,19 +253,19 @@ def update_starting_inventory_split_pickups(inventory: dict) -> dict:
 
     if power:
         if wide:
-            inventory["ITEM_WEAPON_SOLO_WIDE_BEAM"] = 1
+            result["ITEM_WEAPON_SOLO_WIDE_BEAM"] = 1
         if plasma:
-            inventory["ITEM_WEAPON_SOLO_PLASMA_BEAM"] = 1
+            result["ITEM_WEAPON_SOLO_PLASMA_BEAM"] = 1
         if wave:
-            inventory["ITEM_WEAPON_SOLO_WAVE_BEAM"] = 1
+            result["ITEM_WEAPON_SOLO_WAVE_BEAM"] = 1
         if wide and plasma:
-            inventory["ITEM_WEAPON_WIDE_PLASMA_BEAM"] = 1
+            result["ITEM_WEAPON_WIDE_PLASMA_BEAM"] = 1
         if wide and wave:
-            inventory["ITEM_WEAPON_WIDE_WAVE_BEAM"] = 1
+            result["ITEM_WEAPON_WIDE_WAVE_BEAM"] = 1
         if plasma and wave:
-            inventory["ITEM_WEAPON_PLASMA_WAVE_BEAM"] = 1
+            result["ITEM_WEAPON_PLASMA_WAVE_BEAM"] = 1
         if wide and plasma and wave:
-            inventory["ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM"] = 1
+            result["ITEM_WEAPON_WIDE_PLASMA_WAVE_BEAM"] = 1
 
     missile = "ITEM_WEAPON_MISSILE_LAUNCHER" in inventory
     supers = "ITEM_WEAPON_SUPER_MISSILE" in inventory
@@ -273,15 +274,15 @@ def update_starting_inventory_split_pickups(inventory: dict) -> dict:
 
     if missile:
         if supers:
-            inventory["ITEM_WEAPON_SOLO_SUPER_MISSILE"] = 1
+            result["ITEM_WEAPON_SOLO_SUPER_MISSILE"] = 1
         if ice:
-            inventory["ITEM_WEAPON_SOLO_ICE_MISSILE"] = 1
+            result["ITEM_WEAPON_SOLO_ICE_MISSILE"] = 1
         if supers and ice:
-            inventory["ITEM_WEAPON_SUPER_ICE_MISSILE"] = 1
+            result["ITEM_WEAPON_SUPER_ICE_MISSILE"] = 1
         if storm:
-            inventory["ITEM_WEAPON_STORM_MISSILE"] = 1
+            result["ITEM_WEAPON_STORM_MISSILE"] = 1
 
-    return inventory
+    return result
 
 
 def patch_split_pickups(editor: PatcherEditor) -> None:

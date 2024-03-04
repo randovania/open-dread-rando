@@ -1,14 +1,22 @@
+from __future__ import annotations
+
 import copy
 import shutil
 import typing
-from pathlib import Path
 
-from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import ALL_FORMATS, BaseResource, Bmmap, Brfld, Brsa
 from mercury_engine_data_structures.game_check import Game
 
 from open_dread_rando.pickups.map_icons import MapIconEditor
+
+if typing.TYPE_CHECKING:
+    from pathlib import Path
+
+    from construct import Container
+    from mercury_engine_data_structures.formats.base_resource import NameOrAssetId
+
+    from open_dread_rando.configuration import DefActorReferenceWithLayer
 
 T = typing.TypeVar("T")
 
@@ -51,11 +59,11 @@ class PatcherEditor(FileTreeEditor):
     def get_level_pkgs(self, name: str) -> set[str]:
         return set(self.find_pkgs(path_for_level(name) + ".brfld"))
 
-    def ensure_present_in_scenario(self, scenario: str, asset):
+    def ensure_present_in_scenario(self, scenario: str, asset: NameOrAssetId) -> None:
         for pkg in self.get_level_pkgs(scenario):
             self.ensure_present(pkg, asset)
 
-    def resolve_actor_reference(self, ref: dict) -> Container:
+    def resolve_actor_reference(self, ref: DefActorReferenceWithLayer) -> Container:
         scenario = self.get_scenario(ref["scenario"])
         layer = ref.get("layer", "default")
         return scenario.actors_for_layer(layer)[ref["actor"]]
@@ -65,7 +73,7 @@ class PatcherEditor(FileTreeEditor):
             self.replace_asset(name, resource)
         self.memory_files = {}
 
-    def add_new_asset(self, name: str, new_data: typing.Union[bytes, BaseResource], in_pkgs: typing.Iterable[str]):
+    def add_new_asset(self, name: str, new_data: bytes | BaseResource, in_pkgs: typing.Iterable[str]):
         super().add_new_asset(name, new_data, in_pkgs)
         # Hack for textures' weird folder layout
         if name.startswith("textures/") and isinstance(new_data, bytes):
@@ -79,7 +87,7 @@ class PatcherEditor(FileTreeEditor):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(asset)
 
-    def remove_entity(self, reference: dict, map_category: typing.Optional[str]):
+    def remove_entity(self, reference: dict, map_category: str | None):
         scenario = self.get_scenario(reference["scenario"])
         layer = reference.get("layer", "default")
         actor_name = reference["actor"]
@@ -105,23 +113,30 @@ class PatcherEditor(FileTreeEditor):
             else:
                 scenario.remove_actor_from_group(group_name, new_actor_name)
 
-    def copy_actor(self, scenario: str, coords, templateActor: Container, newName: str, offset: tuple = (0, 0, 0)):
+    def copy_actor(
+            self,
+            scenario: str,
+            coords: tuple[float, float, float],
+            template_actor: Container,
+            new_name: str,
+            offset: tuple[float, float, float] = (0, 0, 0)
+    ) -> Container:
         """
         Copies an actor into a scenario at a specific location
 
         @param scenario: the scenario to place the door
         @param coords: the position coordinate to place the door
-        @param actor: The actor to be copied into door's scenario
-        @param sName: The name of the new actor
+        @param template_actor: The actor to be copied into door's scenario
+        @param new_name: The name of the new actor
         @param offset: a tuple containing the offset coordinates, if any
         @returns: the new copied actor
         """
         # print(coords)
-        newActor = copy.deepcopy(templateActor)
-        newActor.sName = newName
+        newActor = copy.deepcopy(template_actor)
+        newActor.sName = new_name
         currentScenario = self.get_scenario(scenario)
         currentScenario.actors_for_layer('default')[newActor.sName] = newActor
-        newActor.vPos = [float(c) + offset for c, offset in zip(coords, offset)]
+        newActor.vPos = [float(c) + offset for c, offset in zip(coords, offset, strict=True)]
 
         return newActor
 
