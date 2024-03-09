@@ -2,7 +2,7 @@ import copy
 from typing import Optional
 
 import construct
-from mercury_engine_data_structures.formats import Brfld
+from mercury_engine_data_structures.formats import Bmmap, Brfld
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando.constants import ALL_SCENARIOS
@@ -364,6 +364,20 @@ def fix_map_icons(map_editor: MapIconEditor):
     map_editor.mirror_bmmap_icons()
 
 
+def move_artaria_missile_tank(editor: PatcherEditor):
+    actor_ref = {
+        "scenario": "s010_cave",
+        "layer": "default",
+        "actor": "item_missiletank_000"
+    }
+    missile_tank = editor.resolve_actor_reference(actor_ref)
+    artaria_map = editor.get_scenario_file(actor_ref["scenario"], Bmmap)
+
+    new_x_pos = 15450.0
+    missile_tank.vPos[0] = new_x_pos
+    artaria_map.items[actor_ref["actor"]].vPos[0] = new_x_pos
+
+
 def apply_static_fixes(editor: PatcherEditor):
     remove_problematic_x_layers(editor)
     activate_emmi_zones(editor)
@@ -377,3 +391,4 @@ def apply_static_fixes(editor: PatcherEditor):
     apply_main_menu_fixes(editor)
     disable_hanubia_cutscene(editor)
     fix_map_icons(editor.map_icon_editor)
+    move_artaria_missile_tank(editor)
