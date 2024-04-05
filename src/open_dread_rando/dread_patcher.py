@@ -20,6 +20,7 @@ from open_dread_rando.misc_patches.model_patcher import generate_custom_models
 from open_dread_rando.misc_patches.sprite_patches import patch_sprites
 from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
 from open_dread_rando.misc_patches.tilegroup_patcher import patch_tilegroup
+from open_dread_rando.misc_patches.tunable_patcher import apply_tunable_patches
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
 from open_dread_rando.pickups.lua_editor import LuaEditor
@@ -256,6 +257,10 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     # Cosmetic patches
     if "cosmetic_patches" in configuration:
         apply_cosmetic_patches(editor, configuration["cosmetic_patches"])
+
+    # Tunable patches
+    if "tunables" in configuration:
+        apply_tunable_patches(editor, configuration["tunables"])
 
     # Environmental Damage
     apply_constant_damage(editor, configuration["constant_environment_damage"])
