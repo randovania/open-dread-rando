@@ -422,6 +422,9 @@
                 "shield_versions"
             ]
         },
+        "tunables": {
+            "type": "object"
+        },
         "enable_remote_lua": {
             "type": "boolean",
             "default": false,
