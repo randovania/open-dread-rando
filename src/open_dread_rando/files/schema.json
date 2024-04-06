@@ -423,7 +423,15 @@
             ]
         },
         "tunables": {
-            "type": "object"
+            "type": "object",
+            "description": "Non-cosmetic tunables to be patched, applied after cosmetic patches",
+            "additionalProperties": false,
+            "default": {},
+            "patternProperties": {
+                ".*": {
+                    "type": "object"
+                }
+            }
         },
         "enable_remote_lua": {
             "type": "boolean",
