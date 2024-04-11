@@ -33,7 +33,7 @@ SPECIFIC_CLASSES = {
 
 class LuaEditor:
     def __init__(self):
-        self._progressive_classes = {}
+        self._custom_classes = {}
         self._powerup_script = _read_powerup_lua()
         self._custom_level_scripts: dict[str, dict] = self._read_levels()
         self._corex_replacement = {
@@ -52,11 +52,37 @@ class LuaEditor:
 
     def get_script_class(self, pickup: dict, boss: bool = False, actordef_name: str = "") -> str:
         pickup_resources = pickup["resources"]
-        parent = self.get_parent_for(pickup_resources[0][0]["item_id"])
+        parent = pickup_resources[0][0]
 
         if not boss and len(pickup_resources) == 1 and len(pickup_resources[0]) == 1:
+            parent_id = parent["item_id"]
+
+            if "ITEM_RANDO_ARTIFACT_" in parent_id:
+                if parent_id in self._custom_classes.keys():
+                    return self._custom_classes[parent_id]
+
+                class_name = f'RandomizerArtifact{parent_id[20:]}'
+
+                self.add_custom_class(
+                    {
+                        "name": class_name,
+                        "resources": [
+                            [
+                                {
+                                    "item_id": lua_util.wrap_string(parent_id),
+                                    "quantity": parent["quantity"]
+                                }
+                            ]
+                        ],
+                        "parent": "RandomizerPowerup"
+                    }
+                )
+
+                self._custom_classes[parent_id] = class_name
+                return class_name
+
             # Single-item pickup; don't include progressive template
-            return parent
+            return self.get_parent_for(parent_id)
 
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
@@ -66,8 +92,8 @@ class LuaEditor:
             for res in pickup_resources
         ]).replace("-", "MINUS")
 
-        if hashable_progression in self._progressive_classes.keys():
-            return self._progressive_classes[hashable_progression]
+        if hashable_progression in self._custom_classes.keys():
+            return self._custom_classes[hashable_progression]
 
         class_name = f"RandomizerProgressive{hashable_progression}"
 
@@ -84,15 +110,15 @@ class LuaEditor:
         replacement = {
             "name": class_name,
             "resources": resources,
-            "parent": parent,
+            "parent": self.get_parent_for(parent["item_id"]),
         }
-        self.add_progressive_class(replacement)
+        self.add_custom_class(replacement)
 
-        self._progressive_classes[hashable_progression] = class_name
+        self._custom_classes[hashable_progression] = class_name
         return class_name
 
-    def add_progressive_class(self, replacement):
-        new_class = lua_util.replace_lua_template("randomizer_progressive_template.lua", replacement)
+    def add_custom_class(self, replacement):
+        new_class = lua_util.replace_lua_template("custom_powerup_template.lua", replacement)
         self._powerup_script += new_class.encode("utf-8")
 
     def add_progressive_models(self, pickup: dict, actordef_name: str):
