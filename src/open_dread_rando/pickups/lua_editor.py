@@ -55,13 +55,13 @@ class LuaEditor:
         first_resource = pickup_resources[0][0]
 
         if not boss and len(pickup_resources) == 1 and len(pickup_resources[0]) == 1:
-            parent_id = first_resource["item_id"]
+            first_resource_id = first_resource["item_id"]
 
-            if "ITEM_RANDO_ARTIFACT_" in parent_id:
-                if parent_id in self._custom_classes.keys():
-                    return self._custom_classes[parent_id]
+            if "ITEM_RANDO_ARTIFACT_" in first_resource_id:
+                if first_resource_id in self._custom_classes.keys():
+                    return self._custom_classes[first_resource_id]
 
-                class_name = f'RandomizerArtifact{parent_id[20:]}'
+                class_name = f'RandomizerArtifact{first_resource_id[20:]}'
 
                 self.add_custom_class(
                     {
@@ -69,7 +69,7 @@ class LuaEditor:
                         "resources": [
                             [
                                 {
-                                    "item_id": lua_util.wrap_string(parent_id),
+                                    "item_id": lua_util.wrap_string(first_resource_id),
                                     "quantity": first_resource["quantity"]
                                 }
                             ]
@@ -78,11 +78,11 @@ class LuaEditor:
                     }
                 )
 
-                self._custom_classes[parent_id] = class_name
+                self._custom_classes[first_resource_id] = class_name
                 return class_name
 
             # Single-item pickup; don't include progressive template
-            return self.get_parent_for(parent_id)
+            return self.get_parent_for(first_resource_id)
 
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
