@@ -52,10 +52,10 @@ class LuaEditor:
 
     def get_script_class(self, pickup: dict, boss: bool = False, actordef_name: str = "") -> str:
         pickup_resources = pickup["resources"]
-        parent = pickup_resources[0][0]
+        first_resource = pickup_resources[0][0]
 
         if not boss and len(pickup_resources) == 1 and len(pickup_resources[0]) == 1:
-            parent_id = parent["item_id"]
+            parent_id = first_resource["item_id"]
 
             if "ITEM_RANDO_ARTIFACT_" in parent_id:
                 if parent_id in self._custom_classes.keys():
@@ -70,7 +70,7 @@ class LuaEditor:
                             [
                                 {
                                     "item_id": lua_util.wrap_string(parent_id),
-                                    "quantity": parent["quantity"]
+                                    "quantity": first_resource["quantity"]
                                 }
                             ]
                         ],
@@ -110,7 +110,7 @@ class LuaEditor:
         replacement = {
             "name": class_name,
             "resources": resources,
-            "parent": self.get_parent_for(parent["item_id"]),
+            "parent": self.get_parent_for(first_resource["item_id"]),
         }
         self.add_custom_class(replacement)
 
