@@ -97,6 +97,9 @@ class ActorPickup(BasePickup):
             set_custom.set_param(8, "guicallbacks.OnSecondaryGunsFire")
             set_custom.set_param(13, float(quantity))
 
+        elif "ITEM_RANDO_ARTIFACT" in item_id:
+            item_id = "ITEM_NONE"
+
         script.functions[0].set_param(2, self.lua_editor.get_script_class(self.pickup))
 
         set_custom.set_param(1, item_id)

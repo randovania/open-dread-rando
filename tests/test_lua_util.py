@@ -16,7 +16,7 @@ def test_create_script_copy_exists():
 
 
 def test_template_replacement(test_files_dir):
-    generated_code = lua_util.replace_lua_template("randomizer_progressive_template.lua", {
+    generated_code = lua_util.replace_lua_template("custom_powerup_template.lua", {
         "name": "RandomizerTestPowerup",
         "parent": "RandomizerPowerup",
         "resources": [
