@@ -3,6 +3,7 @@ from typing import Optional
 
 import construct
 from mercury_engine_data_structures.formats import Bmmap, Brfld
+from mercury_engine_data_structures.formats.dread_types import CDoorLifeComponent_SState
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando.constants import ALL_SCENARIOS
@@ -364,7 +365,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
 
     thermal_switch.pComponents.USABLE.vThermalDoors.append({
         "wpThermalDoor": magma.link_for_actor(new_name),
-        "sDoorState": 1
+        "sDoorState": CDoorLifeComponent_SState.Opened
     })
 
 
