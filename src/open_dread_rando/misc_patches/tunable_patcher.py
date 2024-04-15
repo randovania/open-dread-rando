@@ -10,5 +10,6 @@ def apply_tunable_patches(editor: PatcherEditor, tunable_patches: dict[str, dict
 
     for section, items in tunable_patches.items():
         for k, v in items.items():
-            if section not in config_file.config: config_file.config[section] = {}
+            if section not in config_file.config:
+                config_file.config[section] = {}
             config_file.config[section][k] = Ini.parse_option(v)
