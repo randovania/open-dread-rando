@@ -363,10 +363,10 @@ def apply_experiment_fixes(editor: PatcherEditor):
         "actor": "deviceheat"
     }))
 
-    thermal_switch.pComponents.USABLE.vThermalDoors.append(construct.Container({
+    thermal_switch.pComponents.USABLE.vThermalDoors.append({
         "wpThermalDoor": magma.link_for_actor(new_name),
         "sDoorState": 1
-    }))
+    })
 
     magma.actors_for_layer('default')[thermal_switch.sName] = thermal_switch
     for group in ["eg_collision_camera_004_Default", "eg_collision_camera_004_PostXRelease"]:
