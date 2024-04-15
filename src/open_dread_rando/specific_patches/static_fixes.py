@@ -354,8 +354,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
     new_door.vPos = (5840.0, -5455.0, 0.0)
 
     magma.actors_for_layer('default')[new_name] = new_door
-    for group in ["eg_collision_camera_004_Default", "eg_collision_camera_004_PostXRelease"]:
-        magma.add_actor_to_group(group, new_door.sName)
+    editor.copy_actor_groups("s020_magma", "trap_thermal_horizontal_004", new_name)
 
     # update thermal switch to open new door
     thermal_switch = copy.deepcopy(editor.resolve_actor_reference({
