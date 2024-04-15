@@ -3,6 +3,7 @@ from typing import Optional
 
 import construct
 from mercury_engine_data_structures.formats import Bmmap, Brfld
+from mercury_engine_data_structures.formats.dread_types import CDoorLifeComponent_SState
 from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando.constants import ALL_SCENARIOS
@@ -341,6 +342,31 @@ def apply_experiment_fixes(editor: PatcherEditor):
         "layer": "default",
         "actor": "trap_thermal_horizontal_POSTCOOL"
     }, "mapDoors")
+
+    # add thermal door in front of morph launcher
+    new_door = copy.deepcopy(editor.resolve_actor_reference({
+        "scenario": "s020_magma",
+        "actor": "trap_thermal_horizontal_004"
+    }))
+
+    new_name = "trap_thermal_horizontal_006"
+
+    new_door.sName = new_name
+    new_door.vPos = (5840.0, -5455.0, 0.0)
+
+    magma.actors_for_layer('default')[new_name] = new_door
+    editor.copy_actor_groups("s020_magma", "trap_thermal_horizontal_004", new_name)
+
+    # update thermal switch to open new door
+    thermal_switch = editor.resolve_actor_reference({
+        "scenario": "s020_magma",
+        "actor": "deviceheat"
+    })
+
+    thermal_switch.pComponents.USABLE.vThermalDoors.append({
+        "wpThermalDoor": magma.link_for_actor(new_name),
+        "sDoorState": CDoorLifeComponent_SState.Opened
+    })
 
 
 def apply_main_menu_fixes(editor: PatcherEditor):
