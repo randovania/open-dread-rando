@@ -357,19 +357,15 @@ def apply_experiment_fixes(editor: PatcherEditor):
     editor.copy_actor_groups("s020_magma", "trap_thermal_horizontal_004", new_name)
 
     # update thermal switch to open new door
-    thermal_switch = copy.deepcopy(editor.resolve_actor_reference({
+    thermal_switch = editor.resolve_actor_reference({
         "scenario": "s020_magma",
         "actor": "deviceheat"
-    }))
+    })
 
     thermal_switch.pComponents.USABLE.vThermalDoors.append({
         "wpThermalDoor": magma.link_for_actor(new_name),
         "sDoorState": 1
     })
-
-    magma.actors_for_layer('default')[thermal_switch.sName] = thermal_switch
-    for group in ["eg_collision_camera_004_Default", "eg_collision_camera_004_PostXRelease"]:
-        magma.add_actor_to_group(group, thermal_switch.sName)
 
 
 def apply_main_menu_fixes(editor: PatcherEditor):
