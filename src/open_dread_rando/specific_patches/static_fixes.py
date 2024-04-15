@@ -351,7 +351,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
     new_name = "trap_thermal_horizontal_006"
 
     new_door.sName = new_name
-    new_door.vPos = [5840.0, -5455.0, 0.0]
+    new_door.vPos = (5840.0, -5455.0, 0.0)
 
     magma.actors_for_layer('default')[new_name] = new_door
     for group in ["eg_collision_camera_004_Default", "eg_collision_camera_004_PostXRelease"]:
