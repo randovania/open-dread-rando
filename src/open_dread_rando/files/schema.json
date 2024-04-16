@@ -622,6 +622,9 @@
             },
             "default": []
         },
+        "actor_patches": {
+            "type": "object"
+        },
         "new_spawn_points": {
             "type": "array",
             "description": "Creates new spawn points",

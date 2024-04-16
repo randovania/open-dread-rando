@@ -15,6 +15,7 @@ from open_dread_rando.door_locks.door_patcher import DoorPatcher
 from open_dread_rando.files import files_path
 from open_dread_rando.logger import LOG
 from open_dread_rando.misc_patches import elevator, lua_util
+from open_dread_rando.misc_patches.actor_patcher import apply_actor_patches
 from open_dread_rando.misc_patches.exefs import include_depackager, patch_exefs
 from open_dread_rando.misc_patches.model_patcher import generate_custom_models
 from open_dread_rando.misc_patches.sprite_patches import patch_sprites
@@ -273,6 +274,10 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
 
     # Specific game patches
     game_patches.apply_game_patches(editor, configuration.get("game_patches", {}))
+
+    # Remove actors
+    if "actor_patches" in configuration:
+        apply_actor_patches(editor, configuration["actor_patches"])
 
     # remote connector disconnect symbol
     patch_sprites(editor)
