@@ -16,7 +16,7 @@ def _modify_actor(editor: PatcherEditor, original_reference: dict, modifications
         actor.sName = new_reference["actor"]
     patch(actor, modifications)
 
-    if make_copy or new_reference:
+    if new_reference:
         scenario = editor.get_scenario(new_reference["scenario"])
 
         scenario.actors_for_layer(new_reference["layer"])[new_reference["actor"]] = actor
