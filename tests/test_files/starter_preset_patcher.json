@@ -3592,7 +3592,9 @@
                 "actor": "PRP_CV_AccessPoint002"
             },
             "hint_id": "CAVE_2",
-            "text": "A {c1}Progressive Beam{c0} can be found in {c5}Cataris{c0}."
+            "text": [
+                "A {c1}Progressive Beam{c0} can be found in {c5}Cataris{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3601,7 +3603,9 @@
                 "actor": "PRP_CV_AccessPoint001"
             },
             "hint_id": "CAVE_1",
-            "text": "A {c1}Progressive Beam{c0} can be found in {c5}Artaria{c0}."
+            "text": [
+                "A {c1}Progressive Beam{c0} can be found in {c5}Artaria{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3610,7 +3614,9 @@
                 "actor": "accesspoint"
             },
             "hint_id": "MAGMA_1",
-            "text": "A {c1}Progressive Bomb{c0} can be found in {c5}Artaria{c0}."
+            "text": [
+                "A {c1}Progressive Bomb{c0} can be found in {c5}Artaria{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3619,7 +3625,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "MAGMA_2",
-            "text": "A {c1}Progressive Suit{c0} can be found in {c5}Ghavoran{c0}."
+            "text": [
+                "A {c1}Progressive Suit{c0} can be found in {c5}Ghavoran{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3628,7 +3636,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "LAB_1",
-            "text": "A {c1}Progressive Spin{c0} can be found in {c5}Burenia{c0}."
+            "text": [
+                "A {c1}Progressive Spin{c0} can be found in {c5}Burenia{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3637,7 +3647,9 @@
                 "actor": "accesspoint_001"
             },
             "hint_id": "LAB_2",
-            "text": "The {c1}Grapple Beam{c0} can be found in {c5}Burenia{c0}."
+            "text": [
+                "The {c1}Grapple Beam{c0} can be found in {c5}Burenia{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3646,7 +3658,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "AQUA_1",
-            "text": "The {c1}Storm Missile{c0} can be found in {c5}Cataris{c0}."
+            "text": [
+                "The {c1}Storm Missile{c0} can be found in {c5}Cataris{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3655,7 +3669,9 @@
                 "actor": "accesspoint_001"
             },
             "hint_id": "AQUA_2",
-            "text": "The {c1}Power Bomb{c0} can be found in {c5}Dairon{c0}."
+            "text": [
+                "The {c1}Power Bomb{c0} can be found in {c5}Dairon{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3664,7 +3680,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "SANC_1",
-            "text": "A {c1}Progressive Bomb{c0} can be found in {c5}Dairon{c0}."
+            "text": [
+                "A {c1}Progressive Bomb{c0} can be found in {c5}Dairon{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3673,7 +3691,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "FOREST_1",
-            "text": "The {c1}Spider Magnet{c0} can be found in {c5}Artaria{c0}."
+            "text": [
+                "The {c1}Spider Magnet{c0} can be found in {c5}Artaria{c0}."
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3682,7 +3702,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "SHIP_1",
-            "text": "The {c1}Screw Attack{c0} can be found in {c5}Ferenia{c0}."
+            "text": [
+                "The {c1}Screw Attack{c0} can be found in {c5}Ferenia{c0}."
+            ]
         }
     ],
     "text_patches": {
