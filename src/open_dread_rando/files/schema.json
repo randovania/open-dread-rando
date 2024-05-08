@@ -290,7 +290,10 @@
                         "pattern": "[A-Z]+?_[0-9]+"
                     },
                     "text": {
-                        "type": "string"
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 },
                 "required": [
