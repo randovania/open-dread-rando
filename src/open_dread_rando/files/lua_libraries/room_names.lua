@@ -84,8 +84,6 @@ function RoomNameGui.Update(new_cc)
         return
     end
 
-    RoomNameGui.Fade("1.0")
-
     if type(new_cc) ~= "string" then
         GUI.LogWarn(0, "collision camera is not string")
         return
@@ -94,8 +92,10 @@ function RoomNameGui.Update(new_cc)
     local room_name = RoomNameGui.GetRoomName(new_cc)
     if room_name == nil then
         Game.LogWarn(0, string.format("Couldn't find name for %s/%s", Game.GetScenarioID(), new_cc))
-        label:SetText(new_cc)
+        RoomNameGui.Fade("0.0", "0.01")
+        return
     else
+        RoomNameGui.Fade("1.0")
         label:SetText(room_name)
     end
 
@@ -107,14 +107,17 @@ function RoomNameGui.Update(new_cc)
     end
 end
 
--- fades out or in
--- @param fade_dir the value assigned to FadeColorRGB
-function RoomNameGui.Fade(fade_val)
+---fades the room name in or out
+---@param fade_val string the alpha value assigned to `FadeColorRGB`
+---@param fade_time string? the time to fade to `fade_val`, in seconds. defaults to `"0.5"`
+function RoomNameGui.Fade(fade_val, fade_time)
+    fade_time = fade_time or "0.5"
+
     local container = RoomNameGui.container
     if not container then
         Game.LogWarn(0, "No ui for RoomNameGui")
         return
     end
 
-    container:SetProperties({FadeColorR = "-1.0", FadeColorG = "-1.0", FadeColorB = "-1.0", FadeColorA = fade_val, FadeTime = "0.5"})
+    container:SetProperties({FadeColorR = "-1.0", FadeColorG = "-1.0", FadeColorB = "-1.0", FadeColorA = fade_val, FadeTime = fade_time})
 end
