@@ -782,7 +782,6 @@ end
 
 
 function s020_magma.SetCooldown(state)
-  Game.SetCooldownFlag(state)
   if state then
     Game.PushSetup("Cooldown", true, true)
   else
