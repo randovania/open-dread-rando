@@ -59,12 +59,21 @@ def patch_hints(editor: PatcherEditor, hints: list[dict]):
 
         # update hint text
         hint_id = f"DIAG_ADAM_{hint['hint_id']}"
-        string_key = f"{hint_id}_PAGE_1"
+
+        hint_text = hint["text"]
+
+        if isinstance(hint_text, str):
+            hint_text = [hint_text]
+
+        pages = {
+            f"{hint_id}_PAGE_{i + 1}": hint
+            for i, hint in enumerate(hint_text)
+        }
 
         usable.tCaptionList = {
-            hint_id: [string_key]
+            hint_id: list(pages) or [f"{hint_id}_PAGE_1"]
         }
-        patch_text(editor, string_key, hint["text"])
+        apply_text_patches(editor, pages)
 
 
 _PROJECT_MEMBERS = {

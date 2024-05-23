@@ -290,7 +290,11 @@
                         "pattern": "[A-Z]+?_[0-9]+"
                     },
                     "text": {
-                        "type": "string"
+                        "type": ["string", "array"],
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "If a string, the Adam dialogue will be replaced with a single page containing the string. If an array, a page will be created for each element."
                     }
                 },
                 "required": [

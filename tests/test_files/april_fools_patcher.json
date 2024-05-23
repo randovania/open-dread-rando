@@ -3528,7 +3528,9 @@
                 "actor": "PRP_CV_AccessPoint002"
             },
             "hint_id": "CAVE_2",
-            "text": "Can you guess where a {c1}Progressive Suit{c0} goes?|That's right! It goes in the {c5}Cataris{c0} hole!"
+            "text": [
+                "Can you guess where a {c1}Progressive Suit{c0} goes?|That's right! It goes in the {c5}Cataris{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3537,7 +3539,9 @@
                 "actor": "PRP_CV_AccessPoint001"
             },
             "hint_id": "CAVE_1",
-            "text": "Can you guess where the {c1}Power Bomb{c0} goes?|That's right! It goes in the {c5}Artaria{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Power Bomb{c0} goes?|That's right! It goes in the {c5}Artaria{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3546,7 +3550,9 @@
                 "actor": "accesspoint"
             },
             "hint_id": "MAGMA_1",
-            "text": "Can you guess where the {c1}Wave Beam{c0} goes?|That's right! It goes in the {c5}Ghavoran{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Wave Beam{c0} goes?|That's right! It goes in the {c5}Ghavoran{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3555,7 +3561,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "MAGMA_2",
-            "text": "Can you guess where the {c1}Wide Beam{c0} goes?|That's right! It goes in the {c5}Ghavoran{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Wide Beam{c0} goes?|That's right! It goes in the {c5}Ghavoran{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3564,7 +3572,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "LAB_1",
-            "text": "Can you guess where the {c1}Spider Magnet{c0} goes?|That's right! It goes in the {c5}Artaria{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Spider Magnet{c0} goes?|That's right! It goes in the {c5}Artaria{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3573,7 +3583,9 @@
                 "actor": "accesspoint_001"
             },
             "hint_id": "LAB_2",
-            "text": "{c4}A joke hint.{c0}"
+            "text": [
+                "{c4}A joke hint.{c0}"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3582,7 +3594,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "AQUA_1",
-            "text": "Can you guess where the {c1}Screw Attack{c0} goes?|That's right! It goes in the {c5}Burenia{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Screw Attack{c0} goes?|That's right! It goes in the {c5}Burenia{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3591,7 +3605,9 @@
                 "actor": "accesspoint_001"
             },
             "hint_id": "AQUA_2",
-            "text": "Can you guess where a {c1}Progressive Bomb{c0} goes?|That's right! It goes in the {c5}Burenia{c0} hole!"
+            "text": [
+                "Can you guess where a {c1}Progressive Bomb{c0} goes?|That's right! It goes in the {c5}Burenia{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3600,7 +3616,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "SANC_1",
-            "text": "Can you guess where the {c1}Storm Missile{c0} goes?|That's right! It goes in the {c5}Ferenia{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Storm Missile{c0} goes?|That's right! It goes in the {c5}Ferenia{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3609,7 +3627,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "FOREST_1",
-            "text": "Can you guess where the {c1}Flash Shift{c0} goes?|That's right! It goes in the {c5}Ghavoran{c0} hole!"
+            "text": [
+                "Can you guess where the {c1}Flash Shift{c0} goes?|That's right! It goes in the {c5}Ghavoran{c0} hole!"
+            ]
         },
         {
             "accesspoint_actor": {
@@ -3618,7 +3638,9 @@
                 "actor": "accesspoint_000"
             },
             "hint_id": "SHIP_1",
-            "text": "Can you guess where a {c1}Progressive Suit{c0} goes?|That's right! It goes in the {c5}Artaria{c0} hole!"
+            "text": [
+                "Can you guess where a {c1}Progressive Suit{c0} goes?|That's right! It goes in the {c5}Artaria{c0} hole!"
+            ]
         }
     ],
     "text_patches": {
