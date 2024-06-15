@@ -293,6 +293,7 @@ def patch_corpius_checkpoints(editor: PatcherEditor):
 
 def apply_experiment_fixes(editor: PatcherEditor):
     magma = editor.get_scenario("s020_magma")
+    magma_map = editor.get_scenario_map("s020_magma")
 
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
@@ -356,6 +357,13 @@ def apply_experiment_fixes(editor: PatcherEditor):
 
     magma.actors_for_layer('default')[new_name] = new_door
     editor.copy_actor_groups("s020_magma", "trap_thermal_horizontal_004", new_name)
+
+    # update the minimap
+    new_map_icon = copy.deepcopy(magma_map.get_category("mapDoors")["trap_thermal_horizontal_004"])
+    new_map_icon.vPos = new_door.vPos[:2]
+    new_map_icon.oBoxL.Min = [c + offset for c, offset in zip(new_door.vPos, (-200.0, -50.0))]
+    new_map_icon.oBoxL.Max = [c + offset for c, offset in zip(new_door.vPos, (200.0, 50.0))]
+    magma_map.get_category("mapDoors")["trap_thermal_horizontal_006"] = new_map_icon
 
     # update thermal switch to open new door
     thermal_switch = editor.resolve_actor_reference({

@@ -55,6 +55,13 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
     on_exit.vLogicActions[0].sCallback = "CurrentScenario.OnExit_AP_10"
     trigger.lstActivationConditions.append(on_exit)
 
+    # add minimap icon
+    ap_icon = copy.deepcopy(editor.get_scenario_map("s080_shipyard").get_category("mapUsables")["accesspoint_000"])
+    ap_icon.vPos = [c + offset for c, offset in zip(ap_icon.vPos, new_origin)]
+    ap_icon.oBox.Min = [p + offset for p, offset in zip(new_origin, (-150, 0))]
+    ap_icon.oBox.Max = [p + offset for p, offset in zip(new_origin, (150, 300))]
+    editor.get_scenario_map("s090_skybase").get_category("mapUsables")["accesspoint_000"] = ap_icon
+
     # increase the height of the trigger to prevent jumping over it
     segments = ap_trigger.pComponents.LOGICSHAPE.pLogicShape.oPolyCollection.vPolys[0].oSegmentData
     for i in range(2):
