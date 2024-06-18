@@ -2,7 +2,7 @@ Game.ImportLibrary("system/scripts/init_original.lua")
 
 local initOk, errorMsg = pcall(function()
 
-RemoteLua = RemoteLua or { 
+RemoteLua = RemoteLua or {
     -- defined by exlaunch
     Init = function() end,
     Update = function() end,
@@ -75,6 +75,15 @@ Init.tMaxGameProgressStats = {
     NumTanksPickedUp = 149
 }
 
+local preViewedCutscenes = {
+    "CutScenePlayed[cutscenes/0001gameintro_arrivalatrium/0001gameintro_arrivalatrium.bmscu]",
+    "CutScenePlayed[cutscenes/0001gameintro_fight/0001gameintro_fight.bmscu]",
+    "CutScenePlayed[cutscenes/0001gameintro_flashbackend/0001gameintro_flashbackend.bmscu]",
+    "CutScenePlayed[cutscenes/0001gameintro_flashbackinit/0001gameintro_flashbackinit.bmscu]",
+    "CutScenePlayed[cutscenes/0001gameintro_space/0001gameintro_space.bmscu]",
+    "CutScenePlayed[cutscenes/0001gameintrolanding/0001gameintrolanding.bmscu]",
+}
+
 function Game.StartPrologue(arg1, arg2, arg3, arg4, arg5)
     Game.LogWarn(0, string.format("Will start Game - %s / %s / %s / %s", tostring(arg1), tostring(arg2), tostring(arg3), tostring(arg4)))
     Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
@@ -91,12 +100,9 @@ function Init.CreateNewGameData(difficulty)
     original_Init_CreateNewGameData(difficulty)
 
     -- Mark the intro cutscenes as already played so that the intro room doesn't try to load the cutscene data
-    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_arrivalatrium/0001gameintro_arrivalatrium.bmscu]", "i", 1)
-    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_fight/0001gameintro_fight.bmscu]", "i", 1)
-    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_flashbackend/0001gameintro_flashbackend.bmscu]", "i", 1)
-    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_flashbackinit/0001gameintro_flashbackinit.bmscu]", "i", 1)
-    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_space/0001gameintro_space.bmscu]", "i", 1)
-    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintrolanding/0001gameintrolanding.bmscu]", "i", 1)
+    for _, cutscene in ipairs(preViewedCutscenes) do
+        Blackboard.SetProp("PlayedCutscenes", cutscene, "i", 1)
+    end
 
     local playerSection =  Game.GetPlayerBlackboardSectionName()
 
