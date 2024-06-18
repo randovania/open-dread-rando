@@ -90,6 +90,14 @@ local original_Init_CreateNewGameData = Init.CreateNewGameData
 function Init.CreateNewGameData(difficulty)
     original_Init_CreateNewGameData(difficulty)
 
+    -- Mark the intro cutscenes as already played so that the intro room doesn't try to load the cutscene data
+    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_arrivalatrium/0001gameintro_arrivalatrium.bmscu]", "i", 1)
+    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_fight/0001gameintro_fight.bmscu]", "i", 1)
+    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_flashbackend/0001gameintro_flashbackend.bmscu]", "i", 1)
+    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_flashbackinit/0001gameintro_flashbackinit.bmscu]", "i", 1)
+    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintro_space/0001gameintro_space.bmscu]", "i", 1)
+    Blackboard.SetProp("PlayedCutscenes", "CutScenePlayed[cutscenes/0001gameintrolanding/0001gameintrolanding.bmscu]", "i", 1)
+
     local playerSection =  Game.GetPlayerBlackboardSectionName()
 
     --[[
