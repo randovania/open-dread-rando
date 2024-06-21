@@ -507,6 +507,22 @@
                     "type": "boolean",
                     "description": "Changes weaknesses for certain enemies and props to make Power Bombs less overpowered.",
                     "default": false
+                },
+                "remove_water_platform_water": {
+                    "type": "boolean",
+                    "description": "Remove the water that shows up in Artaria after raising the water platform in the EMMI Zone",
+                    "default": true
+                },
+                "remove_early_cloak_water": {
+                    "type": "string",
+                    "enum": ["unmodified", "right_only", "both_sides"],
+                    "description": "Remove the water underneath the first entrance to the Artaria EMMI Zone. both_sides also removes the blob",
+                    "default": "right_only"
+                },
+                "remove_arbitrary_enky": {
+                    "type": "boolean",
+                    "description": "Remove the enky that appears in Artaria after defeating the EMMI",
+                    "default": false
                 }
             },
             "additionalProperties": false

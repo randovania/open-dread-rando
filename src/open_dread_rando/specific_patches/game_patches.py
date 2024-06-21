@@ -19,6 +19,7 @@ _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
 
 def apply_game_patches(editor: PatcherEditor, configuration: dict):
     raven_beak_damage_mode = configuration["raven_beak_damage_table_handling"]
+    early_cloak_water_mode = configuration["remove_early_cloak_water"]
 
     if raven_beak_damage_mode != "unmodified":
         _modify_raven_beak_damage_table(editor, raven_beak_damage_mode)
@@ -30,6 +31,15 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
 
     if configuration["nerf_power_bombs"]:
         _remove_pb_weaknesses(editor)
+
+    if configuration["remove_water_platform_water"]:
+        _remove_water_platform_water(editor)
+
+    if early_cloak_water_mode != "unmodified":
+        _remove_early_cloak_water(editor, early_cloak_water_mode)
+
+    if configuration["remove_arbitrary_enky"]:
+        _remove_arbitrary_enky(editor)
 
 
 def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
@@ -120,3 +130,53 @@ def _remove_pb_weaknesses(editor: PatcherEditor):
 def _warp_to_start(editor: PatcherEditor):
     text = "Save your progress?|Hold \u1806 and \u1807 while selecting {c6}Cancel{c0}|to warp to the starting location."
     patch_text(editor, "GUI_SAVESTATION_QUESTION", text)
+
+
+def _remove_water_platform_water(editor: PatcherEditor):
+    editor.remove_entity(
+        {
+            "scenario": "s010_cave",
+            "layer": "default",
+            "actor": "PRP_CV_watercave05"
+        },
+        "mapWaterPoolGeos"
+    )
+
+def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
+    editor.remove_entity(
+        {
+            "scenario": "s010_cave",
+            "layer": "default",
+            "actor": "PRP_CV_watercave01b"
+        },
+        "mapWaterPoolGeos"
+    )
+
+    if mode == "both_sides":
+        editor.remove_entity(
+            {
+                "scenario": "s010_cave",
+                "layer": "default",
+                "actor": "PRP_CV_watercave01a"
+            },
+            "mapWaterPoolGeos"
+        )
+        editor.remove_entity(
+            {
+                "scenario": "s010_cave",
+                "layer": "default",
+                "actor": "PRP_DB_CV_003"
+            },
+            "mapOccluderGeos"
+        )
+
+
+def _remove_arbitrary_enky(editor: PatcherEditor):
+    editor.remove_entity(
+        {
+            "scenario": "s010_cave",
+            "layer": "Enemies",
+            "actor": "SG_WarLotus_000"
+        },
+        "mapProps"
+    )
