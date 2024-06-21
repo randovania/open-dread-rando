@@ -520,9 +520,10 @@
                     "default": "right_only"
                 },
                 "remove_arbitrary_enky": {
-                    "type": "boolean",
-                    "description": "Remove the enky that appears in Artaria after defeating the EMMI",
-                    "default": false
+                    "type": "string",
+                    "enum": ["unmodified", "never", "always"],
+                    "description": "Change how the enky that appears in Artaria after defeating the EMMI spawns",
+                    "default": "unmodified"
                 }
             },
             "additionalProperties": false

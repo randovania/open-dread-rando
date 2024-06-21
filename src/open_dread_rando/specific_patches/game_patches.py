@@ -20,6 +20,7 @@ _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
 def apply_game_patches(editor: PatcherEditor, configuration: dict):
     raven_beak_damage_mode = configuration["raven_beak_damage_table_handling"]
     early_cloak_water_mode = configuration["remove_early_cloak_water"]
+    arbitrary_enky_mode = configuration["remove_arbitrary_enky"]
 
     if raven_beak_damage_mode != "unmodified":
         _modify_raven_beak_damage_table(editor, raven_beak_damage_mode)
@@ -38,8 +39,8 @@ def apply_game_patches(editor: PatcherEditor, configuration: dict):
     if early_cloak_water_mode != "unmodified":
         _remove_early_cloak_water(editor, early_cloak_water_mode)
 
-    if configuration["remove_arbitrary_enky"]:
-        _remove_arbitrary_enky(editor)
+    if arbitrary_enky_mode != "unmodified":
+        _remove_arbitrary_enky(editor, arbitrary_enky_mode)
 
 
 def _modify_raven_beak_damage_table(editor: PatcherEditor, mode: str):
@@ -171,12 +172,21 @@ def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
         )
 
 
-def _remove_arbitrary_enky(editor: PatcherEditor):
-    editor.remove_entity(
-        {
+def _remove_arbitrary_enky(editor: PatcherEditor, mode: str):
+    if mode == "never":
+        editor.remove_entity(
+            {
+                "scenario": "s010_cave",
+                "layer": "Enemies",
+                "actor": "SG_WarLotus_000"
+            },
+            "mapProps"
+        )
+    elif mode == "always":
+        arbitrary_enky = editor.resolve_actor_reference({
             "scenario": "s010_cave",
             "layer": "Enemies",
             "actor": "SG_WarLotus_000"
-        },
-        "mapProps"
-    )
+        })
+
+        arbitrary_enky.pComponents.SPAWNGROUP.bAutoenabled = True
