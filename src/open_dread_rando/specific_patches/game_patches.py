@@ -173,20 +173,15 @@ def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
 
 
 def _remove_arbitrary_enky(editor: PatcherEditor, mode: str):
+    arbitrary_enky_reference = {
+        "scenario": "s010_cave",
+        "layer": "Enemies",
+        "actor": "SG_WarLotus_000"
+    }
+
     if mode == "never":
-        editor.remove_entity(
-            {
-                "scenario": "s010_cave",
-                "layer": "Enemies",
-                "actor": "SG_WarLotus_000"
-            },
-            "mapProps"
-        )
+        editor.remove_entity(arbitrary_enky_reference)
     elif mode == "always":
-        arbitrary_enky = editor.resolve_actor_reference({
-            "scenario": "s010_cave",
-            "layer": "Enemies",
-            "actor": "SG_WarLotus_000"
-        })
+        arbitrary_enky = editor.resolve_actor_reference(arbitrary_enky_reference)
 
         arbitrary_enky.pComponents.SPAWNGROUP.bAutoenabled = True
