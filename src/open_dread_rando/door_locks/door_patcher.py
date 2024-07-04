@@ -143,7 +143,7 @@ class DoorType(Enum):
     ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True,
                    ["actors/props/doorshieldmissile"])
     STORM_MISSILE = ("storm_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_STORM_MISSILE, True, True,
-                     ["actors/props/doorshieldmissile"])
+                     ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
     BOMB = ("bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_BOMB, True, True,
             ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
     CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True,
