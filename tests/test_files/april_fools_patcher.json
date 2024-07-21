@@ -15,7 +15,8 @@
         "ITEM_RANDO_ARTIFACT_9": 1,
         "ITEM_RANDO_ARTIFACT_10": 1,
         "ITEM_RANDO_ARTIFACT_11": 1,
-        "ITEM_RANDO_ARTIFACT_12": 1
+        "ITEM_RANDO_ARTIFACT_12": 1,
+        "ITEM_LIFE_SHARDS": 7
     },
     "starting_text": [
         []
@@ -4057,7 +4058,7 @@
         }
     },
     "energy_per_tank": 100,
-    "immediate_energy_parts": true,
+    "immediate_energy_parts": false,
     "enable_remote_lua": true,
     "constant_environment_damage": {
         "heat": 20,
