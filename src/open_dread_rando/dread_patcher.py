@@ -57,9 +57,14 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     if "ITEM_ENERGY_TANKS" in inventory:
         etanks = inventory.pop("ITEM_ENERGY_TANKS")
         max_life += etanks * energy_per_tank
-    if "ITEM_LIFE_SHARDS" in inventory and configuration["immediate_energy_parts"]:
-        shards = inventory.pop("ITEM_LIFE_SHARDS")
-        max_life += shards * energy_per_part
+    if "ITEM_LIFE_SHARDS" in inventory:
+        total_shards = inventory.pop("ITEM_LIFE_SHARDS")
+        leftover_shards = total_shards % 4
+        if configuration["immediate_energy_parts"] or leftover_shards == 0:
+            max_life += total_shards * energy_per_part
+        else:
+            inventory["ITEM_LIFE_SHARDS"] = leftover_shards
+            max_life += (total_shards - leftover_shards) * energy_per_part
 
     inventory.update({
         # TODO: expose shuffling these

@@ -251,9 +251,6 @@
         },
         "starting_items": {
             "type": "object",
-            "properties": {
-                "ITEM_LIFE_SHARDS": {"type": "number", "maximum": 3}
-            },
             "propertyNames": {
                 "$ref": "#/$defs/item_id"
             }
