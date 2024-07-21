@@ -60,10 +60,11 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     if "ITEM_LIFE_SHARDS" in inventory and inventory["ITEM_LIFE_SHARDS"] > 0:
         total_shards = inventory["ITEM_LIFE_SHARDS"]
         leftover_shards = total_shards % 4
-        max_life += (total_shards - leftover_shards) * energy_per_part
         if configuration["immediate_energy_parts"] or leftover_shards == 0:
+            max_life += total_shards * energy_per_part
             inventory.pop("ITEM_LIFE_SHARDS")
-        else:
+        elif total_shards > leftover_shards:
+            max_life += (total_shards - leftover_shards) * energy_per_part
             inventory["ITEM_LIFE_SHARDS"] = leftover_shards
 
     inventory.update({
