@@ -137,3 +137,6 @@ dmypy.json
 
 # Project
 src/open_dread_rando/version.py
+
+# VSCode
+.vscode
