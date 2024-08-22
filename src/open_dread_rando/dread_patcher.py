@@ -19,7 +19,7 @@ from open_dread_rando.misc_patches.exefs import include_depackager, patch_exefs
 from open_dread_rando.misc_patches.model_patcher import generate_custom_models
 from open_dread_rando.misc_patches.sprite_patches import patch_sprites
 from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
-from open_dread_rando.misc_patches.tilegroup_patcher import patch_tilegroup
+from open_dread_rando.misc_patches.tilegroup_patcher import patch_individual_tiles, patch_tilegroup
 from open_dread_rando.misc_patches.tunable_patcher import apply_tunable_patches
 from open_dread_rando.output_config import output_format_for_category, output_paths_for_compatibility
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -250,7 +250,10 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     patch_spawn_points(editor, configuration["new_spawn_points"])
 
     for tile_group in configuration["tile_group_patches"]:
-        patch_tilegroup(editor, tile_group)
+        if "tiletype" in tile_group:
+            patch_tilegroup(editor, tile_group)
+        else:
+            patch_individual_tiles(editor, tile_group["actor"], tile_group["tiles"])
 
     # Text patches
     if "text_patches" in configuration:

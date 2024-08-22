@@ -21,3 +21,17 @@ def patch_tilegroup(editor: PatcherEditor, group: dict):
     gridTiles = actor.pComponents.TILEGROUP.aGridTiles
     for tile in gridTiles:
         tile.eTileType = group["tiletype"]
+
+def patch_individual_tiles(editor: PatcherEditor, actor_reference: dict, tiles: list):
+    actor = editor.resolve_actor_reference(actor_reference)
+
+    if not is_tilegroup(actor):
+        raise ValueError(f"Actor at {actor_reference} is not a breakable tile group.")
+
+    gridTiles = actor.pComponents.TILEGROUP.aGridTiles
+
+    if len(tiles) > len(gridTiles):
+        raise ValueError(f"Too many tiles to patch {actor_reference} (got {len(tiles)}, expected {len(gridTiles)} max)")
+
+    for i, tile in enumerate(gridTiles):
+        tile.eTileType = tiles[i]["tiletype"]

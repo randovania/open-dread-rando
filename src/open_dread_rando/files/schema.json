@@ -598,27 +598,61 @@
                 "properties": {
                     "actor": {
                         "$ref": "#/$defs/actor_reference_with_layer"
-                    },
-                    "tiletype": {
-                        "type": "string",
-                        "enum": [
-                            "POWERBEAM",
-                            "BOMB",
-                            "MISSILE",
-                            "SUPERMISSILE",
-                            "POWERBOMB",
-                            "SCREWATTACK",
-                            "WEIGHT",
-                            "BABYHATCHLING",
-                            "SPEEDBOOST"
-                        ]
                     }
                 },
-                "required": [
-                    "actor",
-                    "tiletype"
+                "oneOf": [
+                    {
+                        "description": "Changes every tile in the group to the specified tile type",
+                        "properties": {
+                            "tiletype": {
+                                "type": "string",
+                                "enum": [
+                                    "POWERBEAM",
+                                    "BOMB",
+                                    "MISSILE",
+                                    "SUPERMISSILE",
+                                    "POWERBOMB",
+                                    "SCREWATTACK",
+                                    "WEIGHT",
+                                    "BABYHATCHLING",
+                                    "SPEEDBOOST"
+                                ]
+                            }
+                        },
+                        "required": ["tiletype"]
+                    },
+                    {
+                        "description": "For each entry in the list, the corresponding tile in the tilegroup will be changed to that tile type. Cannot have more entries than the group has tiles",
+                        "properties": {
+                            "tiles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "tiletype": {
+                                            "type": "string",
+                                            "enum": [
+                                                "POWERBEAM",
+                                                "BOMB",
+                                                "MISSILE",
+                                                "SUPERMISSILE",
+                                                "POWERBOMB",
+                                                "SCREWATTACK",
+                                                "WEIGHT",
+                                                "BABYHATCHLING",
+                                                "SPEEDBOOST"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": ["tiles"]
+                    }
                 ],
-                "additionalProperties": false
+                "required": [
+                    "actor"
+                ]
             },
             "default": []
         },
