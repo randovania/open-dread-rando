@@ -88,12 +88,12 @@ _PROJECT_MEMBERS = {
         "Migs",
         "hyperbola0",
         "Thanatos",
+        "Mayberry",
     ],
     "Logic Database": [
         "KirbymastaH",
         "Dyceron",
         "XenoWars",
-        "Mayberry",
         "Hugoshido",
         "Tyranisaur",
     ],
