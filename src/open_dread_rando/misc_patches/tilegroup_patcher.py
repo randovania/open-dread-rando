@@ -1,3 +1,4 @@
+from open_dread_rando.logger import LOG
 from open_dread_rando.patcher_editor import PatcherEditor
 
 
@@ -21,3 +22,22 @@ def patch_tilegroup(editor: PatcherEditor, group: dict):
     gridTiles = actor.pComponents.TILEGROUP.aGridTiles
     for tile in gridTiles:
         tile.eTileType = group["tiletype"]
+
+def patch_individual_tiles(editor: PatcherEditor, actor_reference: dict, tiles: list):
+    actor = editor.resolve_actor_reference(actor_reference)
+
+    if not is_tilegroup(actor):
+        raise ValueError(f"Actor at {actor_reference} is not a breakable tile group.")
+
+    gridTiles = actor.pComponents.TILEGROUP.aGridTiles
+
+    if len(tiles) != len(gridTiles):
+        tiles_string = f"got {len(tiles)}, expected {len(gridTiles)}"
+
+        if len(tiles) < len(gridTiles):
+            raise ValueError(f"Too few tiles provided to patch tilegroup {actor_reference} ({tiles_string})")
+        else:
+            LOG.warning(f"More tiles provided than in tilegroup {actor_reference} ({tiles_string})")
+
+    for i, tile in enumerate(gridTiles):
+        tile.eTileType = tiles[i]["tiletype"]
