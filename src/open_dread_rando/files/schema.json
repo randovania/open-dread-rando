@@ -605,18 +605,7 @@
                         "description": "Changes every tile in the group to the specified tile type",
                         "properties": {
                             "tiletype": {
-                                "type": "string",
-                                "enum": [
-                                    "POWERBEAM",
-                                    "BOMB",
-                                    "MISSILE",
-                                    "SUPERMISSILE",
-                                    "POWERBOMB",
-                                    "SCREWATTACK",
-                                    "WEIGHT",
-                                    "BABYHATCHLING",
-                                    "SPEEDBOOST"
-                                ]
+                                "$ref": "#/$defs/tiletype"
                             }
                         },
                         "required": ["tiletype"]
@@ -630,18 +619,7 @@
                                     "type": "object",
                                     "properties": {
                                         "tiletype": {
-                                            "type": "string",
-                                            "enum": [
-                                                "POWERBEAM",
-                                                "BOMB",
-                                                "MISSILE",
-                                                "SUPERMISSILE",
-                                                "POWERBOMB",
-                                                "SCREWATTACK",
-                                                "WEIGHT",
-                                                "BABYHATCHLING",
-                                                "SPEEDBOOST"
-                                            ]
+                                            "$ref": "#/$defs/tiletype"
                                         }
                                     }
                                 }
@@ -880,6 +858,20 @@
                 "x",
                 "y",
                 "z"
+            ]
+        },
+        "tiletype": {
+            "type": "string",
+            "enum": [
+                "POWERBEAM",
+                "BOMB",
+                "MISSILE",
+                "SUPERMISSILE",
+                "POWERBOMB",
+                "SCREWATTACK",
+                "WEIGHT",
+                "BABYHATCHLING",
+                "SPEEDBOOST"
             ]
         }
     }
