@@ -623,7 +623,135 @@
             "default": []
         },
         "actor_patches": {
-            "type": "object"
+            "description": "Edits actors",
+            "properties": {
+                "modify": {
+                    "description": "Actors to modify",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "actor": {
+                                "description": "A reference to the actor to modify",
+                                "$ref": "#/$defs/actor_reference_with_layer"
+                            },
+                            "make_copy": {
+                                "description": "If true, the original actor will be left as is and all modifications will be applied to a copy instead",
+                                "type": "boolean"
+                            }
+                        },
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "new_reference": {
+                                        "description": "A reference to where the actor should be placed in/copied to",
+                                        "$ref": "#/$defs/actor_reference_with_layer"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "actor_groups": {
+                                        "description": "The actor groups the actor should be present in. If ommitted, new_reference is present, and the scenario is the same, the actor groups will be copied from the original actor",
+                                        "examples": [
+                                            [
+                                                "eg_collision_camera_007_Default"
+                                            ],
+                                            [
+                                                "eg_collision_camera_042_Default",
+                                                "eg_collision_camera_042_PostXRelease",
+                                                "eg_collision_camera_042_Cooldown"
+                                            ]
+                                        ],
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "modifications": {
+                                        "description": "A list of patches to be applied",
+                                        "examples": [
+                                            [
+                                                {
+                                                    "path": ["vPos", 0],
+                                                    "update_to": [5000.0]
+                                                },
+                                                {
+                                                    "path": ["vAng"],
+                                                    "update_to": [0.0, 0.0, 0.0]
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    "path": ["pComponents", "LIFE", "bStayOpen"],
+                                                    "update_to": true
+                                                }
+                                            ],
+                                            [
+                                                {
+                                                    "path": ["pComponents", "SPAWNGROUP", "vectSpawnPoints", 1]
+                                                }
+                                            ]
+                                        ],
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "path": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": ["string", "number"]
+                                                    }
+                                                },
+                                                "update_to": {}
+                                            },
+                                            "required": ["path"]
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "required": ["actor"],
+                        "if": {
+                            "properties": {
+                                "make_copy": {
+                                    "const": true
+                                }
+                            },
+                            "required": ["make_copy"]
+                        },
+                        "then": {
+                            "required": ["new_reference"]
+                        }
+                    }
+                },
+                "remove": {
+                    "description": "Actors to remove",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "actor": {
+                                "$ref": "#/$defs/actor_reference_with_layer"
+                            },
+                            "map_category": {
+                                "description": "The map category to remove the actor from in the BMMAP",
+                                "examples": [
+                                    "mapItems",
+                                    "mapProps",
+                                    "mapOccluderGeos"
+                                ],
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "default": {}
         },
         "new_spawn_points": {
             "type": "array",
