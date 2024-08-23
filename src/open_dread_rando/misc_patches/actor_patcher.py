@@ -1,12 +1,12 @@
 import copy
 
-from json_delta import patch
+import json_delta
 
 from open_dread_rando.patcher_editor import PatcherEditor
 
 
-def _modify_actor(editor: PatcherEditor, original_reference: dict, modifications: list,
-                  new_reference: dict, actor_groups: list, make_copy: bool = False):
+def _modify_actor(editor: PatcherEditor, original_reference: dict[str, str], new_reference: dict[str, str],
+                  modifications: list[dict], actor_groups: list[str], make_copy: bool = False):
     is_in_place = original_reference == new_reference
     scenario = editor.get_scenario(new_reference["scenario"])
 
@@ -19,7 +19,7 @@ def _modify_actor(editor: PatcherEditor, original_reference: dict, modifications
         scenario.actors_for_layer(new_reference["layer"])[new_reference["actor"]] = actor
 
     if modifications:
-        patch(actor, [
+        json_delta.patch(actor, [
             [modification["path"], modification["update_to"]] if "update_to" in modification
             else [modification["path"]]
             for modification in modifications
@@ -51,10 +51,10 @@ def apply_actor_patches(editor: PatcherEditor, actors_config: dict):
             _modify_actor(
                 editor,
                 actor["actor"],
-                actor.get("modifications", None),
                 actor.get("new_reference", actor["actor"]),
-                actor.get("actor_groups", None),
-                actor.get("make_copy", None)
+                actor["modifications"],
+                actor["actor_groups"],
+                actor["make_copy"]
             )
 
     if "remove" in actors_config:

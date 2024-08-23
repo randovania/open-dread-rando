@@ -275,7 +275,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     # Specific game patches
     game_patches.apply_game_patches(editor, configuration.get("game_patches", {}))
 
-    # Remove actors
+    # Actor patches
     apply_actor_patches(editor, configuration.get("actor_patches"))
 
     # remote connector disconnect symbol
