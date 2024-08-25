@@ -96,11 +96,14 @@ _PROJECT_MEMBERS = {
         "XenoWars",
         "Hugoshido",
         "Tyranisaur",
+        "Mayberry",
+        "Arcanox",
     ],
     "Additional Art": [
         "BigSharksZ",
         "SkyTheLucario",
         "tezar tantular"
+        "hyperbola0",
     ],
     "     ": [
         "With contributions from many others.",
