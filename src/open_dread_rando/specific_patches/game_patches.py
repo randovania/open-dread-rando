@@ -180,7 +180,7 @@ def _remove_arbitrary_enky(editor: PatcherEditor, mode: str):
     }
 
     if mode == "never":
-        editor.remove_entity(arbitrary_enky_reference)
+        editor.remove_entity(arbitrary_enky_reference, "mapProps")
     elif mode == "always":
         arbitrary_enky = editor.resolve_actor_reference(arbitrary_enky_reference)
 
