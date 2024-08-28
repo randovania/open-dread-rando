@@ -675,7 +675,7 @@
                                     [
                                         {
                                             "path": ["vPos", 0],
-                                            "update_to": [5000.0]
+                                            "update_to": 5000.0
                                         },
                                         {
                                             "path": ["vAng"],
