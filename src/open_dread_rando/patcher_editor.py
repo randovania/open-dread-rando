@@ -7,6 +7,7 @@ from construct import Container
 from mercury_engine_data_structures.file_tree_editor import FileTreeEditor
 from mercury_engine_data_structures.formats import ALL_FORMATS, BaseResource, Bmmap, Brfld, Brsa
 from mercury_engine_data_structures.game_check import Game
+from mercury_engine_data_structures.romfs import ExtractedRomFs
 
 from open_dread_rando.pickups.map_icons import MapIconEditor
 
@@ -26,7 +27,7 @@ class PatcherEditor(FileTreeEditor):
     map_icon_editor: MapIconEditor
 
     def __init__(self, root: Path):
-        super().__init__(root, target_game=Game.DREAD)
+        super().__init__(ExtractedRomFs(root), target_game=Game.DREAD)
         self.memory_files = {}
         self.map_icon_editor = MapIconEditor(self)
 
