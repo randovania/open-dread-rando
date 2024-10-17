@@ -337,7 +337,11 @@ class DoorPatcher:
         # make a new RandoShield by popping the lowest actor
         shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, self.get_shield_id(scenario))
 
-        self.editor.copy_actor_groups(scenario, door.sName, shield.sName)
+        self.editor.copy_actor_groups(
+            { "actor": door.sName },
+            { "actor": shield.sName},
+            scenario
+        )
         shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
         shield.vAng[1] = shield.vAng[1] if dir == "L" else -shield.vAng[1]
         if (shield_data is ActorData.SHIELD_WIDE_BEAM):
