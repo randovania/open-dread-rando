@@ -21,13 +21,10 @@ def flip_icon_id(icon_id: str) -> str:
     raise ValueError(f"Unable to flip icon {icon_id}")
 
 
-def _apply_one_sided_door_fix(scenario: Brfld, map_blockages: construct.Container,
-                              layer_name: str, actor_name: str, actor: construct.Container):
+def _apply_one_sided_door_fix(editor: PatcherEditor, scenario: Brfld, map_blockages: construct.Container,
+                              sublayer_name: str, actor_name: str, actor: construct.Container):
     # Continue if this isn't a door
     if not door_patcher.is_door(actor):
-        return
-
-    if actor.oActorDefLink != "actordef:actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad":
         return
 
     life_comp = actor.pComponents.LIFE
@@ -50,11 +47,11 @@ def _apply_one_sided_door_fix(scenario: Brfld, map_blockages: construct.Containe
     if "db_hdoor" in other.oActorDefLink:
         return
 
-    LOG.debug("%s/%s: copy %s into %s", layer_name, actor_name, other.sName, direction)
+    LOG.debug("%s/%s: copy %s into %s", sublayer_name, actor_name, other.sName, direction)
     mirrored = copy.deepcopy(other)
     mirrored.sName += "_mirrored"
     mirrored.vAng = [other.vAng[0], -other.vAng[1], other.vAng[2]]
-    scenario.actors_for_layer(layer_name)[mirrored.sName] = mirrored
+    scenario.actors_for_sublayer(sublayer_name)[mirrored.sName] = mirrored
 
     mirrored_map = copy.deepcopy(map_blockages[other.sName])
     mirrored_map["sIconId"] = flip_icon_id(mirrored_map["sIconId"])
@@ -64,12 +61,14 @@ def _apply_one_sided_door_fix(scenario: Brfld, map_blockages: construct.Containe
     map_blockages[mirrored.sName] = mirrored_map
 
     # Add a reference to the other shield to the main actor
-    life_comp[direction] = f"Root:pScenario:rEntitiesLayer:dctSublayers:{layer_name}:dctActors:{mirrored.sName}"
+    life_comp[direction] = f"Root:pScenario:rEntitiesLayer:dctSublayers:{sublayer_name}:dctActors:{mirrored.sName}"
 
-    for group_name in scenario.all_actor_groups():
-        if any(scenario.is_actor_in_group(group_name, x, layer_name) for x in [actor_name, other.sName]):
-            for name in [actor_name, mirrored.sName, other.sName]:
-                scenario.add_actor_to_group(group_name, name, layer_name)
+    for x in [other.sName, mirrored.sName]:
+        editor.copy_actor_groups(
+            { "actor": actor_name },
+            { "actor": x },
+            scenario.name,
+        )
 
 
 def apply_one_sided_door_fixes(editor: PatcherEditor):
@@ -77,9 +76,10 @@ def apply_one_sided_door_fixes(editor: PatcherEditor):
         scenario = editor.get_scenario(scenario_name)
         bmmap = editor.get_scenario_map(scenario_name)
         map_blockages = bmmap.raw.Root.mapBlockages
+        actordef = "actors/props/doorpowerpower/charclasses/doorpowerpower.bmsad"
 
-        for layer_name, actor_name, actor in list(scenario.all_actors()):
-            _apply_one_sided_door_fix(scenario, map_blockages, layer_name, actor_name, actor)
+        for sublayer_name, actor_name, actor in editor.find_type_of_actor(scenario_name, actordef):
+            _apply_one_sided_door_fix(editor, scenario, map_blockages, sublayer_name, actor_name, actor)
 
 
 PROBLEM_LAYERS = {
@@ -150,7 +150,7 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
 def apply_corpius_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s010_cave",
-        "layer": "Cutscenes",
+        "sublayer": "Cutscenes",
         "actor": "cutsceneplayer_57"
     }, "CurrentScenario.OnCorpiusDeath_CUSTOM", 0)
 
@@ -158,7 +158,7 @@ def apply_corpius_fixes(editor: PatcherEditor):
 def apply_kraid_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
-        "layer": "cutscenes",
+        "sublayer": "cutscenes",
         "actor": "cutsceneplayer_61"
     }, "CurrentScenario.OnKraidDeath_CUSTOM", -1)
 
@@ -166,7 +166,7 @@ def apply_kraid_fixes(editor: PatcherEditor):
 def apply_drogyga_fixes(editor: PatcherEditor):
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s040_aqua",
-        "layer": "cutscenes",
+        "sublayer": "cutscenes",
         "actor": "cutsceneplayer_65"
     }, "CurrentScenario.OnHydrogigaDead_CUSTOM", -1)
 
@@ -181,7 +181,7 @@ def activate_emmi_zones(editor: PatcherEditor):
     editor.remove_entity(
         {
             "scenario": "s010_cave",
-            "layer": "Cutscenes",
+            "sublayer": "Cutscenes",
             "actor": "cutscenetrigger_36"
         },
         None,
@@ -192,7 +192,7 @@ def activate_emmi_zones(editor: PatcherEditor):
     editor.remove_entity(
         {
             "scenario": "s030_baselab",
-            "layer": "cutscenes",
+            "sublayer": "cutscenes",
             "actor": "cutscenetrigger_39"
         },
         None,
@@ -276,7 +276,7 @@ def fix_backdoor_white_cu(editor: PatcherEditor):
     })
 
     cave = editor.get_scenario("s010_cave")
-    cave.actors_for_layer("default")[new_door["sName"]] = new_door
+    cave.actors_for_sublayer("default")[new_door["sName"]] = new_door
 
     for group in ["eg_collision_camera_018_Default", "eg_collision_camera_090_Default",
                   "eg_collision_camera_049_Default", "eg_collision_camera_090_PostXRelease",
@@ -297,7 +297,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
 
     _apply_boss_cutscene_fixes(editor, {
         "scenario": "s020_magma",
-        "layer": "cutscenes",
+        "sublayer": "cutscenes",
         "actor": "cutsceneplayer_81"
     }, "CurrentScenario.OnExperimentDeath_CUSTOM", 0)
 
@@ -310,7 +310,6 @@ def apply_experiment_fixes(editor: PatcherEditor):
     for name, pos in new_triggers.items():
         ap_trigger = copy.deepcopy(editor.resolve_actor_reference({
             "scenario": "s020_magma",
-            "layer": "default",
             "actor": "AP_03"
         }))
 
@@ -320,7 +319,7 @@ def apply_experiment_fixes(editor: PatcherEditor):
         activation_conditions = ap_trigger.pComponents.TRIGGER.lstActivationConditions
         activation_conditions[0].vLogicActions[0].sCallback = f"CurrentScenario.OnEnter_{name}"
 
-        magma.actors_for_layer('default')[name] = ap_trigger
+        magma.actors_for_sublayer('default')[name] = ap_trigger
         magma.add_actor_to_group("eg_collision_camera_004_PostXRelease", name)
 
     # make thermal doors always closed during the fight
@@ -329,18 +328,17 @@ def apply_experiment_fixes(editor: PatcherEditor):
 
         trap = copy.deepcopy(editor.resolve_actor_reference({
             "scenario": "s020_magma",
-            "layer": "default",
             "actor": name
         }))
 
         trap.sName = f"{name}_EXPERIMENT"
-        magma.actors_for_layer('default')[trap.sName] = trap
+        magma.actors_for_sublayer('default')[trap.sName] = trap
         magma.add_actor_to_group('eg_collision_camera_009_Cooldown', trap.sName)
 
     # disable closing the thermal door permanently after experiment
     editor.remove_entity({
         "scenario": "s020_magma",
-        "layer": "default",
+        "sublayer": "default",
         "actor": "trap_thermal_horizontal_POSTCOOL"
     }, "mapDoors")
 
@@ -355,8 +353,12 @@ def apply_experiment_fixes(editor: PatcherEditor):
     new_door.sName = new_name
     new_door.vPos = (5840.0, -5455.0, 0.0)
 
-    magma.actors_for_layer('default')[new_name] = new_door
-    editor.copy_actor_groups("s020_magma", "trap_thermal_horizontal_004", new_name)
+    magma.actors_for_sublayer('default')[new_name] = new_door
+    editor.copy_actor_groups(
+        {"actor": "trap_thermal_horizontal_004" },
+        { "actor": new_name },
+        "s020_magma"
+    )
 
     # update the minimap
     new_map_icon = copy.deepcopy(magma_map.get_category("mapDoors")["trap_thermal_horizontal_004"])
@@ -387,7 +389,7 @@ def disable_hanubia_cutscene(editor: PatcherEditor):
     # disable cutscene 12 (hanubia - tank room) because it teleports samus to the lower section (bad for door rando)
     cutscene_player = editor.resolve_actor_reference({
         "scenario": "s080_shipyard",
-        "layer": "cutscenes",
+        "sublayer": "cutscenes",
         "actor": "cutsceneplayer_12",
     })
     cutscene_player.bEnabled = False
@@ -401,7 +403,6 @@ def fix_map_icons(map_editor: MapIconEditor):
 def move_artaria_missile_tank(editor: PatcherEditor):
     actor_ref = {
         "scenario": "s010_cave",
-        "layer": "default",
         "actor": "item_missiletank_000"
     }
     missile_tank = editor.resolve_actor_reference(actor_ref)
