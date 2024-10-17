@@ -53,8 +53,10 @@ TRANSPORT_TYPES = {
 }
 
 def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[TransporterType, dict]:
-    level = editor.get_scenario(elevator["teleporter"]["scenario"])
-    actor = level.actors_for_layer(elevator["teleporter"]["layer"])[elevator["teleporter"]["actor"]]
+    scenario = editor.get_scenario(elevator["teleporter"]["scenario"])
+    sublayer = elevator["teleporter"].get("sublayer", elevator["teleporter"]["layer"])
+    actor = scenario.actors_for_sublayer(sublayer)[elevator["teleporter"]["actor"]]
+
     try:
         usable = actor.pComponents.USABLE
     except AttributeError:
