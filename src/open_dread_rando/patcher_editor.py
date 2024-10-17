@@ -144,7 +144,7 @@ class PatcherEditor(FileTreeEditor):
     def find_type_of_actor(self, scenario_name: str, actordef: str,
                            actor_layer: ActorLayer = ActorLayer.ENTITIES) -> list[tuple[str, Container]]:
         """
-        Iterably get every actor with given actordef in a scenario
+        Get every actor with given actordef in a scenario
 
         param scenario: the name of the scenario
         param actordef: the actor definition (bmsad) to filter for
