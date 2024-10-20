@@ -338,7 +338,6 @@ def apply_experiment_fixes(editor: PatcherEditor):
     # disable closing the thermal door permanently after experiment
     editor.remove_entity({
         "scenario": "s020_magma",
-        "sublayer": "default",
         "actor": "trap_thermal_horizontal_POSTCOOL"
     }, "mapDoors")
 
