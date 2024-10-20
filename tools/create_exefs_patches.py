@@ -139,7 +139,9 @@ def main():
     exefs_patches.mkdir(parents=True, exist_ok=True)
 
     for version, exefs_hash in VERSIONS.items():
-        exefs_patches.joinpath(f"{exefs_hash}.ips").write_bytes(create_patch(version))
+        out_path = exefs_patches.joinpath(f"{exefs_hash}.ips")
+        out_path.write_bytes(create_patch(version))
+        print(f"Created {out_path}")
 
 
 if __name__ == '__main__':
