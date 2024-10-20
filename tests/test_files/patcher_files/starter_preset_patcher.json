@@ -159,7 +159,7 @@
                 "actor": "Item_MissileTank002"
             },
             "model": [
-                "item_missile__OR"
+                "item_missiletank_orange"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -182,7 +182,7 @@
                 "actor": "item_missiletank_000"
             },
             "model": [
-                "item_missile__YL"
+                "item_missiletank_yellow"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -380,7 +380,7 @@
                 "actor": "item_energytank_000"
             },
             "model": [
-                "item_missile__GN"
+                "item_missiletank_green"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -403,7 +403,7 @@
                 "actor": "item_missiletankplus_000"
             },
             "model": [
-                "item_missile__BL"
+                "item_missiletank_blue"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -486,7 +486,7 @@
                 "actor": "item_energyfragment_000"
             },
             "model": [
-                "item_missile__CY"
+                "item_missiletank_cyan"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -539,7 +539,7 @@
                 "actor": "item_missiletank_003"
             },
             "model": [
-                "item_missile__PR"
+                "item_missiletank_purple"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -708,7 +708,7 @@
                 "actor": "Item_MissileTank014"
             },
             "model": [
-                "item_missile__PK"
+                "item_missiletank_pink"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -759,7 +759,7 @@
                 "actor": "Item_MissileTank015"
             },
             "model": [
-                "item_missile__MG"
+                "item_missiletank_magenta"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -782,7 +782,7 @@
                 "actor": "Item_MissileTank016"
             },
             "model": [
-                "item_missile__WH"
+                "item_missiletank_white"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -805,7 +805,7 @@
                 "actor": "item_missiletankplus_001"
             },
             "model": [
-                "item_missile__BK"
+                "item_missiletank_black"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
@@ -858,7 +858,7 @@
                 "actor": "item_missiletank_006"
             },
             "model": [
-                "item_missile__GR"
+                "item_missiletank_gray"
             ],
             "map_icon": {
                 "icon_id": "item_missiletank"
