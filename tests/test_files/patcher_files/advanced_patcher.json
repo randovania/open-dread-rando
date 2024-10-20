@@ -33,7 +33,15 @@
         "ITEM_ENERGY_TANKS": 5
     },
     "starting_text": [
-        []
+        [
+            "This",
+            "is",
+            "a",
+            "bunch",
+            "of",
+            "starting",
+            "text"
+        ]
     ],
     "pickups": [
         {
@@ -3683,6 +3691,11 @@
                     "scenario": "s020_magma",
                     "actor": "trap_thermal_horizontal_custom_000"
                 },
+                "actor_groups": [
+                    "eg_collision_camera_004_Default",
+                    "eg_collision_camera_004_PostXRelease",
+                    "eg_collision_camera_004_Cooldown"
+                ],
                 "modifications": [
                     {
                         "path": ["vAng", 2],
@@ -3722,6 +3735,18 @@
                     "scenario": "s020_magma",
                     "actor": "trap_thermal_horizontal_custom_001"
                 }
+            },
+            {
+                "actor": {
+                    "scenario": "s020_magma",
+                    "actor": "deviceheat"
+                },
+                "modifications": [
+                    {
+                        "path": ["pComponents", "USABLE", "vThermalDoors", 0, "wpThermalDoor"],
+                        "update_to": "Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:trap_thermal_horizontal_custom_001"
+                    }
+                ]
             },
             {
                 "actor": {
