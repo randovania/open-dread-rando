@@ -29,8 +29,8 @@ def _modify_actor(editor: PatcherEditor, original_reference: dict[str, str], new
             for modification in modifications
         ])
 
-    if actor_groups:
-        for group in scenario.all_actor_groups():
+    if actor_groups is not None:
+        for group in scenario.actor_groups_for_actor_layer(new_actor_layer):
 
             is_actor_in_group = scenario.is_actor_in_group(group, new_actor_name, new_sublayer, new_actor_layer)
 
@@ -58,7 +58,7 @@ def apply_actor_patches(editor: PatcherEditor, actors_config: dict):
                 actor["actor"],
                 actor.get("new_reference", actor["actor"]),
                 actor["modifications"],
-                actor["actor_groups"],
+                actor.get("actor_groups"),
                 actor["make_copy"]
             )
 

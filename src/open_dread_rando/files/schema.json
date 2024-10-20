@@ -666,8 +666,7 @@
                                 "type": "array",
                                 "items": {
                                     "type": "string"
-                                },
-                                "default": []
+                                }
                             },
                             "modifications": {
                                 "description": "A list of patches to be applied",
