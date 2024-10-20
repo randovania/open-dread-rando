@@ -836,7 +836,13 @@
                     "$ref": "#/$defs/scenario_name"
                 },
                 "actor_layer": {
-                    "$ref": "#/$defs/actor_layer"
+                    "type": "string",
+                    "enum": [
+                        "rEntitiesLayer",
+                        "rSoundsLayer",
+                        "rLightsLayer"
+                    ],
+                    "default": "rEntitiesLayer"
                 },
                 "sublayer": {
                     "type": "string"
@@ -883,15 +889,6 @@
                 "s080_shipyard",
                 "s090_skybase"
             ]
-        },
-        "actor_layer": {
-            "type": "string",
-            "enum": [
-                "rEntitiesLayer",
-                "rSoundsLayer",
-                "rLightsLayer"
-            ],
-            "default": "rEntitiesLayer"
         },
         "constant_damage_value": {
             "default": null,
