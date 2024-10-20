@@ -102,7 +102,7 @@ _PROJECT_MEMBERS = {
     "Additional Art": [
         "BigSharksZ",
         "SkyTheLucario",
-        "tezar tantular"
+        "tezar tantular",
         "hyperbola0",
     ],
     "     ": [
