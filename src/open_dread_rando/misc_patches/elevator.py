@@ -54,7 +54,7 @@ TRANSPORT_TYPES = {
 
 def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[TransporterType, dict]:
     scenario = editor.get_scenario(elevator["teleporter"]["scenario"])
-    sublayer = elevator["teleporter"].get("sublayer", elevator["teleporter"]["layer"])
+    sublayer = elevator["teleporter"].get("sublayer", elevator["teleporter"].get("layer", "default"))
     actor = scenario.actors_for_sublayer(sublayer)[elevator["teleporter"]["actor"]]
 
     try:

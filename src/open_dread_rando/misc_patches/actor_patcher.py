@@ -10,7 +10,7 @@ def _modify_actor(editor: PatcherEditor, original_reference: dict[str, str], new
     is_in_place = original_reference == new_reference
     scenario = editor.get_scenario(new_reference["scenario"])
     new_actor_name = new_reference["actor"]
-    new_sublayer = new_reference["sublayer"]
+    new_sublayer = new_reference.get("sublayer", new_reference["layer"])
     new_actor_layer = new_reference["actor_layer"]
 
     if is_in_place:
