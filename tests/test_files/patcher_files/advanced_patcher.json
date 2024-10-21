@@ -1,0 +1,3680 @@
+{
+    "configuration_identifier": "CUSTOM",
+    "starting_location": {
+        "scenario": "s010_cave",
+        "actor": "SP_custom_000"
+    },
+    "starting_items": {
+        "ITEM_WEAPON_MISSILE_MAX": 50,
+        "ITEM_FLOOR_SLIDE": 1,
+        "ITEM_MORPH_BALL": 1,
+        "ITEM_WEAPON_CHARGE_BEAM": 1,
+        "ITEM_WEAPON_DIFFUSION_BEAM": 1,
+        "ITEM_WEAPON_WIDE_BEAM": 1,
+        "ITEM_WEAPON_PLASMA_BEAM": 1,
+        "ITEM_WEAPON_WAVE_BEAM": 1,
+        "ITEM_WEAPON_GRAPPLE_BEAM": 1,
+        "ITEM_WEAPON_SUPER_MISSILE": 1,
+        "ITEM_WEAPON_ICE_MISSILE": 1,
+        "ITEM_MULTILOCKON": 1,
+        "ITEM_WEAPON_BOMB": 1,
+        "ITEM_WEAPON_LINE_BOMB": 1,
+        "ITEM_WEAPON_POWER_BOMB": 1,
+        "ITEM_WEAPON_POWER_BOMB_MAX": 10,
+        "ITEM_GRAVITY_SUIT": 1,
+        "ITEM_SPEED_BOOSTER": 1,
+        "ITEM_SPACE_JUMP": 1,
+        "ITEM_SCREW_ATTACK": 1,
+        "ITEM_MAGNET_GLOVE": 1,
+        "ITEM_OPTIC_CAMOUFLAGE": 1,
+        "ITEM_GHOST_AURA": 1,
+        "ITEM_UPGRADE_FLASH_SHIFT_CHAIN": 2,
+        "ITEM_SONAR": 1,
+        "ITEM_ENERGY_TANKS": 5
+    },
+    "starting_text": [
+        [
+            "This",
+            "is",
+            "a",
+            "bunch",
+            "of",
+            "starting",
+            "text"
+        ]
+    ],
+    "pickups": [
+        {
+            "pickup_type": "actor",
+            "caption": "Morph Ball acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_MORPH_BALL",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "ItemSphere_ChargeBeam"
+            },
+            "model": [
+                "powerup_morphball"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_morphball",
+                "original_actor": {
+                    "scenario": "s010_cave",
+                    "actor": "powerup_chargebeam"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank011"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Spider Magnet acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_MAGNET_GLOVE",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank012"
+            },
+            "model": [
+                "powerup_spidermagnet"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_spidermagnet"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_EnergyTank001"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank001"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank002"
+            },
+            "model": [
+                "item_missiletank_orange"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_missiletank_yellow"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Suit acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_VARIA_SUIT",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_GRAVITY_SUIT",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank003"
+            },
+            "model": [
+                "powerup_variasuit",
+                "powerup_gravitysuit"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_SUIT"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Charge Beam acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_CHARGE_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_DIFFUSION_BEAM",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank004"
+            },
+            "model": [
+                "powerup_chargebeam",
+                "powerup_diffusionbeam"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_CHARGE"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Flash Shift acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_GHOST_AURA",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank005"
+            },
+            "model": [
+                "powerup_ghostaura"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_ghostaura"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank006"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank007"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank003_1"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank009"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_energytank_000"
+            },
+            "model": [
+                "item_missiletank_green"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletankplus_000"
+            },
+            "model": [
+                "item_missiletank_blue"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Beam acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_WIDE_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_PLASMA_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_WAVE_BEAM",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_energyfragment_001"
+            },
+            "model": [
+                "powerup_widebeam",
+                "powerup_plasmabeam",
+                "powerup_wavebeam"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_BEAM"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_001"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_energyfragment_000"
+            },
+            "model": [
+                "item_missiletank_cyan"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Bomb acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_BOMB",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_LINE_BOMB",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "powerup_bomb",
+                "powerup_crossbomb"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_BOMB"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_003"
+            },
+            "model": [
+                "item_missiletank_purple"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_004"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Beam acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_WIDE_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_PLASMA_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_WAVE_BEAM",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank010"
+            },
+            "model": [
+                "powerup_widebeam",
+                "powerup_plasmabeam",
+                "powerup_wavebeam"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_BEAM"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Missile acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_SUPER_MISSILE",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_ICE_MISSILE",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "IT_VARIA_GEN_001"
+            },
+            "model": [
+                "powerup_supermissile",
+                "powerup_icemissile"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_MISSILE",
+                "original_actor": {
+                    "scenario": "s010_cave",
+                    "actor": "powerup_variasuit"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_002"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "ItemSphere_GrappleBeam"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank",
+                "original_actor": {
+                    "scenario": "s010_cave",
+                    "actor": "powerup_grapplebeam"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank014"
+            },
+            "model": [
+                "item_missiletank_pink"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "ItemSphere_ScrewAttack"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank",
+                "original_actor": {
+                    "scenario": "s010_cave",
+                    "actor": "powerup_screwattack"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank015"
+            },
+            "model": [
+                "item_missiletank_magenta"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "Item_MissileTank016"
+            },
+            "model": [
+                "item_missiletank_white"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletankplus_001"
+            },
+            "model": [
+                "item_missiletank_black"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Charge Beam acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_CHARGE_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_DIFFUSION_BEAM",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_005"
+            },
+            "model": [
+                "powerup_chargebeam",
+                "powerup_diffusionbeam"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_CHARGE"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s010_cave",
+                "actor": "item_missiletank_006"
+            },
+            "model": [
+                "item_missiletank_gray"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_powerbombtank_002"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Storm Missile acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_MULTILOCKON",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_012"
+            },
+            "model": [
+                "powerup_stormmissile"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_stormmissile"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "itemsphere_diffusionbeam"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank",
+                "original_actor": {
+                    "scenario": "s020_magma",
+                    "actor": "powerup_diffusionbeam"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_008"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_001"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_003"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_004"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Spin acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_DOUBLE_JUMP",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_SPACE_JUMP",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_005"
+            },
+            "model": [
+                "powerup_doublejump",
+                "powerup_spacejump"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_SPIN"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_energyfragment_001"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_007"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_energyfragment_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_009"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_010"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_011"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_energytank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Beam acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_WIDE_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_PLASMA_BEAM",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_WAVE_BEAM",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletankplus_000"
+            },
+            "model": [
+                "powerup_widebeam",
+                "powerup_plasmabeam",
+                "powerup_wavebeam"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_BEAM"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_powerbombtank_001"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_002"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_006"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s020_magma",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_004"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "itemsphere_widebeam"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank",
+                "original_actor": {
+                    "scenario": "s030_baselab",
+                    "actor": "powerup_widebeam"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "itemsphere_bomb"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus",
+                "original_actor": {
+                    "scenario": "s030_baselab",
+                    "actor": "powerup_bomb"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Bomb acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_BOMB",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_LINE_BOMB",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank"
+            },
+            "model": [
+                "powerup_bomb",
+                "powerup_crossbomb"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_BOMB"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_003"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_energyfragment_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_energyfragment_001"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_powerbombtank_001"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_007"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Missile acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_SUPER_MISSILE",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_ICE_MISSILE",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_008"
+            },
+            "model": [
+                "powerup_supermissile",
+                "powerup_icemissile"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_MISSILE"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletankplus_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_010"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_energyfragment_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_energytank"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_energyfragment_003"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_powerbombtank_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Main Power Bomb acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_001"
+            },
+            "model": [
+                "powerup_powerbomb"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_powerbomb"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_005"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s030_baselab",
+                "actor": "item_missiletank_006"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "powerup_ghostaura"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "itemsphere_gravitysuit"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank",
+                "original_actor": {
+                    "scenario": "s040_aqua",
+                    "actor": "powerup_gravitysuit"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Phantom Cloak acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_OPTIC_CAMOUFLAGE",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_001"
+            },
+            "model": [
+                "powerup_opticcamo"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_opticcamo"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_energytank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_003"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_005"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_energyfragment_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletankplus_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletankplus"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Spin acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_DOUBLE_JUMP",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_SPACE_JUMP",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletankplus_001"
+            },
+            "model": [
+                "powerup_doublejump",
+                "powerup_spacejump"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_SPIN"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_energyfragment_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Grapple Beam acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_GRAPPLE_BEAM",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletankplus_000"
+            },
+            "model": [
+                "powerup_grapplebeam"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_grapplebeam"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_006"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Nothing acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_NONE",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_004"
+            },
+            "model": [
+                "itemsphere"
+            ],
+            "map_icon": {
+                "custom_icon": {
+                    "label": "NOTHING"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_missiletank_007"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s040_aqua",
+                "actor": "item_energytank"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_005"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_001"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "itemsphere_supermissile"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank",
+                "original_actor": {
+                    "scenario": "s050_forest",
+                    "actor": "powerup_supermissile"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletankplus_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_004"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "itemsphere_doublejump"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank",
+                "original_actor": {
+                    "scenario": "s050_forest",
+                    "actor": "powerup_doublejump"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_energyfragment_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_006"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_007"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_003"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_energytank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "powerup_sonar"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank_009"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_energyfragment"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Progressive Suit acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_VARIA_SUIT",
+                        "quantity": 1
+                    }
+                ],
+                [
+                    {
+                        "item_id": "ITEM_GRAVITY_SUIT",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s050_forest",
+                "actor": "item_missiletank"
+            },
+            "model": [
+                "powerup_variasuit",
+                "powerup_gravitysuit"
+            ],
+            "map_icon": {
+                "icon_id": "PROGRESSIVE_SUIT"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s060_quarantine",
+                "actor": "item_energytank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s060_quarantine",
+                "actor": "itemsphere_plasmabeam_000"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank",
+                "original_actor": {
+                    "scenario": "s060_quarantine",
+                    "actor": "powerup_plasmabeam"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s060_quarantine",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s060_quarantine",
+                "actor": "item_missiletank_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s060_quarantine",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "itemsphere_spacejump"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus",
+                "original_actor": {
+                    "scenario": "s070_basesanc",
+                    "actor": "powerup_spacejump"
+                }
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletank_001"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Speed Booster acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_SPEED_BOOSTER",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "powerup_speedbooster"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_speedbooster"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Screw Attack acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_SCREW_ATTACK",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletank_004"
+            },
+            "model": [
+                "powerup_screwattack"
+            ],
+            "map_icon": {
+                "icon_id": "powerup_screwattack"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_energyfragment_002"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_energyfragment_001"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletank_003"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_powerbombtank_001"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_missiletankplus"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletankplus"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletankplus_001"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletank_002"
+            },
+            "model": [
+                "item_powerbombtank"
+            ],
+            "map_icon": {
+                "icon_id": "item_powerbombtank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletankplus_000"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_energyfragment_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_missiletank_005"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s070_basesanc",
+                "actor": "item_energyfragment"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s080_shipyard",
+                "actor": "item_missiletank_000"
+            },
+            "model": [
+                "item_energyfragment"
+            ],
+            "map_icon": {
+                "icon_id": "item_energyfragment"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s080_shipyard",
+                "actor": "item_powerbombtank_000"
+            },
+            "model": [
+                "item_missiletank"
+            ],
+            "map_icon": {
+                "icon_id": "item_missiletank"
+            }
+        },
+        {
+            "pickup_type": "actor",
+            "caption": "Energy Tank acquired.\nEnergy capacity increased by 100.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_ENERGY_TANKS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_actor": {
+                "scenario": "s080_shipyard",
+                "actor": "item_missiletank"
+            },
+            "model": [
+                "item_energytank"
+            ],
+            "map_icon": {
+                "icon_id": "item_energytank"
+            }
+        },
+        {
+            "pickup_type": "emmi",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s080_shipyard",
+                "function": "OnEmmyShipyardAbilityObtained",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/emmyshipyard/charclasses/emmyshipyard.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_POWER_BOMB"
+        },
+        {
+            "pickup_type": "corpius",
+            "caption": "Metroid DNA 1 acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_RANDO_ARTIFACT_1",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s010_cave",
+                "function": "OnCorpiusDeath_CUSTOM",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/scorpius/charclasses/scorpius.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_OPTICAL_CAMO"
+        },
+        {
+            "pickup_type": "emmi",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s010_cave",
+                "function": "OnEmmyCaveDead",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/emmycave/charclasses/emmycave.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_SPIDER_MAGNET"
+        },
+        {
+            "pickup_type": "cutscene",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s040_aqua",
+                "function": "OnHydrogigaDead_CUSTOM",
+                "args": 0
+            }
+        },
+        {
+            "pickup_type": "cutscene",
+            "caption": "Missile+ Tank acquired.\nMissile capacity increased by 10.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 10
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s020_magma",
+                "function": "OnExperimentDeath_CUSTOM",
+                "args": 0
+            }
+        },
+        {
+            "pickup_type": "corex",
+            "caption": "Power Bomb Tank acquired.\nPower Bomb capacity increased by 1.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_POWER_BOMB_MAX",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s070_basesanc",
+                "function": "escue",
+                "args": 2
+            },
+            "pickup_actordef": "actors/characters/core_x_superquetzoa/charclasses/core_x_superquetzoa.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_MULTI_LOCK"
+        },
+        {
+            "pickup_type": "emmi",
+            "caption": "Metroid DNA 3 acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_RANDO_ARTIFACT_3",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s070_basesanc",
+                "function": "OnEmmySancDead",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/emmysanc/charclasses/emmysanc.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_WAVE_BEAM"
+        },
+        {
+            "pickup_type": "emmi",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s020_magma",
+                "function": "OnEmmyMagmaDead",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/emmymagma/charclasses/emmymagma.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_MORPH_BALL"
+        },
+        {
+            "pickup_type": "corex",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s050_forest",
+                "function": "golzuna",
+                "args": 2
+            },
+            "pickup_actordef": "actors/characters/core_x/charclasses/core_x.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_LINE_BOMB"
+        },
+        {
+            "pickup_type": "emmi",
+            "caption": "Energy Part acquired.\nEnergy capacity increased by 25.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_LIFE_SHARDS",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s050_forest",
+                "function": "OnEmmyForestDead",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/emmyforest/charclasses/emmyforest.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_ICE_MISSILE"
+        },
+        {
+            "pickup_type": "emmi",
+            "caption": "Missile Tank acquired.\nMissile capacity increased by 2.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_WEAPON_MISSILE_MAX",
+                        "quantity": 2
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s030_baselab",
+                "function": "OnEmmyBaseLabDead",
+                "args": 0
+            },
+            "pickup_actordef": "actors/characters/emmylab/charclasses/emmylab.bmsad",
+            "pickup_string_key": "GUI_ITEM_ACQUIRED_SPEED_BOOSTER"
+        },
+        {
+            "pickup_type": "cutscene",
+            "caption": "Metroid DNA 2 acquired.",
+            "resources": [
+                [
+                    {
+                        "item_id": "ITEM_RANDO_ARTIFACT_2",
+                        "quantity": 1
+                    }
+                ]
+            ],
+            "pickup_lua_callback": {
+                "scenario": "s020_magma",
+                "function": "OnKraidDeath_CUSTOM",
+                "args": 0
+            }
+        }
+    ],
+    "elevators": [
+        {
+            "teleporter": {
+                "scenario": "s010_cave",
+                "layer": "default",
+                "actor": "LE_Teleport_FromMagma"
+            },
+            "destination": {
+                "scenario": "s010_cave",
+                "actor": "SP_custom_000"
+            },
+            "connection_name": "The Start"
+        },
+        {
+            "teleporter": {
+                "scenario": "s010_cave",
+                "actor": "elevator_baselab_000"
+            },
+            "destination": {
+                "scenario": "s090_skybase",
+                "actor": "elevator_shipyard_000_platform"
+            },
+            "connection_name": "The End"
+        }
+    ],
+    "hints": [
+        {
+            "accesspoint_actor": {
+                "scenario": "s010_cave",
+                "actor": "PRP_CV_AccessPoint001"
+            },
+            "hint_id": "CAVE_1",
+            "text": "This is a single page hint."
+        },
+        {
+            "accesspoint_actor": {
+                "scenario": "s010_cave",
+                "actor": "PRP_CV_AccessPoint002"
+            },
+            "hint_id": "CAVE_2",
+            "text": [
+                "This is a",
+                "multi page",
+                "hint."
+            ]
+        }
+    ],
+    "cosmetic_patches": {
+        "config": {},
+        "lua": {
+            "custom_init": {}
+        },
+        "shield_versions": {}
+    },
+    "tunables": {
+        "AbilityOpticCamouflage": {
+            "iSelectionMode": 1
+        }
+    },
+    "constant_environment_damage": {
+        "heat": 20,
+        "cold": 20,
+        "lava": 20
+    },
+    "game_patches": {},
+    "tile_group_patches": [
+        {
+            "actor": {
+                "scenario": "s010_cave",
+                "sublayer": "breakables",
+                "actor": "breakabletilegroup_053"
+            },
+            "tiletype": "BABYHATCHLING"
+        },
+        {
+            "actor": {
+                "scenario": "s010_cave",
+                "sublayer": "breakables",
+                "actor": "breakabletilegroup_051"
+            },
+            "tiles": [
+                { "tiletype": "MISSILE" },
+                { "tiletype": "POWERBEAM" }
+            ]
+        }
+    ],
+    "actor_patches": {
+        "modify": [
+            {
+                "actor": {
+                    "scenario": "s020_magma",
+                    "actor": "trap_thermal_horizontal_004"
+                },
+                "new_reference": {
+                    "scenario": "s020_magma",
+                    "actor": "trap_thermal_horizontal_custom_000"
+                },
+                "actor_groups": [
+                    "eg_collision_camera_004_Default",
+                    "eg_collision_camera_004_PostXRelease",
+                    "eg_collision_camera_004_Cooldown"
+                ],
+                "modifications": [
+                    {
+                        "path": ["vAng", 2],
+                        "update_to": 3.14159
+                    }
+                ],
+                "make_copy": true
+            },
+            {
+                "actor": {
+                    "scenario": "s020_magma",
+                    "actor": "trap_thermal_horizontal_004"
+                },
+                "new_reference": {
+                    "scenario": "s010_cave",
+                    "actor": "trap_thermal_horizontal_custom_000"
+                },
+                "actor_groups": [
+                    "eg_collision_camera_004_Default",
+                    "eg_collision_camera_004_PostXRelease",
+                    "eg_collision_camera_004_Cooldown"
+                ],
+                "modifications": [
+                    {
+                        "path": ["vPos"],
+                        "update_to": [10300.0, -1700.0, 0.0]
+                    }
+                ],
+                "make_copy": true
+            },
+            {
+                "actor": {
+                    "scenario": "s020_magma",
+                    "actor": "trap_thermal_horizontal_004"
+                },
+                "new_reference": {
+                    "scenario": "s020_magma",
+                    "actor": "trap_thermal_horizontal_custom_001"
+                }
+            },
+            {
+                "actor": {
+                    "scenario": "s020_magma",
+                    "actor": "deviceheat"
+                },
+                "modifications": [
+                    {
+                        "path": ["pComponents", "USABLE", "vThermalDoors", 0, "wpThermalDoor"],
+                        "update_to": "Root:pScenario:rEntitiesLayer:dctSublayers:default:dctActors:trap_thermal_horizontal_custom_001"
+                    }
+                ]
+            },
+            {
+                "actor": {
+                    "scenario": "s010_cave",
+                    "actor_layer": "rSoundsLayer",
+                    "actor": "Area_C_GeneralCaves"
+                },
+                "modifications": [
+                    {
+                        "path": ["pComponents", "ACTIVATABLE", "sLoopSound"],
+                        "update_to": "levels/cave/ambcavevolcano.wav"
+                    }
+                ]
+            },
+            {
+                "actor": {
+                    "scenario": "s010_cave",
+                    "actor_layer": "rLightsLayer",
+                    "sublayer": "cave_000_light",
+                    "actor": "omni_000_13"
+                },
+                "actor_groups": []
+            },
+            {
+                "actor": {
+                    "scenario": "s010_cave",
+                    "actor_layer": "rLightsLayer",
+                    "sublayer": "cave_014_light",
+                    "actor": "spot_014_1"
+                },
+                "modifications": [
+                    {
+                        "path": ["pComponents", "SPOTLIGHT", "bCastShadows"],
+                        "update_to": false
+                    }
+                ]
+            }
+        ],
+        "remove": [
+            {
+                "actor": {
+                    "scenario": "s010_cave",
+                    "actor_layer": "rEntitiesLayer",
+                    "actor": "PRP_DB_CV_006"
+                },
+                "map_category": "mapOccluderGeos"
+            },
+            {
+                "actor": {
+                    "scenario": "s010_cave",
+                    "actor_layer": "rSoundsLayer",
+                    "actor": "Pos_C_Drips_01"
+                }
+            },
+            {
+                "actor": {
+                    "scenario": "s010_cave",
+                    "actor_layer": "rLightsLayer",
+                    "sublayer": "comunication_room_2",
+                    "actor": "cubemap_068"
+                }
+            }
+        ]
+    },
+    "new_spawn_points": [
+        {
+            "new_actor": {
+                "actor": "SP_custom_000",
+                "scenario": "s010_cave"
+            },
+            "location": {
+                "x": 4790.0,
+                "y": -8700.0,
+                "z": 0.0
+            },
+            "collision_camera_name": "collision_camera_000"
+        }
+    ],
+    "layout_uuid": "00000000-0000-1111-0000-000000000000",
+    "mod_compatibility": "ryujinx",
+    "mod_category": "romfs"
+}
