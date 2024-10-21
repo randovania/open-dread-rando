@@ -167,7 +167,7 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
     for new_spawn in spawn_config:
         scenario_name = new_spawn["new_actor"]["scenario"]
         new_actor_name = new_spawn["new_actor"]["actor"]
-        collision_camera_name = new_spawn["collision_camera_name"]
+        collision_camera_name = "eg_" + new_spawn["collision_camera_name"]
         new_spawn_pos = ListContainer(
             (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
 
