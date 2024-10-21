@@ -142,7 +142,7 @@ class PatcherEditor(FileTreeEditor):
         return newActor
 
     def find_type_of_actor(self, scenario_name: str, actordef: str,
-                           actor_layer: ActorLayer = ActorLayer.ENTITIES) -> list[tuple[str, Container]]:
+                           actor_layer: ActorLayer = ActorLayer.ENTITIES) -> list[tuple[str, str, Container]]:
         """
         Get every actor with given actordef in a scenario
 
@@ -191,7 +191,7 @@ class PatcherEditor(FileTreeEditor):
             "actor": actor,
         }
 
-    def build_link(self, sname: str, sublayer: str = "default", actor_layer: ActorLayer = ActorLayer.ENTITIES):
+    def build_link(self, sname: str, sublayer: str = "default", actor_layer: ActorLayer = ActorLayer.ENTITIES) -> str:
         return f"Root:pScenario:{actor_layer.value}:dctSublayers:{sublayer}:dctActors:{sname}"
 
     def get_asset_names_in_folder(self, folder: str) -> typing.Iterator[str]:
