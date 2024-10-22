@@ -201,14 +201,7 @@ def validate(configuration: dict):
     DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
 
 
-def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
-    LOG.info("Will patch files from %s", input_path)
-
-    validate(configuration)
-
-    editor = PatcherEditor(input_path)
-    lua_scripts = LuaEditor()
-
+def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: dict):
     # Copy custom files
     add_custom_files(editor)
     generate_missile_colors(editor)
@@ -238,7 +231,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         elevator.patch_elevators(editor, configuration["elevators"])
 
     # Pickups
-    patch_pickups(editor, lua_scripts, configuration["pickups"], configuration)
+    patch_pickups(editor, lua_editor, configuration["pickups"], configuration)
 
     # Hints
     if "hints" in configuration:
@@ -284,6 +277,18 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     # remote connector disconnect symbol
     patch_sprites(editor)
 
+
+def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
+    LOG.info("Will patch files from %s", input_path)
+
+    validate(configuration)
+
+    editor = PatcherEditor(input_path)
+    lua_editor = LuaEditor()
+
+    # Apply game patches
+    apply_patches(editor, lua_editor, configuration)
+
     out_romfs, out_exefs, exefs_patches = output_paths_for_compatibility(
         output_path,
         configuration["mod_compatibility"],
@@ -301,7 +306,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
         include_depackager(out_exefs)
 
     LOG.info("Saving modified lua scripts")
-    lua_scripts.save_modifications(editor)
+    lua_editor.save_modifications(editor)
 
     LOG.info("Flush modified assets")
     editor.flush_modified_assets()
