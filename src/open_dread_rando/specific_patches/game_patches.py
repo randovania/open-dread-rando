@@ -6,12 +6,10 @@ from open_dread_rando.patcher_editor import PatcherEditor
 _HANUBIA_SHORTCUT_GRAPPLE_BLOCKS = [
     {
         "scenario": "s080_shipyard",
-        "layer": "default",
         "actor": "grapplepulloff1x2_000"
     },
     {
         "scenario": "s080_shipyard",
-        "layer": "default",
         "actor": "grapplepulloff1x2"
     }
 ]
@@ -104,7 +102,6 @@ def _remove_grapple_blocks(editor: PatcherEditor, configuration: dict):
         editor.remove_entity(
             {
                 "scenario": "s080_shipyard",
-                "layer": "default",
                 "actor": "grapplepulloff1x2_001"
             },
             "mapProps"
@@ -137,7 +134,6 @@ def _remove_water_platform_water(editor: PatcherEditor):
     editor.remove_entity(
         {
             "scenario": "s010_cave",
-            "layer": "default",
             "actor": "PRP_CV_watercave05"
         },
         "mapWaterPoolGeos"
@@ -147,7 +143,6 @@ def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
     editor.remove_entity(
         {
             "scenario": "s010_cave",
-            "layer": "default",
             "actor": "PRP_CV_watercave01b"
         },
         "mapWaterPoolGeos"
@@ -157,7 +152,6 @@ def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
         editor.remove_entity(
             {
                 "scenario": "s010_cave",
-                "layer": "default",
                 "actor": "PRP_CV_watercave01a"
             },
             "mapWaterPoolGeos"
@@ -165,7 +159,6 @@ def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
         editor.remove_entity(
             {
                 "scenario": "s010_cave",
-                "layer": "default",
                 "actor": "PRP_DB_CV_003"
             },
             "mapOccluderGeos"
@@ -175,7 +168,7 @@ def _remove_early_cloak_water(editor: PatcherEditor, mode: str):
 def _remove_arbitrary_enky(editor: PatcherEditor, mode: str):
     arbitrary_enky_reference = {
         "scenario": "s010_cave",
-        "layer": "Enemies",
+        "sublayer": "Enemies",
         "actor": "SG_WarLotus_000"
     }
 

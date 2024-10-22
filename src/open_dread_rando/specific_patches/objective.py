@@ -37,7 +37,7 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
 
     # add actors to Itorash and update their position
     for actor in [access_point, ap_platform, ap_trigger]:
-        itorash.actors_for_layer('default')[actor.sName] = actor
+        itorash.actors_for_sublayer('default')[actor.sName] = actor
         itorash.add_actor_to_group('eg_collision_camera_001_Default', actor.sName)
         actor.vPos = [c + offset for c, offset in zip(actor.vPos, new_origin)]
 
@@ -90,7 +90,6 @@ def apply_objective_patches(editor: PatcherEditor, configuration: dict):
 
     quiet_robe_usable = editor.resolve_actor_reference({
         "scenario": "s030_baselab",
-        "layer": "default",
         "actor": "accesspoint_001"
     })
     quiet_robe_usable.pComponents.USABLE.tCaptionList = {
