@@ -20,7 +20,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "mercury-engine-data-structures>=0.24",
+    "mercury-engine-data-structures>=0.33",
     "jsonschema>=4.0.0",
     "json-delta>=2.0.2"
 ]
