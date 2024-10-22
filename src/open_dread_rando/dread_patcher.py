@@ -162,19 +162,19 @@ def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_co
 
 def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
     # create custom spawn point
-    _EXAMPLE_SP = {"scenario": "s010_cave", "layer": "default", "actor": "StartPoint0"}
+    _EXAMPLE_SP = {"scenario": "s010_cave", "actor": "StartPoint0"}
     base_actor = editor.resolve_actor_reference(_EXAMPLE_SP)
     for new_spawn in spawn_config:
         scenario_name = new_spawn["new_actor"]["scenario"]
         new_actor_name = new_spawn["new_actor"]["actor"]
-        collision_camera_name = new_spawn["collision_camera_name"]
+        collision_camera_name = "eg_" + new_spawn["collision_camera_name"]
         new_spawn_pos = ListContainer(
             (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
 
         scenario = editor.get_scenario(scenario_name)
 
         editor.copy_actor(scenario_name, new_spawn_pos, base_actor, new_actor_name)
-        scenario.add_actor_to_entity_groups(collision_camera_name, new_actor_name)
+        scenario.add_actor_to_actor_groups(collision_camera_name, new_actor_name)
 
 
 def add_custom_files(editor: PatcherEditor):

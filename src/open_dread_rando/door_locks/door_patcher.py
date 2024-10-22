@@ -11,7 +11,7 @@ from open_dread_rando.constants import ALL_SCENARIOS
 from open_dread_rando.patcher_editor import PatcherEditor
 
 # copied from existing entity, so we don't have to make a whole shield
-_EXAMPLE_SHIELD = {"scenario": "s010_cave", "layer": "default", "actor": "Door003_missileShield"}
+_EXAMPLE_SHIELD = {"scenario": "s010_cave", "sublayer": "default", "actor": "Door003_missileShield"}
 
 
 class MinimapIconData(Enum):
@@ -337,7 +337,11 @@ class DoorPatcher:
         # make a new RandoShield by popping the lowest actor
         shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, self.get_shield_id(scenario))
 
-        self.editor.copy_actor_groups(scenario, door.sName, shield.sName)
+        self.editor.copy_actor_groups(
+            { "actor": door.sName },
+            { "actor": shield.sName},
+            scenario
+        )
         shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
         shield.vAng[1] = shield.vAng[1] if dir == "L" else -shield.vAng[1]
         if (shield_data is ActorData.SHIELD_WIDE_BEAM):
@@ -370,7 +374,7 @@ class DoorPatcher:
             # we have to cache doors that have shields here and rename them outside the loop,
             # as otherwise it will rename actors in the actor list and confuse the program.
             shielded_doors = []
-            for layer_name, actor_name, actor in list(brfld.all_actors()):
+            for sublayer_name, actor_name, actor in list(brfld.all_actors_in_actor_layer()):
 
                 # this is the door added to the Artaria CU.
                 # For some reason is_door crashes on this so we add a check here.
@@ -414,9 +418,9 @@ class DoorPatcher:
 
             # make new actor, copy its groups, delete it
             brfld = self.editor.get_scenario(scenario)
-            brfld.actors_for_layer('default')[new_id] = shieldActor
-            self.editor.copy_actor_groups(scenario, old_sName, new_id)
-            brfld.actors_for_layer('default').pop(old_sName)
+            brfld.actors_for_sublayer('default')[new_id] = shieldActor
+            self.editor.copy_actor_groups({ "actor": old_sName }, { "actor": new_id }, scenario)
+            brfld.actors_for_sublayer('default').pop(old_sName)
 
             # update the minimap entry as well
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages

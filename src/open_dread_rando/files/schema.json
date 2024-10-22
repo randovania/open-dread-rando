@@ -13,7 +13,8 @@
         "layout_uuid": {
             "description": "An UUID exposed via a global lua variable",
             "type": "string",
-            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "default": "00000000-0000-1111-0000-000000000000"
         },
         "starting_location": {
             "$ref": "#/$defs/actor_reference"
@@ -666,8 +667,7 @@
                                 "type": "array",
                                 "items": {
                                     "type": "string"
-                                },
-                                "default": []
+                                }
                             },
                             "modifications": {
                                 "description": "A list of patches to be applied",
@@ -835,9 +835,22 @@
                 "scenario": {
                     "$ref": "#/$defs/scenario_name"
                 },
+                "actor_layer": {
+                    "type": "string",
+                    "enum": [
+                        "rEntitiesLayer",
+                        "rSoundsLayer",
+                        "rLightsLayer"
+                    ],
+                    "default": "rEntitiesLayer"
+                },
+                "sublayer": {
+                    "type": "string"
+                },
                 "layer": {
                     "type": "string",
-                    "default": "default"
+                    "default": "default",
+                    "deprecated": true
                 },
                 "actor": {
                     "type": "string"
