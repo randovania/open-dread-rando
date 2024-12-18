@@ -47,15 +47,21 @@ class LuaEditor:
             for scenario in ALL_SCENARIOS
         }
 
-    def get_parent_for(self, item_id) -> str:
-        return SPECIFIC_CLASSES.get(item_id, "RandomizerPowerup")
+    def get_parent_for(self, item_id: str, quantity: int) -> str:
+        # coop uses the correct item_id instead of ITEM_NONE but with quantity of 0.
+        # we do not want to use any of the specific classes with quantity = 0
+        if quantity > 0:
+            return SPECIFIC_CLASSES.get(item_id, "RandomizerPowerup")
+        else:
+            return "RandomizerPowerup"
 
     def get_script_class(self, pickup: dict, boss: bool = False, actordef_name: str = "") -> str:
         pickup_resources = pickup["resources"]
         first_resource = pickup_resources[0][0]
+        first_resource_id = first_resource["item_id"]
+        first_resource_quantity = first_resource["quantity"]
 
         if not boss and len(pickup_resources) == 1 and len(pickup_resources[0]) == 1:
-            first_resource_id = first_resource["item_id"]
 
             if "ITEM_RANDO_ARTIFACT_" in first_resource_id:
                 if first_resource_id in self._custom_classes.keys():
@@ -70,7 +76,7 @@ class LuaEditor:
                             [
                                 {
                                     "item_id": lua_util.wrap_string(first_resource_id),
-                                    "quantity": first_resource["quantity"]
+                                    "quantity": first_resource_quantity
                                 }
                             ]
                         ],
@@ -82,7 +88,7 @@ class LuaEditor:
                 return class_name
 
             # Single-item pickup; don't include progressive template
-            return self.get_parent_for(first_resource_id)
+            return self.get_parent_for(first_resource_id, first_resource_quantity)
 
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
@@ -110,7 +116,7 @@ class LuaEditor:
         replacement = {
             "name": class_name,
             "resources": resources,
-            "parent": self.get_parent_for(first_resource["item_id"]),
+            "parent": self.get_parent_for(first_resource_id, first_resource_quantity),
         }
         self.add_custom_class(replacement)
 
