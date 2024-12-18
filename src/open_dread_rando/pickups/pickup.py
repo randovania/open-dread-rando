@@ -113,7 +113,11 @@ class ActorPickup(BasePickup):
 
         item_id: str = "ITEM_NONE"
         first_progression: str = self.pickup["resources"][0][0]["item_id"]
-        if first_progression in {"ITEM_WEAPON_WIDE_BEAM", "ITEM_WEAPON_SUPER_MISSILE"}:
+        first_progression_quantity: int = self.pickup["resources"][0][0]["quantity"]
+        if (
+            first_progression in {"ITEM_WEAPON_WIDE_BEAM", "ITEM_WEAPON_SUPER_MISSILE"}
+            and first_progression_quantity > 0
+        ):
             # the gun doesn't appear to be selected properly on pickup unless we do this
             item_id = first_progression
 
