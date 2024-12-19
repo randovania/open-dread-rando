@@ -633,7 +633,7 @@
                     "default": []
                 },
                 "to_keep": {
-                    "description": "A list of actors not to remove. Use this to keep specific actors from a provided scenario or actor group that",
+                    "description": "A list of actors not to remove. Use this to keep specific actors from a scenario or actor group that has been removed",
                     "type": "array",
                     "items": {
                         "$ref": "#/$defs/actor_reference_with_layer"
