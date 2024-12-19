@@ -546,6 +546,104 @@
             "additionalProperties": false,
             "default": {}
         },
+        "mass_delete_actors": {
+            "description": "Deletes actors en masse",
+            "type": "object",
+            "properties": {
+                "to_remove": {
+                    "type": "array",
+                    "items": {
+                        "examples": [
+                            {
+                                "scenario": "s010_cave",
+                                "actor_layer": "rLightsLayer",
+                                "method": "all"
+                            },
+                            {
+                                "scenario": "s010_cave",
+                                "method": "remove_from_groups",
+                                "actor_groups": [
+                                    "eg_collision_camera_067_Default"
+                                ]
+                            },
+                            {
+                                "scenario": "s030_baselab",
+                                "actor_layer": "rLightsLayer",
+                                "method": "keep_from_groups",
+                                "actor_groups": [
+                                    "lg_collision_camera_011_Default"
+                                ]
+                            }
+                        ],
+                        "type": "object",
+                        "properties": {
+                            "scenario": {
+                                "description": "The scenario to remove actors from",
+                                "$ref": "#/$defs/scenario_name"
+                            },
+                            "actor_layer": {
+                                "description": "The actor layer to remove actors from",
+                                "type": "string",
+                                "enum": [
+                                    "rEntitiesLayer",
+                                    "rSoundsLayer",
+                                    "rLightsLayer"
+                                ],
+                                "default": "rEntitiesLayer"
+                            },
+                            "method": {
+                                "description": "The method for removing actors. all removes all in the scenario, remove_from_groups will remove all actors in the provided actor groups, and keep_from_groups will remove from all actor groups not provided",
+                                "type": "string",
+                                "enum": [
+                                    "all",
+                                    "remove_from_groups",
+                                    "keep_from_groups"
+                                ],
+                                "default": "all"
+                            },
+                            "actor_groups": {
+                                "description": "The actor group the actors are in. Required if method is not all",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": ["scenario"],
+                        "if": {
+                            "anyOf": [
+                                {
+                                    "properties": {
+                                        "method": { "const": "remove_from_groups" }
+                                    },
+                                    "required": ["method"]
+                                },
+                                {
+                                    "properties": {
+                                        "method": { "const": "keep_from_groups" }
+                                    },
+                                    "required": ["method"]
+                                }
+                            ]
+                        },
+                        "then": {
+                            "required": ["actor_groups"]
+                        }
+                    },
+                    "default": []
+                },
+                "to_keep": {
+                    "description": "A list of actors not to remove. Use this to keep specific actors from a provided scenario or actor group that",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/actor_reference_with_layer"
+                    },
+                    "default": []
+                }
+            },
+            "required": ["to_remove"],
+            "default": {}
+        },
         "show_shields_on_minimap": {
             "type": "boolean",
             "description": "Deprecated. Used to remove shields from the minimaps in Door Lock Rando.",

@@ -400,7 +400,8 @@ class DoorPatcher:
                 continue
 
             # get shield actor and cache its sName
-            shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
+            reference = self.editor.reference_for_link(link, scenario)
+            shieldActor = self.editor.resolve_actor_reference(reference)
             old_sName = shieldActor.sName
 
             # skip hdoors (doors where the environment covers one side of the door)
@@ -411,16 +412,18 @@ class DoorPatcher:
             # reclaim old shield id if this is a RandoShield
             self.reclaim_old_shield_id(shieldActor.sName, scenario)
 
-            # grab the lowest open id and rename it
+            # grab the lowest open id
             new_id = self.get_shield_id(scenario)
-            shieldActor.sName = new_id
-            life_comp[link_name] = self.editor.build_link(new_id)
 
             # make new actor, copy its groups, delete it
             brfld = self.editor.get_scenario(scenario)
             brfld.actors_for_sublayer('default')[new_id] = shieldActor
             self.editor.copy_actor_groups({ "actor": old_sName }, { "actor": new_id }, scenario)
-            brfld.actors_for_sublayer('default').pop(old_sName)
+            self.editor.remove_entity(reference, None)
+
+            # actually rename it
+            shieldActor.sName = new_id
+            life_comp[link_name] = self.editor.build_link(new_id)
 
             # update the minimap entry as well
             mapBlockages = self.editor.get_scenario_map(scenario).raw.Root.mapBlockages
