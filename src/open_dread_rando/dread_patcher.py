@@ -29,6 +29,7 @@ from open_dread_rando.pickups.pickup import pickup_object_for
 from open_dread_rando.pickups.split_pickups import patch_split_pickups, update_starting_inventory_split_pickups
 from open_dread_rando.specific_patches import game_patches
 from open_dread_rando.specific_patches.environmental_damage import apply_constant_damage
+from open_dread_rando.specific_patches.mass_delete_actors import mass_delete_actors
 from open_dread_rando.specific_patches.objective import apply_objective_patches
 from open_dread_rando.specific_patches.static_fixes import apply_static_fixes
 from open_dread_rando.validator_with_default import DefaultValidatingDraft7Validator
@@ -270,6 +271,9 @@ def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: d
 
     # Specific game patches
     game_patches.apply_game_patches(editor, configuration.get("game_patches", {}))
+
+    # Mass delete actors
+    mass_delete_actors(editor, configuration["mass_delete_actors"])
 
     # Actor patches
     apply_actor_patches(editor, configuration.get("actor_patches"))
