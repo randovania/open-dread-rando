@@ -1,8 +1,21 @@
-from collections import namedtuple
+import typing
 
 from open_dread_rando.patcher_editor import PatcherEditor
 
-ActorReferenceTuple = namedtuple("ActorReferenceTuple", ["scenario", "actor_layer", "sublayer", "actor"])
+
+class ActorReferenceTuple(typing.NamedTuple):
+    scenario: str
+    actor_layer: str
+    sublayer: str
+    actor: str
+
+    def from_dict(reference: dict[str, str]) -> typing.Self:
+        return ActorReferenceTuple(
+            reference["scenario"],
+            reference["actor_layer"],
+            reference.get("sublayer", reference["layer"]),
+            reference["actor"]
+        )
 
 def _remove_all_actors(editor: PatcherEditor, scenario_name: str, actor_layer: str,
                        to_remove: set[ActorReferenceTuple]) -> None:
@@ -34,15 +47,7 @@ def _remove_actors_not_in_groups(editor: PatcherEditor, scenario_name: str, acto
 def mass_delete_actors(editor: PatcherEditor, configuration: dict) -> None:
     # Sets of tuples will be used to ensure no duplicate entries
     to_remove = set()
-    to_keep = set()
-
-    for reference in configuration["to_keep"]:
-        to_keep.add(ActorReferenceTuple(
-            reference["scenario"],
-            reference["actor_layer"],
-            reference.get("sublayer", reference["layer"]),
-            reference["actor"]
-        ))
+    to_keep = { ActorReferenceTuple.from_dict(reference) for reference in configuration["to_keep"] }
 
     for scenario_config in configuration["to_remove"]:
         scenario_name = scenario_config["scenario"]
