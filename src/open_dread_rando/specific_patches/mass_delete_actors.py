@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 
 from open_dread_rando.patcher_editor import PatcherEditor
@@ -9,7 +11,7 @@ class ActorReferenceTuple(typing.NamedTuple):
     sublayer: str
     actor: str
 
-    def from_dict(reference: dict[str, str]) -> typing.Self:
+    def from_dict(reference: dict[str, str]) -> ActorReferenceTuple:
         return ActorReferenceTuple(
             reference["scenario"],
             reference["actor_layer"],
