@@ -79,8 +79,7 @@ def mass_delete_actors(editor: PatcherEditor, configuration: dict) -> None:
             to_remove.update(new_remove)
             to_keep.update(new_keep)
 
-    for reference in to_keep:
-        to_remove.discard(reference)
+    to_remove.difference_update(to_keep)
 
     for actor in to_remove:
         editor.remove_entity(actor._asdict(), None)
