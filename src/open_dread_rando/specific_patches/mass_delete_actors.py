@@ -15,7 +15,7 @@ class ActorReferenceTuple(typing.NamedTuple):
         return ActorReferenceTuple(
             reference["scenario"],
             reference["actor_layer"],
-            reference.get("sublayer", reference["layer"]),
+            reference.get("sublayer", reference.get("layer")),
             reference["actor"]
         )
 
