@@ -7476,7 +7476,7 @@
                 "scenario": "s010_cave",
                 "actor_layer": "rLightsLayer",
                 "sublayer": "cave_001_light",
-                "actor": "spot_001_01"
+                "actor": "spot_001_1"
             }
         ]
     },
