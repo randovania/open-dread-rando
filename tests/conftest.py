@@ -6,6 +6,8 @@ from pathlib import Path
 import lupa
 import pytest
 
+from open_dread_rando.patcher_editor import PatcherEditor
+
 _FAIL_INSTEAD_OF_SKIP = True
 
 
@@ -54,6 +56,11 @@ function Game.LogWarn() end
 function Game.SetForceSkipCutscenes() end
 """)
     return runtime
+
+
+@pytest.fixture()
+def patcher_editor(dread_path):
+    return PatcherEditor(dread_path)
 
 
 def pytest_addoption(parser):

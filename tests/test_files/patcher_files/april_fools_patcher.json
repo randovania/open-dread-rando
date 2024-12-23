@@ -7448,6 +7448,38 @@
             "{c1}Metroid DNA 4{c0} is guarded by {c2}E.M.M.I.-07PB{c0}."
         ]
     },
+    "mass_delete_actors": {
+        "to_remove": [
+            {
+                "scenario": "s020_magma",
+                "method": "all"
+            },
+            {
+                "scenario": "s010_cave",
+                "actor_layer": "rLightsLayer",
+                "method": "remove_from_groups",
+                "actor_groups": [
+                    "lg_collision_camera_001"
+                ]
+            },
+            {
+                "scenario": "s030_baselab",
+                "actor_layer": "rLightsLayer",
+                "method": "keep_from_groups",
+                "actor_groups": [
+                    "lg_collision_camera_011_Default"
+                ]
+            }
+        ],
+        "to_keep": [
+            {
+                "scenario": "s010_cave",
+                "actor_layer": "rLightsLayer",
+                "sublayer": "cave_001_light",
+                "actor": "spot_001_1"
+            }
+        ]
+    },
     "layout_uuid": "00000000-0000-1111-0000-000000000000",
     "mod_compatibility": "ryujinx",
     "mod_category": "romfs"
