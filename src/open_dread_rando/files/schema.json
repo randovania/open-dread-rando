@@ -1012,6 +1012,7 @@
                 "ITEM_WEAPON_CHARGE_BEAM",
                 "ITEM_WEAPON_DIFFUSION_BEAM",
                 "ITEM_WEAPON_GRAPPLE_BEAM",
+                "ITEM_WEAPON_MISSILE_LAUNCHER",
                 "ITEM_WEAPON_SUPER_MISSILE",
                 "ITEM_WEAPON_ICE_MISSILE",
                 "ITEM_MULTILOCKON",

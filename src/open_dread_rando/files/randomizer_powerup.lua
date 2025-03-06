@@ -550,7 +550,15 @@ end
 RandomizerMissileLauncher = {}
 setmetatable(RandomizerMissileLauncher, {__index = RandomizerPowerup})
 function RandomizerMissileLauncher.OnPickedUp(actor, progression)
-    return pick_up_missile("missile", "ITEM_WEAPON_MISSILE_LAUNCHER", actor, progression)
+    progression = progression or {{{item_id = "ITEM_WEAPON_MISSILE_LAUNCHER", quantity = 1}}}
+    if RandomizerPowerup.HasItem("ITEM_MULTILOCKON") then
+        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_STORM_MISSILE", quantity = 1})
+    end
+
+    local granted = pick_up_missile("missile", "ITEM_WEAPON_MISSILE_LAUNCHER", actor, progression)
+    RandomizerPowerup.DisableInput()
+
+    return granted
 end
 
 RandomizerSuperMissile = {}

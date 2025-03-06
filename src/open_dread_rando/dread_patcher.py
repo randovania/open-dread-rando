@@ -72,7 +72,6 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     inventory.update({
         # TODO: expose shuffling these
         "ITEM_WEAPON_POWER_BEAM": 1,
-        "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
     })
     inventory = update_starting_inventory_split_pickups(inventory)
 
