@@ -417,15 +417,6 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
     gun = samus.components["GUN"]
 
-    missile_launcher_bmsad = editor.get_parsed_asset("actors/weapons/missile/charclasses/missile.bmsad",
-                                                     type_hint=Bmsad)
-    missile_launcher_bmsad.name = "missilelauncher"
-    editor.add_new_asset(
-        "actors/weapons/missilelauncher/charclasses/missilelauncher.bmsad",
-        missile_launcher_bmsad,
-        editor.find_pkgs("actors/weapons/missile/charclasses/missile.bmsad"),
-    )
-
     solo_ice_bmsad = editor.get_parsed_asset("actors/weapons/icemissile/charclasses/icemissile.bmsad",
                                              type_hint=Bmsad)
     solo_ice_bmsad.name = "soloicemissile"
@@ -439,7 +430,6 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
         editor.find_pkgs("actors/weapons/icemissile/charclasses/icemissile.bmsad"),
     )
 
-    samus.sub_actors.append("missilelauncher")
     samus.sub_actors.append("soloicemissile")
 
     missile = AddSecondaryGun(gun.functions[16])
@@ -449,8 +439,6 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
     omega = AddSecondaryGun(gun.functions[20])
 
     missile.main_inventory_item = "ITEM_WEAPON_MISSILE_LAUNCHER"
-    missile.subactor_name = "missilelauncher"
-    missile.priority = 0
 
     solo_super = copy.deepcopy(supers)
     solo_super.name = "SoloSuperMissile"
