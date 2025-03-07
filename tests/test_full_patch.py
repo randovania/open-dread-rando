@@ -18,11 +18,15 @@ def test_export(dread_path, tmp_path, test_files_dir, configuration_path):
     )
     assert len(list(output_path.rglob("*.lc"))) == 33
 
-    ips = sorted(
+    exefs_path = output_path.joinpath("DreadRandovania", "exefs")
+
+    exefs_files = sorted(
         f.relative_to(output_path).as_posix()
-        for f in output_path.joinpath("DreadRandovania", "exefs").glob("*.ips")
+        for f in exefs_path.iterdir() if f.name != ".gitignore"
     )
-    assert ips == [
+    assert exefs_files == [
         "DreadRandovania/exefs/49161D9CCBC15DF944D0B6278A3C446C006B0BE8.ips",
         "DreadRandovania/exefs/646761F643AFEBB379EDD5E6A5151AF2CEF93DC1.ips",
+        "DreadRandovania/exefs/main.npdm",
+        "DreadRandovania/exefs/subsdk9",
     ]
