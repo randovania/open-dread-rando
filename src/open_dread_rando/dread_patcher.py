@@ -4,6 +4,7 @@ import shutil
 import typing
 from pathlib import Path
 
+import open_dread_rando_exlaunch
 from construct import ListContainer
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
@@ -16,7 +17,7 @@ from open_dread_rando.files import files_path
 from open_dread_rando.logger import LOG
 from open_dread_rando.misc_patches import elevator, lua_util
 from open_dread_rando.misc_patches.actor_patcher import apply_actor_patches
-from open_dread_rando.misc_patches.exefs import include_depackager, patch_exefs
+from open_dread_rando.misc_patches.exefs import patch_exefs
 from open_dread_rando.misc_patches.model_patcher import generate_custom_models
 from open_dread_rando.misc_patches.sprite_patches import patch_sprites
 from open_dread_rando.misc_patches.text_patches import apply_text_patches, patch_credits, patch_hints, patch_text
@@ -307,7 +308,7 @@ def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     patch_exefs(exefs_patches, configuration)
 
     if output_format == OutputFormat.ROMFS:
-        include_depackager(out_exefs)
+        open_dread_rando_exlaunch.include_depackager(out_exefs)
 
     LOG.info("Saving modified lua scripts")
     lua_editor.save_modifications(editor)
