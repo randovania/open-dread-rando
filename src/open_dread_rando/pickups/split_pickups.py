@@ -432,36 +432,43 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
 
     samus.sub_actors.append("soloicemissile")
 
+    base = AddSecondaryGun(copy.deepcopy(gun.functions[16]))
     missile = AddSecondaryGun(gun.functions[16])
     supers = AddSecondaryGun(gun.functions[17])
     ice = AddSecondaryGun(gun.functions[18])
     lockon = AddSecondaryGun(gun.functions[19])
     omega = AddSecondaryGun(gun.functions[20])
 
-    missile.main_inventory_item = "ITEM_WEAPON_MISSILE_LAUNCHER"
+    base.subactor_name = ""
+    base.main_inventory_item = "ITEM_FLOOR_SLIDE"
+
+    missile.name = "MissileLauncher"
+    missile.main_inventory_item = "ITEM_WEAPON_SOLO_MISSILE"
+    missile.priority = 1
 
     solo_super = copy.deepcopy(supers)
     solo_super.name = "SoloSuperMissile"
     solo_super.main_inventory_item = "ITEM_WEAPON_SOLO_SUPER_MISSILE"
-    solo_super.priority = 1
+    solo_super.priority = 2
 
     solo_ice = copy.deepcopy(ice)
     solo_ice.name = "SoloIceMissile"
     solo_ice.main_inventory_item = "ITEM_WEAPON_SOLO_ICE_MISSILE"
     solo_ice.subactor_name = "soloicemissile"
     solo_ice.fire_delay = 0.27
-    solo_ice.priority = 2
+    solo_ice.priority = 3
 
     super_ice = copy.deepcopy(ice)
     super_ice.name = "SuperIceMissile"
     super_ice.main_inventory_item = "ITEM_WEAPON_SUPER_ICE_MISSILE"
-    super_ice.priority = 3
+    super_ice.priority = 4
 
     lockon.main_inventory_item = "ITEM_WEAPON_STORM_MISSILE"
 
     omega.main_inventory_item = "ITEM_WEAPON_POWER_BEAM"
 
     return [gun.raw for gun in [
+        base,
         missile,
         solo_super,
         solo_ice,

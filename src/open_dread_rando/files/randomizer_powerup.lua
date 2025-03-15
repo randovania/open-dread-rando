@@ -300,7 +300,6 @@ function RandomizerPowerup.MissileState()
         missile = RandomizerPowerup.HasItem("ITEM_WEAPON_MISSILE_LAUNCHER"),
         super = RandomizerPowerup.HasItem("ITEM_WEAPON_SUPER_MISSILE"),
         ice = RandomizerPowerup.HasItem("ITEM_WEAPON_ICE_MISSILE"),
-        storm = RandomizerPowerup.HasItem("ITEM_MULTILOCKON"),
     }
 end
 
@@ -309,7 +308,7 @@ function RandomizerPowerup.UpdateBeams()
 end
 
 function RandomizerPowerup.UpdateMissiles()
-    RandomizerPowerup._UpdateMissiles(RandomizerPowerup.MissileState(), {})
+    RandomizerPowerup._UpdateMissiles(RandomizerPowerup.MissileState())
 end
 
 function RandomizerPowerup._UpdateBeams(beams)
@@ -354,7 +353,7 @@ function RandomizerPowerup._UpdateBeams(beams)
     return "ITEM_WEAPON_POWER_BEAM"
 end
 
-function RandomizerPowerup._UpdateMissiles(missiles, progression)
+function RandomizerPowerup._UpdateMissiles(missiles)
     -- don't give any missiles without launcher
     if not missiles.missile then return nil end
 
@@ -364,19 +363,17 @@ function RandomizerPowerup._UpdateMissiles(missiles, progression)
     end
     Scenario.SetTunableValue("CTunableIceMissile", "fDamageAmount", ice_damage)
 
-    if missiles.storm then
-        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_STORM_MISSILE", quantity = 1})
-        RandomizerPowerup.DisableInput()
-    end
-
     if missiles.super and missiles.ice then
-        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_SUPER_ICE_MISSILE", quantity = 1})
-    elseif missiles.ice then
-        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_SOLO_ICE_MISSILE", quantity = 1})
-    elseif missiles.super then
-        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_SOLO_SUPER_MISSILE", quantity = 1})
-    -- else
-    --     table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_MISSILE_LAUNCHER", quantity = 1})
+        return "ITEM_WEAPON_SUPER_ICE_MISSILE"
+    end
+    if missiles.ice then
+        return "ITEM_WEAPON_SOLO_ICE_MISSILE"
+    end
+    if missiles.super then
+        return "ITEM_WEAPON_SOLO_SUPER_MISSILE"
+    end
+    if missiles then
+        return "ITEM_WEAPON_SOLO_MISSILE"
     end
 end
 
@@ -446,7 +443,14 @@ end
 RandomizerStormMissile = {}
 setmetatable(RandomizerStormMissile, {__index = RandomizerPowerup})
 function RandomizerStormMissile.OnPickedUp(actor, progression)
-    return pick_up_missile("storm", "ITEM_MULTILOCKON", actor, progression)
+    progression = progression or {{{item_id = "ITEM_MULTILOCKON", quantity = 1}}}
+    if RandomizerPowerup.HasItem("ITEM_WEAPON_MISSILE_LAUNCHER") then
+        table.insert(progression[1], 1, {item_id = "ITEM_WEAPON_STORM_MISSILE", quantity = 1})
+    end
+
+    RandomizerPowerup.ToggleInputsOnPickedUp(
+        actor, progression, "ITEM_MULTILOCKON"
+    )
 end
 
 RandomizerEnergyPart = {}
@@ -522,7 +526,10 @@ local function pick_up_missile(id, item, actor, progression)
     local missiles = RandomizerPowerup.MissileState()
     if #progression == 1 then
         missiles[id] = true
-        RandomizerPowerup._UpdateMissiles(missiles, progression)
+        local to_grant = RandomizerPowerup._UpdateMissiles(missiles)
+        if to_grant ~= nil then
+            table.insert(progression[1], 1, {item_id = to_grant, quantity = 1})
+        end
     else
         -- progressive missiles
         progression = {
