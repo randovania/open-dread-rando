@@ -517,6 +517,21 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
 
+    "powerup_offworld": ModelData(
+        bcmdl_path="actors/items/powerup_offworld/models/offworld.bcmdl",
+        bmsas="actors/items/itemsphere/charclasses/timeline.bmsas",
+        dependencies=(
+            "actors/items/itemsphere/animations/relax.bcskla",
+            "actors/items/itemsphere/collisions/itemsphere.bmscd",
+            "actors/items/itemsphere/fx/impact.bcptl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcmdl",
+            "actors/items/itemsphere/fx/impact_itemsphere.bcskla",
+            "actors/items/itemsphere/fx/imats/impact_itemsphere_itemsphere.bsmat",
+            "actors/items/powerup_offworld/models/offworld.bcmdl",
+            "actors/items/powerup_offworld/models/imats/offworld_mp_opaque_01.bsmat",
+        ),
+    ),
+
     "shield_icemissile": ModelData(
         bcmdl_path="actors/props/shield_icemissile/models/shield_icemissile.bcmdl",
         bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
