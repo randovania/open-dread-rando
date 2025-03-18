@@ -42,7 +42,7 @@ def _modify_actor(editor: PatcherEditor, original_reference: dict[str, str], new
     elif (not is_in_place and
           original_reference["scenario"] == new_reference["scenario"] and
           original_reference["actor_layer"] == new_actor_layer):
-        editor.copy_actor_groups(original_reference, new_reference, scenario.name)
+        editor.copy_actor_groups(original_reference, new_reference, scenario.name, new_actor_layer)
 
     if not is_in_place and not make_copy:
         editor.remove_entity(original_reference, None)
