@@ -3,6 +3,7 @@ from __future__ import annotations
 import dataclasses
 from typing import TYPE_CHECKING
 
+from mercury_engine_data_structures.common_types import Vec2
 from mercury_engine_data_structures.formats import Bmmdef
 
 from open_dread_rando.constants import ALL_SCENARIOS
@@ -18,13 +19,14 @@ class MapIcon:
     coords: tuple[int, int]
     label: str
     disabled_id: str = 'ItemAdquired'
-    offset: tuple[int, int] = (0, 0)
+    offset: Vec2 |  None = None
     auto_scale: bool = True
     is_global: bool = True
     full_zoom_scale: bool = True
     string_key: str = dataclasses.field(init=False)
 
     def __post_init__(self):
+        self.offset = self.offset if self.offset else Vec2(0.0, 0.0)
         object.__setattr__(self, "string_key", f"MAP_ICON_{self.icon_id}")
 
     def add_to_defs(self, bmmdef: Bmmdef, editor: PatcherEditor):
@@ -254,7 +256,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(1,3),
         disabled_id="BlockageDisabledL",
         label="ICE MISSILE COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageIceR": MapIcon(
@@ -262,7 +264,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(1,3),
         disabled_id="BlockageDisabledR",
         label="ICE MISSILE COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageDiffusionL": MapIcon(
@@ -270,7 +272,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(3,3),
         disabled_id="BlockageDisabledL",
         label="DIFFUSION BEAM COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageDiffusionR": MapIcon(
@@ -278,7 +280,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(3,3),
         disabled_id="BlockageDisabledR",
         label="DIFFUSION BEAM COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageStormL": MapIcon(
@@ -286,7 +288,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5,3),
         disabled_id="BlockageDisabledL",
         label="STORM MISSILE COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageStormR": MapIcon(
@@ -294,7 +296,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5,3),
         disabled_id="BlockageDisabledR",
         label="STORM MISSILE COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageScrewL": MapIcon(
@@ -302,7 +304,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5,1),
         disabled_id="BlockageDisabledL",
         label="SCREW ATTACK COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageScrewR": MapIcon(
@@ -310,7 +312,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5,1),
         disabled_id="BlockageDisabledR",
         label="SCREW ATTACK COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageBombL": MapIcon(
@@ -318,7 +320,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(7,3),
         disabled_id="BlockageDisabledL",
         label="BOMB COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageBombR": MapIcon(
@@ -326,7 +328,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(7,3),
         disabled_id="BlockageDisabledR",
         label="BOMB COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageCrossBombL": MapIcon(
@@ -334,7 +336,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(9,3),
         disabled_id="BlockageDisabledL",
         label="CROSS BOMB COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageCrossBombR": MapIcon(
@@ -342,7 +344,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(9,3),
         disabled_id="BlockageDisabledR",
         label="CROSS BOMB COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockagePowerBombL": MapIcon(
@@ -350,7 +352,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(11,3),
         disabled_id="BlockageDisabledL",
         label="POWER BOMB COVER",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockagePowerBombR": MapIcon(
@@ -358,7 +360,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(11,3),
         disabled_id="BlockageDisabledR",
         label="POWER BOMB COVER",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageClosedL": MapIcon(
@@ -366,7 +368,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5,1),
         disabled_id="BlockageDisabledL",
         label="ACCESS CLOSED",
-        offset=(-0.800000011920929, -0.4000000059604645),
+        offset=Vec2(-0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
     "BlockageClosedR": MapIcon(
@@ -374,7 +376,7 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5,1),
         disabled_id="BlockageDisabledR",
         label="ACCESS CLOSED",
-        offset=(0.800000011920929, -0.4000000059604645),
+        offset=Vec2(0.800000011920929, -0.4000000059604645),
         auto_scale=False
     ),
 }
