@@ -2,6 +2,7 @@ import functools
 from enum import Enum
 
 from construct import Container
+from mercury_engine_data_structures.common_types import Vec3
 from mercury_engine_data_structures.formats import Bmmap, Bmsad
 
 from open_dread_rando.files import templates_path
@@ -151,9 +152,9 @@ class ActorPickup(BasePickup):
                 new_template.components = components
 
             if selected_model_data.transform is not None:
-                model_updater.fields.vInitScale = list(selected_model_data.transform.scale)
-                model_updater.fields.vInitPosWorldOffset = list(selected_model_data.transform.position)
-                model_updater.fields.vInitAngWorldOffset = list(selected_model_data.transform.angle)
+                model_updater.fields.vInitScale = Vec3(*selected_model_data.transform.scale)
+                model_updater.fields.vInitPosWorldOffset = Vec3(*selected_model_data.transform.position)
+                model_updater.fields.vInitAngWorldOffset = Vec3(*selected_model_data.transform.angle)
 
             # Animation/BMSAS
             action_set_refs = list(new_template.action_set_refs)
