@@ -460,6 +460,8 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
 
     lockon.main_inventory_item = "ITEM_WEAPON_STORM_MISSILE"
 
+    omega.main_inventory_item = "ITEM_WEAPON_POWER_BEAM"
+
     return [gun.raw for gun in [
         missile,
         solo_super,
