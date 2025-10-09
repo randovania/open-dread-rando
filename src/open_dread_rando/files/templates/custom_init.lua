@@ -3,7 +3,8 @@ Game.ImportLibrary("system/scripts/init_original.lua")
 local initOk, errorMsg = pcall(function()
 
 RemoteLua = RemoteLua or {
-    -- defined by exlaunch
+    -- defined by open-dread-rando-exlaunch
+    -- Somewhere around here: https://github.com/randovania/open-dread-rando-exlaunch/blob/main/source/program/main.cpp#L264
     Init = function() end,
     Update = function() end,
     SendLog = function(message) end,
@@ -74,6 +75,7 @@ Init.sLayoutUUID = TEMPLATE("layout_uuid")
 Init.tMaxGameProgressStats = {
     NumTanksPickedUp = 149
 }
+Init.bBeatenSinceLastReboot = false
 
 local preViewedCutscenes = {
     "CutScenePlayed[cutscenes/0001gameintro_arrivalatrium/0001gameintro_arrivalatrium.bmscu]",

@@ -417,6 +417,8 @@ function s080_shipyard.OnEnter_trigger_EndGame(_ARG_0_, _ARG_1_)
 
   local oActor2 = Game.GetActor("cutsceneplayer_112")
   if oActor2 ~= nil then
+    Init.bBeatenSinceLastReboot = true
+    RL.UpdateRDVClient(false)
     oActor2.CUTSCENE:LaunchCutsceneImmediate()
   end
 end
