@@ -88,6 +88,11 @@ ALL_ICONS: dict[str, MapIcon | str] = {
         coords=(5, 6),
         label="GRAPPLE BEAM"
     ),
+    "powerup_missile": MapIcon(
+        icon_id="ItemMissileLauncher",
+        coords=(10, 5),
+        label="MISSILE LAUNCHER"
+    ),
     "powerup_supermissile": MapIcon(
         icon_id="ItemSuperMissile",
         coords=(6, 6),
