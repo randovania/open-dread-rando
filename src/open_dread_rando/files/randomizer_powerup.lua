@@ -374,8 +374,9 @@ function RandomizerPowerup._UpdateMissiles(missiles)
     if missiles.super then
         return "ITEM_WEAPON_SOLO_SUPER_MISSILE"
     end
-
-    return "ITEM_WEAPON_MISSILE_LAUNCHER"
+    if missiles then
+        return "ITEM_WEAPON_SOLO_MISSILE"
+    end
 end
 
 -- Main PBs
