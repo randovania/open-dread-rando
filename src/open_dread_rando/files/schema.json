@@ -447,6 +447,16 @@
             "default": false,
             "description": "When true, the game will start a socket that receives lua code to run"
         },
+        "enable_logging": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, the Game.LogWarn function will be patched to write actual debug logs (viewable in some emulators). Requires exlaunch."
+        },
+        "skip_item_popups": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, item acquisition popups will be replaced by \"async\" messages at the top of the screen. Requires exlaunch."
+        },
         "constant_environment_damage": {
             "description": "Each property, when not null, will change the damage from that type to be that much per second",
             "default": {},

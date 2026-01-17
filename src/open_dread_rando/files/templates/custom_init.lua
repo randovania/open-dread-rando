@@ -20,6 +20,16 @@ end
 
 RL = RemoteLua
 
+-- OdrDebug stub (real lib is defined by open-dread-rando-exlaunch)
+OdrDebug = OdrDebug or {
+    SetLoggingEnabled = function(_) end,
+}
+
+-- OdrPickups stub (real lib is defined by open-dread-rando-exlaunch)
+OdrPickups = OdrPickups or {
+    SetItemPopupsEnabled = function(_) end,
+}
+
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
 push_debug_print_override = push_debug_print_override or function() end
 pop_debug_print_override = pop_debug_print_override or function() end
@@ -45,6 +55,14 @@ if type(orig_update) == "function" then
         orig_update()
         pop_debug_print_override()
     end
+end
+
+if TEMPLATE("enable_logging") then
+    OdrDebug.SetLoggingEnabled(true)
+end
+
+if TEMPLATE("skip_item_popups") then
+    OdrPickups.SetItemPopupsEnabled(false)
 end
 
 Init.tNewGameInventory = TEMPLATE("new_game_inventory")
