@@ -50,8 +50,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
     enable_remote_lua: bool = configuration.get("enable_remote_lua", False)
-    enable_logging: bool = configuration["enable_logging"]
-    skip_item_popups: bool = configuration["skip_item_popups"]
+    enable_logging: bool = configuration.get("enable_logging", False)
+    skip_item_popups: bool = configuration.get("skip_item_popups", False)
 
     energy_per_tank = configuration["energy_per_tank"]
     energy_per_part = energy_per_tank / 4
