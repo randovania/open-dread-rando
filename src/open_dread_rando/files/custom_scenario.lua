@@ -472,7 +472,9 @@ function Scenario.ShowAsyncPopup(text, time)
     Scenario.ShowingPopup = true
     Game.LogWarn(0, "Showing text '"..text.."' for "..time.." seconds")
 
-    GUI.SetProperties(Scenario.PopupLabel, { Text = text, Visible = true })
+    GUI.SetProperties(Scenario.PopupLabel, { Visible = true })
+    GUI.SetLabelText(Scenario.PopupLabel, text)
+    Scenario.PopupLabel:ForceRedraw()
     Scenario.hideSFID = Game.AddGUISF(time, "Scenario.HideAsyncPopup", "")
     Scenario.showNextSFID = nil
 end
