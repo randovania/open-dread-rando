@@ -3,12 +3,7 @@ DeathCounter = DeathCounter or {
 	newPlayerDeathCount = nil,
 }
 
-function DeathCounter.Init()
-	if DeathCounter.ui then
-		DeathCounter.ui:Destroy()
-		DeathCounter.ui = nil
-	end
-
+function DeathCounter.Init(panel)
 	if not DeathCounter.didPatchOnPlayerDead then
 		-- Patch the "DamagePlants.OnPlayerDeath" function, which is unused in Dread, to detect when the player has died
 		local original_OnPlayerDead = DamagePlants.OnPlayerDead
@@ -24,41 +19,8 @@ function DeathCounter.Init()
 		DeathCounter.didPatchOnPlayerDead = true
 	end
 
-	local hud = GUI.GetDisplayObject("IngameMenuRoot.iconshudcomposition")
-	local ui = GUILib("DeathCounter", hud)
-	local container = ui:AddContainer("Content", {
-		X = 0.025,
-		Y = 0.1975,
-		SizeX = 0.2,
-		SizeY = 0.04,
-	})
-
-	-- Create background
-	container:AddSprite("Background", "HUD_TILESET/BACKGROUND", {
-		SizeX = 0.1,
-		SizeY = 0.04,
-	})
-	container:AddSprite("Frame_top", "HUD_TILESET/FRAME_TOP", {
-		X = -0.0005,
-		Y = -0.0005,
-		SizeX = 0.05,
-		SizeY = 0.015,
-		ColorR = 0.8773584961891174,
-		ColorG = 0.8773584961891174,
-		ColorB = 0.8773584961891174,
-	})
-
-	local label = container:AddLabel("DeathCounter_Label", "Deaths: 0", {
-		X = 0.0075,
-		Y = 0.0,
-		SizeX = 0.2,
-		SizeY = 0.04,
-		Font = "digital_small",
-        Autosize = false,
-	})
-
-	DeathCounter.ui = ui
-	DeathCounter.label = label
+	GUI.SetProperties(panel, { Visible = true })
+	DeathCounter.label = panel:FindChild("DeathCounter_Label")
 	DeathCounter.Update()
 end
 
@@ -90,5 +52,6 @@ function DeathCounter.Update()
 		Game.LogWarn(0, ("Got %s back from Rando_PlayerDeathCount"):format(tostring(deathCount)))
 	end
 
-	label:SetText("Deaths: " .. deathCount)
+	GUI.SetLabelText(label, "Deaths: " .. deathCount )
+	label:ForceRedraw()
 end
