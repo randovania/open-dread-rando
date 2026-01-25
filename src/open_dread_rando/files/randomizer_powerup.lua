@@ -240,6 +240,8 @@ function RandomizerPowerup.CheckArtifacts(resource)
         GUI.AddEmmyMissionLogEntry("#MLOG_" .. resource.item_id)
     end
 
+    Scenario.UpdateHudDnaCount()
+
     -- check for all artifact items, which are numbered. if all are collected, grant metroidnization
     for i=1, Init.iNumRequiredArtifacts do
         if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_"..i) == 0 then return end

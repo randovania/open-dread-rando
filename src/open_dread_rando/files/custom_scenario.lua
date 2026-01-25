@@ -6,6 +6,7 @@ Game.DoFile("system/scripts/guilib.lua")
 Game.DoFile("system/scripts/death_counter.lua")
 Game.DoFile("system/scripts/room_names.lua")
 Game.DoFile("system/scripts/disconnect_gui.lua")
+Game.DoFile("system/scripts/custom_samus_gui.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -306,7 +307,13 @@ function Scenario.OnLoadScenarioFinished()
         Scenario.checkConnectionSFID = Game.AddGUISF(2, "Scenario.CheckConnectionState", "")
     end
 
-    Scenario.InitGui()
+    local guiSuccess, guiError = pcall(Scenario.InitGui)
+
+    if not guiSuccess then
+        Game.LogWarn(0, "Failed to initialize GUI:")
+        Game.LogWarn(0, tostring(guiError))
+    end
+
     Scenario.ShowingPopup = false
     Scenario.ShowNextAsyncPopup()
 
@@ -426,18 +433,51 @@ function Scenario.InitGui()
 
     -- Grab references to the individual objects
     Scenario.PopupLabel = Scenario.RandoUI:FindDescendant("PopupPanel.PopupLabel")
-    Scenario.DeathCounterPanel = Scenario.RandoUI:FindDescendant("DeathCounterPanel")
+    Scenario.ExtraInfoPanel = Scenario.RandoUI:FindDescendant("ExtraInfoPanel")
+    Scenario.DnaCountLabel = Scenario.RandoUI:FindDescendant("ExtraInfoPanel.DNA_Label")
     Scenario.RoomNamesPanel = Scenario.RandoUI:FindDescendant("RoomNamesPanel")
     Scenario.DisconnectPanel = Scenario.RandoUI:FindDescendant("DisconnectPanel")
 
     -- Set initial UI state
+    local hasRequiredDna = Init.iNumRequiredArtifacts > 0
+    local hasDeathCounter = Init.bEnableDeathCounter
+    local showExtraInfo = hasRequiredDna or hasDeathCounter
+
     GUI.SetProperties(Scenario.PopupLabel, { Visible = false })
-    GUI.SetProperties(Scenario.DeathCounterPanel, { Visible = false })
+    GUI.SetProperties(Scenario.ExtraInfoPanel, { Visible = showExtraInfo })
     GUI.SetProperties(Scenario.RoomNamesPanel, { Visible = false })
     GUI.SetProperties(Scenario.DisconnectPanel, { Visible = false })
 
-    if Init.bEnableDeathCounter then
-        DeathCounter.Init(Scenario.DeathCounterPanel)
+    if hasDeathCounter then
+        DeathCounter.Init(Scenario.ExtraInfoPanel)
+
+        if not hasRequiredDna then
+            -- We need to move the death counter icon and label up to where the DNA would normally be shown.
+            -- Unfortunately, there doesn't seem to be a way to *read back* GUI object properties, so we
+            -- have to hard-code the values based on what's in the BMSCP instead of just copying them from
+            -- the DNA elements.
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Y = 0.01453613 })
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { Y = 0.06231394 })
+        end
+    else
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Visible = false })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { Visible = false })
+    end
+
+    if hasRequiredDna then
+        Scenario.UpdateHudDnaCount()
+    else
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DNA_Icon"), { Visible = false })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DNA_Label"), { Visible = false })
+    end
+
+    if not hasDeathCounter or not hasRequiredDna then
+        -- Toggle the "extra info" panel to the short version
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Background"), { Visible = false })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Line_Left"), { Visible = false })
+
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Background_Short"), { Visible = true })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Line_Left_Short"), { Visible = true })
     end
 
     if Init.bEnableRoomIds then
@@ -447,6 +487,16 @@ function Scenario.InitGui()
     if Init.sLayoutUUID ~= Scenario.INVALID_UUID then
         DisconnectGui.Init(Scenario.DisconnectPanel)
     end
+
+    -- The Samus UI isn't always available (it's only accessible when open), so we have to update it
+    -- using a timer. The RandoSamusGui class will try to find it, and create/update it as needed
+    -- while the Samus menu is open.
+    Game.AddGUISF(0, Scenario.UpdateSamusUI, "")
+end
+
+function Scenario.UpdateSamusUI()
+    RandoSamusGui.Update()
+    Game.AddGUISF(1, Scenario.UpdateSamusUI, "")
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
@@ -494,6 +544,22 @@ end
 
 function Scenario.UpdateRoomName(new_subarea)
     RoomNameGui.Update(new_subarea)
+end
+
+function Scenario.UpdateHudDnaCount()
+    local currentDnaCount = 0
+    local requiredDnaCount = Init.iNumRequiredArtifacts
+
+    for i = 1, Init.iNumRequiredArtifacts do
+        if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_" .. i) > 0 then
+            currentDnaCount = currentDnaCount + 1
+        end
+    end
+
+    local dnaText = ("%d / %d"):format(currentDnaCount, requiredDnaCount)
+
+    GUI.SetLabelText(Scenario.DnaCountLabel, dnaText)
+    Scenario.DnaCountLabel:ForceRedraw()
 end
 
 function Scenario.UpdateNumTanksMax(num_locs)

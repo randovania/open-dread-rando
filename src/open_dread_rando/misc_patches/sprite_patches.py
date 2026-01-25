@@ -6,17 +6,31 @@ from open_dread_rando.patcher_editor import PatcherEditor
 
 def patch_sprites(editor: PatcherEditor):
     """
-    Patches a sprite to the hud tileset for a disconnect symbol
+    Adds some custom sprites to the HUD sprite sheet
 
     :param editor: the PatcherEditor
     """
     hud_bmsss = editor.get_file("gui/scripts/sprites_hud_tileset.bmsss", Bmsss)
-    # position in bctex is (446, 6) with 59x59 pixels in a 512x512 pixels tile
-    cont = Container(
-        sID="DISCONNECT",
+    hud_tileset = hud_bmsss.raw.Root.mapSpriteSheets.HUD_TILESET
+
+    # Disconnect icon for multiworld
+    _add_sprite(hud_tileset, "DISCONNECT", (446, 6), (59, 59))
+    # Death counter icon
+    _add_sprite(hud_tileset, "DEATHS", (462, 67), (48, 48))
+    # DNA count icon
+    _add_sprite(hud_tileset, "DNA", (462, 118), (48, 48))
+    # Speed upgrade icon for Samus menu
+    _add_sprite(hud_tileset, "SPEED_UPGRADE", (414, 67), (48, 48))
+    # Flash upgrade icon for Samus menu
+    _add_sprite(hud_tileset, "FLASH_UPGRADE", (414, 118), (48, 48))
+
+def _add_sprite(tileset, name: str, pos: tuple[int, int], size: tuple[int, int]):
+    # texture base size is 512x512 pixels
+    spriteItem = Container(
+        sID=name,
         oTexUVs=Container(
-            v2Offset=ListContainer([446 / 512, 6 / 512]),
-            v2Scale=ListContainer([59 / 512, 59 / 512])
+            v2Offset=ListContainer([pos[0] / 512, pos[1] / 512]),
+            v2Scale=ListContainer([size[0] / 512, size[1] / 512])
         )
     )
-    hud_bmsss.raw.Root.mapSpriteSheets.HUD_TILESET.vecItems.append(cont)
+    tileset.vecItems.append(spriteItem)
