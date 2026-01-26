@@ -187,12 +187,12 @@ function RandoSamusGui.UpdateResourceCounts()
     local nextIcon = 1
     local nextLabel = 1
 
-    -- Hide everything at first
+    -- Hide everything at first, and reset label colors
     for _, icon in ipairs(icons) do
         GUI.SetProperties(icon, { Visible = false })
     end
     for _, label in ipairs(labels) do
-        GUI.SetProperties(label, { Visible = false })
+        GUI.SetProperties(label, { Visible = false, ColorR = "1.0", ColorG = "1.0", ColorB = "1.0" })
     end
 
     -- DNA
@@ -211,9 +211,16 @@ function RandoSamusGui.UpdateResourceCounts()
 
         if Exists(icon) and Exists(label) then
             local countText = ("%d / %d"):format(currentDnaCount, Init.iNumRequiredArtifacts)
+            local haveAllDna = currentDnaCount >= Init.iNumRequiredArtifacts
 
             GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/DNA" })
-            GUI.SetProperties(label, { Visible = true })
+            GUI.SetProperties(label, {
+                Visible = true,
+                -- Text is light red when all DNA are acquired
+                ColorR = "1.0",
+                ColorG = haveAllDna and "0.5" or "1.0",
+                ColorB = haveAllDna and "0.5" or "1.0",
+            })
             GUI.SetLabelText(label, countText)
             label:ForceRedraw()
         end

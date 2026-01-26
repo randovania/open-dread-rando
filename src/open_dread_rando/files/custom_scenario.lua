@@ -549,7 +549,14 @@ function Scenario.UpdateHudDnaCount()
     end
 
     local dnaText = ("%d / %d"):format(currentDnaCount, requiredDnaCount)
+    local haveAllDna = currentDnaCount >= requiredDnaCount
 
+    -- Text is light red when all DNA are acquired
+    GUI.SetProperties(Scenario.DnaCountLabel, {
+        ColorR = "1.0",
+        ColorG = haveAllDna and "0.5" or "1.0",
+        ColorB = haveAllDna and "0.5" or "1.0",
+    })
     GUI.SetLabelText(Scenario.DnaCountLabel, dnaText)
     Scenario.DnaCountLabel:ForceRedraw()
 end
