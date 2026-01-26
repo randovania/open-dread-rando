@@ -104,6 +104,7 @@ _PROJECT_MEMBERS = {
         "SkyTheLucario",
         "tezar tantular",
         "hyperbola0",
+        "Font Awesome",
     ],
     "     ": [
         "With contributions from many others.",
