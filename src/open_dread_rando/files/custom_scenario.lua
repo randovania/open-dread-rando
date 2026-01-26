@@ -488,15 +488,7 @@ function Scenario.InitGui()
         DisconnectGui.Init(Scenario.DisconnectPanel)
     end
 
-    -- The Samus UI isn't always available (it's only accessible when open), so we have to update it
-    -- using a timer. The RandoSamusGui class will try to find it, and create/update it as needed
-    -- while the Samus menu is open.
-    Game.AddGUISF(0, Scenario.UpdateSamusUI, "")
-end
-
-function Scenario.UpdateSamusUI()
-    RandoSamusGui.Update()
-    Game.AddGUISF(1, Scenario.UpdateSamusUI, "")
+    RandoSamusGui.Init()
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()

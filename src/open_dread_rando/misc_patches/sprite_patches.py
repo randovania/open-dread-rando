@@ -23,6 +23,12 @@ def patch_sprites(editor: PatcherEditor):
     _add_sprite(hud_tileset, "SPEED_UPGRADE", (414, 67), (48, 48))
     # Flash upgrade icon for Samus menu
     _add_sprite(hud_tileset, "FLASH_UPGRADE", (414, 118), (48, 48))
+    # Small Plasma Beam icon to show on the Power Beam list item of the Samus menu (for split beams)
+    _add_sprite(hud_tileset, "PLASMA_BEAM", (413, 0), (32, 32))
+    # Small Wide Beam icon to show on the Power Beam list item of the Samus menu (for split beams)
+    _add_sprite(hud_tileset, "WIDE_BEAM", (413, 32), (32, 32))
+    # Small Super Missile icon to show on the Power Beam list item of the Samus menu (for split beams)
+    _add_sprite(hud_tileset, "SUPER_MISSILE", (381, 0), (32, 32))
 
 def _add_sprite(tileset, name: str, pos: tuple[int, int], size: tuple[int, int]):
     # texture base size is 512x512 pixels
