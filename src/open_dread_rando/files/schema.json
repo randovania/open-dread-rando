@@ -275,6 +275,16 @@
             "type": "boolean",
             "default": false
         },
+        "has_flash_upgrades": {
+            "description": "Whether or not there are Flash Shift Upgrade items that can be collected",
+            "type": "boolean",
+            "default": false
+        },
+        "has_speed_upgrades": {
+            "description": "Whether or not there are Speed Booster Upgrade items that can be collected",
+            "type": "boolean",
+            "default": false
+        },
         "hints": {
             "type": "array",
             "items": {
@@ -338,10 +348,15 @@
                         "custom_init": {
                             "type": "object",
                             "properties": {
+                                "show_dna_in_hud": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Shows a count of how many DNA have been collected, and the total number required, in the HUD"
+                                },
                                 "enable_death_counter": {
                                     "type": "boolean",
                                     "default": false,
-                                    "description": "Enables an in-game death counter shown in the player's HUD"
+                                    "description": "Shows a count of how many times the player has died in the HUD"
                                 },
                                 "enable_room_name_display": {
                                     "type": "string",

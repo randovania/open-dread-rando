@@ -156,7 +156,7 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
     local hasFlashShift = RandomizerPowerup.GetItemAmount("ITEM_GHOST_AURA") > 0
     local flashUpgradeCount = RandomizerPowerup.GetItemAmount("ITEM_UPGRADE_FLASH_SHIFT_CHAIN")
 
-    if hasFlashShift or flashUpgradeCount > 0 then
+    if Init.bHasFlashUpgrades and (hasFlashShift or flashUpgradeCount > 0) then
         -- The flash shift upgrade icon is shown if the player has collected any, OR if they have flash shift itself
         local icon = icons[nextIcon]
         local label = labels[nextLabel]
@@ -176,7 +176,7 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
     local hasSpeedBooster = RandomizerPowerup.GetItemAmount("ITEM_SPEED_BOOSTER") > 0
     local speedUpgradeCount = RandomizerPowerup.GetItemAmount("ITEM_UPGRADE_SPEED_BOOST_CHARGE")
 
-    if hasSpeedBooster or speedUpgradeCount > 0 then
+    if Init.bHasSpeedUpgrades and (hasSpeedBooster or speedUpgradeCount > 0) then
         -- The speed booster upgrade icon is shown if the player has collected any, OR if they have speed booster itself
         local icon = icons[nextIcon]
         local label = labels[nextLabel]

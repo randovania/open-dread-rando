@@ -439,39 +439,39 @@ function Scenario.InitGui()
     Scenario.DisconnectPanel = Scenario.RandoUI:FindDescendant("DisconnectPanel")
 
     -- Set initial UI state
-    local hasRequiredDna = Init.iNumRequiredArtifacts > 0
-    local hasDeathCounter = Init.bEnableDeathCounter
-    local showExtraInfo = hasRequiredDna or hasDeathCounter
+    local showDnaInHud = Init.bShowDnaInHud and Init.iNumRequiredArtifacts > 0
+    local showDeathCounter = Init.bEnableDeathCounter
+    local showExtraInfo = showDnaInHud or showDeathCounter
 
     GUI.SetProperties(Scenario.PopupLabel, { Visible = false })
     GUI.SetProperties(Scenario.ExtraInfoPanel, { Visible = showExtraInfo })
     GUI.SetProperties(Scenario.RoomNamesPanel, { Visible = false })
     GUI.SetProperties(Scenario.DisconnectPanel, { Visible = false })
 
-    if hasDeathCounter then
+    if showDeathCounter then
         DeathCounter.Init(Scenario.ExtraInfoPanel)
 
-        if not hasRequiredDna then
-            -- We need to move the death counter icon and label up to where the DNA would normally be shown.
-            -- Unfortunately, there doesn't seem to be a way to *read back* GUI object properties, so we
-            -- have to hard-code the values based on what's in the BMSCP instead of just copying them from
-            -- the DNA elements.
-            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Y = 0.01453613 })
-            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { Y = 0.06231394 })
+        if not showDnaInHud then
+            -- Need to move the death counter icon and label up to where the DNA would normally be shown
+            local dnaIconY = Scenario.ExtraInfoPanel:FindChild("DNA_Icon"):_Y_GetterFunction()
+            local dnaLabelY = Scenario.ExtraInfoPanel:FindChild("DNA_Label"):_CenterY_GetterFunction()
+
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Y = dnaIconY })
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { CenterY = dnaLabelY })
         end
     else
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Visible = false })
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { Visible = false })
     end
 
-    if hasRequiredDna then
+    if showDnaInHud then
         Scenario.UpdateHudDnaCount()
     else
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DNA_Icon"), { Visible = false })
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DNA_Label"), { Visible = false })
     end
 
-    if not hasDeathCounter or not hasRequiredDna then
+    if not showDeathCounter or not showDnaInHud then
         -- Toggle the "extra info" panel to the short version
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Background"), { Visible = false })
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Line_Left"), { Visible = false })
