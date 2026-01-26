@@ -2,7 +2,26 @@ Game.ImportLibrary("system/scripts/utils.lua", false)
 
 RandoSamusGui = RandoSamusGui or {}
 
-RandoSamusGui.fUpdateInterval = 4 / 60 -- Every 4 frames = 15 FPS
+local FAST_UPDATE_INTERVAL = 4 / 60 -- Every 4 frames at 60fps
+local SLOW_UPDATE_INTERVAL = 30 / 60 -- Twice a second
+
+RandoSamusGui.fUpdateInterval = SLOW_UPDATE_INTERVAL
+RandoSamusGui.iCallbackId = -1
+RandoSamusGui.customComposition = nil
+RandoSamusGui.samusMenu = nil
+RandoSamusGui.icons = {}
+RandoSamusGui.labels = {}
+RandoSamusGui.itemDetails = {
+    beams = {
+        background = nil,
+        wideIcon = nil,
+        plasmaIcon = nil,
+    },
+    missiles = {
+        background = nil,
+        supersIcon = nil,
+    },
+}
 
 local function AddSprite(parent, name, properties)
     local sprite = GUI.CreateDisplayObjectEx(name, "CSprite", utils.Merge({
@@ -24,32 +43,80 @@ local function AddSprite(parent, name, properties)
     return sprite
 end
 
+local function Exists(guiObj)
+    return guiObj and type(guiObj.ForceRedraw) == "function"
+end
+
+local function numtostr(num)
+    return string.format("%0.3f", num)
+end
+
 function RandoSamusGui.Init()
+    Game.LogWarn(0, "RandoSamusGui.Init")
+    RandoSamusGui.samusMenu = nil
+
+    if RandoSamusGui.customComposition then
+        GUI.DestroyDisplayObject(RandoSamusGui.customComposition)
+        RandoSamusGui.customComposition = nil
+    end
+
+    if RandoSamusGui.iCallbackId >= 0 then
+        -- Prevent duplicate callbacks if script is somehow initialized multiple times
+        Game.DelSFByID(RandoSamusGui.iCallbackId)
+        RandoSamusGui.iCallbackId = -1
+    end
+
     -- The Samus UI isn't always available (it's only accessible when open), so we have to update it
     -- using a timer. The Update function will try to find it, and update it as needed while it is open.
-    Game.AddGUISF(0, RandoSamusGui.UpdateTimer, "")
+    RandoSamusGui.fUpdateInterval = SLOW_UPDATE_INTERVAL
+    RandoSamusGui.iCallbackId = Game.AddGUISF(0, RandoSamusGui.UpdateTimer, "")
 end
 
 function RandoSamusGui.UpdateTimer()
     RandoSamusGui.Update()
-    Game.AddGUISF(RandoSamusGui.fUpdateInterval, RandoSamusGui.UpdateTimer, "")
+    RandoSamusGui.iCallbackId = Game.AddGUISF(RandoSamusGui.fUpdateInterval, RandoSamusGui.UpdateTimer, "")
 end
 
 function RandoSamusGui.InitCustomContent(samusMenu)
     composition = GUI.CreateMSCPInstanceEx("randosamuscomposition")
     samusMenu:AddChild(composition)
 
+    -- Get references to individual objects
+    RandoSamusGui.icons = {
+        composition:FindDescendant("RandoContent.Item1_Icon"),
+        composition:FindDescendant("RandoContent.Item2_Icon"),
+        composition:FindDescendant("RandoContent.Item3_Icon"),
+    }
+    RandoSamusGui.labels = {
+        composition:FindDescendant("RandoContent.Item1_Label"),
+        composition:FindDescendant("RandoContent.Item2_Label"),
+        composition:FindDescendant("RandoContent.Item3_Label"),
+    }
+
+    -- Destroy old objects if they exist
+    if RandoSamusGui.itemDetails.beams.wideIcon then
+        GUI.DestroyDisplayObject(RandoSamusGui.itemDetails.beams.wideIcon)
+    end
+    if RandoSamusGui.itemDetails.beams.plasmaIcon then
+        GUI.DestroyDisplayObject(RandoSamusGui.itemDetails.beams.plasmaIcon)
+    end
+    if RandoSamusGui.itemDetails.missiles.supersIcon then
+        GUI.DestroyDisplayObject(RandoSamusGui.itemDetails.missiles.supersIcon)
+    end
+
     -- Create custom indicators for beam type
     local beamCategory = samusMenu:FindDescendant("Content.INVCAT_BEAMS")
+    local beamCategoryBg = beamCategory:FindChild("Background")
 
-    AddSprite(beamCategory, "WideIcon", {
+    RandoSamusGui.itemDetails.beams.background = beamCategoryBg
+    RandoSamusGui.itemDetails.beams.wideIcon = AddSprite(beamCategory, "WideIcon", {
         RightX = 0.03112499,
         Y = 0.01666666,
         SizeX = (32 / 1600),
         SizeY = (32 / 900),
         SpriteSheetItem = "HUD_TILESET/WIDE_BEAM",
     })
-    AddSprite(beamCategory, "PlasmaIcon", {
+    RandoSamusGui.itemDetails.beams.plasmaIcon = AddSprite(beamCategory, "PlasmaIcon", {
         RightX = 0.05362497,
         Y = 0.01666666,
         SizeX = (32 / 1600),
@@ -59,8 +126,10 @@ function RandoSamusGui.InitCustomContent(samusMenu)
 
     -- Create custom indicator for missile type
     local missileCategory = samusMenu:FindDescendant("Content.INVCAT_MISSILE")
+    local missileCategoryBg = missileCategory:FindChild("Background")
 
-    AddSprite(missileCategory, "SupersIcon", {
+    RandoSamusGui.itemDetails.missiles.background = missileCategoryBg
+    RandoSamusGui.itemDetails.missiles.supersIcon = AddSprite(missileCategory, "SupersIcon", {
         RightX = 0.03112499,
         Y = 0.01111111,
         SizeX = (32 / 1600),
@@ -72,48 +141,49 @@ function RandoSamusGui.InitCustomContent(samusMenu)
 end
 
 function RandoSamusGui.Update()
-    -- Find the objects
-    local samusMenu = GUI.GetDisplayObject("IngameMenuRoot.samusmenucomposition")
+    local samusMenu = RandoSamusGui.samusMenu
 
     if not samusMenu then
-        -- Not open right now
-        return
+        -- Try to find it
+        samusMenu = GUI.GetDisplayObject("IngameMenuRoot.samusmenucomposition")
+
+        if not samusMenu then
+            -- Not open right now
+            return
+        end
+
+        RandoSamusGui.samusMenu = samusMenu
+
+        -- Finding the menu before we have a handle to it can be slow.
+        -- Once we have a handle, we can increase our update interval, and selectively not update if the menu is closed.
+        RandoSamusGui.fUpdateInterval = FAST_UPDATE_INTERVAL
     end
 
-    local customComposition = samusMenu:FindChild("randosamuscomposition")
+    local customComposition = RandoSamusGui.customComposition
 
     -- FindChild seems to return some non-nil object representing "not found", so we also need
     -- to test if it's really our composition by looking for the "FindDescendant" function
     if not customComposition or not customComposition.FindDescendant then
+        if RandoSamusGui.customComposition then
+            GUI.DestroyDisplayObject(RandoSamusGui.customComposition)
+        end
+
         customComposition = RandoSamusGui.InitCustomContent(samusMenu)
+        RandoSamusGui.customComposition = customComposition
     end
 
-    local success, err = pcall(function()
-        RandoSamusGui.UpdateTopItemCounts(customComposition)
-        RandoSamusGui.UpdatePowerupIcons(samusMenu)
-    end)
+    local samusMenuOpen = samusMenu:_Enabled_GetterFunction()
 
-    if not success then
-        Game.LogWarn(0, "Error: " .. tostring(err))
+    if samusMenuOpen then
+        RandoSamusGui.UpdateResourceCounts()
+        RandoSamusGui.UpdatePowerupIcons()
     end
 end
 
-local function Exists(guiObj)
-    return guiObj and type(guiObj.ForceRedraw) == "function"
-end
-
-function RandoSamusGui.UpdateTopItemCounts(customComposition)
+function RandoSamusGui.UpdateResourceCounts()
     -- Resource icons/labels are populated left-to-right as resources become relevant
-    local icons = {
-        customComposition:FindDescendant("RandoContent.Item1_Icon"),
-        customComposition:FindDescendant("RandoContent.Item2_Icon"),
-        customComposition:FindDescendant("RandoContent.Item3_Icon"),
-    }
-    local labels = {
-        customComposition:FindDescendant("RandoContent.Item1_Label"),
-        customComposition:FindDescendant("RandoContent.Item2_Label"),
-        customComposition:FindDescendant("RandoContent.Item3_Label"),
-    }
+    local icons = RandoSamusGui.icons
+    local labels = RandoSamusGui.labels
     local nextIcon = 1
     local nextLabel = 1
 
@@ -140,11 +210,11 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
         local label = labels[nextLabel]
 
         if Exists(icon) and Exists(label) then
-            local dnaText = ("%d / %d"):format(currentDnaCount, Init.iNumRequiredArtifacts)
+            local countText = ("%d / %d"):format(currentDnaCount, Init.iNumRequiredArtifacts)
 
             GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/DNA" })
             GUI.SetProperties(label, { Visible = true })
-            GUI.SetLabelText(label, dnaText)
+            GUI.SetLabelText(label, countText)
             label:ForceRedraw()
         end
 
@@ -162,9 +232,11 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
         local label = labels[nextLabel]
 
         if Exists(icon) and Exists(label) then
+            local countText = tostring(flashUpgradeCount + 1) -- Add 1 because of "base" chain that is free with Flash Shift
+
             GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/FLASH_UPGRADE" })
             GUI.SetProperties(label, { Visible = true })
-            GUI.SetLabelText(label, tostring(flashUpgradeCount))
+            GUI.SetLabelText(label, countText)
             label:ForceRedraw()
         end
 
@@ -182,9 +254,16 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
         local label = labels[nextLabel]
 
         if Exists(icon) and Exists(label) then
+            -- The minimum charge time is technically 0.55 seconds due to a game quirk, but for the sake of simplicity,
+            -- we just show proper increments of 0.25.
+            local chargeTime = math.max(0.5, 1.5 - speedUpgradeCount * 0.25)
+            -- %0.2g would yield 1.2 if given 1.25, because the precision of "g" is given in significant figures.
+            -- %0.3g will give us 1.25 if given 1.25, while trimming 1.50 down to 1.5.
+            local chargeTimeText = string.format("%0.3gs", chargeTime)
+
             GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/SPEED_UPGRADE" })
             GUI.SetProperties(label, { Visible = true })
-            GUI.SetLabelText(label, tostring(speedUpgradeCount))
+            GUI.SetLabelText(label, chargeTimeText)
             label:ForceRedraw()
         end
 
@@ -193,18 +272,13 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
     end
 end
 
-local function numtostr(num)
-    return string.format("%0.3f", num)
-end
-
-function RandoSamusGui.UpdatePowerupIcons(samusMenu)
+function RandoSamusGui.UpdatePowerupIcons()
     -- Beams
-    local beamCategory = samusMenu:FindDescendant("Content.INVCAT_BEAMS")
-    local beamCategoryBg = beamCategory:FindChild("Background")
-    local beamCategoryFocused = beamCategoryBg:_ColorA_GetterFunction() > 0.5
+    local beamCategoryBg = RandoSamusGui.itemDetails.beams.background
+    local beamCategoryFocused = beamCategoryBg and beamCategoryBg:_ColorA_GetterFunction() > 0.5
     local beamCategoryAlphaMultiplier = beamCategoryFocused and 1.0 or 0.5
-    local wideBeamIcon = beamCategory:FindChild("WideIcon")
-    local plasmaBeamIcon = beamCategory:FindChild("PlasmaIcon")
+    local wideBeamIcon = RandoSamusGui.itemDetails.beams.wideIcon
+    local plasmaBeamIcon = RandoSamusGui.itemDetails.beams.plasmaIcon
     local hasWideBeam = RandomizerPowerup.GetItemAmount("ITEM_WEAPON_WIDE_BEAM") > 0
     local hasPlasmaBeam = RandomizerPowerup.GetItemAmount("ITEM_WEAPON_PLASMA_BEAM") > 0
     local hasWaveBeam = RandomizerPowerup.GetItemAmount("ITEM_WEAPON_WAVE_BEAM") > 0
@@ -233,11 +307,10 @@ function RandoSamusGui.UpdatePowerupIcons(samusMenu)
     })
 
     -- Missiles
-    local missileCategory = samusMenu:FindDescendant("Content.INVCAT_MISSILE")
-    local missileCategoryBg = missileCategory:FindChild("Background")
-    local missileCategoryFocused = missileCategoryBg:_ColorA_GetterFunction() > 0.5
+    local missileCategoryBg = RandoSamusGui.itemDetails.missiles.background
+    local missileCategoryFocused = missileCategoryBg and missileCategoryBg:_ColorA_GetterFunction() > 0.5
     local missileCategoryAlphaMultiplier = missileCategoryFocused and 1.0 or 0.5
-    local superMissileIcon = missileCategory:FindChild("SupersIcon")
+    local superMissileIcon = RandoSamusGui.itemDetails.missiles.supersIcon
     local hasSuperMissiles = RandomizerPowerup.GetItemAmount("ITEM_WEAPON_SUPER_MISSILE") > 0
     local hasIceMissiles = RandomizerPowerup.GetItemAmount("ITEM_WEAPON_ICE_MISSILE") > 0
 
