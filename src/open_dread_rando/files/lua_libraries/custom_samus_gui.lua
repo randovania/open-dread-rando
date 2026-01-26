@@ -98,21 +98,59 @@ function RandoSamusGui.Update()
     end
 end
 
-function RandoSamusGui.UpdateTopItemCounts(customComposition)
-    local upgrade1Icon = customComposition:FindDescendant("RandoContent.Upgrade1_Icon")
-    local upgrade1Label = customComposition:FindDescendant("RandoContent.Upgrade1_Label")
-    local upgrade2Icon = customComposition:FindDescendant("RandoContent.Upgrade2_Icon")
-    local upgrade2Label = customComposition:FindDescendant("RandoContent.Upgrade2_Label")
+local function Exists(guiObj)
+    return guiObj and type(guiObj.ForceRedraw) == "function"
+end
 
-    -- Update the state
-    local nextIcon = upgrade1Icon
-    local nextLabel = upgrade1Label
+function RandoSamusGui.UpdateTopItemCounts(customComposition)
+    -- Resource icons/labels are populated left-to-right as resources become relevant
+    local icons = {
+        customComposition:FindDescendant("RandoContent.Item1_Icon"),
+        customComposition:FindDescendant("RandoContent.Item2_Icon"),
+        customComposition:FindDescendant("RandoContent.Item3_Icon"),
+    }
+    local labels = {
+        customComposition:FindDescendant("RandoContent.Item1_Label"),
+        customComposition:FindDescendant("RandoContent.Item2_Label"),
+        customComposition:FindDescendant("RandoContent.Item3_Label"),
+    }
+    local nextIcon = 1
+    local nextLabel = 1
 
     -- Hide everything at first
-    GUI.SetProperties(upgrade1Icon, { Visible = false })
-    GUI.SetProperties(upgrade1Label, { Visible = false })
-    GUI.SetProperties(upgrade2Icon, { Visible = false })
-    GUI.SetProperties(upgrade2Label, { Visible = false })
+    for _, icon in ipairs(icons) do
+        GUI.SetProperties(icon, { Visible = false })
+    end
+    for _, label in ipairs(labels) do
+        GUI.SetProperties(label, { Visible = false })
+    end
+
+    -- DNA
+    local hasRequiredDna = Init.iNumRequiredArtifacts > 0
+    local currentDnaCount = 0
+
+    if hasRequiredDna then
+        for i = 1, Init.iNumRequiredArtifacts do
+            if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_" .. i) > 0 then
+                currentDnaCount = currentDnaCount + 1
+            end
+        end
+
+        local icon = icons[nextIcon]
+        local label = labels[nextLabel]
+
+        if Exists(icon) and Exists(label) then
+            local dnaText = ("%d / %d"):format(currentDnaCount, Init.iNumRequiredArtifacts)
+
+            GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/DNA" })
+            GUI.SetProperties(label, { Visible = true })
+            GUI.SetLabelText(label, dnaText)
+            label:ForceRedraw()
+        end
+
+        nextIcon = nextIcon + 1
+        nextLabel = nextLabel + 1
+    end
 
     -- Flash Shift upgrades
     local hasFlashShift = RandomizerPowerup.GetItemAmount("ITEM_GHOST_AURA") > 0
@@ -120,16 +158,18 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
 
     if hasFlashShift or flashUpgradeCount > 0 then
         -- The flash shift upgrade icon is shown if the player has collected any, OR if they have flash shift itself
+        local icon = icons[nextIcon]
+        local label = labels[nextLabel]
 
-        if nextIcon and nextLabel then
-            GUI.SetProperties(nextIcon, { Visible = true, SpriteSheetItem = "HUD_TILESET/FLASH_UPGRADE" })
-            GUI.SetProperties(nextLabel, { Visible = true })
-            GUI.SetLabelText(nextLabel, tostring(flashUpgradeCount))
-            nextLabel:ForceRedraw()
+        if Exists(icon) and Exists(label) then
+            GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/FLASH_UPGRADE" })
+            GUI.SetProperties(label, { Visible = true })
+            GUI.SetLabelText(label, tostring(flashUpgradeCount))
+            label:ForceRedraw()
         end
 
-        nextIcon = upgrade2Icon
-        nextLabel = upgrade2Label
+        nextIcon = nextIcon + 1
+        nextLabel = nextLabel + 1
     end
 
     -- Speed Booster upgrades
@@ -138,16 +178,18 @@ function RandoSamusGui.UpdateTopItemCounts(customComposition)
 
     if hasSpeedBooster or speedUpgradeCount > 0 then
         -- The speed booster upgrade icon is shown if the player has collected any, OR if they have speed booster itself
+        local icon = icons[nextIcon]
+        local label = labels[nextLabel]
 
-        if nextIcon and nextLabel then
-            GUI.SetProperties(nextIcon, { Visible = true, SpriteSheetItem = "HUD_TILESET/SPEED_UPGRADE" })
-            GUI.SetProperties(nextLabel, { Visible = true })
-            GUI.SetLabelText(nextLabel, tostring(speedUpgradeCount))
-            nextLabel:ForceRedraw()
+        if Exists(icon) and Exists(label) then
+            GUI.SetProperties(icon, { Visible = true, SpriteSheetItem = "HUD_TILESET/SPEED_UPGRADE" })
+            GUI.SetProperties(label, { Visible = true })
+            GUI.SetLabelText(label, tostring(speedUpgradeCount))
+            label:ForceRedraw()
         end
 
-        nextIcon = nil
-        nextLabel = nil
+        nextIcon = nextIcon + 1
+        nextLabel = nextLabel + 1
     end
 end
 
