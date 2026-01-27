@@ -16,7 +16,7 @@ def test_export(dread_path, tmp_path, test_files_dir, configuration_path):
         output_path=output_path,
         configuration=configuration,
     )
-    assert len(list(output_path.rglob("*.lc"))) == 33
+    assert len(list(output_path.rglob("*.lc"))) == 34
 
     exefs_path = output_path.joinpath("DreadRandovania", "exefs")
 
