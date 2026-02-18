@@ -23,7 +23,7 @@ dependencies = [
     "mercury-engine-data-structures>=0.33",
     "jsonschema>=4.0.0",
     "json-delta>=2.0.2",
-    "open-dread-rando-exlaunch>=1.1.0"
+    "open-dread-rando-exlaunch>=1.2.0"
 ]
 dynamic = ["version"]
 
