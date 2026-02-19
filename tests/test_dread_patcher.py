@@ -15,23 +15,21 @@ def test_cosmetic_options(lua_runtime):
         "starting_items": {},
         "starting_location": {
             "scenario": "s010_cave",
-            "actor": "StartPoint0"
+            "actor": "StartPoint0",
         },
         "configuration_identifier": "<identifier>",
         "layout_uuid": layoutUUID,
         "has_flash_upgrades": False,
         "has_speed_upgrades": False,
         "cosmetic_patches": {
-            "config": {
-            },
+            "config": {},
             "lua": {
                 "custom_init": {
                     "show_dna_in_hud": False,
                     "enable_death_counter": False,
-                    "enable_room_name_display": "NEVER"
+                    "enable_room_name_display": "NEVER",
                 },
-                "camera_names_dict": {
-                }
+                "camera_names_dict": {},
             },
             "shield_versions": {
                 "ice_missile": "ALTERNATE",
@@ -39,15 +37,15 @@ def test_cosmetic_options(lua_runtime):
                 "storm_missile": "ALTERNATE",
                 "bomb": "ALTERNATE",
                 "cross_bomb": "ALTERNATE",
-                "power_bomb": "DEFAULT"
-            }
+                "power_bomb": "DEFAULT",
+            },
         },
         "energy_per_tank": 75,
         "immediate_energy_parts": True,
         "constant_environment_damage": {
             "heat": 20,
             "cold": 20,
-            "lava": 20
+            "lava": 20,
         },
         "game_patches": {
             "raven_beak_damage_table_handling": "consistent_low",
@@ -59,7 +57,7 @@ def test_cosmetic_options(lua_runtime):
         },
         "objective": {
             "required_artifacts": 3,
-            "hints": []
+            "hints": [],
         },
     }
 
@@ -73,39 +71,36 @@ def test_cosmetic_options(lua_runtime):
     assert lua_runtime.eval("Init.fEnergyPerTank") == 75
     assert lua_runtime.eval("Init.sLayoutUUID") == layoutUUID
 
+
 def test_mass_delete_actors(patcher_editor):
     configuration = {
         "to_remove": [
             {
                 "scenario": "s020_magma",
                 "actor_layer": "rEntitiesLayer",
-                "method": "all"
+                "method": "all",
             },
             {
                 "scenario": "s010_cave",
                 "actor_layer": "rLightsLayer",
                 "method": "remove_from_groups",
-                "actor_groups": [
-                    "lg_collision_camera_001"
-                ]
+                "actor_groups": ["lg_collision_camera_001"],
             },
             {
                 "scenario": "s030_baselab",
                 "actor_layer": "rLightsLayer",
                 "method": "keep_from_groups",
-                "actor_groups": [
-                    "lg_collision_camera_011_Default"
-                ]
-            }
+                "actor_groups": ["lg_collision_camera_011_Default"],
+            },
         ],
         "to_keep": [
             {
                 "scenario": "s010_cave",
                 "actor_layer": "rLightsLayer",
                 "sublayer": "cave_001_light",
-                "actor": "spot_001_1"
+                "actor": "spot_001_1",
             }
-        ]
+        ],
     }
 
     mass_delete_actors(patcher_editor, configuration)

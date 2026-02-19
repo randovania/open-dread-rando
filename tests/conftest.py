@@ -63,8 +63,13 @@ def patcher_editor(dread_path):
 
 
 def pytest_addoption(parser):
-    parser.addoption('--skip-if-missing', action='store_false', dest="fail_if_missing",
-                     default=True, help="Skip tests instead of missing, in case any asset is missing")
+    parser.addoption(
+        "--skip-if-missing",
+        action="store_false",
+        dest="fail_if_missing",
+        default=True,
+        help="Skip tests instead of missing, in case any asset is missing",
+    )
 
 
 def pytest_configure(config: pytest.Config):

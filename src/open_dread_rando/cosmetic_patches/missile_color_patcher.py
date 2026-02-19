@@ -14,14 +14,12 @@ class MissileTankRecolor(StaticModelChanger):
                 base_mat="actors/items/item_missiletank/models/imats/item_missiletank_mp_fxhologram_01.bsmat",
                 new_mat_name=f"{name}_mp_fxhologram_01",
                 new_path=f"actors/items/item_missiletank/models/imats/{name}_mp_fxhologram_01.bsmat",
-                uniform_params={
-                    "vTex0EmissiveColor": color
-                }
+                uniform_params={"vTex0EmissiveColor": color},
             )
         }
 
-        self.base_model_path="actors/items/item_missiletank/models/item_missiletank.bcmdl"
-        self.new_model_path=f"actors/items/item_missiletank/models/{name}.bcmdl"
+        self.base_model_path = "actors/items/item_missiletank/models/item_missiletank.bcmdl"
+        self.new_model_path = f"actors/items/item_missiletank/models/{name}.bcmdl"
 
 
 MISSILE_TANK_RECOLORS: dict[str, MissileTankRecolor] = {

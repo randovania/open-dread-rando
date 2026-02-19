@@ -30,13 +30,14 @@ def patch_sprites(editor: PatcherEditor):
     # Small Super Missile icon to show on the Power Beam list item of the Samus menu (for split beams)
     _add_sprite(hud_tileset, "SUPER_MISSILE", (381, 0), (32, 32))
 
+
 def _add_sprite(tileset, name: str, pos: tuple[int, int], size: tuple[int, int]):
     # texture base size is 512x512 pixels
     spriteItem = Container(
         sID=name,
         oTexUVs=Container(
             v2Offset=ListContainer([pos[0] / 512, pos[1] / 512]),
-            v2Scale=ListContainer([size[0] / 512, size[1] / 512])
-        )
+            v2Scale=ListContainer([size[0] / 512, size[1] / 512]),
+        ),
     )
     tileset.vecItems.append(spriteItem)
