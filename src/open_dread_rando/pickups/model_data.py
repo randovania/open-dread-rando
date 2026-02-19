@@ -1,5 +1,4 @@
 import dataclasses
-from typing import Optional
 
 
 @dataclasses.dataclass(frozen=True)
@@ -15,7 +14,7 @@ class ModelData:
     bmsas: str
     dependencies: tuple[str, ...]
     grapple_fx: bool = False
-    transform: Optional[Transform] = None
+    transform: Transform | None = None
 
 
 ALL_MODEL_DATA: dict[str, ModelData] = {

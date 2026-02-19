@@ -12,7 +12,7 @@ class MaterialData:
     new_mat_name: str = None # the name of the new material
     new_path: str = None # the new path for the material, none if its only modifiying an existing mat
     uniform_params: dict[str, typing.Sequence] = None # a dictionary of uniform params stored in shader_stages[0]
-    sampler_params: dict[str, dict[str, typing.Union[str, int, float, list]]] = None
+    sampler_params: dict[str, dict[str, str | int | float | list]] = None
     # a dictionary of sampler params stored in shader_stages[0]
     # key is the name of the sampler param
     # value is a dict of key/value pairs for keys of the sampler (i.e. { "filepath": "path/to/texture.bsmat" })

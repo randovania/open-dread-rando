@@ -1,5 +1,4 @@
 import copy
-from typing import Optional
 
 import construct
 from mercury_engine_data_structures.formats import Bmmap, Brfld
@@ -127,7 +126,7 @@ def remove_problematic_x_layers(editor: PatcherEditor):
 
 
 def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str,
-                               insert_callback_at: Optional[int] = None):
+                               insert_callback_at: int | None = None):
     cutscene_player = editor.resolve_actor_reference(cutscene_ref)
     callbacks_after_cutscene = cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA
 
