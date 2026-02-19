@@ -1,5 +1,4 @@
 import dataclasses
-import typing
 
 from mercury_engine_data_structures.formats.bcmdl import Bcmdl
 
@@ -12,10 +11,10 @@ class ModelData:
     base_model: str  # the model this is based on
 
     # the new path of the model
-    new_path: typing.Optional[str] = None
+    new_path: str | None = None
 
     # dictionary connecting model names (i.e. "mp_opaque_01") to material files
-    materials: typing.Optional[dict[str, str]] = None
+    materials: dict[str, str] | None = None
 
 # contains static data to generate model/material changes
 @dataclasses.dataclass()

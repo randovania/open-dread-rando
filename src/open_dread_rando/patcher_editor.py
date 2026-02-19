@@ -69,7 +69,7 @@ class PatcherEditor(FileTreeEditor):
             self.replace_asset(name, resource)
         self.memory_files = {}
 
-    def add_new_asset(self, name: str, new_data: typing.Union[bytes, BaseResource], in_pkgs: typing.Iterable[str]):
+    def add_new_asset(self, name: str, new_data: bytes | BaseResource, in_pkgs: typing.Iterable[str]):
         super().add_new_asset(name, new_data, in_pkgs)
         # Hack for textures' weird folder layout
         if name.startswith("textures/") and isinstance(new_data, bytes):
@@ -83,7 +83,7 @@ class PatcherEditor(FileTreeEditor):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(asset)
 
-    def remove_entity(self, reference: dict, map_category: typing.Optional[str]):
+    def remove_entity(self, reference: dict, map_category: str | None):
         scenario = self.get_scenario(reference["scenario"])
         actor_layer = ActorLayer(reference.get("actor_layer", "rEntitiesLayer"))
         sublayer = reference.get("sublayer", reference.get("layer", "default"))
