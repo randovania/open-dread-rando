@@ -52,6 +52,6 @@ function DeathCounter.Update()
 		Game.LogWarn(0, ("Got %s back from Rando_PlayerDeathCount"):format(tostring(deathCount)))
 	end
 
-	GUI.SetLabelText(label, "Deaths: " .. deathCount )
+	GUI.SetLabelText(label, tostring(deathCount))
 	label:ForceRedraw()
 end

@@ -6,6 +6,7 @@ Game.DoFile("system/scripts/guilib.lua")
 Game.DoFile("system/scripts/death_counter.lua")
 Game.DoFile("system/scripts/room_names.lua")
 Game.DoFile("system/scripts/disconnect_gui.lua")
+Game.DoFile("system/scripts/custom_samus_gui.lua")
 
 Scenario.tRandoHintPropIDs = {
     CAVE_1 = Blackboard.RegisterLUAProp("HINT_CAVE_1", "bool"),
@@ -306,7 +307,13 @@ function Scenario.OnLoadScenarioFinished()
         Scenario.checkConnectionSFID = Game.AddGUISF(2, "Scenario.CheckConnectionState", "")
     end
 
-    Scenario.InitGui()
+    local guiSuccess, guiError = pcall(Scenario.InitGui)
+
+    if not guiSuccess then
+        Game.LogWarn(0, "Failed to initialize GUI:")
+        Game.LogWarn(0, tostring(guiError))
+    end
+
     Scenario.ShowingPopup = false
     Scenario.ShowNextAsyncPopup()
 
@@ -426,18 +433,51 @@ function Scenario.InitGui()
 
     -- Grab references to the individual objects
     Scenario.PopupLabel = Scenario.RandoUI:FindDescendant("PopupPanel.PopupLabel")
-    Scenario.DeathCounterPanel = Scenario.RandoUI:FindDescendant("DeathCounterPanel")
+    Scenario.ExtraInfoPanel = Scenario.RandoUI:FindDescendant("ExtraInfoPanel")
+    Scenario.DnaCountLabel = Scenario.RandoUI:FindDescendant("ExtraInfoPanel.DNA_Label")
     Scenario.RoomNamesPanel = Scenario.RandoUI:FindDescendant("RoomNamesPanel")
     Scenario.DisconnectPanel = Scenario.RandoUI:FindDescendant("DisconnectPanel")
 
     -- Set initial UI state
+    local showDnaInHud = Init.bShowDnaInHud and Init.iNumRequiredArtifacts > 0
+    local showDeathCounter = Init.bEnableDeathCounter
+    local showExtraInfo = showDnaInHud or showDeathCounter
+
     GUI.SetProperties(Scenario.PopupLabel, { Visible = false })
-    GUI.SetProperties(Scenario.DeathCounterPanel, { Visible = false })
+    GUI.SetProperties(Scenario.ExtraInfoPanel, { Visible = showExtraInfo })
     GUI.SetProperties(Scenario.RoomNamesPanel, { Visible = false })
     GUI.SetProperties(Scenario.DisconnectPanel, { Visible = false })
 
-    if Init.bEnableDeathCounter then
-        DeathCounter.Init(Scenario.DeathCounterPanel)
+    if showDeathCounter then
+        DeathCounter.Init(Scenario.ExtraInfoPanel)
+
+        if not showDnaInHud then
+            -- Need to move the death counter icon and label up to where the DNA would normally be shown
+            local dnaIconY = Scenario.ExtraInfoPanel:FindChild("DNA_Icon"):_Y_GetterFunction()
+            local dnaLabelY = Scenario.ExtraInfoPanel:FindChild("DNA_Label"):_CenterY_GetterFunction()
+
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Y = dnaIconY })
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { CenterY = dnaLabelY })
+        end
+    else
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Visible = false })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { Visible = false })
+    end
+
+    if showDnaInHud then
+        Scenario.UpdateHudDnaCount()
+    else
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DNA_Icon"), { Visible = false })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DNA_Label"), { Visible = false })
+    end
+
+    if not showDeathCounter or not showDnaInHud then
+        -- Toggle the "extra info" panel to the short version
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Background"), { Visible = false })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Line_Left"), { Visible = false })
+
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Background_Short"), { Visible = true })
+        GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("Line_Left_Short"), { Visible = true })
     end
 
     if Init.bEnableRoomIds then
@@ -447,6 +487,8 @@ function Scenario.InitGui()
     if Init.sLayoutUUID ~= Scenario.INVALID_UUID then
         DisconnectGui.Init(Scenario.DisconnectPanel)
     end
+
+    RandoSamusGui.Init()
 end
 
 Scenario.QueuedPopups = Scenario.QueuedPopups or Queue()
@@ -494,6 +536,29 @@ end
 
 function Scenario.UpdateRoomName(new_subarea)
     RoomNameGui.Update(new_subarea)
+end
+
+function Scenario.UpdateHudDnaCount()
+    local currentDnaCount = 0
+    local requiredDnaCount = Init.iNumRequiredArtifacts
+
+    for i = 1, Init.iNumRequiredArtifacts do
+        if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_" .. i) > 0 then
+            currentDnaCount = currentDnaCount + 1
+        end
+    end
+
+    local dnaText = ("%d / %d"):format(currentDnaCount, requiredDnaCount)
+    local haveAllDna = currentDnaCount >= requiredDnaCount
+
+    -- Text is light red when all DNA are acquired
+    GUI.SetProperties(Scenario.DnaCountLabel, {
+        ColorR = "1.0",
+        ColorG = haveAllDna and "0.5" or "1.0",
+        ColorB = haveAllDna and "0.5" or "1.0",
+    })
+    GUI.SetLabelText(Scenario.DnaCountLabel, dnaText)
+    Scenario.DnaCountLabel:ForceRedraw()
 end
 
 function Scenario.UpdateNumTanksMax(num_locs)

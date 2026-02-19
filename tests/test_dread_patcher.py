@@ -19,11 +19,14 @@ def test_cosmetic_options(lua_runtime):
         },
         "configuration_identifier": "<identifier>",
         "layout_uuid": layoutUUID,
+        "has_flash_upgrades": False,
+        "has_speed_upgrades": False,
         "cosmetic_patches": {
             "config": {
             },
             "lua": {
                 "custom_init": {
+                    "show_dna_in_hud": False,
                     "enable_death_counter": False,
                     "enable_room_name_display": "NEVER"
                 },
