@@ -1,4 +1,4 @@
-The files in this folder are here to act as the source of custom files in the `romfs` folder, when there may be data loss upon producing those files.
+The files in this folder are here to act as the source of custom files in the `src/open_dread_rando/files/romfs` folder, when there may be data loss upon producing those files.
 
 ### Custom Textures
 
