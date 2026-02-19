@@ -12,10 +12,10 @@ def replace_lua_template(file: str, replacement: dict[str, Any], wrap_strings: b
         # Replace `TEMPLATE("key")`-style replacements
         code = code.replace(f'TEMPLATE("{key}")', lua_convert(content, wrap_strings))
         # Replace `T__key__T`-style replacements
-        code = code.replace(f'T__{key}__T', lua_convert(content, wrap_strings))
+        code = code.replace(f"T__{key}__T", lua_convert(content, wrap_strings))
 
     unknown_templates = re.findall(r'TEMPLATE\("([^"]+)"\)', code)
-    unknown_templates.extend(re.findall(r'T__(\w+)__T', code))
+    unknown_templates.extend(re.findall(r"T__(\w+)__T", code))
 
     if unknown_templates:
         raise ValueError("The following templates were left unfulfilled: " + str(unknown_templates))
@@ -25,15 +25,9 @@ def replace_lua_template(file: str, replacement: dict[str, Any], wrap_strings: b
 
 def lua_convert(data, wrap_strings: bool = False) -> str:
     if isinstance(data, list):
-        return "{\n" + "\n".join(
-            f"{lua_convert(item, wrap_strings)},"
-            for item in data
-        ) + "\n}"
+        return "{\n" + "\n".join(f"{lua_convert(item, wrap_strings)}," for item in data) + "\n}"
     if isinstance(data, dict):
-        return "{\n" + "\n".join(
-            f"{key} = {lua_convert(value, wrap_strings)},"
-            for key, value in data.items()
-        ) + "\n}"
+        return "{\n" + "\n".join(f"{key} = {lua_convert(value, wrap_strings)}," for key, value in data.items()) + "\n}"
     if isinstance(data, bool):
         return "true" if data else "false"
     if data is None:
@@ -54,7 +48,7 @@ def create_script_copy(editor: FileTreeEditor, path: str):
         editor.add_new_asset(
             original,
             original_lc,
-            editor.find_pkgs(path + ".lc")
+            editor.find_pkgs(path + ".lc"),
         )
 
 

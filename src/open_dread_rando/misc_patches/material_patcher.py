@@ -8,10 +8,10 @@ from open_dread_rando.patcher_editor import PatcherEditor
 
 @dataclasses.dataclass(frozen=True)
 class MaterialData:
-    base_mat: str # path to the "base" material
-    new_mat_name: str = None # the name of the new material
-    new_path: str = None # the new path for the material, none if its only modifiying an existing mat
-    uniform_params: dict[str, typing.Sequence] = None # a dictionary of uniform params stored in shader_stages[0]
+    base_mat: str  # path to the "base" material
+    new_mat_name: str = None  # the name of the new material
+    new_path: str = None  # the new path for the material, none if its only modifiying an existing mat
+    uniform_params: dict[str, typing.Sequence] = None  # a dictionary of uniform params stored in shader_stages[0]
     sampler_params: dict[str, dict[str, str | int | float | list]] = None
     # a dictionary of sampler params stored in shader_stages[0]
     # key is the name of the sampler param

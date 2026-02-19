@@ -17,7 +17,6 @@ EXPANSION_ITEM_IDS = {
     "ITEM_WEAPON_POWER_BOMB_MAX",
     "ITEM_WEAPON_POWER_BOMB",
     "ITEM_UPGRADE_FLASH_SHIFT_CHAIN",
-
     # For multiworld
     "ITEM_NONE",
 }
@@ -83,8 +82,12 @@ class ActorPickup(BasePickup):
                 fields.sOnPickEnergyFragment3Caption = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_3"
                 fields.sOnPickEnergyFragmentCompleteCaption = "#GUI_TANK_ACQUIRED_ENERGY_FRAGMENT_COMPLETE"
             else:
-                for field_name in ["sOnPickEnergyFragment1Caption", "sOnPickEnergyFragment2Caption",
-                                   "sOnPickEnergyFragment3Caption", "sOnPickEnergyFragmentCompleteCaption"]:
+                for field_name in [
+                    "sOnPickEnergyFragment1Caption",
+                    "sOnPickEnergyFragment2Caption",
+                    "sOnPickEnergyFragment3Caption",
+                    "sOnPickEnergyFragmentCompleteCaption",
+                ]:
                     setattr(fields, field_name, caption)
 
         elif item_id in {"ITEM_WEAPON_MISSILE_MAX", "ITEM_WEAPON_POWER_BOMB_MAX", "ITEM_WEAPON_POWER_BOMB"}:
@@ -124,14 +127,23 @@ class ActorPickup(BasePickup):
         set_custom_params = pickable.functions[0]
         set_custom_params.set_param(1, item_id)
 
-        script.functions[0].set_param(2, self.lua_editor.get_script_class(
-            self.pickup, actordef_name=bmsad.name
-        ))
+        script.functions[0].set_param(
+            2,
+            self.lua_editor.get_script_class(
+                self.pickup,
+                actordef_name=bmsad.name,
+            ),
+        )
 
         return bmsad
 
-    def patch_model(self, editor: PatcherEditor, model_names: list[str], actor: Container,
-                    new_template: Bmsad) -> None:
+    def patch_model(
+        self,
+        editor: PatcherEditor,
+        model_names: list[str],
+        actor: Container,
+        new_template: Bmsad,
+    ) -> None:
         if len(model_names) == 1:
             selected_model_data = model_data.get_data(model_names[0])
 
@@ -142,8 +154,9 @@ class ActorPickup(BasePickup):
 
             # Apply grapple particles
             if selected_model_data.grapple_fx:
-                grapple = editor.get_file("actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad",
-                                          Bmsad)
+                grapple = editor.get_file(
+                    "actors/items/powerup_grapplebeam/charclasses/powerup_grapplebeam.bmsad", Bmsad
+                )
                 grapple_components = grapple.components
                 components = new_template.components
                 components["MATERIALFX"] = grapple_components["MATERIALFX"]
@@ -165,10 +178,7 @@ class ActorPickup(BasePickup):
 
             new_template.model_name = default_model_data.bcmdl_path
             model_updater.type = "CMultiModelUpdaterComponent"
-            model_updater.fields.dctModels = {
-                name: model_data.get_data(name).bcmdl_path
-                for name in model_names
-            }
+            model_updater.fields.dctModels = {name: model_data.get_data(name).bcmdl_path for name in model_names}
             model_updater.functions = []
 
             action_set_refs = list(new_template.action_set_refs)
@@ -305,7 +315,7 @@ class CutscenePickup(BasePickup):
             editor,
             self.pickup,
             self.pickup["pickup_lua_callback"],
-            'GUI.ShowMessage({}, true, "")'.format(repr(self.pickup["caption"]))
+            'GUI.ShowMessage({}, true, "")'.format(repr(self.pickup["caption"])),
         )
 
 

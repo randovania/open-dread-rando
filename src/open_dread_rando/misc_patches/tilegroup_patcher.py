@@ -23,6 +23,7 @@ def patch_tilegroup(editor: PatcherEditor, group: dict):
     for tile in gridTiles:
         tile.eTileType = group["tiletype"]
 
+
 def patch_individual_tiles(editor: PatcherEditor, actor_reference: dict, tiles: list):
     actor = editor.resolve_actor_reference(actor_reference)
 

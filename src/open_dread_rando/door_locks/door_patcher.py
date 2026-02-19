@@ -25,6 +25,7 @@ class MinimapIconData(Enum):
         2: y-axis offset from vPos to the bottom-right corner
         3: y-axis offset from vPos to the top-left corner
     """
+
     DOOR_FRAME = ("DoorFrame", (-150, -50, 0, 300))
     DOOR_POWER = ("DoorPower", (-150, -50, 0, 300))
     DOOR_CHARGE = ("DoorCharge", (-150, -50, 0, 300))
@@ -57,10 +58,12 @@ class MinimapIconData(Enum):
         cont["vPos"] = ListContainer([pos[0], pos[1]])
         cont["oBoxL"] = Container(
             Min=ListContainer([pos[0] + self.oBox_min[0], pos[1] - self.oBox_min[1]]),
-            Max=ListContainer([pos[0] + self.oBox_max[0], pos[1] + self.oBox_max[1]]))
+            Max=ListContainer([pos[0] + self.oBox_max[0], pos[1] + self.oBox_max[1]]),
+        )
         cont["oBoxR"] = Container(
             Min=ListContainer([pos[0] - self.oBox_max[0], pos[1] - self.oBox_min[1]]),
-            Max=ListContainer([pos[0] - self.oBox_min[0], pos[1] + self.oBox_max[1]]))
+            Max=ListContainer([pos[0] - self.oBox_min[0], pos[1] + self.oBox_max[1]]),
+        )
         cont["sLeftIconId"] = f"{self.icon_id}L"
         cont["sRightIconId"] = f"{self.icon_id}R"
         cont["aRoomIds"] = ListContainer()
@@ -79,7 +82,8 @@ class MinimapIconData(Enum):
 
         cont["oBox"] = Container(
             Min=ListContainer([pos[0] + self.oBox_min[0] + delta, pos[1] + self.oBox_min[1]]),
-            Max=ListContainer([pos[0] + self.oBox_max[0] + delta, pos[1] + self.oBox_max[1]]))
+            Max=ListContainer([pos[0] + self.oBox_max[0] + delta, pos[1] + self.oBox_max[1]]),
+        )
         cont["sIconId"] = f"{self.icon_id}{dir}"
         cont["bFlipX"] = False if dir == "L" else True
         cont["bFlipY"] = False
@@ -94,6 +98,7 @@ class ActorData(Enum):
     actordef: the actordef for the actor
     minimapData: the MinimapIconData for this type
     """
+
     DOOR_FRAME = (["doorframe"], MinimapIconData.DOOR_FRAME)
     DOOR_POWER = (["doorpowerpower", "doorpowerclosed", "doorclosedpower"], MinimapIconData.DOOR_POWER)
     DOOR_CHARGE = (["doorchargecharge", "doorchargeclosed", "doorclosedcharge"], MinimapIconData.DOOR_CHARGE)
@@ -127,39 +132,152 @@ class DoorType(Enum):
     need_shield: whether the actor needs a shield
     shield: the shield's ActorData
     """
-    FRAME = ("frame", ActorData.DOOR_FRAME)
-    POWER = ("power_beam", ActorData.DOOR_POWER)
-    CHARGE = ("charge_beam", ActorData.DOOR_CHARGE)
-    DIFFUSION = ("diffusion_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_DIFFUSION_BEAM, True, True,
-                 ["actors/props/door_shield_plasma"])
-    WIDE_BEAM = ("wide_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WIDE_BEAM, True, True,
-                 ["actors/props/doorshieldmissile"])
-    PLASMA_BEAM = ("plasma_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_PLASMA_BEAM)
-    WAVE_BEAM = ("wave_beam", ActorData.DOOR_POWER, True, ActorData.SHIELD_WAVE_BEAM)
-    MISSILE = ("missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_MISSILE)
-    SUPER_MISSILE = ("super_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_SUPER_MISSILE)
-    SUPER_CHARGE_MISSILE = ("super_charge_missile", ActorData.DOOR_CHARGE, True,
-                            ActorData.SHIELD_SUPER_MISSILE, True, False)
-    ICE_MISSILE = ("ice_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_ICE_MISSILE, True, True,
-                   ["actors/props/doorshieldmissile"])
-    STORM_MISSILE = ("storm_missile", ActorData.DOOR_POWER, True, ActorData.SHIELD_STORM_MISSILE, True, True,
-                     ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
-    BOMB = ("bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_BOMB, True, True,
-            ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
-    CROSS_BOMB = ("cross_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_CROSS_BOMB, True, True,
-                  ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
-    POWER_BOMB = ("power_bomb", ActorData.DOOR_POWER, True, ActorData.SHIELD_POWER_BOMB, True, True,
-                  ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
-    GRAPPLE = ("grapple_beam", ActorData.DOOR_GRAPPLE, False, None, True, True,
-               ["actors/props/door"])
-    PRESENCE = ("phantom_cloak", ActorData.DOOR_PRESENCE, False, None, True, False,
-                ["actors/props/door"])
-    CLOSED = ("closed", ActorData.DOOR_POWER, True, ActorData.SHIELD_CLOSED, True, True,
-              ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"])
 
-    def __init__(self, rdv_door_type: str, door_data: ActorData, need_shield: bool = False,
-                 shield_data: ActorData = None, can_be_removed: bool = True, can_be_added: bool = True,
-                 additional_asset_folders: list[str] = None):
+    FRAME = (
+        "frame",
+        ActorData.DOOR_FRAME,
+    )
+    POWER = (
+        "power_beam",
+        ActorData.DOOR_POWER,
+    )
+    CHARGE = (
+        "charge_beam",
+        ActorData.DOOR_CHARGE,
+    )
+    DIFFUSION = (
+        "diffusion_beam",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_DIFFUSION_BEAM,
+        True,
+        True,
+        ["actors/props/door_shield_plasma"],
+    )
+    WIDE_BEAM = (
+        "wide_beam",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_WIDE_BEAM,
+        True,
+        True,
+        ["actors/props/doorshieldmissile"],
+    )
+    PLASMA_BEAM = (
+        "plasma_beam",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_PLASMA_BEAM,
+    )
+    WAVE_BEAM = (
+        "wave_beam",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_WAVE_BEAM,
+    )
+    MISSILE = (
+        "missile",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_MISSILE,
+    )
+    SUPER_MISSILE = (
+        "super_missile",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_SUPER_MISSILE,
+    )
+    SUPER_CHARGE_MISSILE = (
+        "super_charge_missile",
+        ActorData.DOOR_CHARGE,
+        True,
+        ActorData.SHIELD_SUPER_MISSILE,
+        True,
+        False,
+    )
+    ICE_MISSILE = (
+        "ice_missile",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_ICE_MISSILE,
+        True,
+        True,
+        ["actors/props/doorshieldmissile"],
+    )
+    STORM_MISSILE = (
+        "storm_missile",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_STORM_MISSILE,
+        True,
+        True,
+        ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"],
+    )
+    BOMB = (
+        "bomb",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_BOMB,
+        True,
+        True,
+        ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"],
+    )
+    CROSS_BOMB = (
+        "cross_bomb",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_CROSS_BOMB,
+        True,
+        True,
+        ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"],
+    )
+    POWER_BOMB = (
+        "power_bomb",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_POWER_BOMB,
+        True,
+        True,
+        ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"],
+    )
+    GRAPPLE = (
+        "grapple_beam",
+        ActorData.DOOR_GRAPPLE,
+        False,
+        None,
+        True,
+        True,
+        ["actors/props/door"],
+    )
+    PRESENCE = (
+        "phantom_cloak",
+        ActorData.DOOR_PRESENCE,
+        False,
+        None,
+        True,
+        False,
+        ["actors/props/door"],
+    )
+    CLOSED = (
+        "closed",
+        ActorData.DOOR_POWER,
+        True,
+        ActorData.SHIELD_CLOSED,
+        True,
+        True,
+        ["actors/props/doorshieldmissile", "actors/props/doorshieldsupermissile"],
+    )
+
+    def __init__(
+        self,
+        rdv_door_type: str,
+        door_data: ActorData,
+        need_shield: bool = False,
+        shield_data: ActorData = None,
+        can_be_removed: bool = True,
+        can_be_added: bool = True,
+        additional_asset_folders: list[str] = None,
+    ):
         self.type = rdv_door_type
         self.need_shield = need_shield
         self.door = door_data
@@ -185,15 +303,12 @@ def is_door(actor: Container):
 
 
 class DoorPatcher:
-    """An API to patch doors. Call patch_door() to use. """
+    """An API to patch doors. Call patch_door() to use."""
 
     def __init__(self, editor: PatcherEditor) -> None:
         # get actors from reference dicts
         self.editor = editor
-        self.available_shield_ids = {
-            scenario: list(range(100))
-            for scenario in ALL_SCENARIOS
-        }
+        self.available_shield_ids = {scenario: list(range(100)) for scenario in ALL_SCENARIOS}
         self.SHIELD = editor.resolve_actor_reference(_EXAMPLE_SHIELD)
         self.rename_all_shields()
         self.patch_doorpresence_collision()
@@ -209,7 +324,7 @@ class DoorPatcher:
             raise ValueError(f"Actor {door.sName} in scenario {scenario} is not a door!")
 
         # filter enums by door's actorref
-        door_actor_ref = door.oActorDefLink.split(':')[1]
+        door_actor_ref = door.oActorDefLink.split(":")[1]
         possible_enum_values = list()
         for type in DoorType:
             for tdef in type.door.actordefs:
@@ -223,16 +338,17 @@ class DoorPatcher:
         shield_actor = None
         life_comp = door.pComponents.LIFE
         for link_name in ["wpLeftDoorShieldEntity", "wpRightDoorShieldEntity"]:
-            if life_comp[link_name] != '{EMPTY}':
+            if life_comp[link_name] != "{EMPTY}":
                 shield_actor = self.editor.resolve_actor_reference(
-                    self.editor.reference_for_link(life_comp[link_name], scenario))
+                    self.editor.reference_for_link(life_comp[link_name], scenario)
+                )
 
         if shield_actor is not None:
             # remove non-shielded doors if shield exists
             possible_enum_values = [e for e in possible_enum_values if e.need_shield]
 
             # check shields
-            shield_actor_ref = shield_actor.oActorDefLink.split(':')[1]
+            shield_actor_ref = shield_actor.oActorDefLink.split(":")[1]
             possible_enum_values = [e for e in possible_enum_values if e.shield.actordefs[0] == shield_actor_ref]
         else:
             # remove shielded doors if shield does not exist
@@ -294,14 +410,14 @@ class DoorPatcher:
         life_comp = door.pComponents.LIFE
         for link_name in ["wpLeftDoorShieldEntity", "wpRightDoorShieldEntity"]:
             link = life_comp[link_name]
-            if link == '{EMPTY}':
+            if link == "{EMPTY}":
                 continue  # skip shield if not linked
 
             # free the shield id if this is a rando shield
             shieldActor = self.editor.resolve_actor_reference(self.editor.reference_for_link(link, scenario))
             self.reclaim_old_shield_id(shieldActor.sName, scenario)
             self.editor.remove_entity(self.editor.reference_for_link(link, scenario), "mapBlockages")
-            life_comp[link_name] = '{EMPTY}'
+            life_comp[link_name] = "{EMPTY}"
 
     # turns the door into a power beam door
     def any_door_to_power(self, door: Container, scenario: str):
@@ -338,14 +454,14 @@ class DoorPatcher:
         shield = self.editor.copy_actor(scenario, door.vPos, self.SHIELD, self.get_shield_id(scenario))
 
         self.editor.copy_actor_groups(
-            { "actor": door.sName },
-            { "actor": shield.sName},
-            scenario
+            {"actor": door.sName},
+            {"actor": shield.sName},
+            scenario,
         )
         shield.oActorDefLink = f"actordef:{shield_data.actordefs[0]}"
         shield.vAng[1] = shield.vAng[1] if dir == "L" else -shield.vAng[1]
-        if (shield_data is ActorData.SHIELD_WIDE_BEAM):
-            shield.pComponents.LIFE['@type'] = 'CBeamDoorLifeComponent'
+        if shield_data is ActorData.SHIELD_WIDE_BEAM:
+            shield.pComponents.LIFE["@type"] = "CBeamDoorLifeComponent"
 
         self.update_minimap_for_shield(shield, shield_data, dir, scenario)
         return shield
@@ -375,7 +491,6 @@ class DoorPatcher:
             # as otherwise it will rename actors in the actor list and confuse the program.
             shielded_doors = []
             for sublayer_name, actor_name, actor in list(brfld.all_actors_in_actor_layer()):
-
                 # this is the door added to the Artaria CU.
                 # For some reason is_door crashes on this so we add a check here.
                 if actor_name == "DreadRando_CUDoor":
@@ -417,8 +532,8 @@ class DoorPatcher:
 
             # make new actor, copy its groups, delete it
             brfld = self.editor.get_scenario(scenario)
-            brfld.actors_for_sublayer('default')[new_id] = shieldActor
-            self.editor.copy_actor_groups({ "actor": old_sName }, { "actor": new_id }, scenario)
+            brfld.actors_for_sublayer("default")[new_id] = shieldActor
+            self.editor.copy_actor_groups({"actor": old_sName}, {"actor": new_id}, scenario)
             self.editor.remove_entity(reference, None)
 
             # actually rename it

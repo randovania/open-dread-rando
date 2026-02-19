@@ -56,7 +56,7 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             new_path="actors/props/doorshieldicemissile/models/doorshieldicemissile.bcmdl",
             materials={
                 "mp_opaque_01": "actors/props/doorshieldicemissile/models/imats/doorshieldicemissile_mp_opaque_01.bsmat"
-            }
+            },
         ),
         default_mats=[
             MaterialData(
@@ -64,8 +64,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldicemissile_mp_opaque_01",
                 new_path="actors/props/doorshieldicemissile/models/imats/doorshieldicemissile_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vConstant0": [0.0, 0.94, 0.95, 1.0]
-                }
+                    "vConstant0": [0.0, 0.94, 0.95, 1.0],
+                },
             )
         ],
         alternate_mats=[
@@ -74,18 +74,20 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldicemissile_mp_opaque_01",
                 new_path="actors/props/doorshieldicemissile/models/imats/doorshieldicemissile_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vConstant0": [0.0, 0.94, 0.95, 1.0]
+                    "vConstant0": [0.0, 0.94, 0.95, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldicemissile/models"
-                                                  "/textures/doorshieldicemissile_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": (
+                            "actors/props/doorshieldicemissile/models/textures/doorshieldicemissile_alt_bc.bctex"
+                        )
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
-        ]
+        ],
     ),
-
     "diffusion_beam": ShieldData(
         name="shield_diffusion",  # NOTE required to be <= len("doorshieldplasma") until bcmdl can alter pointers
         type=DoorTemplates.ENERGY,
@@ -96,15 +98,15 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             new_path="actors/props/shield_diffusion/models/shield_diffusion.bcmdl",
             materials={
                 "matfx": "actors/props/shield_diffusion/models/imats/shield_diffusion_matfx.bsmat",
-                "mp_opaque_01": "actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat"
-            }
+                "mp_opaque_01": "actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat",
+            },
         ),
         alternate_mdl=ModelData(
             base_model=SUPER_MDL,
             new_path="actors/props/shield_diffusion/models/shield_diffusion.bcmdl",
             materials={
                 "mp_opaque_01": "actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat"
-            }
+            },
         ),
         default_mats=[
             # matfx
@@ -113,8 +115,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="shield_diffusion_matfx",
                 new_path="actors/props/shield_diffusion/models/imats/shield_diffusion_matfx.bsmat",
                 uniform_params={
-                    "vConstant0": [1.0, 0.05, 0.05, 1.0]
-                }
+                    "vConstant0": [1.0, 0.05, 0.05, 1.0],
+                },
             ),
             # mp_opaque_01
             MaterialData(
@@ -122,9 +124,9 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="shield_diffusion_mp_opaque_01",
                 new_path="actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vConstant1": [1.0, 0.05, 0.05, 0.0]
-                }
-            )
+                    "vConstant1": [1.0, 0.05, 0.05, 0.0],
+                },
+            ),
         ],
         alternate_mats=[
             # mp_opaque_01
@@ -134,18 +136,18 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_path="actors/props/shield_diffusion/models/imats/shield_diffusion_mp_opaque_01.bsmat",
                 uniform_params={
                     # "fAlbedoEmissiveFactor": [2.0],
-                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.05, 0.05, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.05, 0.05, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/shield_diffusion/models/"
-                                                  "textures/shield_diffusion_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": ("actors/props/shield_diffusion/models/textures/shield_diffusion_alt_bc.bctex")
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
-        ]
+        ],
     ),
-
     "storm_missile": ShieldData(
         name="doorshieldstormmissile",
         type=DoorTemplates.TRIANGLES,
@@ -155,9 +157,10 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             base_model=SUPER_MDL,
             new_path="actors/props/doorshieldstormmissile/models/doorshieldstormmissile.bcmdl",
             materials={
-                "mp_opaque_01": ("actors/props/doorshieldstormmissile/models"
-                                 "/imats/doorshieldstormmissile_mp_opaque_01.bsmat")
-            }
+                "mp_opaque_01": (
+                    "actors/props/doorshieldstormmissile/models/imats/doorshieldstormmissile_mp_opaque_01.bsmat"
+                )
+            },
         ),
         default_mats=[
             MaterialData(
@@ -167,14 +170,17 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 uniform_params={
                     "fAlbedoEmissiveFactor": [2.0],
                     "vAlbedoEmissiveColorMultiplier": [1.0, 1.0, 1.0, 1.0],
-                    "vConstant0": [7.0, 0.15, 0.0, 1.0]
+                    "vConstant0": [7.0, 0.15, 0.0, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldstormmissile/models"
-                                                  "/textures/doorshieldstormmissile_bc.bctex")},
-                    "texAttributes": { "filepath": SMOOTH_ATTRIBUTES },
-                    "texNormals": { "filepath": SMOOTH_NORMALS }
-                }
+                    "texBaseColor": {
+                        "filepath": (
+                            "actors/props/doorshieldstormmissile/models/textures/doorshieldstormmissile_bc.bctex"
+                        )
+                    },
+                    "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
         ],
         alternate_mats=[
@@ -186,34 +192,34 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                     "fAlbedoEmissiveFactor": [7.0],
                     "fSpecularPower": [25.0],
                     "vAlbedoEmissiveColorMultiplier": [7.0, 0.15, 0.0, 1.0],
-                    "vConstant0": [1.0, 1.0, 1.0, 1.0]
+                    "vConstant0": [1.0, 1.0, 1.0, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldstormmissile/models"
-                                                  "/textures/doorshieldstormmissile_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": (
+                            "actors/props/doorshieldstormmissile/models/textures/doorshieldstormmissile_alt_bc.bctex"
+                        )
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
-        ]
+        ],
     ),
-
     "bomb": ShieldData(
         name="doorshieldbomb",
         type=DoorTemplates.TRIANGLES,
-
         # "BOMB" weakness is added in runtime lua.
         # see open_dread_rando/files/custom_scenario.lua : Scenario._BlastShieldTypes
         weaknesses=[],
-
         collision="actors/props/doorshieldmissile/collisions/shield_bomb_colls.bmscd",
         actordef="actors/props/doorshieldbomb/charclasses/doorshieldbomb.bmsad",
         default_mdl=ModelData(
             base_model=SUPER_MDL,
             new_path="actors/props/doorshieldbomb/models/doorshieldbomb.bcmdl",
             materials={
-                "mp_opaque_01": "actors/props/doorshieldbomb/models/imats/doorshieldbomb_mp_opaque_01.bsmat"
-            }
+                "mp_opaque_01": "actors/props/doorshieldbomb/models/imats/doorshieldbomb_mp_opaque_01.bsmat",
+            },
         ),
         default_mats=[
             MaterialData(
@@ -221,14 +227,15 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldbomb_mp_opaque_01",
                 new_path="actors/props/doorshieldbomb/models/imats/doorshieldbomb_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldbomb/models"
-                                                  "/textures/doorshieldbomb_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldbomb/models/textures/doorshieldbomb_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
         ],
         alternate_mats=[
@@ -236,19 +243,17 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 base_mat=SUPER_MAT,
                 new_mat_name="doorshieldbomb_mp_opaque_01",
                 new_path="actors/props/doorshieldbomb/models/imats/doorshieldbomb_mp_opaque_01.bsmat",
-                uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
-                },
+                uniform_params={"vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]},
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldbomb/models"
-                                                  "/textures/doorshieldbomb_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldbomb/models/textures/doorshieldbomb_alt_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
-        ]
+        ],
     ),
-
     "cross_bomb": ShieldData(
         name="doorshieldcrossbomb",
         type=DoorTemplates.TRIANGLES,
@@ -259,9 +264,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             base_model=SUPER_MDL,
             new_path="actors/props/doorshieldcrossbomb/models/doorshieldcrossbomb.bcmdl",
             materials={
-                "mp_opaque_01": ("actors/props/doorshieldcrossbomb/models"
-                                 "/imats/doorshieldcrossbomb_mp_opaque_01.bsmat")
-            }
+                "mp_opaque_01": "actors/props/doorshieldcrossbomb/models/imats/doorshieldcrossbomb_mp_opaque_01.bsmat",
+            },
         ),
         default_mats=[
             MaterialData(
@@ -269,14 +273,15 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldcrossbomb_mp_opaque_01",
                 new_path="actors/props/doorshieldcrossbomb/models/imats/doorshieldcrossbomb_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldpowerbomb/models"
-                                                  "/textures/doorshieldpowerbomb_rdv_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldpowerbomb/models/textures/doorshieldpowerbomb_rdv_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
         ],
         alternate_mats=[
@@ -285,19 +290,19 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldcrossbomb_mp_opaque_01",
                 new_path="actors/props/doorshieldcrossbomb/models/imats/doorshieldcrossbomb_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [0.987, 0.168, 0.976, 1.0],
                 },
                 sampler_params={
                     # TODO cross bomb basecolor
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldcrossbomb/models"
-                                                  "/textures/doorshieldcrossbomb_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldcrossbomb/models/textures/doorshieldcrossbomb_alt_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
-        ]
+        ],
     ),
-
     "power_bomb": ShieldData(
         name="doorshieldpowerbomb",
         type=DoorTemplates.TRIANGLES,
@@ -308,9 +313,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             base_model=SUPER_MDL,
             new_path="actors/props/doorshieldpowerbomb/models/doorshieldpowerbomb.bcmdl",
             materials={
-                "mp_opaque_01": ("actors/props/doorshieldpowerbomb/models"
-                                 "/imats/doorshieldpowerbomb_mp_opaque_01.bsmat")
-            }
+                "mp_opaque_01": "actors/props/doorshieldpowerbomb/models/imats/doorshieldpowerbomb_mp_opaque_01.bsmat",
+            },
         ),
         default_mats=[
             MaterialData(
@@ -318,14 +322,15 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldpowerbomb_mp_opaque_01",
                 new_path="actors/props/doorshieldpowerbomb/models/imats/doorshieldpowerbomb_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.15, 0.0, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.15, 0.0, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldpowerbomb/models"
-                                                  "/textures/doorshieldpowerbomb_rdv_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldpowerbomb/models/textures/doorshieldpowerbomb_rdv_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
         ],
         alternate_mats=[
@@ -334,18 +339,18 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldpowerbomb_mp_opaque_01",
                 new_path="actors/props/doorshieldpowerbomb/models/imats/doorshieldpowerbomb_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.15, 0.0, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.15, 0.0, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldpowerbomb/models"
-                                                  "/textures/doorshieldpowerbomb_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldpowerbomb/models/textures/doorshieldpowerbomb_alt_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_NORMALS},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
         ],
     ),
-
     "closed": ShieldData(
         name="doorshieldclosed",
         type=DoorTemplates.TRIANGLES,
@@ -355,9 +360,8 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
             base_model=SUPER_MDL,
             new_path="actors/props/doorshieldclosed/models/doorshieldclosed.bcmdl",
             materials={
-                "mp_opaque_01": ("actors/props/doorshieldclosed/models"
-                                 "/imats/doorshieldclosed_mp_opaque_01.bsmat")
-            }
+                "mp_opaque_01": "actors/props/doorshieldclosed/models/imats/doorshieldclosed_mp_opaque_01.bsmat",
+            },
         ),
         default_mats=[
             MaterialData(
@@ -365,14 +369,15 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldclosed_mp_opaque_01",
                 new_path="actors/props/doorshieldclosed/models/imats/doorshieldclosed_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.0, 0.0, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.0, 0.0, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldclosed/models"
-                                                  "/textures/doorshieldclosed_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": ("actors/props/doorshieldclosed/models/textures/doorshieldclosed_bc.bctex")
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
         ],
         alternate_mats=[
@@ -381,17 +386,18 @@ ALL_SHIELD_DATA: dict[str, ShieldData] = {
                 new_mat_name="doorshieldclosed_mp_opaque_01",
                 new_path="actors/props/doorshieldclosed/models/imats/doorshieldclosed_mp_opaque_01.bsmat",
                 uniform_params={
-                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.0, 0.0, 1.0]
+                    "vAlbedoEmissiveColorMultiplier": [1.0, 0.0, 0.0, 1.0],
                 },
                 sampler_params={
-                    "texBaseColor": {"filepath": ("actors/props/doorshieldclosed/models"
-                                                  "/textures/doorshieldclosed_alt_bc.bctex")},
+                    "texBaseColor": {
+                        "filepath": "actors/props/doorshieldclosed/models/textures/doorshieldclosed_alt_bc.bctex",
+                    },
                     "texAttributes": {"filepath": SMOOTH_ATTRIBUTES},
-                    "texNormals": {"filepath": SMOOTH_NORMALS}
-                }
+                    "texNormals": {"filepath": SMOOTH_NORMALS},
+                },
             )
-        ]
-    )
+        ],
+    ),
 }
 
 

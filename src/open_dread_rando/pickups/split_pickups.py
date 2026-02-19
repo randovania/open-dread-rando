@@ -33,7 +33,7 @@ class MissileInput(Enum):
     L = 1
 
 
-T = TypeVar('T', bound=ArgAnyType)
+T = TypeVar("T", bound=ArgAnyType)
 
 
 class CCFunc:
@@ -160,11 +160,12 @@ class PrimaryGunFuncs:
     set_gun_charge_params: SetGunChargeParams | None
 
     @classmethod
-    def from_raw(cls,
-                 add_primary_gun: ActorDefFunc,
-                 set_billboard_group_params: ActorDefFunc | None = None,
-                 set_gun_charge_params: ActorDefFunc | None = None
-                 ) -> Self:
+    def from_raw(
+        cls,
+        add_primary_gun: ActorDefFunc,
+        set_billboard_group_params: ActorDefFunc | None = None,
+        set_gun_charge_params: ActorDefFunc | None = None,
+    ) -> Self:
 
         gun = AddPrimaryGun(add_primary_gun)
 
@@ -398,27 +399,31 @@ def _patch_split_beams(editor: PatcherEditor) -> list[ActorDefFunc]:
 
     hyper.add_primary_gun.priority = 8
 
-    return list(itertools.chain.from_iterable(gun.as_list for gun in [
-        power,
-        solo_wide,
-        solo_plasma,
-        solo_wave,
-        wide_plasma,
-        wide_wave,
-        plasma_wave,
-        full,
-        hyper,
-        grapple,
-        spbgun,
-    ]))
+    return list(
+        itertools.chain.from_iterable(
+            gun.as_list
+            for gun in [
+                power,
+                solo_wide,
+                solo_plasma,
+                solo_wave,
+                wide_plasma,
+                wide_wave,
+                plasma_wave,
+                full,
+                hyper,
+                grapple,
+                spbgun,
+            ]
+        )
+    )
 
 
 def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
     samus = editor.get_file(SAMUS_BMSAD_PATH, Bmsad)
     gun = samus.components["GUN"]
 
-    solo_ice_bmsad = editor.get_parsed_asset("actors/weapons/icemissile/charclasses/icemissile.bmsad",
-                                             type_hint=Bmsad)
+    solo_ice_bmsad = editor.get_parsed_asset("actors/weapons/icemissile/charclasses/icemissile.bmsad", type_hint=Bmsad)
     solo_ice_bmsad.name = "soloicemissile"
     movement = solo_ice_bmsad.components["MOVEMENT"].fields
     movement.fInitialSpeed = 1250.0
@@ -462,14 +467,17 @@ def _patch_split_missiles(editor: PatcherEditor) -> list[ActorDefFunc]:
 
     omega.main_inventory_item = "ITEM_WEAPON_POWER_BEAM"
 
-    return [gun.raw for gun in [
-        missile,
-        solo_super,
-        solo_ice,
-        super_ice,
-        lockon,
-        omega,
-    ]]
+    return [
+        gun.raw
+        for gun in [
+            missile,
+            solo_super,
+            solo_ice,
+            super_ice,
+            lockon,
+            omega,
+        ]
+    ]
 
 
 def _patch_blast_shields(editor: PatcherEditor) -> None:

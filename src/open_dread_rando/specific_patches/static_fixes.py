@@ -20,8 +20,14 @@ def flip_icon_id(icon_id: str) -> str:
     raise ValueError(f"Unable to flip icon {icon_id}")
 
 
-def _apply_one_sided_door_fix(editor: PatcherEditor, scenario: Brfld, map_blockages: construct.Container,
-                              sublayer_name: str, actor_name: str, actor: construct.Container):
+def _apply_one_sided_door_fix(
+    editor: PatcherEditor,
+    scenario: Brfld,
+    map_blockages: construct.Container,
+    sublayer_name: str,
+    actor_name: str,
+    actor: construct.Container,
+):
     # Continue if this isn't a door
     if not door_patcher.is_door(actor):
         return
@@ -64,8 +70,8 @@ def _apply_one_sided_door_fix(editor: PatcherEditor, scenario: Brfld, map_blocka
 
     for x in [other.sName, mirrored.sName]:
         editor.copy_actor_groups(
-            { "actor": actor_name },
-            { "actor": x },
+            {"actor": actor_name},
+            {"actor": x},
             scenario.name,
         )
 
@@ -97,7 +103,7 @@ PROBLEM_LAYERS = {
         ],
         "s070_basesanc": [
             "collision_camera_005",  # Quiet Robe room
-        ]
+        ],
     },
     "Cooldown": {
         "s020_magma": [
@@ -108,7 +114,7 @@ PROBLEM_LAYERS = {
         "s070_basesanc": [
             "collision_camera_040",  # Purple Emmi Introduction
         ]
-    }
+    },
 }
 
 
@@ -125,8 +131,12 @@ def remove_problematic_x_layers(editor: PatcherEditor):
             ]
 
 
-def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callback: str,
-                               insert_callback_at: int | None = None):
+def _apply_boss_cutscene_fixes(
+    editor: PatcherEditor,
+    cutscene_ref: dict,
+    callback: str,
+    insert_callback_at: int | None = None,
+):
     cutscene_player = editor.resolve_actor_reference(cutscene_ref)
     callbacks_after_cutscene = cutscene_player.pComponents.CUTSCENE.vctOnAfterCutsceneEndsLA
 
@@ -147,27 +157,42 @@ def _apply_boss_cutscene_fixes(editor: PatcherEditor, cutscene_ref: dict, callba
 
 
 def apply_corpius_fixes(editor: PatcherEditor):
-    _apply_boss_cutscene_fixes(editor, {
-        "scenario": "s010_cave",
-        "sublayer": "Cutscenes",
-        "actor": "cutsceneplayer_57"
-    }, "CurrentScenario.OnCorpiusDeath_CUSTOM", 0)
+    _apply_boss_cutscene_fixes(
+        editor,
+        {
+            "scenario": "s010_cave",
+            "sublayer": "Cutscenes",
+            "actor": "cutsceneplayer_57",
+        },
+        "CurrentScenario.OnCorpiusDeath_CUSTOM",
+        0,
+    )
 
 
 def apply_kraid_fixes(editor: PatcherEditor):
-    _apply_boss_cutscene_fixes(editor, {
-        "scenario": "s020_magma",
-        "sublayer": "cutscenes",
-        "actor": "cutsceneplayer_61"
-    }, "CurrentScenario.OnKraidDeath_CUSTOM", -1)
+    _apply_boss_cutscene_fixes(
+        editor,
+        {
+            "scenario": "s020_magma",
+            "sublayer": "cutscenes",
+            "actor": "cutsceneplayer_61",
+        },
+        "CurrentScenario.OnKraidDeath_CUSTOM",
+        -1,
+    )
 
 
 def apply_drogyga_fixes(editor: PatcherEditor):
-    _apply_boss_cutscene_fixes(editor, {
-        "scenario": "s040_aqua",
-        "sublayer": "cutscenes",
-        "actor": "cutsceneplayer_65"
-    }, "CurrentScenario.OnHydrogigaDead_CUSTOM", -1)
+    _apply_boss_cutscene_fixes(
+        editor,
+        {
+            "scenario": "s040_aqua",
+            "sublayer": "cutscenes",
+            "actor": "cutsceneplayer_65",
+        },
+        "CurrentScenario.OnHydrogigaDead_CUSTOM",
+        -1,
+    )
 
     # remove the trigger that deletes drogyga until after beating drogyga
     aqua = editor.get_scenario("s040_aqua")
@@ -181,7 +206,7 @@ def activate_emmi_zones(editor: PatcherEditor):
         {
             "scenario": "s010_cave",
             "sublayer": "Cutscenes",
-            "actor": "cutscenetrigger_36"
+            "actor": "cutscenetrigger_36",
         },
         None,
     )
@@ -192,94 +217,92 @@ def activate_emmi_zones(editor: PatcherEditor):
         {
             "scenario": "s030_baselab",
             "sublayer": "cutscenes",
-            "actor": "cutscenetrigger_39"
+            "actor": "cutscenetrigger_39",
         },
         None,
     )
 
 
 def fix_backdoor_white_cu(editor: PatcherEditor):
-    new_door = construct.Container({
-        "@type": "CEntity",
-        "sName": "DreadRando_CUDoor",
-        "oActorDefLink": "actordef:actors/props/doorclosedpower/charclasses/doorclosedpower.bmsad",
-        "vPos": [
-            8300.000,
-            -4700.000,
-            0.0
-        ],
-        "vAng": [
-            0.0,
-            0.0,
-            0.0
-        ],
-        "pComponents": {
-            "LIFE": {
-                "@type": "CDoorLifeComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True,
-                "fMaxDistanceOpened": 400.0,
-                "wpLeftDoorShieldEntity": "{EMPTY}",
-                "wpRightDoorShieldEntity": "{EMPTY}",
-                "fMinTimeOpened": 3.0,
-                "bStayOpen": True,
-                "bStartOpened": False,
-                "bOnBlackOutOpened": False,
-                "bDoorIsWet": False,
-                "bFrozenDuringColdown": True,
-                "iAreaLeft": 0,
-                "iAreaRight": 0,
-                "aVignettes": []
+    new_door = construct.Container(
+        {
+            "@type": "CEntity",
+            "sName": "DreadRando_CUDoor",
+            "oActorDefLink": "actordef:actors/props/doorclosedpower/charclasses/doorclosedpower.bmsad",
+            "vPos": [8300.000, -4700.000, 0.0],
+            "vAng": [0.0, 0.0, 0.0],
+            "pComponents": {
+                "LIFE": {
+                    "@type": "CDoorLifeComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                    "fMaxDistanceOpened": 400.0,
+                    "wpLeftDoorShieldEntity": "{EMPTY}",
+                    "wpRightDoorShieldEntity": "{EMPTY}",
+                    "fMinTimeOpened": 3.0,
+                    "bStayOpen": True,
+                    "bStartOpened": False,
+                    "bOnBlackOutOpened": False,
+                    "bDoorIsWet": False,
+                    "bFrozenDuringColdown": True,
+                    "iAreaLeft": 0,
+                    "iAreaRight": 0,
+                    "aVignettes": [],
+                },
+                "AUDIO": {
+                    "@type": "CAudioComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                },
+                "FX": {
+                    "@type": "CFXComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                    "fSelectedHighRadius": 250.0,
+                    "fSelectedLowRadius": 350.0,
+                },
+                "COLLISION": {
+                    "@type": "CCollisionComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                },
+                "TIMELINECOMPONENT": {
+                    "@type": "CTimelineComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                },
+                "NAVMESHITEM": {
+                    "@type": "CNavMeshItemComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                    "tForbiddenEdgesSpawnPoints": [],
+                },
+                "ANIMATION": {
+                    "@type": "CAnimationComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                },
+                "MODELUPDATER": {
+                    "@type": "CModelUpdaterComponent",
+                    "bWantsEnabled": True,
+                    "bUseDefaultValues": True,
+                    "sDefaultModelPath": "",
+                },
             },
-            "AUDIO": {
-                "@type": "CAudioComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True
-            },
-            "FX": {
-                "@type": "CFXComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True,
-                "fSelectedHighRadius": 250.0,
-                "fSelectedLowRadius": 350.0
-            },
-            "COLLISION": {
-                "@type": "CCollisionComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True
-            },
-            "TIMELINECOMPONENT": {
-                "@type": "CTimelineComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True
-            },
-            "NAVMESHITEM": {
-                "@type": "CNavMeshItemComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True,
-                "tForbiddenEdgesSpawnPoints": []
-            },
-            "ANIMATION": {
-                "@type": "CAnimationComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True
-            },
-            "MODELUPDATER": {
-                "@type": "CModelUpdaterComponent",
-                "bWantsEnabled": True,
-                "bUseDefaultValues": True,
-                "sDefaultModelPath": ""
-            }
-        },
-        "bEnabled": True
-    })
+            "bEnabled": True,
+        }
+    )
 
     cave = editor.get_scenario("s010_cave")
     cave.actors_for_sublayer("default")[new_door["sName"]] = new_door
 
-    for group in ["eg_collision_camera_018_Default", "eg_collision_camera_090_Default",
-                  "eg_collision_camera_049_Default", "eg_collision_camera_090_PostXRelease",
-                  "eg_collision_camera_049_PostXRelease"]:
+    for group in [
+        "eg_collision_camera_018_Default",
+        "eg_collision_camera_090_Default",
+        "eg_collision_camera_049_Default",
+        "eg_collision_camera_090_PostXRelease",
+        "eg_collision_camera_049_PostXRelease",
+    ]:
         cave.add_actor_to_group(group, new_door["sName"])
 
 
@@ -294,11 +317,12 @@ def apply_experiment_fixes(editor: PatcherEditor):
     magma = editor.get_scenario("s020_magma")
     magma_map = editor.get_scenario_map("s020_magma")
 
-    _apply_boss_cutscene_fixes(editor, {
-        "scenario": "s020_magma",
-        "sublayer": "cutscenes",
-        "actor": "cutsceneplayer_81"
-    }, "CurrentScenario.OnExperimentDeath_CUSTOM", 0)
+    _apply_boss_cutscene_fixes(
+        editor,
+        {"scenario": "s020_magma", "sublayer": "cutscenes", "actor": "cutsceneplayer_81"},
+        "CurrentScenario.OnExperimentDeath_CUSTOM",
+        0,
+    )
 
     new_triggers = {
         "TriggerEnableCooldown": (5050.000, -5346.150, 0.000),
@@ -307,10 +331,14 @@ def apply_experiment_fixes(editor: PatcherEditor):
 
     # create triggers to update the cooldown status appropriately
     for name, pos in new_triggers.items():
-        ap_trigger = copy.deepcopy(editor.resolve_actor_reference({
-            "scenario": "s020_magma",
-            "actor": "AP_03"
-        }))
+        ap_trigger = copy.deepcopy(
+            editor.resolve_actor_reference(
+                {
+                    "scenario": "s020_magma",
+                    "actor": "AP_03",
+                }
+            )
+        )
 
         ap_trigger.sName = name
         ap_trigger.vPos = pos
@@ -318,44 +346,55 @@ def apply_experiment_fixes(editor: PatcherEditor):
         activation_conditions = ap_trigger.pComponents.TRIGGER.lstActivationConditions
         activation_conditions[0].vLogicActions[0].sCallback = f"CurrentScenario.OnEnter_{name}"
 
-        magma.actors_for_sublayer('default')[name] = ap_trigger
+        magma.actors_for_sublayer("default")[name] = ap_trigger
         magma.add_actor_to_group("eg_collision_camera_004_PostXRelease", name)
 
     # make thermal doors always closed during the fight
     for name in ["trap_thermal_horizontal_000", "trap_thermal_horizontal_005"]:
         magma.remove_actor_from_group("eg_collision_camera_009_Cooldown", name)
 
-        trap = copy.deepcopy(editor.resolve_actor_reference({
-            "scenario": "s020_magma",
-            "actor": name
-        }))
+        trap = copy.deepcopy(
+            editor.resolve_actor_reference(
+                {
+                    "scenario": "s020_magma",
+                    "actor": name,
+                }
+            )
+        )
 
         trap.sName = f"{name}_EXPERIMENT"
-        magma.actors_for_sublayer('default')[trap.sName] = trap
-        magma.add_actor_to_group('eg_collision_camera_009_Cooldown', trap.sName)
+        magma.actors_for_sublayer("default")[trap.sName] = trap
+        magma.add_actor_to_group("eg_collision_camera_009_Cooldown", trap.sName)
 
     # disable closing the thermal door permanently after experiment
-    editor.remove_entity({
-        "scenario": "s020_magma",
-        "actor": "trap_thermal_horizontal_POSTCOOL"
-    }, "mapDoors")
+    editor.remove_entity(
+        {
+            "scenario": "s020_magma",
+            "actor": "trap_thermal_horizontal_POSTCOOL",
+        },
+        "mapDoors",
+    )
 
     # add thermal door in front of morph launcher
-    new_door = copy.deepcopy(editor.resolve_actor_reference({
-        "scenario": "s020_magma",
-        "actor": "trap_thermal_horizontal_004"
-    }))
+    new_door = copy.deepcopy(
+        editor.resolve_actor_reference(
+            {
+                "scenario": "s020_magma",
+                "actor": "trap_thermal_horizontal_004",
+            }
+        )
+    )
 
     new_name = "trap_thermal_horizontal_006"
 
     new_door.sName = new_name
     new_door.vPos = (5840.0, -5455.0, 0.0)
 
-    magma.actors_for_sublayer('default')[new_name] = new_door
+    magma.actors_for_sublayer("default")[new_name] = new_door
     editor.copy_actor_groups(
-        {"actor": "trap_thermal_horizontal_004" },
-        { "actor": new_name },
-        "s020_magma"
+        {"actor": "trap_thermal_horizontal_004"},
+        {"actor": new_name},
+        "s020_magma",
     )
 
     # update the minimap
@@ -366,15 +405,19 @@ def apply_experiment_fixes(editor: PatcherEditor):
     magma_map.get_category("mapDoors")["trap_thermal_horizontal_006"] = new_map_icon
 
     # update thermal switch to open new door
-    thermal_switch = editor.resolve_actor_reference({
-        "scenario": "s020_magma",
-        "actor": "deviceheat"
-    })
+    thermal_switch = editor.resolve_actor_reference(
+        {
+            "scenario": "s020_magma",
+            "actor": "deviceheat",
+        }
+    )
 
-    thermal_switch.pComponents.USABLE.vThermalDoors.append({
-        "wpThermalDoor": magma.link_for_actor(new_name),
-        "sDoorState": CDoorLifeComponent_SState.Opened
-    })
+    thermal_switch.pComponents.USABLE.vThermalDoors.append(
+        {
+            "wpThermalDoor": magma.link_for_actor(new_name),
+            "sDoorState": CDoorLifeComponent_SState.Opened,
+        }
+    )
 
 
 def apply_main_menu_fixes(editor: PatcherEditor):
@@ -385,11 +428,13 @@ def apply_main_menu_fixes(editor: PatcherEditor):
 
 def disable_hanubia_cutscene(editor: PatcherEditor):
     # disable cutscene 12 (hanubia - tank room) because it teleports samus to the lower section (bad for door rando)
-    cutscene_player = editor.resolve_actor_reference({
-        "scenario": "s080_shipyard",
-        "sublayer": "cutscenes",
-        "actor": "cutsceneplayer_12",
-    })
+    cutscene_player = editor.resolve_actor_reference(
+        {
+            "scenario": "s080_shipyard",
+            "sublayer": "cutscenes",
+            "actor": "cutsceneplayer_12",
+        }
+    )
     cutscene_player.bEnabled = False
 
 
@@ -401,7 +446,7 @@ def fix_map_icons(map_editor: MapIconEditor):
 def move_artaria_missile_tank(editor: PatcherEditor):
     actor_ref = {
         "scenario": "s010_cave",
-        "actor": "item_missiletank_000"
+        "actor": "item_missiletank_000",
     }
     missile_tank = editor.resolve_actor_reference(actor_ref)
     artaria_map = editor.get_scenario_file(actor_ref["scenario"], Bmmap)
