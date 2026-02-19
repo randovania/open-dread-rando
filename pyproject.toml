@@ -52,11 +52,12 @@ write_to = "src/open_dread_rando/version.py"
 
 [tool.ruff]
 line-length = 120
-select = ["E", "F", "W", "C90", "I", "UP"]
 src = ["src"]
 
-# Version to target for generated code.
-target-version = "py39"
+[tool.ruff.lint]
+select = [
+    "E", "F", "W", "C90", "I", "UP"
+]
 
 [tool.mypy]
 files = [
