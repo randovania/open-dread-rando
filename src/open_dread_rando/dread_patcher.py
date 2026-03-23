@@ -210,6 +210,14 @@ def validate(configuration: dict):
     DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
 
 
+def patch_saveslot(editor: PatcherEditor, configuration: dict):
+    if not configuration["cosmetic_patches"]["split_saves"]:
+        return
+    
+    save_key = f"RDV_{configuration["configuration_identifier"]}_{configuration["layout_uuid"]}"
+    editor.add_new_asset("RDVHASH", bytes(save_key, encoding="ascii"), in_pkgs=[])
+
+
 def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: dict):
     # Copy custom files
     add_custom_files(editor)
@@ -289,6 +297,8 @@ def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: d
     # remote connector disconnect symbol
     patch_sprites(editor)
 
+    # saveslot patches
+    patch_saveslot(editor, configuration)
 
 def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files from %s", input_path)
