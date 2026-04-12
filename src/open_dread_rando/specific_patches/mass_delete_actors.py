@@ -16,8 +16,9 @@ class ActorReferenceTuple(typing.NamedTuple):
             reference["scenario"],
             reference["actor_layer"],
             reference.get("sublayer", reference.get("layer")),
-            reference["actor"]
+            reference["actor"],
         )
+
 
 def _remove_all_actors(editor: PatcherEditor, scenario_name: str, actor_layer: str) -> set[ActorReferenceTuple]:
     to_remove = set()
@@ -28,8 +29,13 @@ def _remove_all_actors(editor: PatcherEditor, scenario_name: str, actor_layer: s
 
     return to_remove
 
-def _remove_actors_from_groups(editor: PatcherEditor, scenario_name: str, actor_layer: str,
-                               actor_groups: list[str]) -> set[ActorReferenceTuple]:
+
+def _remove_actors_from_groups(
+    editor: PatcherEditor,
+    scenario_name: str,
+    actor_layer: str,
+    actor_groups: list[str],
+) -> set[ActorReferenceTuple]:
     to_remove = set()
     scenario = editor.get_scenario(scenario_name)
 
@@ -39,8 +45,13 @@ def _remove_actors_from_groups(editor: PatcherEditor, scenario_name: str, actor_
 
     return to_remove
 
-def _remove_actors_not_in_groups(editor: PatcherEditor, scenario_name: str, actor_layer: str,
-                                 actor_groups: list[str]) -> tuple[set[ActorReferenceTuple], set[ActorReferenceTuple]]:
+
+def _remove_actors_not_in_groups(
+    editor: PatcherEditor,
+    scenario_name: str,
+    actor_layer: str,
+    actor_groups: list[str],
+) -> tuple[set[ActorReferenceTuple], set[ActorReferenceTuple]]:
     to_remove = set()
     to_keep = set()
     scenario = editor.get_scenario(scenario_name)
@@ -55,10 +66,11 @@ def _remove_actors_not_in_groups(editor: PatcherEditor, scenario_name: str, acto
 
     return to_remove, to_keep
 
+
 def mass_delete_actors(editor: PatcherEditor, configuration: dict) -> None:
     # Sets of tuples will be used to ensure no duplicate entries
     to_remove = set()
-    to_keep = { ActorReferenceTuple.from_dict(reference) for reference in configuration["to_keep"] }
+    to_keep = {ActorReferenceTuple.from_dict(reference) for reference in configuration["to_keep"]}
 
     for scenario_config in configuration["to_remove"]:
         scenario_name = scenario_config["scenario"]
@@ -69,12 +81,14 @@ def mass_delete_actors(editor: PatcherEditor, configuration: dict) -> None:
             to_remove.update(_remove_all_actors(editor, scenario_name, actor_layer))
 
         elif method == "remove_from_groups":
-            to_remove.update(_remove_actors_from_groups(editor, scenario_name, actor_layer,
-                                                       scenario_config["actor_groups"]))
+            to_remove.update(
+                _remove_actors_from_groups(editor, scenario_name, actor_layer, scenario_config["actor_groups"])
+            )
 
         elif method == "keep_from_groups":
-            new_remove, new_keep = _remove_actors_not_in_groups(editor, scenario_name, actor_layer,
-                                                                scenario_config["actor_groups"])
+            new_remove, new_keep = _remove_actors_not_in_groups(
+                editor, scenario_name, actor_layer, scenario_config["actor_groups"]
+            )
 
             to_remove.update(new_remove)
             to_keep.update(new_keep)

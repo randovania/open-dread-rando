@@ -5,9 +5,11 @@ from pathlib import Path
 from open_dread_rando.logger import LOG
 
 
-def patch_with_status_update(input_path: Path, output_path: Path, configuration: dict,
-                             status_update: typing.Callable[[float, str], None]):
+def patch_with_status_update(
+    input_path: Path, output_path: Path, configuration: dict, status_update: typing.Callable[[float, str], None]
+):
     from open_dread_rando.dread_patcher import patch_extracted
+
     total_logs = 108
 
     class StatusUpdateHandler(logging.Handler):

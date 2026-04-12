@@ -6,7 +6,7 @@ from open_dread_rando.patcher_editor import PatcherEditor
 
 
 def apply_tunable_patches(editor: PatcherEditor, tunable_patches: dict[str, dict[str, Any]]):
-    config_file = editor.get_file('config.ini', Ini)
+    config_file = editor.get_file("config.ini", Ini)
 
     for section, items in tunable_patches.items():
         for k, v in items.items():

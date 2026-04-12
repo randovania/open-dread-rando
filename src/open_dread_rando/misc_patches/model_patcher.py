@@ -1,5 +1,4 @@
 import dataclasses
-import typing
 
 from mercury_engine_data_structures.formats.bcmdl import Bcmdl
 
@@ -12,17 +11,18 @@ class ModelData:
     base_model: str  # the model this is based on
 
     # the new path of the model
-    new_path: typing.Optional[str] = None
+    new_path: str | None = None
 
     # dictionary connecting model names (i.e. "mp_opaque_01") to material files
-    materials: typing.Optional[dict[str, str]] = None
+    materials: dict[str, str] | None = None
+
 
 # contains static data to generate model/material changes
 @dataclasses.dataclass()
 class StaticModelChanger:
     base_model_path: str
     new_model_path: str
-    materials: dict[str, MaterialData] # key is material name in bcmdl
+    materials: dict[str, MaterialData]  # key is material name in bcmdl
 
     def generate(self, editor: PatcherEditor):
         mats: dict[str, str] = {}
@@ -31,11 +31,14 @@ class StaticModelChanger:
             create_custom_material(editor, mat)
             mats[name] = mat.new_path
 
-        create_custom_model(editor, ModelData(
-            base_model=self.base_model_path,
-            new_path=self.new_model_path,
-            materials=mats
-        ))
+        create_custom_model(
+            editor,
+            ModelData(
+                base_model=self.base_model_path,
+                new_path=self.new_model_path,
+                materials=mats,
+            ),
+        )
 
 
 ADVANCED_RECOLORS: dict[str, StaticModelChanger] = {
@@ -48,20 +51,21 @@ ADVANCED_RECOLORS: dict[str, StaticModelChanger] = {
                 new_mat_name="supermissiletank_mat01",
                 new_path="actors/items/item_missiletankplus/models/imats/super_missile_tank_mat01.bsmat",
                 uniform_params={
-                    "vConstant0": (0.0, 10.0, 0.15, 1.0)
-                }
+                    "vConstant0": (0.0, 10.0, 0.15, 1.0),
+                },
             ),
             "mp_fxhologram_01": MaterialData(
                 base_mat="actors/items/item_missiletankplus/models/imats/item_missiletankplus_mp_fxhologram_01.bsmat",
                 new_mat_name="supermissiletank_mp_fxhologram_01",
                 new_path="actors/items/item_missiletankplus/models/imats/super_missile_tank_mp_fxhologram_01.bsmat",
                 uniform_params={
-                    "vTex0EmissiveColor": (10.0, 10.0, 10.0, 1.0)
-                }
-            )
-        }
+                    "vTex0EmissiveColor": (10.0, 10.0, 10.0, 1.0),
+                },
+            ),
+        },
     )
 }
+
 
 def create_custom_model(editor: PatcherEditor, model_data: ModelData) -> Bcmdl:
     mdl = editor.get_parsed_asset(model_data.base_model, type_hint=Bcmdl)
@@ -75,6 +79,7 @@ def create_custom_model(editor: PatcherEditor, model_data: ModelData) -> Bcmdl:
         editor.add_new_asset(model_data.new_path, mdl, [])
 
     return mdl
+
 
 def generate_custom_models(editor: PatcherEditor):
     for _, recolor in ADVANCED_RECOLORS.items():

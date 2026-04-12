@@ -3,7 +3,8 @@ Game.ImportLibrary("system/scripts/init_original.lua")
 local initOk, errorMsg = pcall(function()
 
 RemoteLua = RemoteLua or {
-    -- defined by exlaunch
+    -- defined by open-dread-rando-exlaunch
+    -- Somewhere around here: https://github.com/randovania/open-dread-rando-exlaunch/blob/main/source/program/main.cpp#L264
     Init = function() end,
     Update = function() end,
     SendLog = function(message) end,
@@ -18,6 +19,16 @@ function RemoteLua.UpdateRDVClient(new_scenario)
 end
 
 RL = RemoteLua
+
+-- OdrDebug stub (real lib is defined by open-dread-rando-exlaunch)
+OdrDebug = OdrDebug or {
+    SetLoggingEnabled = function(_) end,
+}
+
+-- OdrPickups stub (real lib is defined by open-dread-rando-exlaunch)
+OdrPickups = OdrPickups or {
+    SetItemPopupsEnabled = function(_) end,
+}
 
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
 push_debug_print_override = push_debug_print_override or function() end
@@ -46,16 +57,27 @@ if type(orig_update) == "function" then
     end
 end
 
+if TEMPLATE("enable_logging") then
+    OdrDebug.SetLoggingEnabled(true)
+end
+
+if TEMPLATE("skip_item_popups") then
+    OdrPickups.SetItemPopupsEnabled(false)
+end
+
 Init.tNewGameInventory = TEMPLATE("new_game_inventory")
 
 Init.iNumRandoTextBoxes = TEMPLATE("textbox_count")
 Init.fEnergyPerTank = TEMPLATE("energy_per_tank")
 Init.fEnergyPerPart = TEMPLATE("energy_per_part")
 Init.bImmediateEnergyParts = TEMPLATE("immediate_energy_parts")
+Init.bHasFlashUpgrades = TEMPLATE("has_flash_upgrades")
+Init.bHasSpeedUpgrades = TEMPLATE("has_speed_upgrades")
 Init.bDefaultXRelease = TEMPLATE("default_x_released")
 Init.bEnableExperimentBoss = TEMPLATE("enable_experiment_boss")
 Init.iNumRequiredArtifacts = TEMPLATE("required_artifacts")
 Init.bWarpToStart = TEMPLATE("warp_to_start")
+Init.bShowDnaInHud = TEMPLATE("show_dna_in_hud")
 Init.bEnableDeathCounter = TEMPLATE("enable_death_counter")
 Init.bEnableRoomIds = TEMPLATE("enable_room_ids")
 Init.bRoomIdFadeTime = TEMPLATE("room_id_fade_time")
@@ -74,6 +96,7 @@ Init.sLayoutUUID = TEMPLATE("layout_uuid")
 Init.tMaxGameProgressStats = {
     NumTanksPickedUp = 149
 }
+Init.bBeatenSinceLastReboot = false
 
 local preViewedCutscenes = {
     "CutScenePlayed[cutscenes/0001gameintro_arrivalatrium/0001gameintro_arrivalatrium.bmscu]",

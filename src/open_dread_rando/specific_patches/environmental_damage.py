@@ -28,13 +28,13 @@ def apply_constant_damage(editor: PatcherEditor, configuration: dict):
         actor = editor.resolve_actor_reference(reference)
 
         if actor.oActorDefLink == "actordef:actors/props/env_frozen_gen_001/charclasses/env_frozen_gen_001.bmsad":
-            config_name = 'oFreezeConfig'
+            config_name = "oFreezeConfig"
             config_field = "cold"
         elif actor.oActorDefLink == "actordef:actors/props/env_heat_gen_001/charclasses/env_heat_gen_001.bmsad":
-            config_name = 'oHeatConfig'
+            config_name = "oHeatConfig"
             config_field = "heat"
         elif actor.oActorDefLink == "actordef:actors/props/lavazone/charclasses/lavazone.bmsad":
-            config_name = 'oConfig'
+            config_name = "oConfig"
             config_field = "lava"
         else:
             raise ValueError(f"{reference} does not have a valid actorDef for environmental damage")

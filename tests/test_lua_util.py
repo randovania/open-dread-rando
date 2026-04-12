@@ -16,13 +16,16 @@ def test_create_script_copy_exists():
 
 
 def test_template_replacement(test_files_dir):
-    generated_code = lua_util.replace_lua_template("custom_powerup_template.lua", {
-        "name": "RandomizerTestPowerup",
-        "parent": "RandomizerPowerup",
-        "resources": [
-            [{ "item_id": lua_util.wrap_string("ITEM_TEST_POWERUP"), "quantity": 1 }],
-        ],
-    })
+    generated_code = lua_util.replace_lua_template(
+        "custom_powerup_template.lua",
+        {
+            "name": "RandomizerTestPowerup",
+            "parent": "RandomizerPowerup",
+            "resources": [
+                [{"item_id": lua_util.wrap_string("ITEM_TEST_POWERUP"), "quantity": 1}],
+            ],
+        },
+    )
 
     expected_code = test_files_dir.joinpath("randomizer_progressive_expected.lua").read_text()
 

@@ -50,6 +50,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     starting_text: list[list[str]] = configuration.get("starting_text", [])
     configuration_identifier: str = configuration["configuration_identifier"]
     enable_remote_lua: bool = configuration.get("enable_remote_lua", False)
+    enable_logging: bool = configuration.get("enable_logging", False)
+    skip_item_popups: bool = configuration.get("skip_item_popups", False)
 
     energy_per_tank = configuration["energy_per_tank"]
     energy_per_part = energy_per_tank / 4
@@ -70,11 +72,13 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
             max_life += (total_shards - leftover_shards) * energy_per_part
             inventory["ITEM_LIFE_SHARDS"] = leftover_shards
 
-    inventory.update({
-        # TODO: expose shuffling these
-        "ITEM_WEAPON_POWER_BEAM": 1,
-        "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
-    })
+    inventory.update(
+        {
+            # TODO: expose shuffling these
+            "ITEM_WEAPON_POWER_BEAM": 1,
+            "ITEM_WEAPON_MISSILE_LAUNCHER": 1,
+        }
+    )
     inventory = update_starting_inventory_split_pickups(inventory)
 
     # Game doesn't like to start if some fields are missing, like ITEM_WEAPON_POWER_BOMB_MAX
@@ -91,7 +95,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
 
     def chunks(array, n):
         for i in range(0, len(array), n):
-            yield array[i:i + n]
+            yield array[i : i + n]
 
     textboxes = 0
     for group in starting_text:
@@ -107,6 +111,8 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
 
     replacement = {
         "enable_remote_lua": enable_remote_lua,
+        "enable_logging": enable_logging,
+        "skip_item_popups": skip_item_popups,
         "new_game_inventory": final_inventory,
         "starting_scenario": lua_util.wrap_string(starting_location["scenario"]),
         "starting_actor": lua_util.wrap_string(starting_location["actor"]),
@@ -114,16 +120,19 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
         "energy_per_tank": energy_per_tank,
         "energy_per_part": energy_per_part,
         "immediate_energy_parts": configuration["immediate_energy_parts"],
+        "has_flash_upgrades": configuration["has_flash_upgrades"],
+        "has_speed_upgrades": configuration["has_speed_upgrades"],
         "default_x_released": configuration.get("game_patches", {}).get("default_x_released", False),
         "linear_damage_runs": configuration.get("linear_damage_runs"),
         "linear_dps": configuration.get("linear_dps"),
         "configuration_identifier": lua_util.wrap_string(configuration_identifier),
         "required_artifacts": configuration["objective"]["required_artifacts"],
+        "show_dna_in_hud": cosmetic_options["show_dna_in_hud"],
         "enable_death_counter": cosmetic_options["enable_death_counter"],
         "enable_room_ids": False if cosmetic_options["enable_room_name_display"] == "NEVER" else True,
-        "room_id_fade_time": FadeTimes.NO_FADE.value if (
-            cosmetic_options["enable_room_name_display"] != "WITH_FADE"
-            ) else FadeTimes.ROOM_FADE.value,
+        "room_id_fade_time": FadeTimes.NO_FADE.value
+        if (cosmetic_options["enable_room_name_display"] != "WITH_FADE")
+        else FadeTimes.ROOM_FADE.value,
         "layout_uuid": layout_uuid,
     }
 
@@ -135,7 +144,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
 def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
     py_dict: dict = configuration["cosmetic_patches"]["lua"]["camera_names_dict"]
 
-    file = lua_util.replace_lua_template("cc_to_room_name.lua", { "room_dict" : py_dict}, True).encode("ascii")
+    file = lua_util.replace_lua_template("cc_to_room_name.lua", {"room_dict": py_dict}, True).encode("ascii")
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 
@@ -143,7 +152,7 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
     patch_split_pickups(editor)
 
     # add to the TOC
-    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b'', [])
+    editor.add_new_asset("actors/items/randomizer_powerup/scripts/randomizer_powerup.lc", b"", [])
 
     for i, pickup in enumerate(pickups_config):
         LOG.debug("Writing pickup %d: %s", i, pickup["resources"][0][0]["item_id"])
@@ -171,7 +180,8 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
         new_actor_name = new_spawn["new_actor"]["actor"]
         collision_camera_name = "eg_" + new_spawn["collision_camera_name"]
         new_spawn_pos = ListContainer(
-            (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"]))
+            (new_spawn["location"]["x"], new_spawn["location"]["y"], new_spawn["location"]["z"])
+        )
 
         scenario = editor.get_scenario(scenario_name)
 

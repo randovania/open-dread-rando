@@ -240,6 +240,8 @@ function RandomizerPowerup.CheckArtifacts(resource)
         GUI.AddEmmyMissionLogEntry("#MLOG_" .. resource.item_id)
     end
 
+    Scenario.UpdateHudDnaCount()
+
     -- check for all artifact items, which are numbered. if all are collected, grant metroidnization
     for i=1, Init.iNumRequiredArtifacts do
         if RandomizerPowerup.GetItemAmount("ITEM_RANDO_ARTIFACT_"..i) == 0 then return end
@@ -262,7 +264,9 @@ local tItemTunableHandlers = {
     end,
     ["ITEM_UPGRADE_SPEED_BOOST_CHARGE"] = function(quantity)
         -- Amount of time in seconds for SB to charge - vanilla is 1.5 seconds. Each upgrade reduces by 0.25 seconds.
-        local chargeTime = math.max(0.25, 1.5 - quantity * 0.25)
+        -- Cannot be <= 0 or else all hell breaks loose.
+        -- SB activation is very buggy <= 0.5, so we clamp it a tiny bit higher.
+        local chargeTime = math.max(0.55, 1.5 - quantity * 0.25)
         Scenario.SetTunableValue("CTunableAbilitySpeedBooster", "fTimeToActivate", chargeTime)
     end
 }

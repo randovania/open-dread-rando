@@ -10,19 +10,20 @@ class TransporterType(Enum):
     TRANSPORT = "TRANSPORT"
     TELEPORTAL = "TELEPORTAL"
 
+
 @dataclasses.dataclass
 class TransporterIcon:
     default_icon_id: str
     coords: tuple[int, int]
     prefix: str
-    disabled_id: str = ''
+    disabled_id: str = ""
 
     def map_icon(self, icon_id: str, label: str) -> MapIcon:
         return MapIcon(
             icon_id=icon_id,
             coords=self.coords,
             label=self.prefix + label.upper(),
-            disabled_id=self.disabled_id
+            disabled_id=self.disabled_id,
         )
 
     @classmethod
@@ -33,24 +34,26 @@ class TransporterIcon:
                 return trans_type
         return None
 
+
 TRANSPORT_TYPES = {
     "Elevator": TransporterIcon(
         default_icon_id="UsableElevator",
-        coords=(2,4),
+        coords=(2, 4),
         prefix="ELEVATOR TO ",
         disabled_id="DisabledElevator",
     ),
     "Train": TransporterIcon(
         default_icon_id="UsableTrain",
-        coords=(1,4),
+        coords=(1, 4),
         prefix="SHUTTLE TO ",
     ),
     "Transport": TransporterIcon(
         default_icon_id="UsableTransport",
-        coords=(8,2),
-        prefix = "TRANSPORT CAPSULE TO ",
-    )
+        coords=(8, 2),
+        prefix="TRANSPORT CAPSULE TO ",
+    ),
 }
+
 
 def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[TransporterType, dict]:
     scenario = editor.get_scenario(elevator["teleporter"]["scenario"])
@@ -60,43 +63,54 @@ def _get_type_and_usable(editor: PatcherEditor, elevator: dict) -> tuple[Transpo
     try:
         usable = actor.pComponents.USABLE
     except AttributeError:
-        raise ValueError(f'Actor {elevator["teleporter"]} is not usable')
+        raise ValueError(f"Actor {elevator['teleporter']} is not usable")
 
-    if usable["@type"] in ["CElevatorUsableComponent", "CTrainUsableComponent", "CTrainUsableComponentCutScene",
-                           "CTrainWithPortalUsableComponent", "CCapsuleUsableComponent"]:
+    if usable["@type"] in [
+        "CElevatorUsableComponent",
+        "CTrainUsableComponent",
+        "CTrainUsableComponentCutScene",
+        "CTrainWithPortalUsableComponent",
+        "CCapsuleUsableComponent",
+    ]:
         return TransporterType.TRANSPORT, usable
     elif usable["@type"] == "CTeleporterUsableComponent":
         return TransporterType.TELEPORTAL, usable
     else:
-        raise ValueError(f"Elevator {elevator['teleporter']['scenario']}/{elevator['teleporter']['actor']} "
-                         "is not an elevator, shuttle, capsule or teleporter!\n"
-                         f"USABLE type: {usable['@type']}")
+        raise ValueError(
+            f"Elevator {elevator['teleporter']['scenario']}/{elevator['teleporter']['actor']} "
+            "is not an elevator, shuttle, capsule or teleporter!\n"
+            f"USABLE type: {usable['@type']}"
+        )
+
 
 def _patch_actor(usable: dict, elevator: dict):
     usable.sScenarioName = elevator["destination"]["scenario"]
     usable.sTargetSpawnPoint = elevator["destination"]["actor"]
 
+
 def _patch_minimap_arrows(editor: PatcherEditor, elevator: dict):
     map = editor.get_scenario_map(elevator["teleporter"]["scenario"])
-    sign = map.get_category("mapTransportSigns")[ elevator["teleporter"]["actor"] ]
+    sign = map.get_category("mapTransportSigns")[elevator["teleporter"]["actor"]]
     sign["sDestAreaId"] = elevator["destination"]["scenario"]
+
 
 def _patch_map_icon(editor: PatcherEditor, elevator: dict):
     # get transporter type from mapUsables entry
     conn_name: str = elevator["connection_name"]
-    icon_id = f'RDV_TRANSPORT_{conn_name.replace(" ", "")}' # ex: "RDV_TRANSPORT_Artaria-ThermalDevice"
+    icon_id = f"RDV_TRANSPORT_{conn_name.replace(' ', '')}"  # ex: "RDV_TRANSPORT_Artaria-ThermalDevice"
 
     bmmap = editor.get_scenario_map(elevator["teleporter"]["scenario"])
-    usable = bmmap.get_category("mapUsables")[ elevator["teleporter"]["actor"] ]
+    usable = bmmap.get_category("mapUsables")[elevator["teleporter"]["actor"]]
     ti = TransporterIcon.get_icon(usable)
     if ti is None:
-        raise ValueError(f'Usable icon_id {usable["sIconId"]} invalid!')
+        raise ValueError(f"Usable icon_id {usable['sIconId']} invalid!")
 
     # add BMMDEF
     editor.map_icon_editor.add_icon(ti.map_icon(icon_id, elevator["connection_name"]))
 
     # update usable
     usable["sIconId"] = icon_id
+
 
 def patch_elevators(editor: PatcherEditor, elevators_config: list[dict]):
     for elevator in elevators_config:

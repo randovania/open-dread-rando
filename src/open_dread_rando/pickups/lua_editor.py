@@ -42,10 +42,7 @@ class LuaEditor:
         }
 
     def _read_levels(self) -> dict[str, dict]:
-        return {
-            scenario: {"script": _read_level_lua(scenario), "edited": False}
-            for scenario in ALL_SCENARIOS
-        }
+        return {scenario: {"script": _read_level_lua(scenario), "edited": False} for scenario in ALL_SCENARIOS}
 
     def get_parent_for(self, item_id: str, quantity: int) -> str:
         # coop uses the correct item_id instead of ITEM_NONE but with quantity of 0.
@@ -62,12 +59,11 @@ class LuaEditor:
         first_resource_quantity = first_resource["quantity"]
 
         if not boss and len(pickup_resources) == 1 and len(pickup_resources[0]) == 1:
-
             if "ITEM_RANDO_ARTIFACT_" in first_resource_id:
                 if first_resource_id in self._custom_classes.keys():
                     return self._custom_classes[first_resource_id]
 
-                class_name = f'RandomizerArtifact{first_resource_id[20:]}'
+                class_name = f"RandomizerArtifact{first_resource_id[20:]}"
 
                 self.add_custom_class(
                     {
@@ -76,11 +72,11 @@ class LuaEditor:
                             [
                                 {
                                     "item_id": lua_util.wrap_string(first_resource_id),
-                                    "quantity": first_resource_quantity
+                                    "quantity": first_resource_quantity,
                                 }
                             ]
                         ],
-                        "parent": "RandomizerPowerup"
+                        "parent": "RandomizerPowerup",
                     }
                 )
 
@@ -93,10 +89,9 @@ class LuaEditor:
         if actordef_name and len(pickup["model"]) > 1:
             self.add_progressive_models(pickup, actordef_name)
 
-        hashable_progression = "_".join([
-            f'{res[0]["item_id"]}_{res[0]["quantity"]}'
-            for res in pickup_resources
-        ]).replace("-", "MINUS")
+        hashable_progression = "_".join(
+            [f"{res[0]['item_id']}_{res[0]['quantity']}" for res in pickup_resources]
+        ).replace("-", "MINUS")
 
         if hashable_progression in self._custom_classes.keys():
             return self._custom_classes[hashable_progression]
@@ -107,7 +102,7 @@ class LuaEditor:
             [
                 {
                     "item_id": lua_util.wrap_string(res["item_id"]),
-                    "quantity": res["quantity"]
+                    "quantity": res["quantity"],
                 }
                 for res in resource_list
             ]
@@ -148,8 +143,13 @@ class LuaEditor:
         models = lua_util.replace_lua_template("progressive_model_template.lua", replacement)
         self._powerup_script += models.encode("utf-8")
 
-    def patch_actordef_pickup_script(self, editor: PatcherEditor, pickup: dict, pickup_lua_callback: dict,
-                                     extra_code: str = "") -> None:
+    def patch_actordef_pickup_script(
+        self,
+        editor: PatcherEditor,
+        pickup: dict,
+        pickup_lua_callback: dict,
+        extra_code: str = "",
+    ) -> None:
         scenario = pickup_lua_callback["scenario"]
         scenario_path = path_for_level(scenario)
         lua_util.create_script_copy(editor, scenario_path)
@@ -165,7 +165,7 @@ class LuaEditor:
             "funcname": pickup_lua_callback["function"],
             "pickup_class": self.get_script_class(pickup, True),
             "extra_code": extra_code,
-            "args": ", ".join([f"_ARG_{i}_" for i in range(pickup_lua_callback["args"])])
+            "args": ", ".join([f"_ARG_{i}_" for i in range(pickup_lua_callback["args"])]),
         }
         script["script"] += lua_util.replace_lua_template("boss_powerup_template.lua", replacement)
 

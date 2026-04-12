@@ -21,7 +21,7 @@ ALL_TEXT_FILES = {
     "traditional_chinese.txt",
     "us_english.txt",
     "us_french.txt",
-    "us_spanish.txt"
+    "us_spanish.txt",
 }
 
 
@@ -65,14 +65,9 @@ def patch_hints(editor: PatcherEditor, hints: list[dict]):
         if isinstance(hint_text, str):
             hint_text = [hint_text]
 
-        pages = {
-            f"{hint_id}_PAGE_{i + 1}": hint
-            for i, hint in enumerate(hint_text)
-        }
+        pages = {f"{hint_id}_PAGE_{i + 1}": hint for i, hint in enumerate(hint_text)}
 
-        usable.tCaptionList = {
-            hint_id: list(pages) or [f"{hint_id}_PAGE_1"]
-        }
+        usable.tCaptionList = {hint_id: list(pages) or [f"{hint_id}_PAGE_1"]}
         apply_text_patches(editor, pages)
 
 
@@ -104,10 +99,11 @@ _PROJECT_MEMBERS = {
         "SkyTheLucario",
         "tezar tantular",
         "hyperbola0",
+        "Font Awesome",
     ],
     "     ": [
         "With contributions from many others.",
-    ]
+    ],
 }
 
 
@@ -133,8 +129,5 @@ def patch_credits(editor: PatcherEditor, spoiler_log: dict[str, str]):
 
     rando_credits.append(("     ", "_SUBTITLE"))
 
-    ordered_credits[1:1] = [
-        (f"CREDIT_R_{i:03}{prefix}", item)
-        for i, (item, prefix) in enumerate(rando_credits)
-    ]
+    ordered_credits[1:1] = [(f"CREDIT_R_{i:03}{prefix}", item) for i, (item, prefix) in enumerate(rando_credits)]
     text.strings = {k: v for k, v in ordered_credits}

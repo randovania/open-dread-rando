@@ -69,7 +69,7 @@ class PatcherEditor(FileTreeEditor):
             self.replace_asset(name, resource)
         self.memory_files = {}
 
-    def add_new_asset(self, name: str, new_data: typing.Union[bytes, BaseResource], in_pkgs: typing.Iterable[str]):
+    def add_new_asset(self, name: str, new_data: bytes | BaseResource, in_pkgs: typing.Iterable[str]):
         super().add_new_asset(name, new_data, in_pkgs)
         # Hack for textures' weird folder layout
         if name.startswith("textures/") and isinstance(new_data, bytes):
@@ -83,7 +83,7 @@ class PatcherEditor(FileTreeEditor):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(asset)
 
-    def remove_entity(self, reference: dict, map_category: typing.Optional[str]):
+    def remove_entity(self, reference: dict, map_category: str | None):
         scenario = self.get_scenario(reference["scenario"])
         actor_layer = ActorLayer(reference.get("actor_layer", "rEntitiesLayer"))
         sublayer = reference.get("sublayer", reference.get("layer", "default"))
@@ -97,8 +97,13 @@ class PatcherEditor(FileTreeEditor):
         if map_category is not None:
             self.get_scenario_map(reference["scenario"]).raw.Root[map_category].pop(actor_name)
 
-    def copy_actor_groups(self, base_reference: dict, new_reference: dict, scenario_name: str,
-                          actor_layer: ActorLayer = ActorLayer.ENTITIES):
+    def copy_actor_groups(
+        self,
+        base_reference: dict,
+        new_reference: dict,
+        scenario_name: str,
+        actor_layer: ActorLayer = ActorLayer.ENTITIES,
+    ):
         """
         Copies a base actor's groups to a new actor's groups. Both actors must be in the same scenario and actor layer.
 
@@ -141,8 +146,9 @@ class PatcherEditor(FileTreeEditor):
 
         return newActor
 
-    def find_type_of_actor(self, scenario_name: str, actordef: str,
-                           actor_layer: ActorLayer = ActorLayer.ENTITIES) -> list[tuple[str, str, Container]]:
+    def find_type_of_actor(
+        self, scenario_name: str, actordef: str, actor_layer: ActorLayer = ActorLayer.ENTITIES
+    ) -> list[tuple[str, str, Container]]:
         """
         Get every actor with given actordef in a scenario
 
@@ -156,14 +162,16 @@ class PatcherEditor(FileTreeEditor):
         filtered = []
 
         for sublayer, actor_name, actor in scenario.all_actors_in_actor_layer(actor_layer):
-            a = self.resolve_actor_reference({
-                "actor": actor_name,
-                "sublayer": sublayer,
-                "actor_layer": actor_layer,
-                "scenario": scenario_name
-            })
+            a = self.resolve_actor_reference(
+                {
+                    "actor": actor_name,
+                    "sublayer": sublayer,
+                    "actor_layer": actor_layer,
+                    "scenario": scenario_name,
+                }
+            )
 
-            if a.oActorDefLink.split(':')[1] == actordef:
+            if a.oActorDefLink.split(":")[1] == actordef:
                 filtered.append((sublayer, actor_name, actor))
 
         return filtered
