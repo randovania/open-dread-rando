@@ -26,7 +26,7 @@ class MapIcon:
     string_key: str = dataclasses.field(init=False)
 
     def __post_init__(self):
-        self.offset = self.offset if self.offset else Vec2(0.0, 0.0)
+        object.__setattr__(self, "offset", self.offset if self.offset else Vec2(0.0, 0.0))
         object.__setattr__(self, "string_key", f"MAP_ICON_{self.icon_id}")
 
     def add_to_defs(self, bmmdef: Bmmdef, editor: PatcherEditor):

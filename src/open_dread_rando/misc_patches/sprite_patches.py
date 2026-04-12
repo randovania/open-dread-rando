@@ -32,13 +32,13 @@ def patch_sprites(editor: PatcherEditor):
     _add_sprite(hud_tileset, "SUPER_MISSILE", (381, 0), (32, 32))
 
 
-def _add_sprite(tileset, name: str, pos: tuple[int, int], size: tuple[int, int]):
+def _add_sprite(tileset: Container, name: str, pos: tuple[int, int], size: tuple[int, int]):
     # texture base size is 512x512 pixels
     spriteItem = Container(
         sID=name,
         oTexUVs=Container(
-            v2Offset=Vec2([pos[0] / 512, pos[1] / 512]),
-            v2Scale=Vec2([size[0] / 512, size[1] / 512]),
+            v2Offset=Vec2(pos[0] / 512, pos[1] / 512),
+            v2Scale=Vec2(size[0] / 512, size[1] / 512),
         ),
     )
     tileset.vecItems.append(spriteItem)
