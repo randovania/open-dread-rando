@@ -215,7 +215,7 @@ def patch_saveslot(editor: PatcherEditor, configuration: dict):
         return
     
     save_key = f"RDV_{configuration["configuration_identifier"]}_{configuration["layout_uuid"]}"
-    editor.add_new_asset("RDVHASH", bytes(save_key, encoding="ascii"), in_pkgs=[])
+    editor.add_new_asset("RDVHASH", save_key.encode("ascii"), in_pkgs=[])
 
 
 def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: dict):
