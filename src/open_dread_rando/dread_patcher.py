@@ -213,8 +213,8 @@ def validate(configuration: dict):
 def patch_saveslot(editor: PatcherEditor, configuration: dict):
     if not configuration["cosmetic_patches"]["split_saves"]:
         return
-    
-    save_key = f"RDV_{configuration["configuration_identifier"]}_{configuration["layout_uuid"]}"
+
+    save_key = f"RDV_{configuration['configuration_identifier']}_{configuration['layout_uuid']}"
     editor.add_new_asset("RDVHASH", save_key.encode("ascii"), in_pkgs=[])
 
 
