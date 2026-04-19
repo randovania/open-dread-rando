@@ -300,6 +300,7 @@ def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: d
     # saveslot patches
     patch_saveslot(editor, configuration)
 
+
 def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
     LOG.info("Will patch files from %s", input_path)
 

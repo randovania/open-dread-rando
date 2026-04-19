@@ -35,6 +35,6 @@ def test_export(dread_path, tmp_path, test_files_dir, configuration_path):
     if configuration["cosmetic_patches"]["split_saves"]:
         assert profile_path.exists()
         profile_name = profile_path.read_text()
-        assert profile_name == f"RDV_{configuration["configuration_identifier"]}_{configuration["layout_uuid"]}"
+        assert profile_name == f"RDV_{configuration['configuration_identifier']}_{configuration['layout_uuid']}"
     else:
         assert not profile_path.exists()
