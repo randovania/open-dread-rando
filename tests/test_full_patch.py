@@ -9,7 +9,7 @@ configuration_jsons = [x for x in Path(__file__).parent.joinpath("test_files", "
 
 @pytest.mark.parametrize("configuration_path", configuration_jsons)
 def test_export(dread_path, tmp_path, test_files_dir, configuration_path):
-    output_path = tmp_path.joinpath("out")
+    output_path: Path = tmp_path.joinpath("out")
     configuration = test_files_dir.read_json(configuration_path)
 
     dread_patcher.patch_extracted(
@@ -28,3 +28,11 @@ def test_export(dread_path, tmp_path, test_files_dir, configuration_path):
         "DreadRandovania/exefs/main.npdm",
         "DreadRandovania/exefs/subsdk9",
     ]
+
+    profile_path = output_path.joinpath("DreadRandovania", "romfs", "RDVHASH")
+    if configuration["cosmetic_patches"]["split_saves"]:
+        assert profile_path.exists()
+        profile_name = profile_path.read_text()
+        assert profile_name == f"RDV_{configuration['configuration_identifier']}_{configuration['layout_uuid']}"
+    else:
+        assert not profile_path.exists()

@@ -431,6 +431,11 @@
                             "default": "DEFAULT"
                         }
                     }
+                },
+                "split_saves": {
+                    "description": "When enabled, names save slots after seed's GUID",
+                    "type": "boolean",
+                    "default": false
                 }
             },
             "required": [
