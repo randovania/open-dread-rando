@@ -3495,7 +3495,8 @@
         "lua": {
             "custom_init": {}
         },
-        "shield_versions": {}
+        "shield_versions": {},
+        "split_saves": false
     },
     "tunables": {
         "AbilityOpticCamouflage": {
