@@ -3935,7 +3935,8 @@
             "bomb": "ALTERNATE",
             "cross_bomb": "ALTERNATE",
             "power_bomb": "DEFAULT"
-        }
+        },
+        "split_saves": true
     },
     "energy_per_tank": 100,
     "immediate_energy_parts": true,
