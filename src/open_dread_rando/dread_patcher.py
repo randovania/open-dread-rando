@@ -6,8 +6,8 @@ from pathlib import Path
 
 import open_dread_rando_exlaunch
 from construct import ListContainer
-from mercury_engine_data_structures.formats.gui_files import Bmscp
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
+from mercury_engine_data_structures.formats.gui_files import Bmscp
 
 from open_dread_rando.constants import FadeTimes
 from open_dread_rando.cosmetic_patches import apply_cosmetic_patches
@@ -149,7 +149,9 @@ def create_collision_camera_table(editor: PatcherEditor, configuration: dict) ->
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 
-def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict) -> None:
+def patch_pickups(
+    editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict
+) -> None:
     patch_split_pickups(editor)
 
     # add to the TOC
@@ -234,6 +236,7 @@ def patch_saveslot(editor: PatcherEditor, configuration: dict) -> None:
             item.ColorB = 0.2
             item.ColorA = 1
     editor.replace_asset("gui/scripts/mainmenucomposition.bmscp", menu)
+
 
 def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: dict) -> None:
     # Copy custom files
