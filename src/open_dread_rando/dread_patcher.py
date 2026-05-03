@@ -6,6 +6,7 @@ from pathlib import Path
 
 import open_dread_rando_exlaunch
 from construct import ListContainer
+from mercury_engine_data_structures.formats.gui_files import Bmscp
 from mercury_engine_data_structures.file_tree_editor import OutputFormat
 
 from open_dread_rando.constants import FadeTimes
@@ -38,7 +39,7 @@ from open_dread_rando.validator_with_default import DefaultValidatingDraft7Valid
 T = typing.TypeVar("T")
 
 
-def _read_schema():
+def _read_schema() -> dict:
     with files_path().joinpath("schema.json").open() as f:
         return json.load(f)
 
@@ -93,7 +94,7 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     }
     final_inventory.update(inventory)
 
-    def chunks(array, n):
+    def chunks(array: list[str], n: int) -> typing.Generator[list[str], None, None]:
         for i in range(0, len(array), n):
             yield array[i : i + n]
 
@@ -141,14 +142,14 @@ def create_custom_init(editor: PatcherEditor, configuration: dict) -> str:
     return lua_util.replace_lua_template("custom_init.lua", replacement)
 
 
-def create_collision_camera_table(editor: PatcherEditor, configuration: dict):
+def create_collision_camera_table(editor: PatcherEditor, configuration: dict) -> None:
     py_dict: dict = configuration["cosmetic_patches"]["lua"]["camera_names_dict"]
 
     file = lua_util.replace_lua_template("cc_to_room_name.lua", {"room_dict": py_dict}, True).encode("ascii")
     editor.add_new_asset("system/scripts/cc_to_room_name.lc", file, ["packs/system/system.pkg"])
 
 
-def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict):
+def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config: list[dict], configuration: dict) -> None:
     patch_split_pickups(editor)
 
     # add to the TOC
@@ -162,7 +163,7 @@ def patch_pickups(editor: PatcherEditor, lua_scripts: LuaEditor, pickups_config:
             LOG.warning(e)
 
 
-def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_config: dict[str, str]):
+def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_config: dict[str, str]) -> None:
     editor.map_icon_editor.add_all_new_door_icons()
     create_all_shield_assets(editor, shield_model_config)
 
@@ -171,7 +172,7 @@ def patch_doors(editor: PatcherEditor, doors_config: list[dict], shield_model_co
         door_patcher.patch_door(door["actor"], door["door_type"])
 
 
-def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
+def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]) -> None:
     # create custom spawn point
     _EXAMPLE_SP = {"scenario": "s010_cave", "actor": "StartPoint0"}
     base_actor = editor.resolve_actor_reference(_EXAMPLE_SP)
@@ -189,7 +190,7 @@ def patch_spawn_points(editor: PatcherEditor, spawn_config: list[dict]):
         scenario.add_actor_to_actor_groups(collision_camera_name, new_actor_name)
 
 
-def add_custom_files(editor: PatcherEditor):
+def add_custom_files(editor: PatcherEditor) -> None:
     custom_romfs = files_path().joinpath("romfs")
     for child in custom_romfs.rglob("*"):
         if not child.is_file():
@@ -209,19 +210,32 @@ def add_custom_files(editor: PatcherEditor):
         editor.add_new_asset(full_path.as_posix(), child.read_bytes(), ["packs/system/system.pkg"])
 
 
-def validate(configuration: dict):
+def validate(configuration: dict) -> None:
     DefaultValidatingDraft7Validator(_read_schema()).validate(configuration)
 
 
-def patch_saveslot(editor: PatcherEditor, configuration: dict):
+def patch_saveslot(editor: PatcherEditor, configuration: dict) -> None:
     if not configuration["cosmetic_patches"]["split_saves"]:
         return
 
+    # add the RDVHASH file
     save_key = f"RDV_{configuration['configuration_identifier']}_{configuration['layout_uuid']}"
     editor.add_new_asset("RDVHASH", save_key.encode("ascii"), in_pkgs=[])
 
+    # change the borders to dark green to indicate it is operating on unique save slots
+    menu = editor.get_parsed_asset("gui/scripts/mainmenucomposition.bmscp", type_hint=Bmscp)
+    borders = ["TopL", "BottomL", "TopR", "BottomR", "LineT", "LineB", "LineL", "LineR"]
+    for s in range(3):
+        for b in borders:
+            print(f"Content.ListComposition.CProfileButton-Slot{s}.{b}")
+            item = menu.get_child(f"Content.ListComposition.CProfileButton-Slot{s}.{b}")
+            item.ColorR = 0
+            item.ColorG = 0.4
+            item.ColorB = 0.2
+            item.ColorA = 1
+    editor.replace_asset("gui/scripts/mainmenucomposition.bmscp", menu)
 
-def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: dict):
+def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: dict) -> None:
     # Copy custom files
     add_custom_files(editor)
     generate_missile_colors(editor)
@@ -304,7 +318,7 @@ def apply_patches(editor: PatcherEditor, lua_editor: LuaEditor, configuration: d
     patch_saveslot(editor, configuration)
 
 
-def patch_extracted(input_path: Path, output_path: Path, configuration: dict):
+def patch_extracted(input_path: Path, output_path: Path, configuration: dict) -> None:
     LOG.info("Will patch files from %s", input_path)
 
     validate(configuration)
