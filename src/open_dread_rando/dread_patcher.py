@@ -229,7 +229,6 @@ def patch_saveslot(editor: PatcherEditor, configuration: dict) -> None:
     borders = ["TopL", "BottomL", "TopR", "BottomR", "LineT", "LineB", "LineL", "LineR"]
     for s in range(3):
         for b in borders:
-            print(f"Content.ListComposition.CProfileButton-Slot{s}.{b}")
             item = menu.get_child(f"Content.ListComposition.CProfileButton-Slot{s}.{b}")
             item.ColorR = 0
             item.ColorG = 0.4
