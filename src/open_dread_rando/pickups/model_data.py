@@ -57,13 +57,12 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
     "powerup_wavebeam": ModelData(
-        bcmdl_path="actors/items/powerup_widebeam/models/powerup_wavebeam.bcmdl",
+        bcmdl_path="actors/items/powerup_wavebeam/models/powerup_wavebeam.bcmdl",
         bmsas="actors/items/powerup_widebeam/charclasses/powerup_widebeam.bmsas",
         dependencies=(
-            "actors/items/powerup_widebeam/models/powerup_wavebeam.bcmdl",
-            "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_autoilum.bsmat",
-            "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_bola.bsmat",
-            "actors/items/powerup_widebeam/models/imats/powerup_wavebeam_cangrejo.bsmat",
+            "actors/items/powerup_wavebeam/models/imats/powerup_wavebeam_autoilum.bsmat",
+            "actors/items/powerup_wavebeam/models/imats/powerup_wavebeam_bola.bsmat",
+            "actors/items/powerup_wavebeam/models/imats/powerup_wavebeam_lagarto.bsmat",
         ),
     ),
     "powerup_plasmabeam": ModelData(
@@ -107,12 +106,11 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         grapple_fx=True,
     ),
     "powerup_missile": ModelData(
-        bcmdl_path="actors/items/powerup_supermissile/models/powerup_missile.bcmdl",
+        bcmdl_path="actors/items/powerup_missile/models/powerup_missile.bcmdl",
         bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
         dependencies=(
-            "actors/items/powerup_supermissile/models/powerup_missile.bcmdl",
-            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
-            "actors/items/powerup_supermissile/models/imats/powerup_missile_mp_opaque_01.bsmat",
+            "actors/items/powerup_missile/models/imats/powerup_missile_material.bsmat",
+            "actors/items/powerup_missile/models/imats/powerup_missile_hologram.bsmat",
         ),
     ),
     "powerup_supermissile": ModelData(
@@ -125,24 +123,20 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
     "powerup_icemissile": ModelData(
-        bcmdl_path="actors/items/powerup_supermissile/models/powerup_icemissile.bcmdl",
+        bcmdl_path="actors/items/powerup_icemissile/models/powerup_icemissile.bcmdl",
         bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
         dependencies=(
-            "actors/items/powerup_supermissile/models/powerup_icemissile.bcmdl",
-            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
-            "actors/items/powerup_supermissile/models/imats/powerup_icemissile_mp_opaque_01.bsmat",
+            "actors/items/powerup_icemissile/models/imats/powerup_icemissile_material.bsmat",
+            "actors/items/powerup_icemissile/models/imats/powerup_icemissile_hologram.bsmat",
         ),
     ),
     "powerup_stormmissile": ModelData(
-        bcmdl_path="actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
+        bcmdl_path="actors/items/powerup_stormmissile/models/powerup_stormmissile.bcmdl",
         bmsas="actors/items/powerup_supermissile/charclasses/powerup_supermissile.bmsas",
         dependencies=(
-            "actors/items/powerup_supermissile/models/powerup_supermissile.bcmdl",
-            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_hologram.bsmat",
-            "actors/items/powerup_supermissile/models/imats/powerup_supermissile_mp_opaque_01.bsmat",
-            "actors/items/powerup_grapplebeam/fx/auraitemparticle.bcptl",
+            "actors/items/powerup_stormmissile/models/imats/powerup_stormmissile_material.bsmat",
+            "actors/items/powerup_stormmissile/models/imats/powerup_stormmissile_hologram.bsmat",
         ),
-        grapple_fx=True,
     ),
     "powerup_opticcamo": ModelData(
         bcmdl_path="actors/items/item_cube_broken/model/itemcube_camo.bcmdl",
@@ -224,15 +218,12 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
         ),
     ),
     "powerup_crossbomb": ModelData(
-        bcmdl_path="actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
+        bcmdl_path="actors/items/powerup_crossbomb/models/powerup_crossbomb.bcmdl",
         bmsas="actors/items/powerup_bomb/charclasses/powerup_bomb.bmsas",
         dependencies=(
-            "actors/items/powerup_bomb/models/powerup_bomb.bcmdl",
-            "actors/items/powerup_bomb/models/imats/powerup_bomb_hologram.bsmat",
-            "actors/items/powerup_bomb/models/imats/powerup_bomb_material.bsmat",
-            "actors/items/powerup_grapplebeam/fx/auraitemparticle.bcptl",
+            "actors/items/powerup_crossbomb/models/imats/powerup_crossbomb_material.bsmat",
+            "actors/items/powerup_crossbomb/models/imats/powerup_crossbomb_hologram.bsmat",
         ),
-        grapple_fx=True,
     ),
     "powerup_doublejump": ModelData(
         bcmdl_path="actors/items/powerup_doublejump/models/powerup_doublejump.bcmdl",
@@ -460,16 +451,19 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
     ),
     "powerup_powerbomb": ModelData(
         bcmdl_path="actors/items/powerup_powerbomb/models/powerup_powerbomb.bcmdl",
-        bmsas="actors/items/item_powerbombtank/charclasses/item_powerbombtank.bmsas",
+        bmsas="actors/items/powerup_bomb/charclasses/powerup_bomb.bmsas",
         dependencies=(
-            "actors/items/item_powerbombtank/models/item_powerbombtank.bcmdl",
-            # use more leading zeros because path needs to be the same length as for item_powerbombtank
-            "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_mat0001.bsmat",
-            "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_mp_fxhologram_0001.bsmat",
+            "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_material.bsmat",
+            "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_hologram.bsmat",
         ),
+    ),
+    "powerup_dna": ModelData(
+        bcmdl_path="actors/items/powerup_dna/models/powerup_dna.bcmdl",
+        bmsas="actors/items/powerup_widebeam/charclasses/powerup_widebeam.bmsas",
+        dependencies=("actors/items/powerup_dna/models/imats/powerup_dna_material.bsmat",),
         transform=Transform(
-            scale=(-1.25, 1.25, 1.25),
-            position=(0.0, -30.0, 0.0),
+            scale=(2.0, 2.0, 2.0),
+            position=(0.0, 50.0, 0.0),
         ),
     ),
     "shield_icemissile": ModelData(
