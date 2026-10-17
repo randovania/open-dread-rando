@@ -457,15 +457,6 @@ ALL_MODEL_DATA: dict[str, ModelData] = {
             "actors/items/powerup_powerbomb/models/imats/powerup_powerbomb_hologram.bsmat",
         ),
     ),
-    "powerup_dna": ModelData(
-        bcmdl_path="actors/items/powerup_dna/models/powerup_dna.bcmdl",
-        bmsas="actors/items/powerup_widebeam/charclasses/powerup_widebeam.bmsas",
-        dependencies=("actors/items/powerup_dna/models/imats/powerup_dna_material.bsmat",),
-        transform=Transform(
-            scale=(2.0, 2.0, 2.0),
-            position=(0.0, 50.0, 0.0),
-        ),
-    ),
     "shield_icemissile": ModelData(
         bcmdl_path="actors/props/shield_icemissile/models/shield_icemissile.bcmdl",
         bmsas="actors/props/doorshieldmissile/charclasses/doorshieldmissile.bmsas",
