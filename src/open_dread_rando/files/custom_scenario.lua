@@ -93,7 +93,7 @@ function Scenario.InitScenario(arg1, arg2, arg3, arg4)
     if not Game.HasRandomizerPatches then
         return Scenario.ShowFatalErrorMessage({
             "{c2}Error!{c0}|Unsupported Metroid Dread version.",
-            "Only {c6}1.0.0{c0} and {c6}2.1.0{c0} are supported.|Returning to title screen.",
+            "Only {c6}1.0.0{c0} and {c6}2.1.0{c0} are supported.|Please verify if the mod was installed properly, as incomplete installation can cause this.|Returning to title screen.",
         })
     end
 
