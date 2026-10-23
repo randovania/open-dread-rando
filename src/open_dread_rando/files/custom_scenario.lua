@@ -454,10 +454,9 @@ function Scenario.InitGui()
         if not showDnaInHud then
             -- Need to move the death counter icon and label up to where the DNA would normally be shown
             local dnaIconY = Scenario.ExtraInfoPanel:FindChild("DNA_Icon"):_Y_GetterFunction()
-            local dnaLabelY = Scenario.ExtraInfoPanel:FindChild("DNA_Label"):_CenterY_GetterFunction()
 
             GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Y = dnaIconY })
-            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { CenterY = dnaLabelY })
+            GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Label"), { CenterY = dnaIconY })
         end
     else
         GUI.SetProperties(Scenario.ExtraInfoPanel:FindChild("DeathCounter_Icon"), { Visible = false })
