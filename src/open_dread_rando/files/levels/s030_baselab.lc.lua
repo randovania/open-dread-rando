@@ -665,17 +665,8 @@ function s030_baselab.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
-function s030_baselab.OnUsablePrepareUse(actor)
-  Scenario.DisableGlobalTeleport(actor)
-end
-
 function s030_baselab.OnUsableCancelUse(actor)
-  Scenario.ResetGlobalTeleport(actor)
   Scenario.CheckWarpToStart(actor)
-end
-
-function s030_baselab.OnUsableUse(actor)
-  Scenario.SetTeleportalUsed(actor)
 end
 
 
