@@ -83,7 +83,7 @@ _PROJECT_MEMBERS = {
         "Migs",
         "hyperbola0",
         "Thanatos",
-        "Mayberry",
+        "M10",
     ],
     "Logic Database": [
         "KirbymastaH",
@@ -91,7 +91,7 @@ _PROJECT_MEMBERS = {
         "XenoWars",
         "Hugoshido",
         "Tyranisaur",
-        "Mayberry",
+        "M10",
         "Arcanox",
     ],
     "Additional Art": [
@@ -100,6 +100,8 @@ _PROJECT_MEMBERS = {
         "tezar tantular",
         "hyperbola0",
         "Font Awesome",
+        "M10",
+        "Tyler Herr",
     ],
     "     ": [
         "With contributions from many others.",
