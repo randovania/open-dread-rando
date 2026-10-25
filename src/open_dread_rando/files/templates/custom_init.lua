@@ -33,6 +33,7 @@ OdrPickups = OdrPickups or {
 -- OdrMap stub (real lib is defined by open-dread-rando-exlaunch)
 OdrMap = OdrMap or {
     MarkMapTutoDone = function(_) return false end,
+    MarkAreaVisited = function(_scenario, _x, _y, _z) return false end,
 }
 
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
