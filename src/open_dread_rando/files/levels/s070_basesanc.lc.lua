@@ -913,17 +913,8 @@ function s070_basesanc.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
-function s070_basesanc.OnUsablePrepareUse(actor)
-  Scenario.DisableGlobalTeleport(actor)
-end
-
 function s070_basesanc.OnUsableCancelUse(actor)
-  Scenario.ResetGlobalTeleport(actor)
   Scenario.CheckWarpToStart(actor)
-end
-
-function s070_basesanc.OnUsableUse(actor)
-  Scenario.SetTeleportalUsed(actor)
 end
 
 

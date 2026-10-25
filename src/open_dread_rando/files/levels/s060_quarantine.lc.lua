@@ -363,12 +363,7 @@ function s060_quarantine.OnExit_ChangeCamera_004_B()
   Game.SetCollisionCameraLocked("collision_camera_004_B", false)
 end
 
-function s060_quarantine.OnUsablePrepareUse(actor)
-  Scenario.DisableGlobalTeleport(actor)
-end
-
 function s060_quarantine.OnUsableCancelUse(actor)
-  Scenario.ResetGlobalTeleport(actor)
   Scenario.CheckWarpToStart(actor)
 end
 
@@ -377,5 +372,4 @@ function s060_quarantine.OnUsableUse(actor)
     Game.SetXparasite(true)
     Blackboard.SetProp("GAME_PROGRESS", "QUARENTINE_OPENED", "b", true)
   end
-  Scenario.SetTeleportalUsed(actor)
 end
