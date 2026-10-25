@@ -30,6 +30,11 @@ OdrPickups = OdrPickups or {
     SetItemPopupsEnabled = function(_) end,
 }
 
+-- OdrMap stub (real lib is defined by open-dread-rando-exlaunch)
+OdrMap = OdrMap or {
+    MarkMapTutoDone = function(_) return false end,
+}
+
 exclude_function_from_logging = exclude_function_from_logging or function(_) end
 push_debug_print_override = push_debug_print_override or function() end
 pop_debug_print_override = pop_debug_print_override or function() end
@@ -125,6 +130,11 @@ function Init.CreateNewGameData(difficulty)
     -- Mark the intro cutscenes as already played so that the intro room doesn't try to load the cutscene data
     for _, cutscene in ipairs(preViewedCutscenes) do
         Blackboard.SetProp("PlayedCutscenes", cutscene, "i", 1)
+    end
+
+    -- Mark the hidden item map tutorial (EMapTutoType HINT_ZONE = 0) as already shown
+    if not OdrMap.MarkMapTutoDone(0) then
+        Game.LogWarn(0, "OdrMap.MarkMapTutoDone failed")
     end
 
     local playerSection =  Game.GetPlayerBlackboardSectionName()
