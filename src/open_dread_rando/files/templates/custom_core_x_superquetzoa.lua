@@ -6,11 +6,18 @@ end
 function CoreX_SuperQuetzoa.LaunchDamageSound(_ARG_0_)
 end
 
+local reward_class = TEMPLATE("escue")
+
+function CoreX_SuperQuetzoa.OnRewardMessageClosed()
+  Scenario.ResumeEnvironmentSound()
+  reward_class.OnPickedUp(nil)
+end
+
 function CoreX_SuperQuetzoa.OnBigXAbsorbed(_ARG_0_)
   RandomizerPowerup.MarkLocationCollected("s070_basesanc_escue")
   Game.PushSetup("PostSuperQuetzoaDead", true, false)
-  if TEMPLATE("escue") then
-    GUI.ShowMessage("#GUI_ITEM_ACQUIRED_MULTI_LOCK", true, 'TEMPLATE("escue").OnPickedUp', false)
+  if reward_class then
+    GUI.ShowMessage("#GUI_ITEM_ACQUIRED_MULTI_LOCK", true, "CoreX_SuperQuetzoa.OnRewardMessageClosed", false)
   end
   local door = Game.GetActor("doorpowerpower_014")
   if  door ~= nil then
