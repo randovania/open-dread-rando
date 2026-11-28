@@ -376,6 +376,14 @@ function Scenario.CheckWarpToStart(actor)
 
     Input.LogInputs()
     if Input.CheckInputs("ZL", "ZR") then
+        -- The game only saves an area as selectable on the world map when it has a LastPlayerPos
+        local player = Game.GetPlayer()
+        if player ~= nil then
+            local pos = player.vPos
+            OdrMap.MarkAreaVisited(CurrentScenarioID, pos.x, pos.y, pos.z)
+        else
+            OdrMap.MarkAreaVisited(CurrentScenarioID)
+        end
         Game.LoadScenario("c10_samus", Init.sStartingScenario, Init.sStartingActor, "", 1)
     end
 end
