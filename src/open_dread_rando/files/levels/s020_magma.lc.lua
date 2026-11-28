@@ -759,18 +759,10 @@ function s020_magma.OnUsableFinishInteract(_ARG_0_)
   end
 end
 
-function s020_magma.OnUsablePrepareUse(actor)
-  Scenario.DisableGlobalTeleport(actor)
-end
-
 function s020_magma.OnUsableCancelUse(actor)
-  Scenario.ResetGlobalTeleport(actor)
   Scenario.CheckWarpToStart(actor)
 end
 
-function s020_magma.OnUsableUse(actor)
-  Scenario.SetTeleportalUsed(actor)
-end
 
 
 

@@ -2118,7 +2118,6 @@ function s010_cave.OnUsableCancelUse(actor)
     s010_cave.OnTutoMapRoomBegins(true)
   end
 
-  Scenario.ResetGlobalTeleport(actor)
   Scenario.CheckWarpToStart(actor)
 end
 
@@ -2128,16 +2127,12 @@ function s010_cave.OnUsablePrepareUse(actor)
   elseif actor.sName == "PRP_CV_MapStation001" then
     s010_cave.OnTutoMapRoomBegins(false)
   end
-
-  Scenario.DisableGlobalTeleport(actor)
 end
 
 function s010_cave.OnUsableUse(actor)
   if actor.sName == "LE_Elevator_FromMagma" and not CAVES_TUTO_MAP_ROOM_DONE then
     Scenario.WriteToBlackboard(Scenario.LUAPropIDs.CAVES_TUTO_MAP_ROOM_DONE, "b", true)
   end
-
-  Scenario.SetTeleportalUsed(actor)
 end
 
 

@@ -162,70 +162,24 @@ function Scenario.ShowText()
     end
 end
 
-function Scenario.IsTeleportal(actor)
-    return Scenario.GetCharclass(actor) == "teleporter"
-end
-
-function Scenario.DisableGlobalTeleport(actor)
-    if not Scenario.IsTeleportal(actor) then return end
-    if not Blackboard.GetProp("GAME_PROGRESS", "TeleportWorldUnlocked") then return end
-
-    local teleportal_id = Scenario.GetTeleportalID(actor)
-    if Blackboard.GetProp("GAME_PROGRESS", teleportal_id) then return end
-    if Blackboard.GetProp("GAME_PROGRESS", "RandoMapSeen" .. actor.USABLE.sScenarioName) then return end
-    Blackboard.SetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked", "b", true)
-    Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", false)
-end
-
-function Scenario.GetTeleportalID(actor)
-    return CurrentScenarioID .. actor.sName
-end
-
-function Scenario.ResetGlobalTeleport(actor)
-    if not Scenario.IsTeleportal(actor) then return end
-    if not Blackboard.GetProp("GAME_PROGRESS", "RandoTeleportWorldUnlocked") then return end
-
-    Blackboard.SetProp("GAME_PROGRESS", "TeleportWorldUnlocked", "b", true)
-end
-
-function Scenario.SetTeleportalUsed(actor)
-    if not Scenario.IsTeleportal(actor) then return end
-
-    Scenario.ResetGlobalTeleport(actor)
-
-    local teleportal_id = Scenario.GetTeleportalID(actor)
-    local target_id = actor.USABLE.sTargetSpawnPoint
-    Blackboard.SetProp("GAME_PROGRESS", teleportal_id, "b", true)
-    Blackboard.SetProp("GAME_PROGRESS", "RandoUnlockTeleportal", "s", target_id)
-end
 
 local scenarios_with_teleport = {
-    s010_cave = "StartPoint0",
-    s020_magma = "savestation_000",
-    s030_baselab = "savestation_000",
-    s040_aqua = "savestation_000",
-    s050_forest = "savestation_000",
-    s070_basesanc = "savestation_000"
+    "s010_cave",
+    "s020_magma",
+    "s030_baselab",
+    "s040_aqua",
+    "s050_forest",
+    "s070_basesanc"
 }
 
-function Scenario.VisitAllTeleportScenarios()
-    if CurrentScenarioID == "s090_skybase" then
-        Blackboard.SetProp("GAME_PROGRESS", "RandoVisitScenarios", "b", true)
+function Scenario.AddAllTeleportalAreas()
+    if CurrentScenarioID ~= "s090_skybase" then
+        return
     end
 
-    if not Blackboard.GetProp("GAME_PROGRESS", "RandoVisitScenarios") then return end
-
-    for scenario, spawn in pairs(scenarios_with_teleport) do
-        if not Blackboard.GetProp("GAME_PROGRESS", "RandoVisited"..scenario) then
-            Game.LoadScenario("c10_samus", scenario, spawn, "", 1)
-            return true
-        end
+    for _, scenario in ipairs(scenarios_with_teleport) do
+        OdrMap.MarkAreaVisited(scenario)
     end
-
-    Blackboard.SetProp("GAME_PROGRESS", "RandoVisitScenarios", "b", false)
-    if CurrentScenarioID == "s090_skybase" then return false end
-    Game.LoadScenario("c10_samus", "s090_skybase", "elevator_shipyard_000_platform", "", 1)
-    return true
 end
 
 function Scenario._UpdateProgressiveItemModels()
@@ -317,24 +271,13 @@ function Scenario.OnLoadScenarioFinished()
     Scenario.ShowingPopup = false
     Scenario.ShowNextAsyncPopup()
 
-    Blackboard.SetProp("GAME_PROGRESS", "RandoVisited" .. CurrentScenarioID, "b", true)
-
-    if Scenario.VisitAllTeleportScenarios() then return end
+    Scenario.AddAllTeleportalAreas()
 
     Scenario.UpdateProgressiveItemModels()
     Scenario.UpdateBlastShields()
 
-    Blackboard.SetProp("GAME_PROGRESS", "RandoMapSeen" .. CurrentScenarioID, "b", true)
-
     Game.AddSF(0, "Scenario.CheckDebugInputs", "")
     RL.UpdateRDVClient(true)
-
-    local teleportal_id = Blackboard.GetProp("GAME_PROGRESS", "RandoUnlockTeleportal")
-    if teleportal_id == nil then return end
-    local platform = Game.GetActor(teleportal_id)
-    if platform ~= nil then
-        Blackboard.SetProp("GAME_PROGRESS", CurrentScenarioID .. platform.SMARTOBJECT.sUsableEntity, "b", true)
-    end
 end
 
 function Scenario.CheckArtifactsObtained(actor, diag)
