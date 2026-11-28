@@ -55,13 +55,29 @@ function Scenario.SetRandoHintSeen()
     end
 end
 
+function Scenario.ResumeEnvironmentSound()
+    -- environment sound channel = 5
+    OdrSound.PauseChannel(5, false)
+    Game.PauseEnvironment(false)
+end
+
+function Scenario.EmmyAbilityObtained_RandoMessageClosed()
+    Scenario.ResumeEnvironmentSound()
+    Scenario.EmmyAbilityObtained_ShowMessageCallback()
+end
+
+function Scenario.EmmyAbilityObtained_RandoMessageClosedSkipped()
+    Scenario.ResumeEnvironmentSound()
+    Scenario.EmmyAbilityObtained_ShowMessageLaunchCallbacks()
+end
+
 function Scenario.EmmyAbilityObtained_ShowMessage(message, callback, finalcallback, skipped)
     Scenario.sEmmyAbilityObtainedCallback = callback
     Scenario.sEmmyAbilityObtainedFinalCallback = finalcallback
 
-    local post_gui_callback = "Scenario.EmmyAbilityObtained_ShowMessageCallback"
+    local post_gui_callback = "Scenario.EmmyAbilityObtained_RandoMessageClosed"
     if skipped then
-        post_gui_callback = "Scenario.EmmyAbilityObtained_ShowMessageLaunchCallbacks"
+        post_gui_callback = "Scenario.EmmyAbilityObtained_RandoMessageClosedSkipped"
     end
     GUI.ShowMessage(message, true, post_gui_callback, false)
     Game.AddSF(0.5, Game.PlayCurrentEnvironmentMusic, "")

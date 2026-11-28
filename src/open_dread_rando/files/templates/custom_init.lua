@@ -30,6 +30,11 @@ OdrPickups = OdrPickups or {
     SetItemPopupsEnabled = function(_) end,
 }
 
+-- OdrSound stub (real lib is defined by open-dread-rando-exlaunch)
+OdrSound = OdrSound or {
+    PauseChannel = function(_channel, _pause) return false end,
+}
+
 -- OdrMap stub (real lib is defined by open-dread-rando-exlaunch)
 OdrMap = OdrMap or {
     MarkMapTutoDone = function(_) return false end,
